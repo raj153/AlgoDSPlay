@@ -7,6 +7,13 @@ using AlgoDSPlay.DataStructures;
 // See https://aka.ms/new-console-template for more information
 using AlgoDSPlay.Sorting;
 
+var str=SubstringOps.LongestSubstringWithoutDuplication("clementisacap");
+MatrixOps.MinimumPassesOfMatrix(new int[][]{
+                        new int[]{0,-1,-3,2,0},
+                        new int[]{1,-2,-5,-1,-3},
+                        new int[]{3,0,0,-4,-1},
+                        }
+                        );
 //2,4,3,6,7,10,9
 var sortedArray =BubbleSort.Sort(new List<int>(){10,2,4,1});
 sortedArray =BubbleSort.OptimalSort(new List<int>(){10,2,4,1});

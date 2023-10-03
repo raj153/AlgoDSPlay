@@ -4,6 +4,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AlgoDSPlay.DataStructures;
+using System.Security.AccessControl;
+using System.Data;
+using System.Text.RegularExpressions;
 
 namespace AlgoDSPlay
 {
@@ -42,7 +45,7 @@ namespace AlgoDSPlay
             visited[row, col]= true;
 
             trieNode = trieNode.children[letter];
-            if(trieNode.children.ContainsKey('*')){
+            if(trieNode.children.ContainsKey('*')){  //endSymbol checking
                 finalWords.Add(trieNode.word);
             }
 
@@ -169,7 +172,7 @@ namespace AlgoDSPlay
             List<Node> nodesToVisitList = new List<Node>();
             nodesToVisitList.Add(startNode);
                     
-            MinHeapForAStarAlgo nodesToVisit = new MinHeapForAStarAlg(nodesToVisitList);
+            MinHeapForAStarAlgo nodesToVisit = new MinHeapForAStarAlgo(nodesToVisitList);
 
             while(!nodesToVisit.IsEmpty()){
                 Node currentMinDistanceNode = nodesToVisit.Remove();
@@ -329,6 +332,370 @@ namespace AlgoDSPlay
                 unVisitedNeighbors.Add(new int[]{row, col+1});
 
             return unVisitedNeighbors;
+        }
+
+        //https://www.algoexpert.io/questions/spiral-traverse
+        public static List<int> SpiralTraverse(int[,] array){
+            
+            ////T:O(n) | S:O(n)
+            
+            if(array.GetLength(0) ==0) return new List<int>();            
+            
+            var result = SpiralTraverseIterative(array);
+            SpiralTraverseRecursion(array, 0, array.GetLength(0)-1, 0, array.GetLength(1)-1, result);
+            return result;
+        }
+
+        private static void SpiralTraverseRecursion(int[,] array, int startRow, int endRow, int startCol, int endCol, List<int> result)
+        {
+            if(startRow > endRow || startCol > endCol) return;
+
+            //TOP
+            for(int col=startCol; col<=endCol; col++){
+                result.Add(array[startRow, col]);
+            }
+
+            //Right
+            for(int row=startRow+1; row<=endRow; row++){
+                result.Add(array[row, endCol]);
+            }
+
+            //Bottom 
+            for(int col=endCol-1; col>=startCol; col++){
+
+                //Single Row edge case
+                if(startRow == endRow) break;
+
+                result.Add(array[endRow, col]);
+            }
+
+            //Left
+            for(int row=endRow-1; row > startRow; row++){
+
+                //Single column edge case
+                if(startCol == endCol) break;                
+
+                result.Add(array[row,startCol]);
+            }
+
+            SpiralTraverseRecursion(array,startRow++, endRow--, startCol++, endCol--, result);
+        }
+
+        private static List<int> SpiralTraverseIterative(int[,] array)
+        {   
+            List<int> result = new List<int>();
+            
+            var startRow =0;
+            var endRow = array.GetLength(0)-1;
+            var startCol=0;
+            var endCol = array.GetLength(1)-1;
+
+            while(startRow <=endRow && startCol <= endCol){
+                
+                //Top(Left->Right)
+                for(int col=startCol; col<=endCol; col++){
+                    result.Add(array[startRow, col]);                    
+                }
+
+                //Right (Top to Bottom)
+                for(int row=startRow+1; row<=endRow; row++){
+                    result.Add(array[row, endCol]);
+                }
+
+                //Bottom (Right -> Left)
+                for(int col=endCol-1; col>=startCol; col--){
+
+                    //Single Row edge case
+                    if(startRow == endRow) break;
+                    
+                    result.Add(array[endRow, col]);
+                }
+
+                //Left (Bottom to Top)
+                for(int row =endRow-1; row > startRow; row--){
+
+                    //Single Column Edge code
+                    if(startCol == endCol) break;
+
+                    result.Add(array[row, startCol]);
+                }
+                startRow++;
+                startCol++;
+                endRow--;
+                endCol--;
+
+
+            }
+
+            return result;
+         
+        }
+
+        //https://www.algoexpert.io/questions/minimum-passes-of-matrix
+        public static int MinimumPassesOfMatrix(int[][] matrix){
+            int passes = ConvertNegatives(matrix);
+
+            return (!ContainsNegatives(matrix))?passes:-1;
+        }
+
+        private static bool ContainsNegatives(int[][] matrix)
+        {
+            foreach(var row in matrix){
+                foreach(var val in row){
+                    if (val <0)
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        private static int ConvertNegatives(int[][] matrix)
+        {
+            Queue<Pos> posQ = GetAllPositivePositions(matrix);
+            int passes=0;
+            int size = posQ.Count();
+            while(posQ.Count>0){
+                Pos curPos = posQ.Dequeue();
+                size--;
+                List<int[]> adjacentPos = GetAdjacentPositions(matrix, curPos);
+                foreach(var pos in adjacentPos){
+                   int row = pos[0], col=pos[1];
+                   int val = matrix[row][col];
+                   if(val < 0) {
+                        matrix[row][col] = val*-1;
+                        posQ.Enqueue(new Pos{Row=row, Col=col});     
+                   }
+                   
+                }
+                if(size == 0){
+                    size =posQ.Count();
+                    if(size > 0)
+                        passes++;
+                    
+                }
+
+            }
+            return passes;
+        }
+
+        private static List<int[]> GetAdjacentPositions(int[][] matrix, Pos pos)
+        {
+            List<int[]> adjPos = new List<int[]>();
+            int row= pos.Row;
+            int col=pos.Col;
+
+            //https://www.tutorialsteacher.com/csharp/csharp-multi-dimensional-array
+            //var twoDArr = new int[,] {{1,2},{2,3}};
+            //https://www.tutorialsteacher.com/csharp/csharp-jagged-array
+            //var jogArr = new int[][] {new int[3]{0, 1, 2}, new int[5]{1,2,3,4,5}};
+           
+           //Top
+            if(row> 0)
+                adjPos.Add(new int[]{row-1, col});
+
+            //Bottom/Down
+            if(row < matrix.Length-1){
+                adjPos.Add(new int[]{row+1, col});
+            }
+            
+            //Left
+            if(col >0)
+                adjPos.Add(new int[]{row, col-1});
+
+            //Right
+            if(col < matrix[0].Length-1)
+                adjPos.Add(new int[]{row, col+1});
+
+
+
+            return adjPos;
+        }
+
+        private static Queue<Pos> GetAllPositivePositions(int[][] matrix)
+        {
+            Queue<Pos> positivePos= new Queue<Pos>();
+
+            for(int row=0; row < matrix.Length; row++){
+                for(int col=0; col<matrix[row].Length; col++){
+                    int val= matrix[row][col];
+                    if(val>0)
+                        positivePos.Enqueue(new Pos(){Row=row, Col=col});
+                }
+            }
+            return positivePos;
+        }
+
+        struct Pos{
+            public int Row, Col;
+
+        }
+
+        //https://www.algoexpert.io/questions/rectangle-mania
+        static string UP ="up";
+        static string RIGHT = "right";
+        static string DOWN = "down";
+        static string LEFT = "left";
+        
+        public static int RectangleMania(List<int[]> coords){
+
+            Dictionary<string, Dictionary<string, List<int[]>>> coordsTable; 
+            int rectangleCount=0;
+            //1. T: O(n^2) S:O(n^2) where n is number of co-ordinates 
+            coordsTable = GetCoordsTable(coords);
+            rectangleCount = GetRectangleCount(coords, coordsTable);
+            //2. T: O(n^2) S:O(n) where n is number of co-ordinates 
+            TODO: 
+
+            //3. T: O(n^2) S:O(n) where n is number of co-ordinates 
+            HashSet<string> coordsSet = GetCoordsSet(coords);
+            rectangleCount = GetRectangleCount(coords, coordsSet);
+            return rectangleCount;
+
+        }
+
+        private static int GetRectangleCount(List<int[]> coords, HashSet<string> coordsSet)
+        {
+            int rectangleCount =0;
+
+            foreach(var coord1 in coords){
+                foreach(var coord2 in coords){
+                    if(!IsInUpperRight(coord1, coord2)) continue;
+                    string upperCoordString = CoordsToString(new int[]{coord1[0], coord2[1]});
+                    string bottomRightCoordString = CoordsToString(new int[]{coord2[0],coord1[1]});
+                    if(coordsSet.Contains(upperCoordString) && coordsSet.Contains(bottomRightCoordString))
+                        rectangleCount++;
+                }
+            }
+            return rectangleCount;
+        }
+
+        private static bool IsInUpperRight(int[] coord1, int[] coord2)
+        {
+            return coord2[0]>coord1[0] && coord2[1]> coord2[1];
+        }
+
+        private static HashSet<string> GetCoordsSet(List<int[]> coords)
+        {
+            HashSet<string> coordsSet = new HashSet<string>();
+            foreach(var coord in coords){
+                string coordString = CoordsToString(coord);
+                coordsSet.Add(coordString);
+            }
+
+            return coordsSet;
+        }
+
+        private static int GetRectangleCount(List<int[]> coords, Dictionary<string, Dictionary<string, List<int[]>>> coordsTable)
+        {
+            int rectangleCount =0;
+            foreach(var coord in coords)
+                rectangleCount+= ClockWiseCountRectangles(coord,coordsTable,UP, coord);
+
+            return rectangleCount;
+        }
+
+        private static int ClockWiseCountRectangles(int[] coord, Dictionary<string, Dictionary<string, List<int[]>>> coordsTable, string direction, int[] origin)
+        {
+            string coordString = CoordsToString(coord);
+
+            if(direction == LEFT){
+                bool rectangleFound = coordsTable[coordString][LEFT].Contains(origin);
+                return rectangleFound?1:0;
+            }else{
+                int rectangleCount =0;
+                string nextDirection = GetNextClockWiseDirection(direction);
+                foreach(var nextCoord in coordsTable[coordString][direction]){
+                    rectangleCount += ClockWiseCountRectangles(nextCoord, coordsTable, nextDirection, origin);
+                }
+                return rectangleCount;
+            }            
+            
+        }
+
+        private static string GetNextClockWiseDirection(string direction)
+        {
+            if(direction == UP) return RIGHT;
+            if(direction == RIGHT) return DOWN;
+            if(direction == DOWN) return LEFT;
+
+            return "";
+        }
+
+        private static Dictionary<string, Dictionary<string, List<int[]>>> GetCoordsTable(List<int[]> coords)
+        {
+            
+            Dictionary<string, Dictionary<string, List<int[]>>> coordsTable = new Dictionary<string, Dictionary<string, List<int[]>>>();
+            
+            foreach(int[] coord1 in coords){
+                
+                Dictionary<string, List<int[]>> coord1Directions = new Dictionary<string, List<int[]>>();
+                coord1Directions[UP] = new List<int[]>();
+                coord1Directions[DOWN] = new List<int[]>();
+                coord1Directions[RIGHT] = new List<int[]>();
+                coord1Directions[LEFT] = new List<int[]>();
+
+                foreach(var coord2 in coords){
+
+                    string coord2Direction = GetCoordDirection(coord1, coord2);
+                    
+                    if(coord1Directions.ContainsKey(coord2Direction))
+                        coord1Directions[coord2Direction].Add(coord2);
+                    
+                }
+                string coord1String = CoordsToString(coord1);
+                coordsTable[coord1String] = coord1Directions;
+
+            }
+
+            return coordsTable;
+        }
+
+        private static string CoordsToString(int[] coord)
+        {
+            return coord[0].ToString() +"-"+coord[1].ToString();
+        }
+
+        private static string GetCoordDirection(int[] coord1, int[] coord2)
+        {
+            if(coord2[1] == coord1[1]){
+                if(coord2[0]> coord1[0]){
+                    return RIGHT;
+                }else if (coord2[0]<coord1[0]){
+                    return LEFT;
+                }
+            }else if (coord2[0] == coord1[0]){
+                if(coord2[1] > coord1[1]){
+                    return UP;
+                }
+                else if (coord2[1] < coord1[1]){
+                    return DOWN;
+                }
+            }
+            return "";
+        }
+
+        //https://www.algoexpert.io/questions/tournament-winner
+        public static string TournamentWinner(List<List<string>> competitions, List<int> results){
+            //T:O(n) | S:O(k) where n is number of competitions and k is number of teams.
+            Dictionary<string,int> teamScores = new Dictionary<string, int>();
+            string maxScoreTeam="";
+            for(int i=0; i< results.Count; i++){
+                
+                int winner = results[i];
+                string currentWinningTeam = competitions[i][1-winner];
+                if(!teamScores.ContainsKey(currentWinningTeam))
+                    teamScores[currentWinningTeam]=0;
+                
+                teamScores[currentWinningTeam]+=3;
+                if(string.IsNullOrEmpty(maxScoreTeam))
+                    maxScoreTeam = currentWinningTeam;
+                else if(teamScores[maxScoreTeam]< teamScores[currentWinningTeam])
+                    maxScoreTeam = currentWinningTeam;
+
+
+            }
+            return maxScoreTeam;
+
         }
     }
 }

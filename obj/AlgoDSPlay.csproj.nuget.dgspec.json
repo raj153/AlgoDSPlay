@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Learn\\DSAlgo\\AlgoDSPlay\\AlgoDSPlay.csproj": {}
+    "c:\\Learn\\DSAlgo\\AlgoDSPlay\\AlgoDSPlay.csproj": {}
   },
   "projects": {
-    "C:\\Learn\\DSAlgo\\AlgoDSPlay\\AlgoDSPlay.csproj": {
+    "c:\\Learn\\DSAlgo\\AlgoDSPlay\\AlgoDSPlay.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Learn\\DSAlgo\\AlgoDSPlay\\AlgoDSPlay.csproj",
+        "projectUniqueName": "c:\\Learn\\DSAlgo\\AlgoDSPlay\\AlgoDSPlay.csproj",
         "projectName": "AlgoDSPlay",
-        "projectPath": "C:\\Learn\\DSAlgo\\AlgoDSPlay\\AlgoDSPlay.csproj",
+        "projectPath": "c:\\Learn\\DSAlgo\\AlgoDSPlay\\AlgoDSPlay.csproj",
         "packagesPath": "C:\\Users\\Raj\\.nuget\\packages\\",
-        "outputPath": "C:\\Learn\\DSAlgo\\AlgoDSPlay\\obj\\",
+        "outputPath": "c:\\Learn\\DSAlgo\\AlgoDSPlay\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\Raj\\AppData\\Roaming\\NuGet\\NuGet.Config"

@@ -322,7 +322,7 @@ namespace AlgoDSPlay
             }
         }
         public bool IsHeightBalancedBinaryTree(Tree tree){
-            //T:O(n) } S:O(h)
+            //T:O(n) | S:O(h)
             TreeInfo treeInfo = GetTreeInfo(tree);
             return  treeInfo.IsBalanced;
         }
@@ -340,6 +340,99 @@ namespace AlgoDSPlay
             return new TreeInfo(isBalanced, height);
 
 
+        }
+
+        //https://www.algoexpert.io/questions/depth-first-search
+        class Node{
+            public string Name {get;set;}
+            public List<Node> Children = new List<Node>();
+
+            public Node(string name){
+                this.Name= name;
+            }
+            public List<string> DepthFirstSearch(List<string> array){
+                array.Add(this.Name);
+                for(int i=0; i < Children.Count; i++){
+                    Children[i].DepthFirstSearch(array);
+                }
+
+                return array;
+            }
+            public Node AddChild(string name){
+                Node child = new Node(name);
+                Children.Add(child);
+                return this;
+            }
+
+        }
+
+        //https://www.algoexpert.io/questions/validate-bst
+        public static bool ValidateBST(Tree tree){
+            //T:O(n) | S:O(d) d->height/distance of tree calls in call stack
+            return ValidateBST(tree, Int32.MinValue, Int32.MaxValue);
+            
+        }
+
+        private static bool ValidateBST(Tree node, int minValue, int maxValue)
+        {
+            if(node.Value < minValue || node.Value >= maxValue)
+                return false;
+            
+            if(node.Left != null && !ValidateBST(node.Left,minValue,node.Value)){
+                return false;
+            }
+
+            if(node.Right!=null && !ValidateBST(node.Right,node.Value, maxValue))
+                return false;
+
+            return true;
+
+        }
+        //https://www.algoexpert.io/questions/right-smaller-than
+        public static List<int> RightSmallerThan(List<int> array){
+            
+            List<int> rightSmallerCounts = new List<int>();
+
+            if(array.Count ==0 ) return rightSmallerCounts;
+            
+            //1. T: O(n2) | O(n)
+            rightSmallerCounts = RightSmallerThanNaive(array);
+        
+            //2. Average case: when the created BST is balanced
+                        // O(nlog(n)) time | O(n) space - where n is the length of the array
+                // Worst case: when the created BST is like a linked list
+                        // O(n^2) time | O(n) space
+            TODO:
+
+            //3.Average case: when the created BST is balanced
+                        // O(nlog(n)) time | O(n) space - where n is the length of the array
+                // Worst case: when the created BST is like a linked list
+                        // O(n^2) time | O(n) space
+            int lastIdx = array.Count-1;
+            rightSmallerCounts[lastIdx]=0;
+            SpecialBST bst = new SpecialBST(array[lastIdx]);            
+            for(int i=array.Count-2; i >=0; i--){
+                bst.Insert(array[i],i,rightSmallerCounts);
+            }
+            return rightSmallerCounts;
+
+        }
+
+        private static List<int> RightSmallerThanNaive(List<int> array)
+        {
+            List<int> rightSmallerCounts = new List<int>();
+            for(int i=0; i< array.Count; i++){
+                int rightSmallerCount =0;
+
+                for(int j=i+1; j<array.Count; j++){
+
+                    if(array[i] > array[j])
+                        rightSmallerCount++;
+                }
+
+                rightSmallerCounts.Add(rightSmallerCount);
+            }
+            return rightSmallerCounts;
         }
     }
 }

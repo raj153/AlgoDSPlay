@@ -62,5 +62,53 @@ namespace AlgoDSPlay
 
             return headOne.Value< headTwo.Value ? headOne: headTwo;
         }
+        //https://www.algoexpert.io/questions/middle-node
+        public static LinkedList MiddleNode(LinkedList linkedList){
+            LinkedList node=default;
+            
+            //1.Naive - T:O(n) | S:O(1)
+            node = MiddleNodeNaive(linkedList);
+
+            //2.Two Pointer - T:O(n) | S:O(1) 
+            node = MiddleNodeTwoPointer(linkedList);
+            return node;
+
+
+        }
+
+        private static LinkedList? MiddleNodeTwoPointer(LinkedList linkedList)
+        {
+            LinkedList slowNode=linkedList, fastNode=linkedList;
+            
+            
+            while(fastNode !=null && fastNode.Next != null)
+            {
+                slowNode = slowNode.Next;
+                fastNode = fastNode.Next.Next;
+
+            }
+            return slowNode;
+        }
+
+        private static LinkedList? MiddleNodeNaive(LinkedList linkedList)
+        {
+            int count =0;
+
+            LinkedList currentNode = linkedList;
+
+            while(currentNode != null)
+            {
+                count++;
+                currentNode= currentNode.Next;
+            }
+            LinkedList middleNode = linkedList;
+
+            for(int i=0; i<count/2; i++){
+                middleNode = middleNode.Next;
+            }
+
+            return middleNode;
+
+        }
     }
 }
