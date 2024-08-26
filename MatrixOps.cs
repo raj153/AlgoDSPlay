@@ -7,6 +7,8 @@ using AlgoDSPlay.DataStructures;
 using System.Security.AccessControl;
 using System.Data;
 using System.Text.RegularExpressions;
+using System.Runtime.CompilerServices;
+using System.Security.Principal;
 
 namespace AlgoDSPlay
 {
@@ -14,87 +16,14 @@ namespace AlgoDSPlay
     {
 
 
-        //https://www.algoexpert.io/questions/boggle-board
-        public static List<string> BoggleBoard(char[,] board, string[] words){
-            //T:O(WS+MN*8^S) | S:O(WS+MN)
-            Trie trie = new Trie();
-            foreach(var word in words){
-                trie.Insert(word);
-            }
-            HashSet<string> finalWords = new HashSet<string>();
-            bool[,] visited = new bool[board.GetLength(0), board.GetLength(1)];
-            for(int row=0; row< board.GetLength(0); row++){
-                for(int col=0; col < board.GetLength(1); col++){
-                    Explore(row, col, board, trie.root, visited, finalWords);
-                }
-            }
-            List<string> finalWordsArray = new List<string>();
-            foreach(string key in finalWords){
-                finalWordsArray.Add(key);
-            }
-            return finalWordsArray;
-
-        }
-
-        private static void Explore(int row, int col, char[,] board, TrieNode trieNode, bool[,] visited, HashSet<string> finalWords)
-        {
-            if(visited[row, col]) return;
-
-            char letter = board[row, col];
-            if(!trieNode.children.ContainsKey(letter)) return;
-            visited[row, col]= true;
-
-            trieNode = trieNode.children[letter];
-            if(trieNode.children.ContainsKey('*')){  //endSymbol checking
-                finalWords.Add(trieNode.word);
-            }
-
-            List<int[]> neighbors = GetNeighbors(row, col,board);
-            foreach(int[] neighbor in neighbors){
-                Explore(neighbor[0], neighbor[1], board, trieNode,visited, finalWords);
-            }
-            visited[row, col]=false;
-
-        }
-
-        public static List<int[]> GetNeighbors(int row, int col, char[,] board){
-            
-            List<int[]> neighbors = new List<int[]>();
-
-            //Top-Left Diagonal 
-            if(row >0 && col > 0)
-                neighbors.Add(new int[]{row-1, col-1});
-            //Top
-            if(row >0)
-                neighbors.Add(new int[]{row-1, col});
-            //Top-Right Diagonal
-            if(row >0 && col < board.GetLength(1)-1)
-                neighbors.Add(new int[]{row-1, col+1});
-            //Right
-            if(col < board.GetLength(1)-1)
-                neighbors.Add(new int[]{row, col+1});
-            //Down-Right Diagonal
-            if(row > board.GetLength(0)-1 && col < board.GetLength(1)-1)
-                neighbors.Add(new int[]{row+1, col+1});
-            //Down
-            if(row > board.GetLength(0)-1)
-                neighbors.Add(new int[]{row+1, col});
-            //Down-Left Diagonal
-            if(row > board.GetLength(0)-1 && col >0)
-                neighbors.Add(new int[]{row+1, col-1});
-            //Left
-            if(col>0)
-                neighbors.Add(new int[]{row, col-1});
-
-            return neighbors;
-        }
+   
 
         //https://www.algoexpert.io/questions/waterfall-streams
         public double[] WaterfallStreams(double[][] array, int source){
             //T:O(W^2*h) | S:O(W)
             double[] rowAbove =array[0];
 
-            rowAbove[source] = -1;
+            rowAbove[source] = -1; // -1 used to represent water since 1 is used for a block
 
             for(int row=1; row < array.Length; row++){
                 double[] currentRow = array[row];
@@ -337,11 +266,12 @@ namespace AlgoDSPlay
         //https://www.algoexpert.io/questions/spiral-traverse
         public static List<int> SpiralTraverse(int[,] array){
             
-            ////T:O(n) | S:O(n)
-            
             if(array.GetLength(0) ==0) return new List<int>();            
             
+            //1. Iterative - T:O(n) | S:O(n)
             var result = SpiralTraverseIterative(array);
+
+            //2. Recursive - T:O(n) | S:O(n)
             SpiralTraverseRecursion(array, 0, array.GetLength(0)-1, 0, array.GetLength(1)-1, result);
             return result;
         }
@@ -697,5 +627,487 @@ namespace AlgoDSPlay
             return maxScoreTeam;
 
         }
+        //https://www.algoexpert.io/questions/square-of-zeroes
+        public static bool SquareOfZeroes(List<List<int>> matrix){
+
+            //1.Naive Iterative - T:n^4 |S:O(1) where n is height and width of matrix
+            bool IsSquarOfZeroesExists = SquareOfZeroesNaiveIterative (matrix); 
+
+            //2.Optimal(Precompute) Iterative - T:(n^3) |S:O(n^2) where n is height and width of matrix
+            IsSquarOfZeroesExists = SquareOfZeroesOptimalIterative (matrix); 
+
+            //3.Naive Recursive without Caching - T:(n^4) |S:O(n^3) where n is height and width of matrix
+            
+            //4.Optimal Recursive with Caching - T:(n^4) |S:O(n^3) where n is height and width of matrix
+            IsSquarOfZeroesExists = SquareOfZeroesOptimalRecursive (matrix); 
+            //5.Optimal Recursive with Caching & PreCompute - T:(n^3) |S:O(n^3) where n is height and width of matrix
+            TODO:
+            return IsSquarOfZeroesExists;
+        }
+
+        private static bool SquareOfZeroesOptimalRecursive(List<List<int>> matrix)
+        {
+            int lastIdx = matrix.Count-1;
+            Dictionary<string, bool> cache = new Dictionary<string, bool>();
+            return HasSquareOfZeroes(matrix, 0, 0, lastIdx, lastIdx, cache);
+
+        }
+
+        private static bool HasSquareOfZeroes(List<List<int>> matrix, int topRow, int leftCol, int bottomRow, int rightCol, Dictionary<string, bool> cache)
+        {
+            if(topRow >= bottomRow || leftCol >= rightCol) return false;
+            string key = topRow.ToString() +'-'+ leftCol.ToString() +'-'+ bottomRow.ToString() +'-'+ rightCol.ToString();
+            if(cache.ContainsKey(key)) return cache[key];
+
+            cache[key] = IsSquareOfZeroes(matrix, topRow, leftCol,bottomRow, rightCol) || 
+                         HasSquareOfZeroes(matrix, topRow+1, leftCol+1, bottomRow-1, rightCol-1, cache) ||
+                         HasSquareOfZeroes(matrix,topRow,leftCol+1,bottomRow-1,rightCol, cache) ||
+                         HasSquareOfZeroes(matrix, topRow+1, leftCol, bottomRow, rightCol-1,cache) ||
+                         HasSquareOfZeroes(matrix, topRow+1,leftCol+1, bottomRow, rightCol, cache) ||
+                         HasSquareOfZeroes(matrix, topRow,leftCol, bottomRow-1, rightCol-1, cache);
+
+            return cache[key];
+        }
+
+        private static bool SquareOfZeroesOptimalIterative(List<List<int>> matrix)
+        {
+            List<List<InfoMatrixItem>> infoMatrix = PreComputeNumOfZeroes(matrix);
+            int n= matrix.Count;
+            for(int topRow=0; topRow < n; topRow++){
+                for(int leftCol=0; leftCol<n; leftCol++){
+                    int squareLen = 2;
+                    while(squareLen <=n-leftCol && squareLen <=n-topRow){
+                        int bottomRow = topRow+squareLen-1;
+                        int rightCol = leftCol+squareLen-1;
+                        if(IsSquareOfZeroes(infoMatrix, topRow, leftCol, bottomRow, rightCol)){
+                            return true;
+                        }
+                        squareLen++;
+                    }                    
+                }
+            }            
+            return false;
+        }
+
+        private static bool IsSquareOfZeroes(List<List<InfoMatrixItem>> infoMatrix, int topRow, int leftCol, int bottomRow, int rightCol)
+        {
+            int squareLen = rightCol-leftCol+1;
+            bool hasTopBorder = infoMatrix[topRow][leftCol].NumberZeroesRight >= squareLen;
+            bool hasLeftBorder = infoMatrix[topRow][leftCol].NumberZeroesBelow >= squareLen;
+            bool hasBottomBorder = infoMatrix[bottomRow][leftCol].NumberZeroesRight >= squareLen;
+            bool hasRightBorder = infoMatrix[topRow][rightCol].NumberZeroesBelow >= squareLen;
+
+            return hasBottomBorder && hasLeftBorder && hasRightBorder && hasTopBorder;
+        }
+
+        private static List<List<InfoMatrixItem>> PreComputeNumOfZeroes(List<List<int>> matrix)
+        {
+            List<List<InfoMatrixItem>> infoMatrix = new List<List<InfoMatrixItem>>();
+            for(int row=0; row < matrix.Count; row++){
+                List<InfoMatrixItem> inner = new List<InfoMatrixItem>();
+                for (int col=0; col < matrix[row].Count; col++){
+                    int numZeroes = matrix[row][col] ==0 ?1:0;
+                    inner.Add(new InfoMatrixItem(numZeroes, numZeroes));
+                }
+                infoMatrix.Add(inner);
+            }
+            int lastIdx= infoMatrix.Count-1;
+            for(int row=lastIdx; row >=0; row--){
+                for(int col=lastIdx; col>=0; col--){
+                    if(matrix[row][col] == 1) continue;
+                    if(row < lastIdx){
+                        infoMatrix[row][col].NumberZeroesBelow += infoMatrix[row+1][col].NumberZeroesBelow;
+                    }
+                    if(col < lastIdx){
+                        infoMatrix[row][col].NumberZeroesRight += infoMatrix[row][col+1].NumberZeroesRight;
+                    }
+                }
+            }
+            return infoMatrix;
+        }
+        internal class InfoMatrixItem
+        {
+            public int NumberZeroesBelow{get;set;}
+            public int NumberZeroesRight{get;set;}
+
+            public InfoMatrixItem(int numZeroesBelow, int numZeroesRight){
+                this.NumberZeroesBelow = numZeroesBelow;
+                this.NumberZeroesRight = numZeroesRight;
+            }
+        }
+        private static bool SquareOfZeroesNaiveIterative(List<List<int>> matrix)
+        {
+            int n=matrix.Count;
+            for(int topRow=0; topRow < n; topRow++){
+                for(int leftCol=0; leftCol<n; leftCol++){
+                    int squareLen =2;
+                    while(squareLen <= n-leftCol && squareLen <=n-topRow){
+                        int bottomRow = topRow+squareLen-1;
+                        int rightCol = leftCol+squareLen-1;
+                        if(IsSquareOfZeroes(matrix,topRow,leftCol,bottomRow, rightCol))
+                            return true;
+                        squareLen++;
+                    }
+                }
+            }
+            return false;
+        }
+
+        private static bool IsSquareOfZeroes(List<List<int>> matrix, int topRow, int leftCol, int bottomRow, int rightCol)
+        {
+            for(int row=topRow; row<bottomRow+1; row++){
+                if(matrix[row][leftCol] !=0 || matrix[row][rightCol] != 0) return false;
+            }
+            for(int col=leftCol; col<rightCol+1; col++){
+            
+                if(matrix[topRow][col] != 0 || matrix[bottomRow][col] != 0) return false;
+            }
+            return true;
+        }      
+
+        //https://www.algoexpert.io/questions/knapsack-problem
+        public static List<List<int>> KnapsackProblem(int[,] items, int capacity){
+            //T:O(nc) | S:O(nc)
+            int[,] knapsackValues = new int[items.GetLength(0)+1, capacity+1];
+            for(int row=1; row<items.GetLength(0)+1; row++){
+                int currentWeigtht = items[row-1,1];
+                int currentValue = items[row-1,0];
+                for(int col=0; col< capacity+1; col++){
+                    if(currentWeigtht > col){
+                        knapsackValues[row, col] = knapsackValues[row-1, col];
+                    }else{
+                        knapsackValues[row, col]= Math.Max(knapsackValues[row-1,col],
+                                                            knapsackValues[row-1,col-currentWeigtht]+currentValue);
+                                                        
+                    }
+                }                
+            }
+            return GetKnapsackItems(knapsackValues, items, knapsackValues[items.GetLength(0),capacity]);
+        }
+
+        private static List<List<int>> GetKnapsackItems(int[,] knapsackValues, int[,] items, int weight)
+        {
+            List<List<int>> sequence = new List<List<int>>();
+
+            List<int> totalWeight = new List<int>();
+            sequence.Add(totalWeight);
+            sequence.Add(new List<int>());
+            int row=knapsackValues.GetLength(0)-1;
+            int col= knapsackValues.GetLength(1)-1;
+            while(row>0){
+                if(knapsackValues[row,col] == knapsackValues[row-1, col])
+                    row--;
+                else{
+                    sequence[1].Insert(0,row-1);
+                    col -= items[row-1, 1];
+                    row--;
+
+                }
+                if(col == 0) break;
+            }
+
+            return sequence;
+        }
+        //https://www.algoexpert.io/questions/maximum-sum-submatrix
+        public static int MaximumSumSubmatrix(int[,] matrix, int size){
+
+            //1.Naive, with pair of loops to find submatrix based on size and loop thru square values to get sum; Overlaps can occur
+            //T:O(w*h*size^2) | S:O(1)
+
+
+            //2.Optimal - precompute sums at each cell to avoid repeated calculations due to overlap
+            //T:O(w*h) | S:O(w*h)
+            int maxSumMatrixSum = MaximumSumSubmatrixOptimal(matrix, size);
+            return maxSumMatrixSum;
+        }
+
+        private static int MaximumSumSubmatrixOptimal(int[,] matrix, int size)
+        {
+            int[,] sums = PrecomputeSumMatrix(matrix);
+            int maxSubMatrixSum = Int32.MinValue;
+            TODO:
+            for(int row=size-1; row< matrix.GetLength(0); row++ ){
+                for(int col=size-1; col< matrix.GetLength(1); col++)
+                {
+                    int total = sums[row, col];
+
+                    bool touchesTopBorder = (row -size < 0);
+                    if(!touchesTopBorder)
+                        total -= sums[row-size, col];
+                    
+                    bool touchesLeftBorder = (col-size <0);
+                    if(!touchesLeftBorder){
+                        total -=sums[row, col-size];
+                    }
+
+                    bool touchesTopOrLeftBorder =(touchesTopBorder || touchesLeftBorder);
+                    if(!touchesTopOrLeftBorder)
+                        total += sums[row-size, col-size];
+                    
+                    maxSubMatrixSum = Math.Max(maxSubMatrixSum , total);
+
+                }
+            }
+            return maxSubMatrixSum;
+        }
+
+        private static int[,] PrecomputeSumMatrix(int[,] matrix)
+        {
+            int[,] sums = new int[matrix.GetLength(0), matrix.GetLength(1)];
+            sums[0,0] = matrix[0,0];
+
+            //Fill first row
+            for(int idx=1; idx< matrix.GetLength(1); idx++){
+                sums[0,idx]= sums[0, idx-1]+matrix[0,idx];
+            }
+            //Fill first column
+            for(int idx=1; idx< matrix.GetLength(0); idx++ ){
+                sums[idx,0] = sums[idx-1,0]+matrix[idx,0];                
+            }
+
+            //Fill in the rest of matrix
+            for(int row=1; row < matrix.GetLength(0); row++){
+                for(int col=1; col< matrix.GetLength(1); col++)
+                {
+                    sums[row, col]= sums[row-1,col]+sums[row, col-1]-sums[row-1, col-1]+matrix[row, col];
+                }
+            }
+            return sums;
+        }
+        //https://www.algoexpert.io/questions/search-in-sorted-matrix
+        public static int[] SearchInMatrix(int[,] matrix, int target){
+            //1.Naive - pair of loops
+            //T:O(n^2) | S:O(1)
+
+            //2. Leveraging facts that rows and columns of matrix sorted
+
+            int row =0;
+            int col= matrix.GetLength(1)-1;
+            while(row < matrix.GetLength(0) && col >=0){
+
+                if(matrix [row, col] > target){
+                    col--;
+                }else if(matrix[row, col] < target){
+                    row++;
+                }else{
+                    return new int[]{row, col};
+                }
+            }
+            return new int[]{-1, -1};
+        }
+        //https://www.algoexpert.io/questions/minimum-area-rectangle
+        public static int MinimumAreaRectangle(int[][] points){
+
+            if(points.Length < 4) return 0;
+            //1.Naive - 4 pair/nested of loops to generate all possible combinations of 4 points and find minimum area among rectangles found
+            //T:O(n^4) | S:O(1)
+
+            //2.Optimal - edge pairing algo- find parallel points vertically and horizontally to see if they can form rectangles
+            //T:O(n^2) | S:O(n) - n is number of points
+            int minAreaRect = MinimumAreaRectangleOptimal(points);
+            
+            //3.Optimal - simplified -find two opposite end points and try to match them with any two points to see if they can form rectangles
+            //T:O(n^2) | S:O(n) - n is number of points
+            minAreaRect = MinimumAreaRectangleOptima2(points);
+
+            return minAreaRect != Int32.MinValue ? minAreaRect :0;
+            
+        }
+
+        private static int MinimumAreaRectangleOptima2(int[][] points)
+        {
+            HashSet<string> pointSet =CreatePointSet(points);
+            int minAreaRect = Int32.MaxValue;
+            for(int curIdx=0; curIdx < points.Length; curIdx++){
+
+                int p2x = points[curIdx][0];
+                int p2y = points[curIdx][1];
+                
+                for(int prevIdx=0; prevIdx < curIdx; prevIdx++){
+    
+                    int p1x = points[prevIdx][0];
+                    int p1y = points[prevIdx][1];
+                
+                    bool pointsShareValue = p1x == p2x || p2y == p1y;
+                    if(pointsShareValue) continue;
+
+                    bool point1OnOppositDirectionExists = pointSet.Contains(ConvertPointToString(p1x,p2y));
+                    bool point2OnOppositDirectionExists = pointSet.Contains(ConvertPointToString(p2x,p1y));
+
+                    bool oppositeDiagonalExists = point1OnOppositDirectionExists && point2OnOppositDirectionExists;
+
+                    if(oppositeDiagonalExists){
+                        int curArea = Math.Abs(p1x-p2x) * Math.Abs(p1y-p2y);
+                        minAreaRect = Math.Min(minAreaRect, curArea);
+                    }
+                }
+                
+            }
+            return minAreaRect;
+        }
+
+        private static string ConvertPointToString(int x, int y)
+        {
+            return x.ToString()+":"+y.ToString();
+        }
+
+        private static HashSet<string> CreatePointSet(int[][] points)
+        {
+            HashSet<string> pointSet = new HashSet<string>();
+            foreach(var point in points){
+                int x = point[0];
+                int y= point[1];
+                string pointStr = x.ToString()+"-"+y.ToString();
+                pointSet.Add(pointStr);
+            }
+            return pointSet;
+        }
+
+        private static int MinimumAreaRectangleOptimal(int[][] points)
+        {
+            Dictionary<int, int[]> columns = InitializeColumns(points);
+            int minAreaRect= Int32.MaxValue;
+            Dictionary<string, int> edgesParallelToYAxis = new Dictionary<string, int>();
+            List<int> sortedColumns = new List<int>(columns.Keys);
+            sortedColumns.Sort();
+
+            foreach(var x in sortedColumns){
+                int[] yValuesInCurrentColumn = columns[x];
+                Array.Sort(yValuesInCurrentColumn);
+
+                for(int curIdx=0; curIdx < yValuesInCurrentColumn.Length; curIdx++){
+                    int y2 = yValuesInCurrentColumn[curIdx];
+                    for(int prevIdx=0; prevIdx< curIdx; prevIdx++){
+                        int y1= yValuesInCurrentColumn[prevIdx];
+                        string pointString = y1.ToString()+":"+y2.ToString();
+
+                        if(edgesParallelToYAxis.ContainsKey(pointString)){
+                            int currArea = (x - edgesParallelToYAxis[pointString] * y2-y1);
+                            minAreaRect = Math.Min(minAreaRect, currArea);
+                        }
+                        edgesParallelToYAxis[pointString] = x;
+                    }
+                }
+            }
+            return minAreaRect;
+        }
+
+        private static Dictionary<int, int[]> InitializeColumns(int[][] points)
+        {
+            Dictionary<int, int[]> columns = new Dictionary<int, int[]>();
+            
+            foreach(var point in points){
+                int x = point[0];
+                int y = point[1];
+
+                if(!columns.ContainsKey(x)){
+                    columns[x]= new int[]{};
+                }
+                int[] column = columns[x];
+                int[] newColumn = new int[column.Length+1];
+                for(int i=0; i< column.Length; i++){
+                    newColumn[i] = column[i];
+                }
+                newColumn[column.Length]=y;
+                columns[x] = newColumn;
+            }
+            return columns;
+        }
+        //https://www.algoexpert.io/questions/number-of-ways-to-traverse-graph
+        public static int NumberOfWaysToTraverseGraph(int width, int height){
+            
+            //1.Naive 
+            //T:O(2^(n+m)) |S:O(n+m)
+            int numWaysToTraverseGraph = NumberOfWaysToTraverseGraphNaive(width, height);
+
+            //2.Optimal - using Dynamic Programming aka memoization
+            //T:O(n*m) |S:O(n*m)
+            numWaysToTraverseGraph = NumberOfWaysToTraverseGraphOptimal1(width, height);
+
+            //3.Optimal - using math formual for permutations among given sets ex: (3, 2) representing width and height
+            //T:O(n+m) |S:O(1)
+            numWaysToTraverseGraph = NumberOfWaysToTraverseGraphOptimal2(width, height);
+            return numWaysToTraverseGraph;
+        }
+
+        private static int NumberOfWaysToTraverseGraphOptimal2(int width, int height)
+        {
+            int xDistinaceToCorner = width -1;
+            int yDistanceToCorner = height-1;
+
+            //The number of permutations of right and down movements 
+                                            //is the number of ways to reach the bottom right corner
+            //(n+r)!/n!*r!
+            int numerator = Factorial(xDistinaceToCorner+yDistanceToCorner);
+            int denominator = Factorial(xDistinaceToCorner) * Factorial (yDistanceToCorner);
+
+            return numerator/denominator;
+        }
+
+        private static int Factorial(int num)
+        {
+            int result =1;
+            for(int i=2; i<=num; i++)
+                result *=i;
+            
+            return result;
+        }   
+
+        private static int NumberOfWaysToTraverseGraphOptimal1(int width, int height)
+        {   
+            //Heigh =>Row And Width =>Column
+            int[,] numberOfWays = new int[height+1, width+1];
+
+            for(int widthIdx=1; widthIdx < width+1; widthIdx++){
+
+                for(int heightIdx =1; heightIdx < height+1; heightIdx++){
+
+                    if(widthIdx == 1 || heightIdx == 1){
+                        numberOfWays[heightIdx, widthIdx] = 1;
+                    }
+                    else{
+                        int waysLeft = numberOfWays[heightIdx, widthIdx-1];
+                        int waysRight = numberOfWays[heightIdx-1, widthIdx];
+                        numberOfWays[heightIdx, widthIdx]= waysLeft + waysRight;
+
+                    }
+
+                }
+            }
+            return numberOfWays[height, width];
+        }
+
+        private static int NumberOfWaysToTraverseGraphNaive(int width, int height)
+        {
+            if(width == 1 || height ==1) return 1;
+
+            return NumberOfWaysToTraverseGraphNaive(width-1, height)+
+                    NumberOfWaysToTraverseGraphNaive(width, height-1);
+                
+        }
+        //https://www.algoexpert.io/questions/two-colorable
+        public static bool TwoColorables(int[][] edges){
+
+            //T:O(v+e) | S:O(v)
+            int[] colors = new int[edges.Length];
+            colors[0]=1;
+            Stack<int> stack = new Stack<int>();
+            stack.Push(0);
+
+            while(stack.Count > 0){
+                int node = stack.Pop();
+                foreach(var connection in edges[node]){
+                    if(colors[connection] ==0){
+                        colors[connection] = colors[node]==1?2:1;
+                        stack.Push(connection);
+                    }else if(colors[connection] == colors[node])
+                        return false;
+                }
+            }
+            return true;
+
+        }
     }
+
+   
 }

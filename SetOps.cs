@@ -7,13 +7,14 @@ namespace AlgoDSPlay
 {
     public class SetOps
     {
+        //https://www.algoexpert.io/questions/powerset
         public static List<List<int>> GeneratePowerSet(List<int> array){
 
 
-            //1.Iterative - T:O(2^n*n) | O(2^n*n)
+            //1.Iterative - T:O(n*2^n) | O(n*2^n)
             List<List<int>> powersets = GeneratePowerSetIterative(array );
 
-            //2.Recursive - T:O(2^n*n) | O(2^n*n)
+            //2.Recursive - T:O(n*2^n) | O(n*2^n)
             powersets = GeneratePowerSetRecursive(array, array.Count-1);
             return powersets;
         }

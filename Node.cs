@@ -10,8 +10,8 @@ namespace AlgoDSPlay
             public int Row;
             public int Col;
             public int Value;
-            public int distanceFromStart; //F
-            public int estimatedDistanceToEnd; //H
+            public int distanceFromStart; //G
+            public int estimatedDistanceToEnd; //F
 
             public Node? CameFrom;
 

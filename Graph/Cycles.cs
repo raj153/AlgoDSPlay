@@ -19,7 +19,9 @@ namespace AlgoDSPlay.Graph
  
         }
 
-        static int WHITE=0, GREY=1, BLACK=2;
+        static int WHITE=0; //unvisited, 
+        static int GREY=1; //Visited and Instack 
+        static int  BLACK=2; //Visited and Finished traversing 
         private static bool CycleInGrah2(int[][] edges)
         {
             int numberOfNodes = edges.Length;
