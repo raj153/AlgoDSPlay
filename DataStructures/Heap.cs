@@ -5,31 +5,33 @@ using System.Threading.Tasks;
 
 namespace AlgoDSPlay.DataStructures
 {
-    public class Heap
+    public class Heap<T>
     {
-        private List<int> _heap;
-        private Func<int, int, bool> _comparisionFunc;
-        public int _length;
+        private List<T> _heap;
+        private Func<T, T, bool> _comparisionFunc;
 
-        public Heap(List<int> array, Func<int, int, bool> comparisionFunc){
+        public Heap(List<T> array, Func<T, T, bool> comparisionFunc){
             this._comparisionFunc= comparisionFunc;
             this._heap = BuildHeap(array);            
-            this._length= this._heap.Count;
         }
-        public int Peek(){
+        public T Peek(){
             return this._heap[0];
         }
-        public int Remove(){
+        public bool IsEmpty(){
+            return _heap.Count ==00;
+        }
+        public int Count{
+            get{ return _heap.Count;}
+        }
+        public T Remove(){
             this.Swap(0, _heap.Count-1,_heap);
-            int valueToRemove = _heap[_heap.Count-1];
+            T valueToRemove = _heap[_heap.Count-1];
             this._heap.RemoveAt(_heap.Count-1);
-            this._length -=1;
             this.SiftDown(0,_heap.Count -1,_heap);
             return valueToRemove;
         }
-        public void Insert(int value){
+        public void Insert(T value){
             this._heap.Add(value);
-            this._length+=1;
             this.SiftUp(_heap.Count-1);
         }
 
@@ -44,7 +46,7 @@ namespace AlgoDSPlay.DataStructures
                 
             }
         }
-        private List<int> BuildHeap(List<int> array){
+        private List<T> BuildHeap(List<T> array){
             int firstParentIdx = (array.Count -2)/2;
             for(int currentIdx=firstParentIdx; currentIdx>=0; currentIdx--){
                 this.SiftDown(currentIdx, array.Count-1, array);
@@ -52,7 +54,7 @@ namespace AlgoDSPlay.DataStructures
             return array;
         }
 
-        private void SiftDown(int currentIdx, int endIdx, List<int> heap){
+        private void SiftDown(int currentIdx, int endIdx, List<T> heap){
             int childOneIdx = currentIdx*2+1;
             while(childOneIdx <= endIdx){
                 int childTwoIdx = currentIdx *2+2 <= endIdx ? currentIdx*2+2:-1;
@@ -74,9 +76,9 @@ namespace AlgoDSPlay.DataStructures
             }           
         }
 
-        private void Swap(int currentIdx, int idxToSwap, List<int> heap)
+        private void Swap(int currentIdx, int idxToSwap, List<T> heap)
         {
-            int temp = heap[currentIdx];
+            T temp = heap[currentIdx];
             heap[currentIdx] = heap[idxToSwap];
             heap[idxToSwap] = temp; 
         }

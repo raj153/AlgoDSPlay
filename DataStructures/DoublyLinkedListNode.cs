@@ -20,7 +20,13 @@ namespace AlgoDSPlay.DataStructures
 
         public void RemoveBindings()
         {
-            throw new NotImplementedException();
+            if(prev!=null)
+                prev.next = next;
+            if(next != null)
+                next.prev = prev;
+            
+            prev=null;
+            next=null;
         }
     }
 }
