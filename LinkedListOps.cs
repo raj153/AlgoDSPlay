@@ -11,23 +11,28 @@ namespace AlgoDSPlay
 {
     public class LinkedListOps
     {
-        public static void RemoveKthNodeFromEnd(LinkedList head, int k){
+        //https://www.algoexpert.io/questions/remove-kth-node-from-end
+        public static void RemoveKthNodeFromEnd(LinkedList head, int k)
+        {
             //T:O(n)| S:O(1)
-            int counter=1;
+            int counter = 1;
             LinkedList first = head;
             LinkedList second = head;
-            while(counter <=k){
+            while (counter <= k)
+            {
                 second = second.Next;
                 counter++;
             }
 
-            if(second == null){
+            if (second == null)
+            {
                 //0->1->2->Null
                 head.Value = head.Next.Value;
                 head.Next = head.Next.Next;
                 return;
             }
-            while(second.Next != null){
+            while (second.Next != null)
+            {
                 second = second.Next;
                 first = first.Next;
             }
@@ -36,11 +41,12 @@ namespace AlgoDSPlay
         }
 
         //https://www.algoexpert.io/questions/merge-linked-lists
-        public static LinkedList MergeLinkedLists(LinkedList headOne, LinkedList headTwo){
+        public static LinkedList MergeLinkedLists(LinkedList headOne, LinkedList headTwo)
+        {
             //1.Iterative - T:O(n+m)| S: O(1)
             LinkedList mergedList = MergeLinkedListsIterative(headOne, headTwo);
-            //2.Recursion - T:O(n+m) S:(n+m)
-            TODO:
+        //2.Recursion - T:O(n+m) S:(n+m)
+        TODO:
             return mergedList;
         }
 
@@ -50,27 +56,32 @@ namespace AlgoDSPlay
             LinkedList p2 = headTwo;
             LinkedList p1Prev = null;
 
-            while(p1 != null && p2 != null){
-                if(p1.Value < p2.Value){
+            while (p1 != null && p2 != null)
+            {
+                if (p1.Value < p2.Value)
+                {
                     p1Prev = p1;
-                    p1=p1.Next;
-                }else{
+                    p1 = p1.Next;
+                }
+                else
+                {
 
-                    if(p1Prev != null)
-                        p1Prev.Next=p2;
+                    if (p1Prev != null)
+                        p1Prev.Next = p2;
                     p1Prev = p2;
                     p2 = p2.Next;
                     p1Prev.Next = p1;
                 }
             }
-            if(p1 == null) p1Prev.Next = p2;
+            if (p1 == null) p1Prev.Next = p2;
 
-            return headOne.Value< headTwo.Value ? headOne: headTwo;
+            return headOne.Value < headTwo.Value ? headOne : headTwo;
         }
         //https://www.algoexpert.io/questions/middle-node
-        public static LinkedList MiddleNode(LinkedList linkedList){
-            LinkedList node=default;
-            
+        public static LinkedList MiddleNode(LinkedList linkedList)
+        {
+            LinkedList node = default;
+
             //1.Naive - T:O(n) | S:O(1)
             node = MiddleNodeNaive(linkedList);
 
@@ -83,10 +94,10 @@ namespace AlgoDSPlay
 
         private static LinkedList? MiddleNodeTwoPointer(LinkedList linkedList)
         {
-            LinkedList slowNode=linkedList, fastNode=linkedList;
-            
-            
-            while(fastNode !=null && fastNode.Next != null)
+            LinkedList slowNode = linkedList, fastNode = linkedList;
+
+
+            while (fastNode != null && fastNode.Next != null)
             {
                 slowNode = slowNode.Next;
                 fastNode = fastNode.Next.Next;
@@ -97,18 +108,19 @@ namespace AlgoDSPlay
 
         private static LinkedList? MiddleNodeNaive(LinkedList linkedList)
         {
-            int count =0;
+            int count = 0;
 
             LinkedList currentNode = linkedList;
 
-            while(currentNode != null)
+            while (currentNode != null)
             {
                 count++;
-                currentNode= currentNode.Next;
+                currentNode = currentNode.Next;
             }
             LinkedList middleNode = linkedList;
 
-            for(int i=0; i<count/2; i++){
+            for (int i = 0; i < count / 2; i++)
+            {
                 middleNode = middleNode.Next;
             }
 
@@ -116,13 +128,15 @@ namespace AlgoDSPlay
 
         }
         //https://www.algoexpert.io/questions/remove-duplicates-from-linked-list
-        public static LinkedList RemoveDuplicatesFromLinkedList(LinkedList linkedList){
+        public static LinkedList RemoveDuplicatesFromLinkedList(LinkedList linkedList)
+        {
 
             //T:O(n) | S:O(1)
             LinkedList currentNode = linkedList;
-            while(currentNode != null){
-                LinkedList nextDistinctNode = currentNode.Next;                                
-                while(nextDistinctNode !=null &&
+            while (currentNode != null)
+            {
+                LinkedList nextDistinctNode = currentNode.Next;
+                while (nextDistinctNode != null &&
                         currentNode.Value == nextDistinctNode.Value)
                 {
 
@@ -134,66 +148,76 @@ namespace AlgoDSPlay
             return linkedList;
         }
 
-        public static LinkedList RemoveDuplicatesFromLinkedList1(LinkedList linkedList){
+        public static LinkedList RemoveDuplicatesFromLinkedList1(LinkedList linkedList)
+        {
             LinkedList currentNode = linkedList;
             LinkedList prevNode = null;
             int prevNodeVal = Int32.MinValue;
-            
-            while(currentNode != null){          
-                if(prevNodeVal != Int32.MinValue && prevNodeVal == currentNode.Value){
-                        prevNode.Next = currentNode.Next;
-                        currentNode = currentNode.Next;
-                            
-                }else{
+
+            while (currentNode != null)
+            {
+                if (prevNodeVal != Int32.MinValue && prevNodeVal == currentNode.Value)
+                {
+                    prevNode.Next = currentNode.Next;
+                    currentNode = currentNode.Next;
+
+                }
+                else
+                {
                     prevNode = currentNode;
                     prevNodeVal = currentNode.Value;
                     currentNode = currentNode.Next;
                 }
-          
-          
+
+
             }
             // Write your code here.
             return linkedList;
 
         }
         //https://www.algoexpert.io/questions/merging-linked-lists
-        public static LinkedList MergingLinkedLists(LinkedList linkedList1, LinkedList linkedList2){
+        public static LinkedList MergingLinkedLists(LinkedList linkedList1, LinkedList linkedList2)
+        {
 
             //1.Naive - T:O(n+m) | S:O(n) - Using HashSet
-            LinkedList intersectNode =MergingLinkedListsNaive(linkedList1, linkedList2);
+            LinkedList intersectNode = MergingLinkedListsNaive(linkedList1, linkedList2);
 
             //2.Optimla w/ou extra space - T:O(n+m) | S:O(1) 
-            intersectNode =MergingLinkedListsOptimal(linkedList1, linkedList2);
+            intersectNode = MergingLinkedListsOptimal(linkedList1, linkedList2);
 
             return intersectNode;
 
-            
+
         }
 
         private static LinkedList MergingLinkedListsOptimal(LinkedList linkedList1, LinkedList linkedList2)
         {
             LinkedList currentNodeOne = linkedList1;
-            int countOne =0;
-            while(currentNodeOne != null){
+            int countOne = 0;
+            while (currentNodeOne != null)
+            {
                 countOne++;
                 currentNodeOne = currentNodeOne.Next;
             }
             LinkedList currentNodeTwo = linkedList2;
-            int countTwo=0;
-            while(currentNodeTwo != null){
+            int countTwo = 0;
+            while (currentNodeTwo != null)
+            {
                 countTwo++;
                 currentNodeTwo = currentNodeTwo.Next;
             }
 
-            int difference = Math.Abs(countTwo-countOne);
+            int difference = Math.Abs(countTwo - countOne);
 
             LinkedList biggerCurrentNode = countOne > countTwo ? linkedList1 : linkedList2;
             LinkedList smallerCurrentNode = countOne > countTwo ? linkedList2 : linkedList1;
 
-            for(int i=0; i< difference; i++){
+            for (int i = 0; i < difference; i++)
+            {
                 biggerCurrentNode = biggerCurrentNode.Next;
             }
-            while(biggerCurrentNode != smallerCurrentNode){
+            while (biggerCurrentNode != smallerCurrentNode)
+            {
                 biggerCurrentNode = biggerCurrentNode.Next;
                 smallerCurrentNode = smallerCurrentNode.Next;
             }
@@ -205,16 +229,18 @@ namespace AlgoDSPlay
             HashSet<LinkedList> listOneNodeSet = new HashSet<LinkedList>();
 
             LinkedList currentNodeOne = linkedList1;
-            while(currentNodeOne != null){
+            while (currentNodeOne != null)
+            {
                 listOneNodeSet.Add(currentNodeOne);
                 currentNodeOne = currentNodeOne.Next;
             }
 
-            LinkedList currentNodeTwo =  linkedList2;
+            LinkedList currentNodeTwo = linkedList2;
 
-            while(currentNodeTwo != null){
+            while (currentNodeTwo != null)
+            {
 
-                if(listOneNodeSet.Contains(currentNodeTwo))
+                if (listOneNodeSet.Contains(currentNodeTwo))
                     return currentNodeTwo;
                 currentNodeTwo = currentNodeTwo.Next;
             }
@@ -223,7 +249,8 @@ namespace AlgoDSPlay
 
         }
         //https://www.algoexpert.io/questions/find-loop
-        public static LinkedList FindLoop(LinkedList head){
+        public static LinkedList FindLoop(LinkedList head)
+        {
 
             //1.Naive - Using Set to store nodes and loop exists if a node exists in Set
             //T:O(n) : S:O(1)
@@ -233,37 +260,42 @@ namespace AlgoDSPlay
             LinkedList slow = head;
             LinkedList fast = head.Next.Next;
 
-            while(slow != fast){
+            while (slow != fast)
+            {
                 slow = slow.Next;
                 fast = fast.Next.Next;
             }
             slow = head;
-            while(slow != fast){
+            while (slow != fast)
+            {
 
                 slow = slow.Next;
-                fast  = fast.Next;
+                fast = fast.Next;
             }
             return slow;
 
         }
         //https://www.algoexpert.io/questions/reverse-linked-list
-        public static LinkedList ReverseLinkedList(LinkedList head) {
+        public static LinkedList ReverseLinkedList(LinkedList head)
+        {
             //T:O(n) | S:O(1)
             LinkedList prevNode = null;
             LinkedList currNode = head;
 
-            while(currNode != null){
+            while (currNode != null)
+            {
                 LinkedList nxtNode = currNode.Next;
-                currNode.Next= prevNode;
+                currNode.Next = prevNode;
                 prevNode = currNode;
                 currNode = nxtNode;
-                
+
             }
-           return prevNode;
+            return prevNode;
         }
 
         //https://www.algoexpert.io/questions/node-swap
-        public static LinkedList NodeSwap(LinkedList head){
+        public static LinkedList NodeSwap(LinkedList head)
+        {
 
             //1.Recurvie with Call stack space
             //T:O(n) | S:O(n)
@@ -282,12 +314,13 @@ namespace AlgoDSPlay
             tempNode.Next = head;
 
             LinkedList prevNode = tempNode;
-            while(prevNode.Next != null && prevNode.Next.Next != null){
-                LinkedList  firstNode = prevNode.Next;
-                LinkedList secondNode =  prevNode.Next.Next;
+            while (prevNode.Next != null && prevNode.Next.Next != null)
+            {
+                LinkedList firstNode = prevNode.Next;
+                LinkedList secondNode = prevNode.Next.Next;
 
                 firstNode.Next = secondNode.Next;
-                secondNode.Next =firstNode;
+                secondNode.Next = firstNode;
                 prevNode.Next = secondNode;
 
                 prevNode = firstNode;
@@ -297,13 +330,259 @@ namespace AlgoDSPlay
 
         private static LinkedList NodeSwapOptimal1(LinkedList head)
         {
-            if(head == null && head.Next ==null) return head;
+            if (head == null && head.Next == null) return head;
 
             LinkedList nextNode = head.Next;
-            head.Next =NodeSwapOptimal1(head.Next);
+            head.Next = NodeSwapOptimal1(head.Next);
             nextNode.Next = head;
             return nextNode;
         }
-    }
 
+        //https://www.algoexpert.io/questions/rearrange-linked-list
+        // O(n) time | O(1) space - where n is the number of nodes in the Linked List
+        public static LinkedList RearrangeLinkedList(LinkedList head, int k)
+        {
+            LinkedList smallerListHead = null;
+            LinkedList smallerListTail = null;
+            LinkedList equalListHead = null;
+            LinkedList equalListTail = null;
+            LinkedList greaterListHead = null;
+            LinkedList greaterListTail = null;
+
+            LinkedList node = head;
+            while (node != null)
+            {
+                if (node.Value < k)
+                {
+                    LinkedListPair smallerList =
+                      growLinkedList(smallerListHead, smallerListTail, node);
+                    smallerListHead = smallerList.head;
+                    smallerListTail = smallerList.tail;
+                }
+                else if (node.Value > k)
+                {
+                    LinkedListPair greaterList =
+                      growLinkedList(greaterListHead, greaterListTail, node);
+                    greaterListHead = greaterList.head;
+                    greaterListTail = greaterList.tail;
+                }
+                else
+                {
+                    LinkedListPair equalList =
+                      growLinkedList(equalListHead, equalListTail, node);
+                    equalListHead = equalList.head;
+                    equalListTail = equalList.tail;
+                }
+
+                LinkedList prevNode = node;
+                node = node.Next;
+                prevNode.Next = null;
+            }
+
+            LinkedListPair firstPair = connectLinkedLists(
+              smallerListHead, smallerListTail, equalListHead, equalListTail
+            );
+            LinkedListPair finalPair = connectLinkedLists(
+              firstPair.head, firstPair.tail, greaterListHead, greaterListTail
+            );
+            return finalPair.head;
+        }
+
+        public static LinkedListPair growLinkedList(
+          LinkedList head, LinkedList tail, LinkedList node
+        )
+        {
+            LinkedList newHead = head;
+            LinkedList newTail = node;
+
+            if (newHead == null) newHead = node;
+            if (tail != null) tail.Next = node;
+
+            return new LinkedListPair(newHead, newTail);
+        }
+
+        public static LinkedListPair connectLinkedLists(
+          LinkedList headOne,
+          LinkedList tailOne,
+          LinkedList headTwo,
+          LinkedList tailTwo
+        )
+        {
+            LinkedList newHead = headOne == null ? headTwo : headOne;
+            LinkedList newTail = tailTwo == null ? tailOne : tailTwo;
+
+            if (tailOne != null) tailOne.Next = headTwo;
+
+            return new LinkedListPair(newHead, newTail);
+
+        }
+        public class LinkedListPair
+        {
+            public LinkedList head;
+            public LinkedList tail;
+
+            public LinkedListPair(LinkedList head, LinkedList tail)
+            {
+                this.head = head;
+                this.tail = tail;
+            }
+        }
+
+        
+        public class LinkedList
+        {
+            public int Value;
+            public LinkedList Next = null;
+
+            public LinkedList(int value)
+            {
+                this.Value = value;
+            }
+        }
+        //https://www.algoexpert.io/questions/sum-of-linked-lists
+        // O(max(n, m)) time | O(max(n, m)) space - where n is the length of the
+        // first Linked List and m is the length of the second Linked List
+        public LinkedList SumOfLinkedLists(
+          LinkedList linkedListOne, LinkedList linkedListTwo
+        )
+        {
+            // This variable will store a dummy node whose .Next
+            // attribute will point to the head of our new LL.
+            LinkedList newLinkedListHeadPointer = new LinkedList(0);
+            LinkedList currentNode = newLinkedListHeadPointer;
+            int carry = 0;
+
+            LinkedList nodeOne = linkedListOne;
+            LinkedList nodeTwo = linkedListTwo;
+
+            while (nodeOne != null || nodeTwo != null || carry != 0)
+            {
+                int valueOne = (nodeOne != null) ? nodeOne.Value : 0;
+                int valueTwo = (nodeTwo != null) ? nodeTwo.Value : 0;
+                int sumOfValues = valueOne + valueTwo + carry;
+
+                int newValue = sumOfValues % 10;
+                LinkedList newNode = new LinkedList(newValue);
+                currentNode.Next = newNode;
+                currentNode = newNode;
+
+                carry = sumOfValues / 10;
+                nodeOne = (nodeOne != null) ? nodeOne.Next : null;
+                nodeTwo = (nodeTwo != null) ? nodeTwo.Next : null;
+            }
+
+            return newLinkedListHeadPointer.Next;
+        }
+        //https://www.algoexpert.io/questions/shift-linked-list
+        // O(n) time | O(1) space - where n is the number of nodes in the Linked List
+        public static LinkedList ShiftLinkedList(LinkedList head, int k)
+        {
+            int listLength = 1;
+            LinkedList listTail = head;
+            while (listTail.Next != null)
+            {
+                listTail = listTail.Next;
+                listLength++;
+            }
+
+            int offset = Math.Abs(k) % listLength;
+            if (offset == 0) return head;
+            int newTailPosition = k > 0 ? listLength - offset : offset;
+            LinkedList newTail = head;
+            for (int i = 1; i < newTailPosition; i++)
+            {
+                newTail = newTail.Next;
+            }
+
+            LinkedList newHead = newTail.Next;
+            newTail.Next = null;
+            listTail.Next = head;
+            return newHead;
+        }
+        //https://www.algoexpert.io/questions/linked-list-
+
+        //1.
+        // O(n) time | O(n) space - where n is the number of nodes in the Linked List
+        public bool LinkedListPalindromeNaive(LinkedList head)
+        {
+            LinkedListInfo isPalindromeResults = isPalindrome(head, head);
+            return isPalindromeResults.outerNodesAreEqual;
+        }
+
+        public LinkedListInfo isPalindrome(
+          LinkedList leftNode, LinkedList rightNode
+        )
+        {
+            if (rightNode == null) return new LinkedListInfo(true, leftNode);
+
+            LinkedListInfo recursiveCallResults =
+              isPalindrome(leftNode, rightNode.Next);
+            LinkedList leftNodeToCompare = recursiveCallResults.leftNodeToCompare;
+            bool outerNodesAreEqual = recursiveCallResults.outerNodesAreEqual;
+
+            bool recursiveIsEqual =
+              outerNodesAreEqual && (leftNodeToCompare.Value == rightNode.Value);
+            LinkedList nextLeftNodeToCompare = leftNodeToCompare.Next;
+
+            return new LinkedListInfo(recursiveIsEqual, nextLeftNodeToCompare);
+        }
+
+        //2.
+        // O(n) time | O(1) space - where n is the number of nodes in the Linked List
+        public bool LinkedListPalindrome(LinkedList head)
+        {
+            LinkedList slowNode = head;
+            LinkedList fastNode = head;
+
+            while (fastNode != null && fastNode.Next != null)
+            {
+                slowNode = slowNode.Next;
+                fastNode = fastNode.Next.Next;
+            }
+
+            LinkedList reversedSecondHalfNode = reverseLinkedList(slowNode);
+            LinkedList firstHalfNode = head;
+
+            while (reversedSecondHalfNode != null)
+            {
+                if (reversedSecondHalfNode.Value != firstHalfNode.Value) return false;
+                reversedSecondHalfNode = reversedSecondHalfNode.Next;
+                firstHalfNode = firstHalfNode.Next;
+            }
+
+            return true;
+        }
+
+        public static LinkedList reverseLinkedList(LinkedList head)
+        {
+            LinkedList previousNode = null;
+            LinkedList currentNode = head;
+            while (currentNode != null)
+            {
+                LinkedList nextNode = currentNode.Next;
+                currentNode.Next = previousNode;
+                previousNode = currentNode;
+                currentNode = nextNode;
+            }
+            return previousNode;
+        }
+
+        public class LinkedListInfo
+        {
+            public bool outerNodesAreEqual;
+            public LinkedList leftNodeToCompare;
+            public LinkedListInfo(
+              bool outerNodesAreEqual, LinkedList leftNodeToCompare
+            )
+            {
+                this.outerNodesAreEqual = outerNodesAreEqual;
+                this.leftNodeToCompare = leftNodeToCompare;
+            }
+        }
+
+        
+
+
+
+    }
 }

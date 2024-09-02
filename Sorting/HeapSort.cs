@@ -5,10 +5,13 @@ using System.Threading.Tasks;
 
 namespace AlgoDSPlay.Sorting
 {
+    //https://www.algoexpert.io/questions/heap-sort
     public class HeapSort
     {
         public static int[] Sort(int[] array){
-            //T:O(nlogn) | S:O(1)
+            // Best: O(nlog(n)) time | O(1) space
+            // Average: O(nlog(n)) time | O(1) space
+            // Worst: O(nlog(n)) time | O(1) space
             BuildMaxHeap(array);
             for(int endIdx=array.Length-1; endIdx>0; endIdx--){
                 Swap(0, endIdx, array);

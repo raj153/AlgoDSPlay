@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace AlgoDSPlay
 {
-    public class Node{
+    public class NodeExt{
             public string Id{get;set;}
             public int Row;
             public int Col;
@@ -13,9 +13,9 @@ namespace AlgoDSPlay
             public int distanceFromStart; //G
             public int estimatedDistanceToEnd; //F
 
-            public Node? CameFrom;
+            public NodeExt? CameFrom;
 
-            public Node(int row, int col, int value){
+            public NodeExt(int row, int col, int value){
 
                 this.Id = row.ToString() +"-"+col.ToString();
                 this.Row= row;

@@ -7,6 +7,9 @@ namespace AlgoDSPlay.DataStructures
 {
     //https://www.algoexpert.io/questions/union-find
     //https://algodaily.com/lessons/what-to-know-about-the-union-find-algorithm
+    //UnionFind/DisjointSet
+    //https://www.geeksforgeeks.org/introduction-to-disjoint-set-data-structure-or-union-find-algorithm/
+
     public class UnionFind
     {
         private Dictionary<int, int> parents = new Dictionary<int, int>();
@@ -90,7 +93,7 @@ namespace AlgoDSPlay.DataStructures
         //T:O(alpha(n)), approximately O(1) | S:O(alpha(n)), approximately O(1)
         //Leaveraging Ranks
         public void Union(int valueOne, int valueTwo){
-            if(!parents.ContainsKey(valueTwo) || !parents.ContainsKey(valueTwo))
+            if(!parents.ContainsKey(valueOne) || !parents.ContainsKey(valueTwo))
                 return;
             
             int valueOneRoot = (int)Find(valueOne);

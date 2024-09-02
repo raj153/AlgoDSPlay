@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 
 namespace AlgoDSPlay.Sorting
 {
+    //https://www.algoexpert.io/questions/bubble-sort
     public class BubbleSort
     {
         public static List<int> Sort(List<int> numArray){

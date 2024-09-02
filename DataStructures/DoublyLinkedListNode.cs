@@ -9,8 +9,8 @@ namespace AlgoDSPlay.DataStructures
     {
         public T1 Key;
         public T2 Value;
-        public DoublyLinkedListNode<T1, T2> prev = null;
-        public DoublyLinkedListNode<T1,T2> next = null;
+        public DoublyLinkedListNode<T1, T2> Prev = null;
+        public DoublyLinkedListNode<T1,T2> Next = null;
 
 
         public DoublyLinkedListNode(T1 key, T2 value){
@@ -20,13 +20,13 @@ namespace AlgoDSPlay.DataStructures
 
         public void RemoveBindings()
         {
-            if(prev!=null)
-                prev.next = next;
-            if(next != null)
-                next.prev = prev;
+            if(Prev!=null)
+                Prev.Next = Next;
+            if(Next != null)
+                Next.Prev = Prev;
             
-            prev=null;
-            next=null;
+            Prev=null;
+            Next=null;
         }
     }
 }

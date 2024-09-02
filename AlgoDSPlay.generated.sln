@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.5.002.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AlgoDSPlay", "AlgoDSPlay.csproj", "{B9886E54-71ED-4BB4-B382-15457B9C6D8A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AlgoDSPlay", "AlgoDSPlay.csproj", "{E0978050-0C10-464F-B565-6B7326E97883}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,10 +11,10 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{B9886E54-71ED-4BB4-B382-15457B9C6D8A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B9886E54-71ED-4BB4-B382-15457B9C6D8A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B9886E54-71ED-4BB4-B382-15457B9C6D8A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B9886E54-71ED-4BB4-B382-15457B9C6D8A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E0978050-0C10-464F-B565-6B7326E97883}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E0978050-0C10-464F-B565-6B7326E97883}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E0978050-0C10-464F-B565-6B7326E97883}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E0978050-0C10-464F-B565-6B7326E97883}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

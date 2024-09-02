@@ -7,19 +7,19 @@ namespace AlgoDSPlay.DataStructures
 {
     public class MinHeapForAStarAlgo
     {
-        List<Node> heap = new List<Node>();
+        List<NodeExt> heap = new List<NodeExt>();
         Dictionary<string, int> nodePositionInHeap = new Dictionary<string, int>();
 
-        public MinHeapForAStarAlgo(List<Node> array){
+        public MinHeapForAStarAlgo(List<NodeExt> array){
             for(int i=0; i< array.Count; i++){
-                Node node = array[i];
+                NodeExt node = array[i];
                 nodePositionInHeap[node.Id]=i;
             }
             heap = BuildHeap(array);
         }
 
         //T:O(n) | S:O(1)
-        private List<Node> BuildHeap(List<Node> array)
+        private List<NodeExt> BuildHeap(List<NodeExt> array)
         {
             int firstParentIdx = (array.Count-2)/2;
             for(int currentIdx=firstParentIdx+1; currentIdx >=0; currentIdx--){
@@ -32,7 +32,7 @@ namespace AlgoDSPlay.DataStructures
         }
 
         //T:O(log(n)) | S:O(1)
-        private void SiftDown(int currentIdx, int endIdx, List<Node> array)
+        private void SiftDown(int currentIdx, int endIdx, List<NodeExt> array)
         {
             int childOneIdx = currentIdx*2+1;
             while(childOneIdx <= endIdx){
@@ -65,26 +65,26 @@ namespace AlgoDSPlay.DataStructures
             }
         }
         
-        public Node Remove(){
+        public NodeExt Remove(){
             if(IsEmpty()) return null;
 
             Swap(0, heap.Count-1);
-            Node node = heap[heap.Count-1];
+            NodeExt node = heap[heap.Count-1];
             heap.RemoveAt(heap.Count-1);
             nodePositionInHeap.Remove(node.Id);
             SiftDown(0, heap.Count-1, heap);
             return node;
 
         }
-        public void Insert(Node node){
+        public void Insert(NodeExt node){
             heap.Add(node);
             nodePositionInHeap[node.Id]=heap.Count-1;
             SiftUp(heap.Count-1);
         }
-        public void Update(Node node){
+        public void Update(NodeExt node){
             SiftUp(nodePositionInHeap[node.Id]);
         }
-        public bool ContainsNode(Node node){
+        public bool ContainsNode(NodeExt node){
             return nodePositionInHeap.ContainsKey(node.Id);
         }
         private void Swap(int idx1, int idx2)
@@ -92,7 +92,7 @@ namespace AlgoDSPlay.DataStructures
             nodePositionInHeap[heap[idx1].Id]= idx2;
             nodePositionInHeap[heap[idx2].Id]= idx1;
 
-            Node temp = heap[idx1];
+            NodeExt temp = heap[idx1];
             heap[idx1] = heap[idx2];
             heap[idx2] = temp;
 

@@ -6,6 +6,8 @@ using AlgoDSPlay.DP;
 using AlgoDSPlay.DataStructures;
 // See https://aka.ms/new-console-template for more information
 using AlgoDSPlay.Sorting;
+using AlgoDSPlay.Design;
+using static AlgoDSPlay.Design.SparseVector;
 
 int res1= (4-3)/2;
 double res2 = (double)(4-3)/2 ;
@@ -31,12 +33,13 @@ var resG = RealProbs.KrusaklMST(new int[][][]{
                                 },
                                 }
 );
+
 LinkedList lse = new LinkedList(1);
 lse.Next=new LinkedList(3);
 lse.Next.Next=new LinkedList(4);
 lse.Next.Next.Next=new LinkedList(5);
 lse.Next.Next.Next.Next=new LinkedList(6);
-LinkedList lst2 = LinkedListOps.RemoveDuplicatesFromLinkedList1(lse);
+//LinkedList lst2 = LinkedListOps.RemoveDuplicatesFromLinkedList1(lse);
 string str2= StringOps.ReverseWordsInString("I AM ");
 var resu1 = ArrayOps.IndexEqualsValue(new int[]{-5, -4, -3, -2, -1, 0, 1, 3, 5, 6, 7, 11, 12, 14, 19, 20});
 var resss = MatrixOps.KnapsackProblem(new int[,]{

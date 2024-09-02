@@ -9,25 +9,33 @@ namespace AlgoDSPlay
     public class StackProbs
     {
         //https://www.algoexpert.io/questions/balanced-brackets
-        public static bool BalancedBrackets(string str){
+        public static bool BalancedBrackets(string str)
+        {
             //T:O(n)|S:O(n)
-            string openingBrackets ="([{";
+            string openingBrackets = "([{";
             string closingBrackets = ")]}";
             Dictionary<char, char> matchingBrackets = new Dictionary<char, char>();
-            matchingBrackets.Add('(',')');
-            matchingBrackets.Add('[',']');
-            matchingBrackets.Add('{','}');
+            matchingBrackets.Add('(', ')');
+            matchingBrackets.Add('[', ']');
+            matchingBrackets.Add('{', '}');
             List<char> stack = new List<char>();
-            for(int i=0; i< str.Length; i++){
+            for (int i = 0; i < str.Length; i++)
+            {
                 char letter = str[i];
-                if(openingBrackets.IndexOf(letter) != -1){
-                    stack.Add(letter);                    
-                }else if(closingBrackets.IndexOf(letter) != -1){
-                    if(stack.Count ==0) return false;
+                if (openingBrackets.IndexOf(letter) != -1)
+                {
+                    stack.Add(letter);
+                }
+                else if (closingBrackets.IndexOf(letter) != -1)
+                {
+                    if (stack.Count == 0) return false;
 
-                    if (stack[stack.Count-1] == matchingBrackets[letter]){
-                        stack.RemoveAt(stack.Count-1);
-                    }else{
+                    if (stack[stack.Count - 1] == matchingBrackets[letter])
+                    {
+                        stack.RemoveAt(stack.Count - 1);
+                    }
+                    else
+                    {
                         return false;
                     }
                 }
@@ -52,52 +60,60 @@ namespace AlgoDSPlay
         }
 
         //https://www.algoexpert.io/questions/colliding-asteroids
-        public static int[] CollidingAsteroids(int[] asteroids) {
+        public static int[] CollidingAsteroids(int[] asteroids)
+        {
             //T:O(n) | S:O(n)
-            if(asteroids.Length ==0) return new int[]{};
-            
+            if (asteroids.Length == 0) return new int[] { };
+
             Stack<int> asters = new Stack<int>();
-            
-            foreach(int aster in asteroids){
-                if(asters.Count ==0 || aster > 0 || asters.Peek()<0){
+
+            foreach (int aster in asteroids)
+            {
+                if (asters.Count == 0 || aster > 0 || asters.Peek() < 0)
+                {
                     asters.Push(aster);
                     continue;
-                }                
-                while(asters.Count >0){
-                    if(asters.Peek() < 0){
+                }
+                while (asters.Count > 0)
+                {
+                    if (asters.Peek() < 0)
+                    {
                         asters.Push(aster);
                         break;
                     }
                     //-3,5,-8
-                    int prevAster = asters.Peek();                    
-                    
-                    if( prevAster > Math.Abs(aster)) { break;}
-                    if(prevAster == Math.Abs(aster)) { asters.Pop(); break;}
+                    int prevAster = asters.Peek();
 
-                    asters.Pop();                    
+                    if (prevAster > Math.Abs(aster)) { break; }
+                    if (prevAster == Math.Abs(aster)) { asters.Pop(); break; }
 
-                    if(asters.Count == 0){
+                    asters.Pop();
+
+                    if (asters.Count == 0)
+                    {
                         asters.Push(aster);
                         break;
                     }
 
-                } 
-                
+                }
+
             }
-            int[] res= new int[asters.Count()];
-            for(int i=asters.Count-1; i>=0; i--){
-                res[i]=asters.Pop();
+            int[] res = new int[asters.Count()];
+            for (int i = asters.Count - 1; i >= 0; i--)
+            {
+                res[i] = asters.Pop();
             }
             return res;
         }
         //https://www.algoexpert.io/questions/longest-balanced-substring
-        public int LongestBalancedSubstring(string str){
-            int maxLen=0;
-            
+        public int LongestBalancedSubstring(string str)
+        {
+            int maxLen = 0;
+
             //1. Naive/Bruteforce - Pair of loops and Stack
             //T:O(n^3) | S:O(n)
             maxLen = LongestBalancedSubstringNaive(str);
-            
+
             //2. Optimal with Stack space
             //T:O(n) | S:O(n)
             maxLen = LongestBalancedSubstringOptimal1(str);
@@ -120,66 +136,75 @@ namespace AlgoDSPlay
 
         private int GetLongestBalancedDirection(string str, bool leftToRight)
         {
-            char openingParens = leftToRight? '(':')';
-            int strIdx = leftToRight ? 0 : str.Length-1;
-            int step=leftToRight?1:-1;
+            char openingParens = leftToRight ? '(' : ')';
+            int strIdx = leftToRight ? 0 : str.Length - 1;
+            int step = leftToRight ? 1 : -1;
 
-            int maxLen =0;
-            int openingCount=0, closingCount =0;
+            int maxLen = 0;
+            int openingCount = 0, closingCount = 0;
 
             int idx = strIdx;
-            while(idx >=0 && idx <str.Length)
+            while (idx >= 0 && idx < str.Length)
             {
                 char c = str[idx];
 
-                if(c == openingParens) openingCount++;
+                if (c == openingParens) openingCount++;
                 else closingCount++;
 
-                if(openingCount == closingCount)
-                    maxLen = Math.Max(maxLen, closingCount*2);
-                else if (closingCount > openingCount){
-                    openingCount =0; 
-                    closingCount=0;
+                if (openingCount == closingCount)
+                    maxLen = Math.Max(maxLen, closingCount * 2);
+                else if (closingCount > openingCount)
+                {
+                    openingCount = 0;
+                    closingCount = 0;
                 }
-                idx+=step;
+                idx += step;
             }
             return maxLen;
         }
 
         private int LongestBalancedSubstringOptimal2(string str)
         {
-            int maxLen =0;
-            int openingCount =0, closingCount=0;
-            
-            for(int i=0; i<str.Length; i++){
+            int maxLen = 0;
+            int openingCount = 0, closingCount = 0;
+
+            for (int i = 0; i < str.Length; i++)
+            {
                 char c = str[i];
 
-                if( c == '('){
-                    openingCount +=1;
-                }else closingCount+=1;
+                if (c == '(')
+                {
+                    openingCount += 1;
+                }
+                else closingCount += 1;
 
-                if(openingCount == closingCount)
-                    maxLen = Math.Max(maxLen, closingCount*2);
-                else if ( closingCount > openingCount){
-                    openingCount =0;
-                    closingCount =0;
+                if (openingCount == closingCount)
+                    maxLen = Math.Max(maxLen, closingCount * 2);
+                else if (closingCount > openingCount)
+                {
+                    openingCount = 0;
+                    closingCount = 0;
                 }
             }
-            openingCount =0;
-            closingCount =0;
+            openingCount = 0;
+            closingCount = 0;
             //scenario: ((())( where opening brackets are more than closing one and still a valid substring exists
-            for(int i=str.Length-1; i>=0; i--){
+            for (int i = str.Length - 1; i >= 0; i--)
+            {
                 char c = str[i];
 
-                if(c == '('){
+                if (c == '(')
+                {
                     openingCount++;
-                }else closingCount++;
+                }
+                else closingCount++;
 
-                if(openingCount == closingCount) 
-                    maxLen = Math.Max(maxLen, openingCount*2);
-                else if (openingCount > closingCount){
-                    openingCount =0;
-                    closingCount =0;
+                if (openingCount == closingCount)
+                    maxLen = Math.Max(maxLen, openingCount * 2);
+                else if (openingCount > closingCount)
+                {
+                    openingCount = 0;
+                    closingCount = 0;
                 }
             }
             return maxLen;
@@ -187,18 +212,23 @@ namespace AlgoDSPlay
 
         private int LongestBalancedSubstringOptimal1(string str)
         {
-            int maxLen=0;
+            int maxLen = 0;
             Stack<int> idxStack = new Stack<int>();
             idxStack.Push(-1);
 
-            for(int i=0; i<str.Length; i++){
-                if(str[i] == '('){
+            for (int i = 0; i < str.Length; i++)
+            {
+                if (str[i] == '(')
+                {
                     idxStack.Push(i);
-                }else {
+                }
+                else
+                {
                     idxStack.Pop(); //-1 is there by-default
-                    if(idxStack.Count ==0)
-                        idxStack.Push(i);                    
-                    else{
+                    if (idxStack.Count == 0)
+                        idxStack.Push(i);
+                    else
+                    {
                         int balancedSubstringStartIdx = idxStack.Peek();
                         int currentLen = i - balancedSubstringStartIdx;
                         maxLen = Math.Max(maxLen, currentLen);
@@ -210,12 +240,15 @@ namespace AlgoDSPlay
 
         private int LongestBalancedSubstringNaive(string str)
         {
-            int maxLen=0;
-            for(int i=0; i< str.Length; i++){
-                for(int j=i+2; j<str.Length+1; j++){
-                    if(IsBalanced(str.Substring(i, j-i))){
-                        int currentLen = j-i;
-                        maxLen= Math.Max(currentLen, maxLen);
+            int maxLen = 0;
+            for (int i = 0; i < str.Length; i++)
+            {
+                for (int j = i + 2; j < str.Length + 1; j++)
+                {
+                    if (IsBalanced(str.Substring(i, j - i)))
+                    {
+                        int currentLen = j - i;
+                        maxLen = Math.Max(currentLen, maxLen);
                     }
                 }
             }
@@ -226,19 +259,60 @@ namespace AlgoDSPlay
         {
             Stack<char> openParamsStack = new Stack<char>();
 
-            for(int i=0; i< str.Length; i++){
+            for (int i = 0; i < str.Length; i++)
+            {
                 char c = str[i];
-                if( c == '('){
+                if (c == '(')
+                {
                     openParamsStack.Push('(');
-                }else if( openParamsStack.Count >0){
+                }
+                else if (openParamsStack.Count > 0)
+                {
                     openParamsStack.Pop();
-                }else{
+                }
+                else
+                {
                     return false;
                 }
             }
-            return openParamsStack.Count ==0;
+            return openParamsStack.Count == 0;
         }
-        
-        
+
+        //https://www.algoexpert.io/questions/sort-stack
+        // O(n^2) time | O(n) space - where n is the length of the stack
+        public List<int> SortStack(List<int> stack)
+        {
+            if (stack.Count == 0)
+            {
+                return stack;
+            }
+
+            int top = stack[stack.Count - 1];
+            stack.RemoveAt(stack.Count - 1);
+
+            SortStack(stack);
+
+            insertInSortedOrder(stack, top);
+
+            return stack;
+        }
+
+        public void insertInSortedOrder(List<int> stack, int value)
+        {
+            if (stack.Count == 0 || (stack[stack.Count - 1] <= value))
+            {
+                stack.Add(value);
+                return;
+            }
+
+            int top = stack[stack.Count - 1];
+            stack.RemoveAt(stack.Count - 1);
+
+            insertInSortedOrder(stack, value);
+
+            stack.Add(top);
+        }
+
+
     }
 }
