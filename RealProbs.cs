@@ -2049,19 +2049,12 @@ for cup in measuringCups:
 
         }
         //https://www.algoexpert.io/questions/phone-number-mnemonics
-        public static Dictionary<char, string[]> DIGIT_LETTERS =
-                new Dictionary<char, string[]> {
-                { '0', new string[] { "0" } },
-                { '1', new string[] { "1" } },
-                { '2', new string[] { "a", "b", "c" } },
-                { '3', new string[] { "d", "e", "f" } },
-                { '4', new string[] { "g", "h", "i" } },
-                { '5', new string[] { "j", "k", "l" } },
-                { '6', new string[] { "m", "n", "o" } },
-                { '7', new string[] { "p", "q", "r", "s" } },
-                { '8', new string[] { "t", "u", "v" } },
-                { '9', new string[] { "w", "x", "y", "z" } }
-        };
+        /*
+17. Letter Combinations of a Phone Number
+https://leetcode.com/problems/letter-combinations-of-a-phone-number/description/
+
+        */
+        //Approach 1: Backtracking
 
         // O(4^n * n) time | O(4^n * n) space - where
         // n is the length of the phone number
@@ -2100,6 +2093,20 @@ for cup in measuringCups:
                 }
             }
         }
+        public static Dictionary<char, string[]> DIGIT_LETTERS =
+        new Dictionary<char, string[]> {
+                { '0', new string[] { "0" } },
+                { '1', new string[] { "1" } },
+                { '2', new string[] { "a", "b", "c" } },
+                { '3', new string[] { "d", "e", "f" } },
+                { '4', new string[] { "g", "h", "i" } },
+                { '5', new string[] { "j", "k", "l" } },
+                { '6', new string[] { "m", "n", "o" } },
+                { '7', new string[] { "p", "q", "r", "s" } },
+                { '8', new string[] { "t", "u", "v" } },
+                { '9', new string[] { "w", "x", "y", "z" } }
+        };
+
         //https://www.algoexpert.io/questions/minimum-waiting-time
         // O(nlogn) time | O(1) space - where n is the number of queries
         public int MinimumWaitingTime(int[] queries)
@@ -5807,12 +5814,12 @@ for cup in measuringCups:
             }
         }
 
- 
-       /*
-        2462. Total Cost to Hire K Workers
-        https://leetcode.com/problems/total-cost-to-hire-k-workers/description
 
-        */
+        /*
+         2462. Total Cost to Hire K Workers
+         https://leetcode.com/problems/total-cost-to-hire-k-workers/description
+
+         */
         public long TotalCost(int[] costs, int k, int candidates)
         {
             //1. 2 Priority Queues
@@ -6651,6 +6658,1829 @@ for cup in measuringCups:
 
             return daysNeeded <= days;
         }
+        /*
+        2288. Apply Discount to Prices
+        https://leetcode.com/problems/apply-discount-to-prices/description/
+
+        */
+        public string DiscountPrices(string sentence, int discount)
+        {
+            string[] words = sentence.Split(' ');
+
+            for (int index = 0; index < words.Length; ++index)
+            {
+                string word = words[index];
+
+                if (word.Length < 2) continue;
+
+                char firstCharacter = word[0];
+                string numberString = word.Substring(1);
+
+                if (IsValid(firstCharacter, numberString))
+                {
+                    words[index] = Format(numberString, discount);
+                }
+            }
+            return string.Join(" ", words);
+        }
+
+        private bool IsValid(char firstCharacter, string numberString)
+        {
+            if (firstCharacter != '$') return false;
+
+            foreach (char character in numberString)
+            {
+                if (character < '0' || character > '9') return false;
+            }
+            return true;
+        }
+
+        private string Format(string numberString, int discount)
+        {
+            double discountedPrice = long.Parse(numberString) * (1 - discount / 100d);
+            return '$' + discountedPrice.ToString("F2");
+        }
+        /*
+        11. Container With Most Water
+        https://leetcode.com/problems/container-with-most-water/
+        */
+        public int MaxWaterArea(int[] height)
+        {
+            /*
+            Approach 1: Brute Force
+Complexity Analysis
+•	Time complexity: O(n^2). Calculating area for all (n(n−1))/2 height pairs.
+•	Space complexity: O(1). Constant extra space is used
+
+            */
+            int maxWaterArea = MaxWaterAreaNaive(height);
+            /*
+Approach 2: Two Pointer Approach
+Complexity Analysis
+•	Time complexity: O(n). Single pass.
+•	Space complexity: O(1). Constant space is used.
+            */
+            maxWaterArea = MaxWaterxAreaOptimal(height);
+
+            return maxWaterArea;
+
+        }
+        private int MaxWaterAreaNaive(int[] height)
+        {
+            int maxarea = 0;
+
+            for (int left = 0; left < height.Length; left++)
+            {
+                for (int right = left + 1; right < height.Length; right++)
+                {
+                    int width = right - left;
+                    maxarea = Math.Max(
+                        maxarea, Math.Min(height[left], height[right]) * width);
+                }
+            }
+
+            return maxarea;
+        }
+
+        private int MaxWaterxAreaOptimal(int[] height)
+        {
+            int maxArea = 0;
+            int left = 0;
+            int right = height.Length - 1;
+
+            while (left < right)
+            {
+                int width = right - left;
+                maxArea = Math.Max(maxArea,
+                                   Math.Min(height[left], height[right]) * width);
+                if (height[left] <= height[right])
+                {
+                    left++;
+                }
+                else
+                {
+                    right--;
+                }
+            }
+
+            return maxArea;
+        }
+
+        /*
+        11. Container With Most Water
+        https://leetcode.com/problems/container-with-most-water/
+        */
+        public int TrapRainWater(int[] height)
+        {
+            /*
+            Approach 1: Brute Force
+Complexity Analysis
+•	Time complexity: O(n^2). For each element of array, we iterate the left and right parts.
+•	Space complexity: O(1) extra space.
+            */
+            int trapRainWater = TrapRainWaterNaive(height);
+
+            /*
+Approach 2: Dynamic Programming
+ Complexity Analysis
+•	Time complexity: O(n).
+o	We store the maximum heights upto a point using 2 iterations of O(n) each.
+o	We finally update ans using the stored values in O(n).
+•	Space complexity: O(n) extra space.
+o	Additional O(n) space for left_max and right_max arrays than in Approach 1.
+            
+            */
+            trapRainWater = TrapRainWaterDP(height);
+
+            /*
+   Approach 3: Using stacks         
+Complexity Analysis
+•	Time complexity: O(n).
+o	Single iteration of O(n) in which each bar can be touched at most twice(due to insertion and deletion from stack) and insertion and deletion from stack takes O(1) time.
+•	Space complexity: O(n). Stack can take upto O(n) space in case of stairs-like or flat structure.
+       
+            */
+            trapRainWater = TrapRainWaterStack(height);
+            /*
+  Approach 4: Using 2 pointers          
+   Complexity Analysis
+•	Time complexity: O(n). Single iteration of O(n).
+•	Space complexity: O(1) extra space. Only constant space required for left, right, left_max and right_max.
+
+
+            */
+            trapRainWater = TrapRainWaterOptimal(height);
+
+            return trapRainWater;
+
+        }
+
+        public int TrapRainWaterNaive(int[] height)
+        {
+            int ans = 0;
+            int size = height.Length;
+            for (int i = 1; i < size - 1; i++)
+            {
+                int left_max = 0, right_max = 0;
+                // Search the left part for max bar size
+                for (int j = i; j >= 0; j--)
+                {
+                    left_max = Math.Max(left_max, height[j]);
+                }
+                // Search the right part for max bar size
+                for (int j = i; j < size; j++)
+                {
+                    right_max = Math.Max(right_max, height[j]);
+                }
+                ans += Math.Min(left_max, right_max) - height[i];
+            }
+            return ans;
+        }
+        public int TrapRainWaterDP(int[] height)
+        {
+            // Case of empty height array
+            if (height.Length == 0)
+                return 0;
+            int ans = 0;
+            int size = height.Length;
+            // Create left and right max arrays
+            int[] left_max = new int[size];
+            int[] right_max = new int[size];
+            // Initialize first height into left max
+            left_max[0] = height[0];
+            for (int i = 1; i < size; i++)
+            {
+                // update left max with current max
+                left_max[i] = Math.Max(height[i], left_max[i - 1]);
+            }
+
+            // Initialize last height into right max
+            right_max[size - 1] = height[size - 1];
+            for (int i = size - 2; i >= 0; i--)
+            {
+                // update right max with current max
+                right_max[i] = Math.Max(height[i], right_max[i + 1]);
+            }
+
+            // Calculate the trapped water
+            for (int i = 1; i < size - 1; i++)
+            {
+                ans += Math.Min(left_max[i], right_max[i]) - height[i];
+            }
+
+            // Return amount of trapped water
+            return ans;
+        }
+        public int TrapRainWaterStack(int[] height)
+        {
+            int ans = 0, current = 0;
+            Stack<int> st = new Stack<int>();
+            while (current < height.Length)
+            {
+                while (st.Count != 0 && height[current] > height[st.Peek()])
+                {
+                    int top = st.Peek();
+                    st.Pop();
+                    if (st.Count == 0)
+                        break;
+                    int distance = current - st.Peek() - 1;
+                    int bounded_height =
+                        Math.Min(height[current], height[st.Peek()]) - height[top];
+                    ans += distance * bounded_height;
+                }
+
+                st.Push(current++);
+            }
+
+            return ans;
+        }
+        public int TrapRainWaterOptimal(int[] height)
+        {
+            int left = 0, right = height.Length - 1;
+            int ans = 0;
+            int left_max = 0, right_max = 0;
+            while (left < right)
+            {
+                if (height[left] < height[right])
+                {
+                    left_max = Math.Max(left_max, height[left]);
+                    ans += left_max - height[left];
+                    ++left;
+                }
+                else
+                {
+                    right_max = Math.Max(right_max, height[right]);
+                    ans += right_max - height[right];
+                    --right;
+                }
+            }
+
+            return ans;
+        }
+        /*
+        407. Trapping Rain Water II
+        https://leetcode.com/problems/trapping-rain-water-ii/description/
+
+        Using Proirity Queues
+        Complexity
+            Time complexity:
+            O(mn log(mn))
+
+        */
+        class Cell
+        {
+            public int row;
+            public int col;
+            public int height;
+            public Cell(int _row, int _col, int _height)
+            {
+                row = _row;
+                col = _col;
+                height = _height;
+            }
+        }
+        public int TrapRainWater(int[][] heightMap)
+        {
+            int m = heightMap.Length, n = heightMap[0].Length;
+            PriorityQueue<Cell, int> pq = new(Comparer<int>.Create((a, b) => a.CompareTo(b)));
+            // Initially, add all the Cells which are on borders to the queue.
+            for (int r = 0; r < m; r++)
+            {
+                pq.Enqueue(new Cell(r, 0, heightMap[r][0]), heightMap[r][0]);
+                pq.Enqueue(new Cell(r, n - 1, heightMap[r][n - 1]), heightMap[r][n - 1]);
+                heightMap[r][n - 1] = -1;
+                heightMap[r][0] = -1;
+            }
+            for (int c = 1; c < n - 1; c++)
+            {
+                pq.Enqueue(new Cell(0, c, heightMap[0][c]), heightMap[0][c]);
+                pq.Enqueue(new Cell(m - 1, c, heightMap[m - 1][c]), heightMap[m - 1][c]);
+                heightMap[0][c] = -1;
+                heightMap[m - 1][c] = -1;
+            }
+
+
+            // from the borders, pick the shortest cell visited and check its neighbors:
+            // if the neighbor is shorter, collect the water it can trap and update its height as its height plus the water trapped
+            // add all its neighbors to the queue.
+
+            Tuple<int, int>[] dir = new Tuple<int, int>[]
+            {Tuple.Create(0,1), Tuple.Create(0,-1),Tuple.Create(1,0),Tuple.Create(-1,0)};
+            int res = 0;
+            while (pq.Count > 0)
+            {
+                var cell = pq.Dequeue();
+                for (int i = 0; i < dir.Length; i++)
+                {
+                    int row = cell.row + dir[i].Item1;
+                    int col = cell.col + dir[i].Item2;
+
+                    if (row < 0 || row >= m || col < 0 || col >= n || heightMap[row][col] == -1) continue;
+
+                    res += Math.Max(0, cell.height - heightMap[row][col]);
+                    Cell newBoundary = new Cell(row, col, Math.Max(heightMap[row][col], cell.height));
+                    pq.Enqueue(newBoundary, newBoundary.height);
+                    heightMap[row][col] = -1;
+                }
+            }
+
+            return res;
+        }
+
+        /*
+        1326. Minimum Number of Taps to Open to Water a Garden
+        https://leetcode.com/problems/minimum-number-of-taps-to-open-to-water-a-garden/description
+        */
+
+        public int MinTaps(int n, int[] ranges)
+        {
+
+            /*
+Approach 1: Dynamic Programming 
+Complexity Analysis
+Let m be the average range of the taps.
+•	Time Complexity: O(n⋅m).
+Iterating through each tap and updating the minimum number of taps for each position within its range requires nested loops. The outer loop iterates through each of the n+1 taps. The inner loop iterates through the positions within the range of each tap. The number of iterations for the inner loop is O(m).
+Overall, the time complexity of the solution is O(n⋅m).
+•	Space Complexity: O(n).
+The space complexity is determined by the additional memory used to store the DP array. The size of the DP array is n+1.
+Therefore, the space complexity is O(n).
+            */
+            int minTaps = MinTapsDP(n, ranges);
+            /*
+Approach 2: Greedy
+Complexity Analysis
+Time Complexity: O(n).
+We iterate through the garden once to calculate the maximum reach for each position, and then iterate through the garden again to choose the taps and determine the minimum number of taps required. The iteration involves visiting each position in the garden once, resulting in a linear time complexity.
+
+Space Complexity: O(n).
+We use additional space to store the max_reach array of size n+1. Therefore, the space complexity is linear with respect to the size of the garden.                   
+            */
+            minTaps = MinTapsGreedy(n, ranges);
+
+            /*
+            Approach3: using Priority Queue
+
+            Time complexity:
+            O(n log n)
+            */
+            minTaps = MinTapsPQ(n, ranges);
+
+            return minTaps;
+
+        }
+        public int MinTapsPQ(int n, int[] ranges)
+        {
+            PriorityQueue<int[], int> pq = new(Comparer<int>.Create((a, b) => a.CompareTo(b)));
+            for (int i = 0; i < ranges.Length; i++)
+            {
+                int start = Math.Max(0, i - ranges[i]);
+                int end = Math.Min(n, i + ranges[i]);
+                if (start < end) pq.Enqueue(new int[] { start, end }, start);
+            }
+            int covered = 0, res = 0;
+            while (pq.Count > 0 && covered < n)
+            {
+                int end = 0;
+                while (pq.Count > 0 && pq.Peek()[0] <= covered)
+                    end = Math.Max(end, pq.Dequeue()[1]);
+                res++;
+                if (end == covered) return -1;
+                covered = end;
+            }
+            if (covered == n)
+                return res;
+            return -1;
+        }
+
+        public int MinTapsDP(int gardenLength, int[] ranges)
+        {
+            // Define an infinite value
+            const int InfiniteValue = (int)1e9;
+
+            // Create an array to store the minimum number of taps needed for each position
+            int[] minimumTaps = new int[gardenLength + 1];
+            Array.Fill(minimumTaps, InfiniteValue);
+
+            // Initialize the starting position of the garden
+            minimumTaps[0] = 0;
+
+            for (int i = 0; i <= gardenLength; i++)
+            {
+                // Calculate the leftmost position reachable by the current tap
+                int tapStart = Math.Max(0, i - ranges[i]);
+                // Calculate the rightmost position reachable by the current tap
+                int tapEnd = Math.Min(gardenLength, i + ranges[i]);
+
+                for (int j = tapStart; j <= tapEnd; j++)
+                {
+                    // Update with the minimum number of taps
+                    minimumTaps[tapEnd] = Math.Min(minimumTaps[tapEnd], minimumTaps[j] + 1);
+                }
+            }
+
+            // Check if the garden can be watered completely
+            if (minimumTaps[gardenLength] == InfiniteValue)
+            {
+                // Garden cannot be watered
+                return -1;
+            }
+
+            // Return the minimum number of taps needed to water the entire garden
+            return minimumTaps[gardenLength];
+        }
+        public int MinTapsGreedy(int gardenLength, int[] tapRanges)
+        {
+            // Create an array to track the maximum reach for each position
+            int[] maximumReach = new int[gardenLength + 1];
+
+            // Calculate the maximum reach for each tap
+            for (int tapIndex = 0; tapIndex < tapRanges.Length; tapIndex++)
+            {
+                // Calculate the leftmost position the tap can reach
+                int startPosition = Math.Max(0, tapIndex - tapRanges[tapIndex]);
+                // Calculate the rightmost position the tap can reach
+                int endPosition = Math.Min(gardenLength, tapIndex + tapRanges[tapIndex]);
+
+                // Update the maximum reach for the leftmost position
+                maximumReach[startPosition] = Math.Max(maximumReach[startPosition], endPosition);
+            }
+
+            // Number of taps used
+            int numberOfTaps = 0;
+            // Current rightmost position reached
+            int currentEndPosition = 0;
+            // Next rightmost position that can be reached
+            int nextEndPosition = 0;
+
+            // Iterate through the garden
+            for (int position = 0; position <= gardenLength; position++)
+            {
+                // Current position cannot be reached
+                if (position > nextEndPosition)
+                {
+                    return -1;
+                }
+
+                // Increment taps when moving to a new tap
+                if (position > currentEndPosition)
+                {
+                    numberOfTaps++;
+                    // Move to the rightmost position that can be reached
+                    currentEndPosition = nextEndPosition;
+                }
+
+                // Update the next rightmost position that can be reached
+                nextEndPosition = Math.Max(nextEndPosition, maximumReach[position]);
+            }
+
+            // Return the minimum number of taps used
+            return numberOfTaps;
+        }
+        /*
+        198. House Robber
+        https://leetcode.com/problems/house-robber/
+        */
+        public int Rob(int[] nums)
+        {
+            /*
+Approach 1: Recursion with Memoization
+Complexity Analysis
+•	Time Complexity: O(N) since we process at most N recursive calls, thanks to caching, and during each of these calls, we make an O(1) computation which is simply making two other recursive calls, finding their maximum, and populating the cache based on that.
+•	Space Complexity: O(N) which is occupied by the cache and also by the recursion stack.
+            
+            */
+            int maxMoneyRobbed = RobRecMemo(nums);
+            /*
+Approach 2: Dynamic Programming
+Complexity Analysis
+•	Time Complexity: O(N) since we have a loop from N−2⋯0 and we simply use the pre-calculated values of our dynamic programming table for calculating the current value in the table which is a constant time operation.
+•	Space Complexity: O(N) which is used by the table. So what is the real advantage of this solution over the previous solution? In this case, we don't have a recursion stack. When the number of houses is large, a recursion stack can become a serious limitation, because the recursion stack size will be huge and the compiler will eventually run into stack-overflow problems (no pun intended!).
+            
+            */
+            maxMoneyRobbed = RobDP(nums);
+
+
+            /*
+Approach 3: Optimized Dynamic Programming
+Complexity Analysis
+•	Time Complexity: O(N) since we have a loop from N−2⋯0 and we use the precalculated values of our dynamic programming table to calculate the current value in the table which is a constant time operation.
+•	Space Complexity: O(1) since we are not using a table to store our values. Simply using two variables will suffice for our calculations.
+            
+            */
+            maxMoneyRobbed = RobDPOptimal(nums);
+
+            return maxMoneyRobbed;
+
+
+        }
+        public int RobDPOptimal(int[] nums)
+        {
+            int N = nums.Length;
+
+            // Special handling for empty array case.
+            if (N == 0)
+            {
+                return 0;
+            }
+
+            int robNext, robNextPlusOne;
+
+            // Base case initializations.
+            robNextPlusOne = 0;
+            robNext = nums[N - 1];
+
+            // DP table calculations. Note: we are not using any
+            // table here for storing values. Just using two
+            // variables will suffice.
+            for (int i = N - 2; i >= 0; --i)
+            {
+                // Same as the recursive solution.
+                int current = Math.Max(robNext, robNextPlusOne + nums[i]);
+
+                // Update the variables
+                robNextPlusOne = robNext;
+                robNext = current;
+            }
+
+            return robNext;
+        }
+        public int RobDP(int[] nums)
+        {
+            int N = nums.Length;
+
+            // Special handling for empty array case.
+            if (N == 0)
+            {
+                return 0;
+            }
+
+            int[] maxRobbedAmount = new int[nums.Length + 1];
+
+            // Base case initializations.
+            maxRobbedAmount[N] = 0;
+            maxRobbedAmount[N - 1] = nums[N - 1];
+
+            // DP table calculations.
+            for (int i = N - 2; i >= 0; --i)
+            {
+                // Same as the recursive solution.
+                maxRobbedAmount[i] = Math.Max(
+                    maxRobbedAmount[i + 1],
+                    maxRobbedAmount[i + 2] + nums[i]
+                );
+            }
+
+            return maxRobbedAmount[0];
+        }
+        public int RobRecMemo(int[] houseValues)
+        {
+            this.memo = new int[100];
+
+            // Fill with sentinel value representing not-calculated recursions.
+            Array.Fill(this.memo, -1);
+
+            return this.RobFrom(0, houseValues);
+        }
+
+        private int RobFrom(int index, int[] houseValues)
+        {
+            // No more houses left to examine.
+            if (index >= houseValues.Length)
+            {
+                return 0;
+            }
+
+            // Return cached value.
+            if (this.memo[index] > -1)
+            {
+                return this.memo[index];
+            }
+
+            // Recursive relation evaluation to get the optimal answer.
+            int optimalAmount = Math.Max(
+                this.RobFrom(index + 1, houseValues),
+                this.RobFrom(index + 2, houseValues) + houseValues[index]
+            );
+
+            // Cache for future use.
+            this.memo[index] = optimalAmount;
+            return optimalAmount;
+        }
+        /*
+        213. House Robber II
+        https://leetcode.com/problems/house-robber-ii/description/
+
+        */
+        public int RobII(int[] nums)
+        {
+            /*   
+Approach 1: Dynamic Programming
+Complexity Analysis
+•	Time complexity : O(N) where N is the size of nums. We are accumulating results as we are scanning nums.
+•	Space complexity : O(1) since we are not consuming additional space other than variables for two previous results and a temporary variable to hold one of the previous results.
+            
+            */
+
+            if (nums.Length == 0) return 0;
+
+            if (nums.Length == 1) return nums[0];
+
+            int max1 = RobSimple(nums, 0, nums.Length - 2);
+            int max2 = RobSimple(nums, 1, nums.Length - 1);
+
+            return Math.Max(max1, max2);
+
+
+        }
+        public int RobSimple(int[] nums, int start, int end)
+        {
+            int t1 = 0;
+            int t2 = 0;
+
+            for (int i = start; i <= end; i++)
+            {
+                int temp = t1;
+                int current = nums[i];
+                t1 = Math.Max(current + t2, t1);
+                t2 = temp;
+            }
+
+            return t1;
+        }
+
+        public class TreeNode
+        {
+            public int Val;
+            public TreeNode Left;
+            public TreeNode Right;
+            public TreeNode(int val = 0, TreeNode left = null, TreeNode right = null)
+            {
+                this.Val = val;
+                this.Left = left;
+                this.Right = right;
+            }
+        }
+        /*
+337. House Robber III
+https://leetcode.com/problems/house-robber-iii/description/
+
+        */
+        public int RobIII(TreeNode root)
+        {
+            /*
+Approach 1: Recursion
+Complexity Analysis
+Let N be the number of nodes in the binary tree.
+•	Time complexity: O(N) since we visit all nodes once.
+•	Space complexity: O(N) since we need stacks to do recursion, and the maximum depth of the recursion is the height of the tree, which is O(N) in the worst case and O(log(N)) in the best case.
+
+            
+            */
+
+            int result = RobIIIRec(root);
+
+            /*
+ Approach 2: Recursion with Memoization
+Complexity Analysis
+Let N be the number of nodes in the binary tree.
+•	Time complexity: O(N) since we run the helper function for all nodes once, and saved the results to prevent the second calculation.
+•	Space complexity: O(N) since we need two maps with the size of O(N) to store the results, and O(N) space for stacks to start recursion.
+
+            
+            */
+            result = RobIIIRecMemo(root);
+            /*
+Approach 3: Dynamic Programming
+Complexity Analysis
+Let N be the number of nodes in the binary tree.
+•	Time complexity: O(N) since we visit all nodes once to form the tree-array, and then iterate two DP array, which both have length O(N).
+•	Space complexity: O(N) since we need an array of length O(N) to store the tree, and two DP arrays of length O(N). Also, the sizes of other data structures in code do not exceed O(N).
+
+            
+            */
+            result = RobIIIDP(root);
+
+            return result;
+
+
+        }
+        public int[] Helper(TreeNode node)
+        {
+            // return [rob this node, not rob this node]
+            if (node == null)
+            {
+                return new int[] { 0, 0 };
+            }
+            int[] left = Helper(node.Left);
+            int[] right = Helper(node.Right);
+            // if we rob this node, we cannot rob its children
+            int rob = node.Val + left[1] + right[1];
+            // else, we free to choose rob its children or not
+            int notRob = Math.Max(left[0], left[1]) + Math.Max(right[0], right[1]);
+
+            return new int[] { rob, notRob };
+        }
+
+        public int RobIIIRec(TreeNode root)
+        {
+            int[] answer = Helper(root);
+            return Math.Max(answer[0], answer[1]);
+        }
+
+        private Dictionary<TreeNode, int> robResult = new Dictionary<TreeNode, int>();
+        private Dictionary<TreeNode, int> notRobResult = new Dictionary<TreeNode, int>();
+
+        public int Helper(TreeNode node, bool parentRobbed)
+        {
+            if (node == null)
+            {
+                return 0;
+            }
+            if (parentRobbed)
+            {
+                if (robResult.ContainsKey(node))
+                {
+                    return robResult[node];
+                }
+                int result = Helper(node.Left, false) + Helper(node.Right, false);
+                robResult[node] = result;
+                return result;
+            }
+            else
+            {
+                if (notRobResult.ContainsKey(node))
+                {
+                    return notRobResult[node];
+                }
+                int rob = node.Val + Helper(node.Left, true) + Helper(node.Right, true);
+                int notRob = Helper(node.Left, false) + Helper(node.Right, false);
+                int result = Math.Max(rob, notRob);
+                notRobResult[node] = result;
+                return result;
+            }
+        }
+
+        public int RobIIIRecMemo(TreeNode root)
+        {
+            return Helper(root, false);
+        }
+
+        public int RobIIIDP(TreeNode root)
+        {
+            if (root == null)
+            {
+                return 0;
+            }
+            // reform tree into array-based tree
+            List<int> tree = new List<int>();
+            Dictionary<int, List<int>> graph = new Dictionary<int, List<int>>();
+            graph.Add(-1, new List<int>());
+            int index = -1;
+            // we use two Queue to store node and index
+            Queue<TreeNode> q_node = new Queue<TreeNode>();
+            q_node.Enqueue(root);
+            Queue<int> q_index = new Queue<int>();
+            q_index.Enqueue(index);
+
+            while (q_node.Count > 0)
+            {
+                TreeNode node = q_node.Dequeue();
+                int parentIndex = q_index.Dequeue();
+                if (node != null)
+                {
+                    index++;
+                    tree.Add(node.Val);
+                    graph.Add(index, new List<int>());
+                    graph[parentIndex].Add(index);
+                    // push new node into Queue
+                    q_node.Enqueue(node.Left);
+                    q_index.Enqueue(index);
+                    q_node.Enqueue(node.Right);
+                    q_index.Enqueue(index);
+                }
+            }
+
+            // represent the maximum start by node i with robbing i
+            int[] dpRob = new int[index + 1];
+
+            // represent the maximum start by node i without robbing i
+            int[] dpNotRob = new int[index + 1];
+
+            for (int i = index; i >= 0; i--)
+            {
+                List<int> children = graph[i];
+                if (children == null || children.Count == 0)
+                {
+                    // if is leaf
+                    dpRob[i] = tree[i];
+                    dpNotRob[i] = 0;
+                }
+                else
+                {
+                    dpRob[i] = tree[i];
+                    foreach (int child in children)
+                    {
+                        dpRob[i] += dpNotRob[child];
+                        dpNotRob[i] += Math.Max(dpRob[child], dpNotRob[child]);
+                    }
+                }
+            }
+
+            return Math.Max(dpRob[0], dpNotRob[0]);
+        }
+
+
+        /*
+        656. Coin Path
+https://leetcode.com/problems/coin-path/description/	
+
+        */
+        public List<int> CheapestJump(int[] coins, int maxJump)
+        {
+            /*
+  Approach #1 Brute Force[Time Limit Exceeded]
+  Complexity Analysis
+  •	Time complexity : O(B^n). The size of the recursive tree can grow upto O(b^n) in the worst case. This is because, we have B possible branches at every step. Here, B refers to the limit of the largest jump and n refers to the size of the given A array.
+  •	Space complexity : O(n). The depth of the recursive tree can grow upto n. next array of size n is used.
+
+            */
+            var cheapestJump = CheapestJumpNaive(coins, maxJump);
+            /*
+  Approach #2 Using Memoization 
+  Complexity Analysis
+  •	Time complexity : O(nB). memo array of size n is filled only once. We also do a traversal over the next array, which will go upto B steps. Here, n refers to the number of nodes in the given tree.
+  •	Space complexity : O(n). The depth of the recursive tree can grow upto n. next array of size n is used.
+
+            */
+            cheapestJump = CheapestJumpMemo(coins, maxJump);
+            /*
+ Approach #3 Using Dynamic Programming 
+ Complexity Analysis
+ •	Time complexity : O(nB). We need to consider all the possible B positions for every current index considered in the A array. Here, A refers to the number of elements in A.
+ •	Space complexity : O(n). dp and next array of size n are used.
+
+           */
+            cheapestJump = CheapestJumpDP(coins, maxJump);
+
+            return cheapestJump;
+
+        }
+        public List<int> CheapestJumpDP(int[] costs, int maxJump)
+        {
+            int[] nextIndex = new int[costs.Length];
+            long[] minimumCost = new long[costs.Length];
+            Array.Fill(nextIndex, -1);
+            List<int> result = new List<int>();
+
+            for (int currentIndex = costs.Length - 2; currentIndex >= 0; currentIndex--)
+            {
+                long minCost = int.MaxValue;
+
+                for (int jumpIndex = currentIndex + 1; jumpIndex <= currentIndex + maxJump && jumpIndex < costs.Length; jumpIndex++)
+                {
+                    if (costs[jumpIndex] >= 0)
+                    {
+                        long totalCost = costs[currentIndex] + minimumCost[jumpIndex];
+                        if (totalCost < minCost)
+                        {
+                            minCost = totalCost;
+                            nextIndex[currentIndex] = jumpIndex;
+                        }
+                    }
+                }
+                minimumCost[currentIndex] = minCost;
+            }
+
+            int index;
+            for (index = 0; index < costs.Length && nextIndex[index] > 0; index = nextIndex[index])
+                result.Add(index + 1);
+
+            if (index == costs.Length - 1 && costs[index] >= 0)
+                result.Add(costs.Length);
+            else
+                return new List<int>();
+
+            return result;
+        }
+        public List<int> CheapestJumpMemo(int[] array, int jumpDistance)
+        {
+            int[] nextIndices = new int[array.Length];
+            Array.Fill(nextIndices, -1);
+            long[] memoization = new long[array.Length];
+            Jump(array, jumpDistance, 0, nextIndices, memoization);
+            List<int> result = new List<int>();
+            int index;
+            for (index = 0; index < array.Length && nextIndices[index] > 0; index = nextIndices[index])
+            {
+                result.Add(index + 1);
+            }
+            if (index == array.Length - 1 && array[index] >= 0)
+            {
+                result.Add(array.Length);
+            }
+            else
+            {
+                return new List<int>();
+            }
+            return result;
+        }
+
+        public long Jump(int[] array, int jumpDistance, int currentIndex, int[] nextIndices, long[] memoization)
+        {
+            if (memoization[currentIndex] > 0)
+            {
+                return memoization[currentIndex];
+            }
+            if (currentIndex == array.Length - 1 && array[currentIndex] >= 0)
+            {
+                return array[currentIndex];
+            }
+            long minimumCost = int.MaxValue;
+            for (int nextIndex = currentIndex + 1; nextIndex <= currentIndex + jumpDistance && nextIndex < array.Length; nextIndex++)
+            {
+                if (array[nextIndex] >= 0)
+                {
+                    long cost = array[currentIndex] + Jump(array, jumpDistance, nextIndex, nextIndices, memoization);
+                    if (cost < minimumCost)
+                    {
+                        minimumCost = cost;
+                        nextIndices[currentIndex] = nextIndex;
+                    }
+                }
+            }
+            memoization[currentIndex] = minimumCost;
+            return minimumCost;
+        }
+        public List<int> CheapestJumpNaive(int[] jumps, int maxJump)
+        {
+            int[] nextIndices = new int[jumps.Length];
+            Array.Fill(nextIndices, -1);
+            Jump(jumps, maxJump, 0, nextIndices);
+            List<int> result = new List<int>();
+            int index;
+            for (index = 0; index < jumps.Length && nextIndices[index] > 0; index = nextIndices[index])
+                result.Add(index + 1);
+            if (index == jumps.Length - 1 && jumps[index] >= 0)
+                result.Add(jumps.Length);
+            else
+                return new List<int>();
+            return result;
+        }
+
+        private long Jump(int[] jumps, int maxJump, int currentIndex, int[] nextIndices)
+        {
+            if (currentIndex == jumps.Length - 1 && jumps[currentIndex] >= 0)
+                return jumps[currentIndex];
+            long minimumCost = int.MaxValue;
+            for (int nextIndex = currentIndex + 1; nextIndex <= currentIndex + maxJump && nextIndex < jumps.Length; nextIndex++)
+            {
+                if (jumps[nextIndex] >= 0)
+                {
+                    long cost = jumps[currentIndex] + Jump(jumps, maxJump, nextIndex, nextIndices);
+                    if (cost < minimumCost)
+                    {
+                        minimumCost = cost;
+                        nextIndices[currentIndex] = nextIndex;
+                    }
+                }
+            }
+            return minimumCost;
+        }
+
+        /*
+        256. Paint House
+https://leetcode.com/problems/paint-house/description/
+
+        */
+        public int MinCost(int[][] costs)
+        {
+            /*
+Approach 1: Brute force
+Complexity Analysis
+•	Time complexity : O(2^n) or O(3^n).
+Without writing code, we can get a good idea of the cost. We know that at the very least, we'd have to process every valid permutation. The number of valid permutations doubles with every house added. With 4 houses, there were 24 permutations. If we add another house, then all of our permutations for 4 houses could be extended with 2 different colors for the 5th house, giving 48 permutations. Because it doubles every time, this is O(n2).
+It'd be even worse if we generated all permutations of 0, 1, and 2 and then pruned out the invalid ones. There are O(n3) such permutations in total.
+•	Space complexity : Anywhere from O(n) to O(n⋅3n).
+This would depend entirely on the implementation. If you generated all the permutations at the same time and put them in a massive list, then you'd be using O(n∗2n) or O(n∗3n) space. If you generated one, processed it, generated the next, processed it, etc, without keeping the long list, it'd require O(n) space.
+
+            
+            */
+
+            /*
+Approach 2: Brute force with a Recursive Tree
+ Complexity Analysis
+•	Time complexity : O(2^n).
+While this approach is an improvement on the previous approach, it still requires exponential time. Think about the number of leaf nodes. Each permutation has its own leaf node. The number of internal nodes is the same as the number of leaf nodes too. Remember how there are 2n different permutations? Each effectively adds 2 nodes to the tree, so dropping the constant of 2 gives us O(2n).
+This is better than the previous approach, which had an additional factor of n, giving O(n⋅2n). That extra factor of n has disappeared here because the permutations are now "sharing" their similar parts, unlike before. The idea of "sharing" similar parts can be taken much further for this particular problem, as we will see with the remaining approaches that knock the time complexity all the way down to O(n).
+•	Space complexity : O(n).
+This algorithm might initially appear to be O(1), because we are not allocating any new data structures. However, we need to take into account space usage on the run-time stack. The run-time stack was shown in the animation. Whenever we are processing the last house (house number n - 1), there are n stack frames on the stack. This space usages counts for complexity analysis (it's memory usage, like any other memory usage) and so the space complexity is O(n).           
+            
+            */
+            int minCost = MinCostNaiveReco(costs);
+
+            /*
+            
+  Approach 3: Memoization
+Complexity Analysis
+•	Time complexity : O(n).
+Analyzing memoization algorithms can be tricky at first, and requires understanding how recursion impacts the cost differently to loops. The key thing to notice is that the full function runs once for each possible set of parameters. There are 3 * n different possible sets of parameters, because there are n houses and 3 colors. Because the function body is O(1) (it's simply a conditional), this gives us a total of 3 * n. There can't be more than 3 * 2 * n searches into the memoization dictionary either. The tree showed this clearly—the nodes representing lookups had to be the child of a call where a full calculation was done. Because the constants are all dropped, this leaves O(n).
+•	Space complexity : O(n).
+Like the previous approach, the main space usage is on the stack. When we go down the first branch of function calls (see the tree visualization), we won't find any results in the dictionary. Therefore, every house will make a stack frame. Because there are n houses, this gives a worst case space usage of O(n). Note that this could be a problem in languages such as Python, where stack frames are large.
+
+            */
+            minCost = MinCostMemo(costs);
+            /*
+Approach 4: Dynamic Programming
+ Complexity Analysis
+•	Time Complexity : O(n).
+Finding the minimum of two values and adding it to another value is an O(1) operation. We are doing these O(1) operations for 3⋅(n−1) cells in the grid. Expanding that out, we get 3⋅n−3. The constants don't matter in big-oh notation, so we drop them, leaving us with O(n).
+A word of warning: This would not be correct if there were m colors. For this particular problem we were told there's only 3 colors. However, a logical follow-up question would be to make the code work for any number of colors. In that case, the time complexity would actually be O(n⋅m), because m is not a constant, whereas 3 is. If this confused you, I'd recommend reading up on big-oh notation.
+•	Space Complexity : O(1)
+We don't allocate any new data structures, and are only using a few local variables. All the work is done directly into the input array. Therefore, the algorithm is in-place, requiring constant extra space.
+            
+            */
+            minCost = MinCostDP(costs);
+            /*
+Approach 5: Dynamic Programming with Optimized Space Complexity            
+Complexity Analysis
+•	Time Complexity : O(n).
+Same as previous approach.
+•	Space Complexity : O(1)
+We're "remembering" up to 6 calculations at a time (using 2 x length-3 arrays). Because this is actually a constant, the space complexity is still O(1).
+Like the time complexity though, this analysis is dependent on there being a constant number of colors (i.e. 3). If the problem was changed to be m colors, then the space complexity would become O(m) as we'd need to keep track of a couple of length-m arrays.
+
+            */
+            minCost = MinCostDPOptimal(costs);
+
+            return minCost;
+
+        }
+        private int[][] costs;
+
+        public int MinCostNaiveReco(int[][] costs)
+        {
+            if (costs.Length == 0)
+            {
+                return 0;
+            }
+            this.costs = costs;
+            return Math.Min(PaintCost(0, 0), Math.Min(PaintCost(0, 1), PaintCost(0, 2)));
+        }
+
+        private int PaintCost(int n, int color)
+        {
+            int totalCost = costs[n][color];
+            if (n == costs.Length - 1)
+            {
+            }
+            else if (color == 0)
+            { // Red
+                totalCost += Math.Min(PaintCost(n + 1, 1), PaintCost(n + 1, 2));
+            }
+            else if (color == 1)
+            { // Green
+                totalCost += Math.Min(PaintCost(n + 1, 0), PaintCost(n + 1, 2));
+            }
+            else
+            { // Blue
+                totalCost += Math.Min(PaintCost(n + 1, 0), PaintCost(n + 1, 1));
+            }
+            return totalCost;
+        }
+        private Dictionary<string, int> memoDict;
+
+        public int MinCostMemo(int[][] costs)
+        {
+            if (costs.Length == 0)
+            {
+                return 0;
+            }
+            this.costs = costs;
+            this.memoDict = new Dictionary<string, int>();
+            return Math.Min(PaintCostMemo(0, 0), Math.Min(PaintCostMemo(0, 1), PaintCostMemo(0, 2)));
+        }
+
+        private int PaintCostMemo(int n, int color)
+        {
+            if (memoDict.ContainsKey(GetKey(n, color)))
+            {
+                return memoDict[GetKey(n, color)];
+            }
+            int totalCost = costs[n][color];
+            if (n == costs.Length - 1)
+            {
+            }
+            else if (color == 0)
+            { // Red
+                totalCost += Math.Min(PaintCostMemo(n + 1, 1), PaintCostMemo(n + 1, 2));
+            }
+            else if (color == 1)
+            { // Green
+                totalCost += Math.Min(PaintCostMemo(n + 1, 0), PaintCostMemo(n + 1, 2));
+            }
+            else
+            { // Blue
+                totalCost += Math.Min(PaintCostMemo(n + 1, 0), PaintCostMemo(n + 1, 1));
+            }
+            memoDict[GetKey(n, color)] = totalCost;
+
+            return totalCost;
+        }
+
+        // Convert a house number and color into a simple string key for the memo.
+        private string GetKey(int n, int color)
+        {
+            return n.ToString() + " " + color.ToString();
+        }
+
+        public int MinCostDP(int[][] costs)
+        {
+
+            for (int n = costs.Length - 2; n >= 0; n--)
+            {
+                // Total cost of painting the nth house red.
+                costs[n][0] += Math.Min(costs[n + 1][1], costs[n + 1][2]);
+                // Total cost of painting the nth house green.
+                costs[n][1] += Math.Min(costs[n + 1][0], costs[n + 1][2]);
+                // Total cost of painting the nth house blue.
+                costs[n][2] += Math.Min(costs[n + 1][0], costs[n + 1][1]);
+            }
+
+            if (costs.Length == 0) return 0;
+
+            return Math.Min(Math.Min(costs[0][0], costs[0][1]), costs[0][2]);
+        }
+        public int MinCostDPOptimal(int[][] costs)
+        {
+            if (costs.Length == 0) return 0;
+
+            int[] previousRow = costs[costs.Length - 1];
+
+            for (int houseIndex = costs.Length - 2; houseIndex >= 0; houseIndex--)
+            {
+                int[] currentRow = (int[])costs[houseIndex].Clone();
+                // Total cost of painting the nth house red.
+                currentRow[0] += Math.Min(previousRow[1], previousRow[2]);
+                // Total cost of painting the nth house green.
+                currentRow[1] += Math.Min(previousRow[0], previousRow[2]);
+                // Total cost of painting the nth house blue.
+                currentRow[2] += Math.Min(previousRow[0], previousRow[1]);
+                previousRow = currentRow;
+            }
+
+            return Math.Min(Math.Min(previousRow[0], previousRow[1]), previousRow[2]);
+        }
+
+        /*
+        265. Paint House II
+        https://leetcode.com/problems/paint-house-ii/description/	
+
+        */
+        public int MinCostII(int[][] costs)
+        {
+            /*
+Approach 1: Memoization
+Complexity Analysis
+•	Time complexity : O(n⋅k^2).
+Determining the total time complexity of a recursive memoization algorithm requires looking at how many calls are made to the paint function, and how much each call costs (remember that the memoization lookups are O(1)). The function is called once for each possible pair of house number and color. This gives n⋅k calls. Then, each call has a loop that loops over each of the k colors. Therefore, we have n⋅k⋅k=n⋅k2 which is O(n⋅k2).
+The part outside of the recursive function is O(k) and therefore does not impact the overall complexity.
+•	Space complexity : O(n⋅k).
+There are 2 different places memory is being used that we need to consider.
+Firstly, the memoization is storing the answers for each pair of house number and color. There are n⋅k of these, and so O(n⋅k) memory used.
+Secondly, we need to consider the memory used on the run-time stack. In the worst case, there's a stack frame for each house number on the stack. This is a total of O(n).
+The O(n) is insignficant to the O(n⋅k), so we're left with a total of O(n⋅k).
+            
+            */
+            int minCost = MinCostIIMemo(costs);
+
+            /*
+Approach 2: Dynamic Programming
+Complexity Analysis
+•	Time complexity : O(n⋅k^2).
+We iterate over each of the n⋅k cells. For each of the cells, we're finding the minimum of the k values in the row above, excluding the one that is in the same column. This operation is O(k). Multiplying this out, we get O(n⋅k^2).
+•	Space complexity : O(1) if done in-place, O(n⋅k) if input is copied.
+We're not creating any new data structures in the code above, and so it has a space complexity of O(1). This is, however, overwriting the given input, which might not be ideal in some situations.
+If we don't want to overwrite the input, we could instead create a copy of it first and then do the calculations in the copy. This will require an additional O(n⋅k) space.
+
+            
+            */
+            minCost = MinCostIIDP(costs);
+
+            /*
+Approach 3: Dynamic Programming with O(k) additional Space.
+Complexity Analysis
+•	Time complexity : O(n⋅k^2).
+Same as above.
+•	Space complexity : O(k).
+The previous row and the current row are represented as k-length arrays.
+This approach does not modify the input grid.	
+            
+            */
+
+            minCost = MinCostIIDP2(costs);
+            /*
+Approach 4: Dynamic programming with Optimized Time
+Complexity Analysis
+•	Time complexity : O(n⋅k).
+The first loop that finds the minimums of the first row is O(k) because it looks at each of the k values in the first row exactly once. The second loop is O(n⋅k) because the outer loop loops n times, and the inner loop loops k times. O(n⋅k)+O(k)=O(n⋅k). We know it is impossible to ever do better here, because we cannot solve the problem without at least looking at each of the n⋅k cells once.
+•	Space complexity : O(1).
+Like approach 2, this approach also modifies the input instead of allocating its own space.
+            
+            */
+            minCost = MinCostIIDPOptimal(costs);
+
+            /*
+Approach 5: Dynamic programming with Optimized Time and Space
+Complexity Analysis
+•	Time complexity : O(n⋅k).
+Same as the previous approach.
+•	Space complexity : O(1).
+The only additional working memory we're using is a constant number of single-value variables to keep track of the 2 minimums in the current and previous row, and to calculate the cost of the current cell. Because the memory usage is constant, we say it is O(1). Unlike the previous approach one though, this one does not overwrite the input.
+
+            
+            */
+            minCost = MinCostIIDPOptimal2(costs);
+
+            return minCost;
+
+        }
+
+        private int n;
+        private int k;
+
+        public int MinCostIIMemo(int[][] costs)
+        {
+            if (costs.Length == 0) return 0;
+            this.k = costs[0].Length;
+            this.n = costs.Length;
+            this.costs = costs;
+            this.memoDict = new Dictionary<string, int>();
+            int minCost = int.MaxValue;
+            for (int color = 0; color < k; color++)
+            {
+                minCost = Math.Min(minCost, MemoSolve(0, color));
+            }
+            return minCost;
+        }
+
+        private int MemoSolve(int houseNumber, int color)
+        {
+
+            // Base case: There are no more houses after this one.
+            if (houseNumber == n - 1)
+            {
+                return costs[houseNumber][color];
+            }
+
+            // Memoization lookup case: Have we already solved this subproblem?
+            if (memoDict.ContainsKey(GetKey(houseNumber, color)))
+            {
+                return memoDict[GetKey(houseNumber, color)];
+            }
+
+            // Recursive case: Determine the minimum cost for the remainder.
+            int minRemainingCost = int.MaxValue;
+            for (int nextColor = 0; nextColor < k; nextColor++)
+            {
+                if (color == nextColor) continue;
+                int currentRemainingCost = MemoSolve(houseNumber + 1, nextColor);
+                minRemainingCost = Math.Min(currentRemainingCost, minRemainingCost);
+            }
+            int totalCost = costs[houseNumber][color] + minRemainingCost;
+            memoDict[GetKey(houseNumber, color)] = totalCost;
+            return totalCost;
+        }
+        public int MinCostIIDP(int[][] costs)
+        {
+
+            if (costs.Length == 0) return 0;
+            int k = costs[0].Length;
+            int n = costs.Length;
+
+            for (int house = 1; house < n; house++)
+            {
+                for (int color = 0; color < k; color++)
+                {
+                    int mini = int.MaxValue;
+                    for (int previousColor = 0; previousColor < k; previousColor++)
+                    {
+                        if (color == previousColor) continue;
+                        mini = Math.Min(mini, costs[house - 1][previousColor]);
+                    }
+                    costs[house][color] += mini;
+                }
+            }
+
+            // Find the minimum in the last row.
+            int min = int.MaxValue;
+            foreach (int c in costs[n - 1])
+            {
+                min = Math.Min(min, c);
+            }
+            return min;
+        }
+
+        public int MinCostIIDP2(int[][] costs)
+        {
+
+            if (costs.Length == 0) return 0;
+            int k = costs[0].Length;
+            int n = costs.Length;
+            int[] previousRow = costs[0];
+
+            for (int house = 1; house < n; house++)
+            {
+                int[] currentRow = new int[k];
+                for (int color = 0; color < k; color++)
+                {
+                    int minim = int.MaxValue;
+                    for (int previousColor = 0; previousColor < k; previousColor++)
+                    {
+                        if (color == previousColor) continue;
+                        minim = Math.Min(minim, previousRow[previousColor]);
+                    }
+                    currentRow[color] += costs[house][color] += minim;
+                }
+            }
+
+            // Find the minimum in the last row.
+            int min = int.MaxValue;
+            foreach (int c in previousRow)
+            {
+                min = Math.Min(min, c);
+            }
+            return min;
+        }
+        public int MinCostIIDPOptimal(int[][] costs)
+        {
+
+            if (costs.Length == 0) return 0;
+            int k = costs[0].Length;
+            int n = costs.Length;
+
+            for (int house = 1; house < n; house++)
+            {
+
+                // Find the minimum and second minimum color in the PREVIOUS row.
+                int minColor = -1; int secondMinColor = -1;
+                for (int color = 0; color < k; color++)
+                {
+                    int cost = costs[house - 1][color];
+                    if (minColor == -1 || cost < costs[house - 1][minColor])
+                    {
+                        secondMinColor = minColor;
+                        minColor = color;
+                    }
+                    else if (secondMinColor == -1 || cost < costs[house - 1][secondMinColor])
+                    {
+                        secondMinColor = color;
+                    }
+                }
+
+                // And now calculate the new costs for the current row.
+                for (int color = 0; color < k; color++)
+                {
+                    if (color == minColor)
+                    {
+                        costs[house][color] += costs[house - 1][secondMinColor];
+                    }
+                    else
+                    {
+                        costs[house][color] += costs[house - 1][minColor];
+                    }
+                }
+            }
+
+            // Find the minimum in the last row.
+            int min = int.MaxValue;
+            foreach (int c in costs[n - 1])
+            {
+                min = Math.Min(min, c);
+            }
+            return min;
+        }
+
+        public int MinCostIIDPOptimal2(int[][] costs)
+        {
+
+            if (costs.Length == 0) return 0;
+            int k = costs[0].Length;
+            int n = costs.Length;
+
+            /* Firstly, we need to determine the 2 lowest costs of
+              the first row. We also need to remember the color of the lowest. 
+            */
+            int prevMin = -1; int prevSecondMin = -1; int prevMinColor = -1;
+            for (int color = 0; color < k; color++)
+            {
+                int cost = costs[0][color];
+                if (prevMin == -1 || cost < prevMin)
+                {
+                    prevSecondMin = prevMin;
+                    prevMinColor = color;
+                    prevMin = cost;
+                }
+                else if (prevSecondMin == -1 || cost < prevSecondMin)
+                {
+                    prevSecondMin = cost;
+                }
+            }
+
+            // And now, we need to work our way down, keeping track of the minimums.
+            for (int house = 1; house < n; house++)
+            {
+                int min = -1; int secondMin = -1; int minColor = -1;
+                for (int color = 0; color < k; color++)
+                {
+                    // Determine the cost for this cell (without writing it in).
+                    int cost = costs[house][color];
+                    if (color == prevMinColor)
+                    {
+                        cost += prevSecondMin;
+                    }
+                    else
+                    {
+                        cost += prevMin;
+                    }
+                    // Determine whether or not this current cost is also a minimum.
+                    if (min == -1 || cost < min)
+                    {
+                        secondMin = min;
+                        minColor = color;
+                        min = cost;
+                    }
+                    else if (secondMin == -1 || cost < secondMin)
+                    {
+                        secondMin = cost;
+                    }
+                }
+                // Transfer current mins to be previous mins.
+                prevMin = min;
+                prevSecondMin = secondMin;
+                prevMinColor = minColor;
+            }
+
+            return prevMin;
+        }
+        /*
+        276. Paint Fence
+        https://leetcode.com/problems/paint-fence/description/
+        */
+
+        public int NumWaysToPaintFence(int n, int k)
+        {
+            /*            
+Approach 1: Top-Down Dynamic Programming (Recursion + Memoization) 
+Complexity Analysis
+•	Time complexity: O(n)
+totalWays gets called with each index from n to 3. Because of our memoization, each call will only take O(1) time.
+•	Space complexity: O(n)
+The extra space used by this algorithm is the recursion call stack. For example, totalWays(50) will call totalWays(49), which calls totalWays(48) etc., all the way down until the base cases at totalWays(1) and totalWays(2). In addition, our hash map memo will be of size n at the end, since we populate it with every index from n to 3.
+
+
+            */
+            int numWays = NumWaysToPaintFenceTDDPRecMemo(n, k);
+            /*
+Approach 2: Bottom-Up Dynamic Programming (Tabulation)
+Complexity Analysis
+•	Time complexity: O(n)
+We only iterate from 3 to n once, where each iteration requires O(1) time.
+•	Space complexity: O(n)
+We need to use an array totalWays, where totalWays.length scales linearly with n.
+
+
+            */
+            numWays = NumWaysToPaintFenceBUDP(n, k);
+            /*
+Approach 3: Bottom-Up, Constant Space
+Complexity Analysis
+•	Time complexity: O(n).
+We only iterate from 3 to n once, each time doing O(1) work.
+•	Space complexity: O(1)
+The only extra space we use are a few integer variables, which are independent of input size
+          
+
+            */
+            numWays = NumWaysToPaintFenceBUDPOptimal(n, k);
+
+            return numWays;
+        }
+        private Dictionary<int, int> memoDict1 = new Dictionary<int, int>();
+
+        private int TotalWays(int i, int k)
+        {
+            if (i == 1) return k;
+            if (i == 2) return k * k;
+
+            // Check if we have already calculated totalWays(i)
+            if (memoDict1.ContainsKey(i))
+            {
+                return memoDict1[i];
+            }
+
+            // Use the recurrence relation to calculate totalWays(i)
+            memoDict1[i] = (k - 1) * (TotalWays(i - 1, k) + TotalWays(i - 2, k));
+            return memoDict1[i];
+        }
+
+        public int NumWaysToPaintFenceTDDPRecMemo(int n, int k)
+        {
+            return TotalWays(n, k);
+        }
+
+        public int NumWaysToPaintFenceBUDP(int n, int k)
+        {
+            // Base cases for the problem to avoid index out of bound issues
+            if (n == 1) return k;
+            if (n == 2) return k * k;
+
+            int[] totalWaysArr = new int[n + 1];
+            totalWaysArr[1] = k;
+            totalWaysArr[2] = k * k;
+
+            for (int i = 3; i <= n; i++)
+            {
+                totalWaysArr[i] = (k - 1) * (totalWaysArr[i - 1] + totalWaysArr[i - 2]);
+
+            }
+            return totalWaysArr[n];
+        }
+        public int NumWaysToPaintFenceBUDPOptimal(int n, int k)
+        {
+            if (n == 1) return k;
+
+            int twoPostsBack = k;
+            int onePostBack = k * k;
+
+            for (int i = 3; i <= n; i++)
+            {
+                int curr = (k - 1) * (onePostBack + twoPostsBack);
+                twoPostsBack = onePostBack;
+                onePostBack = curr;
+            }
+
+            return onePostBack;
+        }
+
+
+        /*
+
+278. First Bad Version
+https://leetcode.com/problems/first-bad-version/description/
+
+        */
+
+        public int FirstBadVersion(int n)
+        {
+            /*
+Approach #1 (Linear Scan) [Time Limit Exceeded]
+Complexity analysis
+•	Time complexity : O(n).
+Assume that isBadVersion(version) takes constant time to check if a version is bad. It takes at most n−1 checks, therefore the overall time complexity is O(n).
+•	Space complexity : O(1).
+
+
+            */
+            int firstBadVersion = FirstBadVersionNaive(n);
+            /*
+  Approach #2 Binary Search (BS) [Accepted]          
+   Complexity analysis
+•	Time complexity : O(logn).
+The search space is halved each time, so the time complexity is O(logn).
+•	Space complexity : O(1).
+         
+            */
+
+            firstBadVersion = FirstBadVersionBS(n);
+
+            return firstBadVersion;
+
+        }
+
+        public int FirstBadVersionNaive(int n)
+        {
+            for (int i = 1; i < n; i++)
+            {
+                if (IsBadVersion(i))
+                {
+                    return i;
+                }
+            }
+            return n;
+        }
+
+        public int FirstBadVersionBS(int n)
+        {
+            int left = 1;
+            int right = n;
+            while (left < right)
+            {
+                int mid = left + (right - left) / 2;
+                if (IsBadVersion(mid))
+                {
+                    right = mid;
+                }
+                else
+                {
+                    left = mid + 1;
+                }
+            }
+            return left;
+        }
+
+        bool IsBadVersion(int version)
+        {
+            return false; //dummy implementation; It cam be true also 
+        }
+        /*
+        765. Couples Holding Hands
+        https://leetcode.com/problems/couples-holding-hands/description/
+
+        */
+        public int MinSwapsCouples(int[] row)
+        {
+            /*
+Approach #1: Backtracking [Time Limit Exceeded]
+ Complexity Analysis
+•	Time Complexity: O(N∗2^N), where N is the number of couples, as for each couch we check up to two complete possibilities. The N factor is from searching for jx and jy; this factor can be removed with a more efficient algorithm that keeps track of where pairs[j][k] is x as we swap elements through pairs.
+•	Space Complexity: O(N).
+           
+            */
+            int minSwapsCouples = MinSwapsCouplesBacktrack(row);
+
+            /*
+Approach #2: Cycle Finding [Accepted] (CF)
+Complexity Analysis
+•	Time Complexity: O(N), where N is the number of couples.
+•	Space Complexity: O(N), the size of adj and associated data structures.
+
+            */
+            minSwapsCouples = MinSwapsCouplesCF(row);
+            /*
+  Approach #3: Greedy [Accepted]          
+   Complexity Analysis
+•	Time Complexity: O(N^2), where N is the number of couples.
+•	Space Complexity: O(1) additional complexity: the swaps are in place
+         
+            */
+            minSwapsCouples = MinSwapsCouplesGreedy(row);
+
+            return minSwapsCouples;
+
+        }
+
+        int N;
+        int[][] pairs;
+
+        public int MinSwapsCouplesBacktrack(int[] row)
+        {
+            N = row.Length / 2;
+            pairs = new int[N][];
+            for (int i = 0; i < N; ++i)
+            {
+                pairs[i][0] = row[2 * i] / 2;
+                pairs[i][1] = row[2 * i + 1] / 2;
+            }
+
+            return solve(0);
+        }
+
+        public void swap(int a, int b, int c, int d)
+        {
+            int t = pairs[a][b];
+            pairs[a][b] = pairs[c][d];
+            pairs[c][d] = t;
+        }
+
+        public int solve(int i)
+        {
+            if (i == N) return 0;
+            int x = pairs[i][0], y = pairs[i][1];
+            if (x == y) return solve(i + 1);
+
+            int jx = 0, kx = 0, jy = 0, ky = 0; // Always gets set later
+            for (int j = i + 1; j < N; ++j)
+            {
+                for (int k = 0; k <= 1; ++k)
+                {
+                    if (pairs[j][k] == x) { jx = j; kx = k; }
+                    if (pairs[j][k] == y) { jy = j; ky = k; }
+                }
+            }
+
+            swap(i, 1, jx, kx);
+            int ans1 = 1 + solve(i + 1);
+            swap(i, 1, jx, kx);
+
+            swap(i, 0, jy, ky);
+            int ans2 = 1 + solve(i + 1);
+            swap(i, 0, jy, ky);
+
+            return Math.Min(ans1, ans2);
+        }
+
+
+        public int MinSwapsCouplesCF(int[] row)
+        {
+            int N = row.Length / 2;
+            //couples[x] = {i, j} means that
+            //couple #x is at couches i and j (1 indexed)
+            int[][] couples = new int[N][];
+
+            for (int i = 0; i < row.Length; ++i)
+                Add(couples[row[i] / 2], i / 2 + 1);
+
+            //adj[x] = {i, j} means that
+            //x-th couch connected to couches i, j (all 1 indexed) by couples
+            int[][] adj = new int[N + 1][];
+            foreach (int[] couple in couples)
+            {
+                Add(adj[couple[0]], couple[1]);
+                Add(adj[couple[1]], couple[0]);
+            }
+
+            // The answer will be N minus the number of cycles in adj.
+            int ans = N;
+            // For each couch (1 indexed)
+            for (int r = 1; r <= N; ++r)
+            {
+                // If this couch has no people needing to be paired, continue
+                if (adj[r][0] == 0 && adj[r][1] == 0)
+                    continue;
+
+                // Otherwise, there is a cycle starting at couch r.
+                // We will use two pointers x, y with y faster than x by one turn.
+                ans--;
+                int x = r, y = Pop(adj[r]);
+                // When y reaches the start 'r', we've reached the end of the cycle.
+                while (y != r)
+                {
+                    // We are at some couch with edges going to 'x' and 'new'.
+                    // We remove the previous edge, since we came from x.
+                    Rem(adj[y], x);
+
+                    // We update x, y appropriately: y becomes new and x becomes y.
+                    x = y;
+                    y = Pop(adj[y]);
+                }
+            }
+            return ans;
+        }
+
+        // Replace the next zero element with x.
+        public void Add(int[] pair, int x)
+        {
+            pair[pair[0] == 0 ? 0 : 1] = x;
+        }
+
+        // Remove x from pair, replacing it with zero.
+        public void Rem(int[] pair, int x)
+        {
+            pair[pair[0] == x ? 0 : 1] = 0;
+        }
+
+        // Remove the next non-zero element from pair, replacing it with zero.
+        public int Pop(int[] pair)
+        {
+            int x = pair[0];
+            if (x != 0)
+            {
+                pair[0] = 0;
+            }
+            else
+            {
+                x = pair[1];
+                pair[1] = 0;
+            }
+            return x;
+        }
+
+
+        public int MinSwapsCouplesGreedy(int[] row)
+        {
+            int ans = 0;
+            for (int i = 0; i < row.Length; i += 2)
+            {
+                int x = row[i];
+                if (row[i + 1] == (x ^ 1)) continue;
+                ans++;
+                for (int j = i + 1; j < row.Length; ++j)
+                {
+                    if (row[j] == (x ^ 1))
+                    {
+                        row[j] = row[i + 1];
+                        row[i + 1] = x ^ 1;
+                        break;
+                    }
+                }
+            }
+            return ans;
+        }
+
+
+
 
     }
 }
+

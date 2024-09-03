@@ -3304,7 +3304,7 @@ namespace AlgoDSPlay
 
             maxAreaOfIsland = CountSubIslandsDFSIterative(grid);
 
-       
+
             return maxAreaOfIsland;
 
 
@@ -3379,6 +3379,1164 @@ namespace AlgoDSPlay
             return (1 + MaxAreaOfIslandDFSRec(r + 1, c, seen) + MaxAreaOfIslandDFSRec(r - 1, c, seen)
                       + MaxAreaOfIslandDFSRec(r, c - 1, seen) + MaxAreaOfIslandDFSRec(r, c + 1, seen));
         }
+
+        /*
+        79. Word Search	
+        https://leetcode.com/problems/word-search/description/
+
+        Approach 1: Backtracking
+
+        Complexity
+            •	Time Complexity: O(N⋅3L) where N is the number of cells in the board and L is the length of the word to be matched.
+            o	For the backtracking function, initially we could have at most 4 directions to explore, but further the choices are reduced into 3 (since we won't go back to where we come from).
+            As a result, the execution trace after the first step could be visualized as a 3-nary tree, each of the branches represent a potential exploration in the corresponding direction. Therefore, in the worst case, the total number of invocation would be the number of nodes in a full 3-nary tree, which is about 3L.
+            o	We iterate through the board for backtracking, i.e. there could be N times invocation for the backtracking function in the worst case.
+            o	As a result, overall the time complexity of the algorithm would be O(N⋅3L).
+        •	Space Complexity: O(L) where L is the length of the word to be matched.
+            o	The main consumption of the memory lies in the recursion call of the backtracking function. The maximum length of the call stack would be the length of the word. Therefore, the space complexity of the algorithm is O(L).
+
+        */
+        public bool Exist(char[][] board, string word)
+        {
+            this.board = board;
+            this.rows = board.Length;
+            this.cols = board[0].Length;
+
+            for (int row = 0; row < this.rows; row++)
+            {
+                for (int col = 0; col < this.cols; col++)
+                {
+                    if (Backtrack(row, col, word, 0))
+                    {
+                        return true;
+                    }
+                }
+            }
+
+            return false;
+        }
+
+        private bool Backtrack(int row, int col, string word, int index)
+        {
+            // Step 1: Check if the last character matches
+            if (index >= word.Length)
+            {
+                return true;
+            }
+
+            // Step 2: Check boundaries
+            if (row < 0 || row == this.rows || col < 0 || col == this.cols ||
+                this.board[row][col] != word[index])
+            {
+                return false;
+            }
+
+            // Step 3: Explore the neighbors in DFS
+            bool ret = false;
+            // Mark the path before the next exploration
+            char temp = this.board[row][col];
+            // Mark the cell as visited by replacing it with '#'
+            this.board[row][col] = '#';
+
+            int[] rowOffsets = { 0, 1, 0, -1 };
+            int[] colOffsets = { 1, 0, -1, 0 };
+            for (int d = 0; d < 4; d++)
+            {
+                ret = Backtrack(row + rowOffsets[d], col + colOffsets[d], word,
+                                index + 1);
+                if (ret)      // If path is found, return true without cleanup
+
+                    break;
+            }
+
+            // Step 4: Clean up and return 
+            // Restore the original character before returning
+            this.board[row][col] = temp;
+            return ret;
+        }
+
+        /*
+        212. Word Search II
+        https://leetcode.com/problems/word-search-ii/description/
+
+        Approach 1: Backtracking with Trie
+
+        Complexity
+        •	Time complexity: O(M(4⋅3L−1)), where M is the number of cells in the board and L is the maximum length of words.
+            o	It is tricky is calculate the exact number of steps that a backtracking algorithm would perform. We provide a upper bound of steps for the worst scenario for this problem. The algorithm loops over all the cells in the board, therefore we have M as a factor in the complexity formula. It then boils down to the maximum number of steps we would need for each starting cell (i.e.4⋅3L−1).
+            o	Assume the maximum length of word is L, starting from a cell, initially we would have at most 4 directions to explore. Assume each direction is valid (i.e. worst case), during the following exploration, we have at most 3 neighbor cells (excluding the cell where we come from) to explore. As a result, we would traverse at most 4⋅3L−1 cells during the backtracking exploration.
+            o	One might wonder what the worst case scenario looks like. Well, here is an example. Imagine, each of the cells in the board contains the letter a, and the word dictionary contains a single word ['aaaa']. Voila. This is one of the worst scenarios that the algorithm would encounter.
+            
+            o	Note that, the above time complexity is estimated under the assumption that the Trie data structure would not change once built. If we apply the optimization trick to gradually remove the nodes in Trie, we could greatly improve the time complexity, since the cost of backtracking would reduced to zero once we match all the words in the dictionary, i.e. the Trie becomes empty.
+
+
+        •	Space Complexity: O(N), where N is the total number of letters in the dictionary.
+            o	The main space consumed by the algorithm is the Trie data structure we build. In the worst case where there is no overlapping of prefixes among the words, the Trie would have as many nodes as the letters of all words. And optionally, one might keep a copy of words in the Trie as well. As a result, we might need 2N space for the Trie.
+
+        */
+        private int rows;
+        private int cols;
+        private char[][] board = null;
+        private List<string> result = new List<string>();
+
+        public List<string> FindWords(char[][] board, string[] words)
+        {
+            // Step 1). Construct the Trie
+            TrieNode root = new TrieNode();
+            foreach (string word in words)
+            {
+                TrieNode node = root;
+
+                foreach (char letter in word)
+                {
+                    if (node.Children.ContainsKey(letter))
+                    {
+                        node = node.Children[letter];
+                    }
+                    else
+                    {
+                        TrieNode newNode = new TrieNode();
+                        node.Children[letter] = newNode;
+                        node = newNode;
+                    }
+                }
+                node.Word = word; // store words in Trie
+            }
+
+            this.board = board;
+            // Step 2). Backtracking starting for each cell in the board
+            for (int row = 0; row < board.Length; ++row)
+            {
+                for (int col = 0; col < board[row].Length; ++col)
+                {
+                    if (root.Children.ContainsKey(board[row][col]))
+                    {
+                        Backtracking(row, col, root);
+                    }
+                }
+            }
+
+            return this.result;
+        }
+
+        private void Backtracking(int row, int col, TrieNode parent)
+        {
+            char letter = this.board[row][col];
+            TrieNode currNode = parent.Children[letter];
+
+            // check if there is any match
+            if (currNode.Word != null)
+            {
+                this.result.Add(currNode.Word);
+                currNode.Word = null;
+            }
+
+            // mark the current letter before the EXPLORATION
+            this.board[row][col] = '#';
+
+            // explore neighbor cells in around-clock directions: up, right, down, left
+            int[] rowOffset = { -1, 0, 1, 0 };
+            int[] colOffset = { 0, 1, 0, -1 };
+            for (int i = 0; i < 4; ++i)
+            {
+                int newRow = row + rowOffset[i];
+                int newCol = col + colOffset[i];
+                if (
+                    newRow < 0 ||
+                    newRow >= this.board.Length ||
+                    newCol < 0 ||
+                    newCol >= this.board[0].Length
+                )
+                {
+                    continue;
+                }
+                if (currNode.Children.ContainsKey(this.board[newRow][newCol]))
+                {
+                    Backtracking(newRow, newCol, currNode);
+                }
+            }
+
+            // End of EXPLORATION, restore the original letter in the board.
+            this.board[row][col] = letter;
+
+            // Optimization: incrementally remove the leaf nodes
+            if (currNode.Children.Count == 0)
+            {
+                parent.Children.Remove(letter);
+            }
+        }
+        /*
+        1631. Path With Minimum Effort
+        https://leetcode.com/problems/path-with-minimum-effort/description/
+        */
+        public int MinimumEffortPath(int[][] heights)
+        {
+
+            /*
+Approach 1: Brute Force using Backtracking
+Complexity Analysis
+Let m be the number of rows and n be the number of columns in the matrix heights.
+•	Time Complexity : O(3m⋅n). The total number of cells in the matrix is given by m⋅n. For the backtracking, there are at most 4 possible directions to explore, but further, the choices are reduced to 3 (since we won't go back to where we come from). Thus, considering 3 possibilities for every cell in the matrix the time complexity would be O(3m⋅n).
+The time complexity is exponential, hence this approach is exhaustive and results in Time Limit Exceeded (TLE).
+•	Space Complexity: O(m⋅n) This space will be used to store the recursion stack. As we recursively move to the adjacent cells, in the worst case there could be m⋅n cells in the recursive call stack.
+            */
+
+            int result = MinimumEffortPathNaiveBacktrack(heights);
+            /*
+Approach 2: Variations of Dijkstra's Algorithm
+Complexity Analysis
+•	Time Complexity : O(m⋅nlog(m⋅n)), where m is the number of rows and n is the number of columns in matrix heights.
+It will take O(m⋅n) time to visit every cell in the matrix. The priority queue will contain at most m⋅n cells, so it will take O(log(m⋅n)) time to re-sort the queue after every adjacent cell is added to the queue.
+This given as total time complexiy as O(m⋅nlog(m⋅n)).
+•	Space Complexity: O(m⋅n), where m is the number of rows and n is the number of columns in matrix heights.
+The maximum queue size is equal to the total number of cells in the matrix height which is given by m⋅n. Also, we use a difference matrix of size m⋅n. This gives as time complexity as O(m⋅n+m⋅n) = O(m⋅n)
+
+
+            */
+            result = MinimumEffortPathDijKPQ(heights);
+
+            /*
+Approach 3: Union Find - Disjoint Set
+Complexity Analysis
+Let m be the number of rows and n be the number of columns of the matrix height.
+•	Time Complexity : O(m⋅n(log(m⋅n))). We iterate each edge in the matrix. From the above example, it is evident that for a matrix of size 3⋅3, the total number of edges are 12. Thus, for a m⋅n matrix, the total number of edges could be given by (m⋅n⋅2)−(m+n) (3*3*2) - (3+3)), which is roughly equivalent to m⋅n.
+For every edge, we find the parent of each cell and perform the union (Union Find). For n elements, the time complexity of Union Find is logn. (Refer Proof Of Time Complexity Of Union Find). Thus for m⋅n cells, the time taken to perform Union Find would be logm⋅n. This gives us total time complexity as, O(m⋅n(log(m⋅n))).
+•	Space Complexity : O(m⋅n) , we use arrays edgeList, parent, and rank of size m⋅n.
+
+            
+            */
+            result = MinimumEffortPathUF(heights);
+
+            /*
+Approach 4: Binary Search Using BFS
+Complexity Analysis
+Let m be the number of rows and n be the number of columns for the matrix height.
+•	Time Complexity : O(m⋅n). We do a binary search to calculate the mid values and then do Breadth First Search on the matrix for each of those values.
+Binary Search:To perform Binary search on numbers in range (0..106), the time taken would be O(log106).
+Breadth First Search: The time complexity for the Breadth First Search for vertices V and edges E is O(V+E) (See our Explore Card on BFS)
+Thus, in the matrix of size m⋅n, with m⋅n vertices and m⋅n edges (Refer time complexity of Approach 3), the time complexity to perform Breadth First Search would be O(m⋅n+m⋅n) = O(m⋅n).
+This gives us total time complexity as O(log106⋅(m⋅n)) which is equivalent to O(m⋅n).
+•	Space Complexity: O(m⋅n), as we use a queue and visited array of size m⋅n
+
+            
+            */
+            result = MinimumEffortPathBFSBS(heights);
+
+            /*
+Approach 5: Binary Search Using DFS
+ Complexity Analysis
+•	Time Complexity : O(m⋅n). As in Approach 4. The only difference is that we are using Depth First Search instead of Breadth First Search and have similar time complexity.
+•	Space Complexity: O(m⋅n), As in Approach 4. In Depth First Search, we use the internal call stack (instead of the queue in Breadth First Search).
+           
+            */
+            result = MinimumEffortPathDFSBS(heights);
+
+            return result;
+
+        }
+
+        public int MinimumEffortPathNaiveBacktrack(int[][] heights)
+        {
+            return Backtrack(0, 0, heights, heights.Length, heights[0].Length, 0);
+        }
+
+        //int[][] directions = new int[][] { new int[] { 0, 1 }, new int[] { 1, 0 }, new int[] { 0, -1 }, new int[] { -1, 0 } };
+        int maxSoFar = int.MaxValue;
+
+        int Backtrack(int x, int y, int[][] heights, int row, int col, int maxDifference)
+        {
+            if (x == row - 1 && y == col - 1)
+            {
+                maxSoFar = Math.Min(maxSoFar, maxDifference);
+                return maxDifference;
+            }
+            int currentHeight = heights[x][y];
+            heights[x][y] = 0;
+            int minEffort = int.MaxValue;
+            for (int i = 0; i < 4; i++)
+            {
+                int adjacentX = x + directions[i][0];
+                int adjacentY = y + directions[i][1];
+                if (IsValidCell(adjacentX, adjacentY, row, col) && heights[adjacentX][adjacentY] != 0)
+                {
+                    int currentDifference = Math.Abs(heights[adjacentX][adjacentY] - currentHeight);
+                    int maxCurrentDifference = Math.Max(maxDifference, currentDifference);
+                    if (maxCurrentDifference < maxSoFar)
+                    {
+                        int result = Backtrack(adjacentX, adjacentY, heights, row, col, maxCurrentDifference);
+                        minEffort = Math.Min(minEffort, result);
+                    }
+                }
+            }
+            heights[x][y] = currentHeight;
+            return minEffort;
+        }
+
+        bool IsValidCell(int x, int y, int rowCount, int colCount)
+        {
+            return x >= 0 && x <= rowCount - 1 && y >= 0 && y <= colCount - 1;
+        }
+        public int MinimumEffortPathDijKPQ(int[][] heights)
+        {
+            int rowCount = heights.Length;
+            int colCount = heights[0].Length;
+            int[][] differenceMatrix = new int[rowCount][];
+            for (int i = 0; i < rowCount; i++)
+            {
+                differenceMatrix[i] = new int[colCount];
+                Array.Fill(differenceMatrix[i], int.MaxValue);
+            }
+            differenceMatrix[0][0] = 0;
+            PriorityQueue<Cell, int> queue = new PriorityQueue<Cell, int>(Comparer<int>.Create((a, b) => a.CompareTo(b)));
+            bool[][] visited = new bool[rowCount][];
+            for (int i = 0; i < rowCount; i++)
+            {
+                visited[i] = new bool[colCount];
+            }
+            queue.Enqueue(new Cell(0, 0, differenceMatrix[0][0]), differenceMatrix[0][0]);
+
+            while (queue.Count > 0)
+            {
+                Cell currentCell = queue.Dequeue();
+                visited[currentCell.X][currentCell.Y] = true;
+                if (currentCell.X == rowCount - 1 && currentCell.Y == colCount - 1)
+                    return currentCell.Difference;
+                foreach (int[] direction in directions)
+                {
+                    int adjacentX = currentCell.X + direction[0];
+                    int adjacentY = currentCell.Y + direction[1];
+                    if (IsValidCell(adjacentX, adjacentY, rowCount, colCount) && !visited[adjacentX][adjacentY])
+                    {
+                        int currentDifference = Math.Abs(heights[adjacentX][adjacentY] - heights[currentCell.X][currentCell.Y]);
+                        int maxDifference = Math.Max(currentDifference, differenceMatrix[currentCell.X][currentCell.Y]);
+                        if (differenceMatrix[adjacentX][adjacentY] > maxDifference)
+                        {
+                            differenceMatrix[adjacentX][adjacentY] = maxDifference;
+                            queue.Enqueue(new Cell(adjacentX, adjacentY, maxDifference), maxDifference);
+                        }
+                    }
+                }
+            }
+            return differenceMatrix[rowCount - 1][colCount - 1];
+
+            bool IsValidCell(int x, int y, int rowCount, int colCount)
+            {
+                return x >= 0 && x < rowCount && y >= 0 && y < colCount;
+            }
+
+        }
+
+        class Cell
+        {
+            public int X { get; }
+            public int Y { get; }
+            public int Difference { get; }
+
+            public Cell(int x, int y, int difference)
+            {
+                X = x;
+                Y = y;
+                Difference = difference;
+            }
+
+            public Cell(int x, int y)
+            {
+                X = x;
+                Y = y;
+            }
+
+        }
+
+        public int MinimumEffortPathUF(int[][] heights)
+        {
+            int rowCount = heights.Length;
+            int columnCount = heights[0].Length;
+            if (rowCount == 1 && columnCount == 1) return 0;
+            UnionFind unionFind = new UnionFind(heights);
+            List<Edge> edgeList = unionFind.EdgeList;
+            edgeList.Sort((e1, e2) => e1.Difference - e2.Difference);
+
+            for (int i = 0; i < edgeList.Count; i++)
+            {
+                int x = edgeList[i].X;
+                int y = edgeList[i].Y;
+                unionFind.Union(x, y);
+                if (unionFind.Find(0) == unionFind.Find(rowCount * columnCount - 1)) return edgeList[i].Difference;
+            }
+            return -1;
+        }
+
+
+        class UnionFind
+        {
+            private int[] Parent;
+            private int[] Rank;
+            public List<Edge> EdgeList;
+
+            public UnionFind(int[][] heights)
+            {
+                int rowCount = heights.Length;
+                int columnCount = heights[0].Length;
+                Parent = new int[rowCount * columnCount];
+                EdgeList = new List<Edge>();
+                Rank = new int[rowCount * columnCount];
+                for (int currentRow = 0; currentRow < rowCount; currentRow++)
+                {
+                    for (int currentCol = 0; currentCol < columnCount; currentCol++)
+                    {
+                        if (currentRow > 0)
+                        {
+                            EdgeList.Add(new Edge(currentRow * columnCount + currentCol,
+                                                   (currentRow - 1) * columnCount + currentCol,
+                                                   Math.Abs(heights[currentRow][currentCol] - heights[currentRow - 1][currentCol])));
+                        }
+                        if (currentCol > 0)
+                        {
+                            EdgeList.Add(new Edge(currentRow * columnCount + currentCol,
+                                                   currentRow * columnCount + currentCol - 1,
+                                                   Math.Abs(heights[currentRow][currentCol] - heights[currentRow][currentCol - 1])));
+                        }
+                        Parent[currentRow * columnCount + currentCol] = currentRow * columnCount + currentCol;
+                    }
+                }
+            }
+
+            public int Find(int x)
+            {
+                if (Parent[x] != x) Parent[x] = Find(Parent[x]);
+                return Parent[x];
+            }
+
+            public void Union(int x, int y)
+            {
+                int parentX = Find(x);
+                int parentY = Find(y);
+                if (parentX != parentY)
+                {
+                    if (Rank[parentX] > Rank[parentY]) Parent[parentY] = parentX;
+                    else if (Rank[parentX] < Rank[parentY]) Parent[parentX] = parentY;
+                    else
+                    {
+                        Parent[parentY] = parentX;
+                        Rank[parentX] += 1;
+                    }
+                }
+            }
+        }
+
+        class Edge
+        {
+            public int X;
+            public int Y;
+            public int Difference;
+
+            public Edge(int x, int y, int difference)
+            {
+                X = x;
+                Y = y;
+                Difference = difference;
+            }
+        }
+        public int MinimumEffortPathBFSBS(int[][] heights)
+        {
+            int leftBoundary = 0;
+            int rightBoundary = 1000000;
+            int result = rightBoundary;
+            //Binary Search
+            while (leftBoundary <= rightBoundary)
+            {
+                int midPoint = (leftBoundary + rightBoundary) / 2;
+                if (CanReachDestination(heights, midPoint))
+                {
+                    result = Math.Min(result, midPoint);
+                    rightBoundary = midPoint - 1;
+                }
+                else
+                {
+                    leftBoundary = midPoint + 1;
+                }
+            }
+            return result;
+        }
+        // use bfs to check if we can reach destination with max absolute difference k
+        bool CanReachDestination(int[][] heights, int maxDifference)
+        {
+            int rowCount = heights.Length;
+            int columnCount = heights[0].Length;
+            Queue<Cell> queue = new Queue<Cell>();
+            bool[][] visitedCells = new bool[heights.Length][];
+            for (int i = 0; i < heights.Length; i++)
+            {
+                visitedCells[i] = new bool[heights[0].Length];
+            }
+            queue.Enqueue(new Cell(0, 0));
+            visitedCells[0][0] = true;
+            while (queue.Count > 0)
+            {
+                Cell currentCell = queue.Dequeue();
+                if (currentCell.X == rowCount - 1 && currentCell.Y == columnCount - 1)
+                {
+                    return true;
+                }
+                foreach (int[] direction in directions)
+                {
+                    int adjacentX = currentCell.X + direction[0];
+                    int adjacentY = currentCell.Y + direction[1];
+                    if (IsValidCell(adjacentX, adjacentY, rowCount, columnCount) && !visitedCells[adjacentX][adjacentY])
+                    {
+                        int currentDifference = Math.Abs(heights[adjacentX][adjacentY] - heights[currentCell.X][currentCell.Y]);
+                        if (currentDifference <= maxDifference)
+                        {
+                            visitedCells[adjacentX][adjacentY] = true;
+                            queue.Enqueue(new Cell(adjacentX, adjacentY));
+                        }
+                    }
+                }
+            }
+            return false;
+            bool IsValidCell(int x, int y, int rowCount, int columnCount)
+            {
+                return x >= 0 && x <= rowCount - 1 && y >= 0 && y <= columnCount - 1;
+            }
+
+        }
+        public int MinimumEffortPathDFSBS(int[][] heights)
+        {
+            int left = 0;
+            int right = 1000000;
+            int result = right;
+            //Binary Search
+            while (left <= right)
+            {
+                int mid = (left + right) / 2;
+                if (MinimumEffortPathDFSBS(heights, mid))
+                {
+                    result = Math.Min(result, mid);
+                    right = mid - 1;
+                }
+                else
+                {
+                    left = mid + 1;
+                }
+            }
+            return result;
+        }
+        private bool MinimumEffortPathDFSBS(int[][] heights, int mid)
+        {
+            int rowCount = heights.Length;
+            int colCount = heights[0].Length;
+            bool[][] visited = new bool[rowCount][];
+            for (int i = 0; i < rowCount; i++)
+            {
+                visited[i] = new bool[colCount];
+            }
+            return MinimumEffortPathDFSBSRec(0, 0, heights, visited, rowCount, colCount, mid);
+        }
+        private bool MinimumEffortPathDFSBSRec(int x, int y, int[][] heights, bool[][] visited, int rowCount, int colCount, int mid)
+        {
+            if (x == rowCount - 1 && y == colCount - 1)
+            {
+                return true;
+            }
+            visited[x][y] = true;
+            foreach (int[] direction in directions)
+            {
+                int adjacentX = x + direction[0];
+                int adjacentY = y + direction[1];
+                if (IsValidCell(adjacentX, adjacentY, rowCount, colCount) && !visited[adjacentX][adjacentY])
+                {
+                    int currentDifference = Math.Abs(heights[adjacentX][adjacentY] - heights[x][y]);
+                    if (currentDifference <= mid)
+                    {
+                        if (MinimumEffortPathDFSBSRec(adjacentX, adjacentY, heights, visited, rowCount, colCount, mid))
+                            return true;
+                    }
+                }
+            }
+            return false;
+        }
+        /*
+        778. Swim in Rising Water
+        https://leetcode.com/problems/swim-in-rising-water/
+        */
+        public int SwimInWater(int[][] grid)
+        {
+            int n = grid.Length;
+            bool IsCell(int r, int c) => r >= 0 && r < n && c >= 0 && c < n;
+            int[][] moves = new int[][]{
+            new int[]{1,0},
+            new int[]{-1,0},
+            new int[]{0,1},
+            new int[]{0,-1}
+            };
+            PriorityQueue<int[], int> pq = new(Comparer<int>.Create((a, b) => a.CompareTo(b)));
+            pq.Enqueue(new int[] { 0, 0, grid[0][0] }, grid[0][0]);
+            grid[0][0] = -1;
+            while (pq.Count > 0)
+            {
+                int[] cur = pq.Dequeue();
+                int x = cur[0], y = cur[1], val = cur[2];
+                if (x == n - 1 && y == n - 1)
+                    return val;
+                foreach (var move in moves)
+                {
+                    var newCell = new int[] { x + move[0], y + move[1], val };
+                    if (IsCell(newCell[0], newCell[1]) && grid[newCell[0]][newCell[1]] != -1)
+                    {
+                        newCell[2] = Math.Max(newCell[2], grid[newCell[0]][newCell[1]]);
+                        grid[newCell[0]][newCell[1]] = -1;
+                        pq.Enqueue(newCell, newCell[2]);
+                    }
+                }
+            }
+            return 0;
+        }
+
+        /*
+        62. Unique Paths
+        https://leetcode.com/problems/unique-paths/description/
+
+        */
+        public int UniquePaths(int m, int n)
+        {
+            /*
+ Approach 1: Dynamic Programming           
+  Complexity Analysis
+•	Time complexity: O(N×M).
+•	Space complexity: O(N×M).
+          
+            */
+            int numOfUniquePaths = UniquePathsDP(m, n);
+
+            /*
+  Approach 2: Math (Python3 only)          
+   Complexity Analysis
+•	Time complexity: O((M+N)(log(M+N)loglog(M+N))^2).
+•	Space complexity: O(1).
+         
+            */
+            numOfUniquePaths = UniquePathsMaths(m, n);
+
+            return numOfUniquePaths;
+
+        }
+
+        public int UniquePathsDP(int m, int n)
+        {
+            int[][] d = new int[m][];
+            for (int i = 0; i < m; ++i)
+            {
+                d[i] = new int[n];
+                for (int j = 0; j < n; ++j)
+                {
+                    d[i][j] = 1;
+                }
+            }
+
+            for (int col = 1; col < m; ++col)
+            {
+                for (int row = 1; row < n; ++row)
+                {
+                    d[col][row] = d[col - 1][row] + d[col][row - 1];
+                }
+            }
+
+            return d[m - 1][n - 1];
+        }
+        public int UniquePathsMaths(int m, int n)
+        {
+            long totalPlaces = m + n - 2;
+            long minPlaces = Math.Min(m - 1, n - 1);
+            long result = 1;
+            for (int i = 0; i < minPlaces; i++)
+            {
+                result = result * (totalPlaces - i) / (i + 1);
+            }
+
+            return (int)result;
+
+        }
+        /*
+
+        Approach 1: Dynamic Programming
+        Complexity Analysis
+        •	Time Complexity: O(M×N). The rectangular grid given to us is of size M×N and we process each cell just once.
+        •	Space Complexity: O(1). We are utilizing the obstacleGrid as the DP array. Hence, no extra space.
+
+        */
+        public int UniquePathsWithObstacles(int[][] obstacleGrid)
+        {
+            int R = obstacleGrid.Length;
+            int C = obstacleGrid[0].Length;
+            // If the starting cell has an obstacle, then simply return as there
+            // would be no paths to the destination.
+            if (obstacleGrid[0][0] == 1)
+            {
+                return 0;
+            }
+
+            // Number of ways of reaching the starting cell = 1.
+            obstacleGrid[0][0] = 1;
+            // Filling the values for the first column
+            for (int i = 1; i < R; i++)
+            {
+                obstacleGrid[i][0] =
+                    (obstacleGrid[i][0] == 0 && obstacleGrid[i - 1][0] == 1) ? 1
+                                                                             : 0;
+            }
+
+            // Filling the values for the first row
+            for (int i = 1; i < C; i++)
+            {
+                obstacleGrid[0][i] =
+                    (obstacleGrid[0][i] == 0 && obstacleGrid[0][i - 1] == 1) ? 1
+                                                                             : 0;
+            }
+
+            // Starting from cell(1,1) fill up the values
+            // No. of ways of reaching cell[i][j] = cell[i - 1][j] + cell[i][j - 1]
+            // i.e. From above and left.
+            for (int i = 1; i < R; i++)
+            {
+                for (int j = 1; j < C; j++)
+                {
+                    if (obstacleGrid[i][j] == 0)
+                    {
+                        obstacleGrid[i][j] =
+                            obstacleGrid[i - 1][j] + obstacleGrid[i][j - 1];
+                    }
+                    else
+                    {
+                        obstacleGrid[i][j] = 0;
+                    }
+                }
+            }
+
+            // Return value stored in rightmost bottommost cell. That is the
+            // destination.
+            return obstacleGrid[R - 1][C - 1];
+        }
+
+        /*
+        980. Unique Paths III
+        https://leetcode.com/problems/unique-paths-iii/description/
+
+        Approach 1: Backtracking
+        Complexity Analysis
+        Let N be the total number of cells in the input grid.
+        •	Time Complexity: O(3^N)
+        o	Although technically we have 4 directions to explore at each step, we have at most 3 directions to try at any moment except the first step.
+        The last direction is the direction where we came from, therefore we don't need to explore it, since we have been there before.
+        o	In the worst case where none of the cells is an obstacle, we have to explore each cell.
+        Hence, the time complexity of the algorithm is O(4∗3^(N−1))=O(3^N).
+        •	Space Complexity: O(N)
+        o	Thanks to the in-place technique, we did not use any additional memory to keep track of the state.
+        o	On the other hand, we apply recursion in the algorithm, which could incur O(N) space in the function call stack.
+        o	Hence, the overall space complexity of the algorithm is O(N).
+
+
+        */
+        public int UniquePathsIII(int[][] grid)
+        {
+            int non_obstacles = 0, start_row = 0, start_col = 0;
+
+            this.rows = grid.Length;
+            this.cols = grid[0].Length;
+
+            // step 1). initialize the conditions for backtracking
+            //   i.e. initial state and final state
+            for (int row = 0; row < rows; ++row)
+                for (int col = 0; col < cols; ++col)
+                {
+                    int cell = grid[row][col];
+                    if (cell >= 0)
+                        non_obstacles += 1;
+                    if (cell == 1)
+                    {
+                        start_row = row;
+                        start_col = col;
+                    }
+                }
+
+            this.path_count = 0;
+            this.grid = grid;
+
+            // kick-off the backtracking
+            Backtrack(start_row, start_col, non_obstacles);
+
+            return this.path_count;
+        }
+        int path_count;
+        protected void Backtrack(int row, int col, int remain)
+        {
+            // base case for the termination of backtracking
+            if (this.grid[row][col] == 2 && remain == 1)
+            {
+                // reach the destination
+                this.path_count += 1;
+                return;
+            }
+
+            // mark the square as visited. case: 0, 1, 2
+            int temp = grid[row][col];
+            grid[row][col] = -4;
+            remain -= 1; // we now have one less square to visit
+
+            // explore the 4 potential directions around
+            int[] row_offsets = { 0, 0, 1, -1 };
+            int[] col_offsets = { 1, -1, 0, 0 };
+            for (int i = 0; i < 4; ++i)
+            {
+                int next_row = row + row_offsets[i];
+                int next_col = col + col_offsets[i];
+
+                if (0 > next_row || next_row >= this.rows ||
+                    0 > next_col || next_col >= this.cols)
+                    // invalid coordinate
+                    continue;
+
+                if (grid[next_row][next_col] < 0)
+                    // either obstacle or visited square
+                    continue;
+
+                Backtrack(next_row, next_col, remain);
+            }
+
+            // unmark the square after the visit
+            grid[row][col] = temp;
+        }
+
+        /*
+      64. Minimum Path Sum
+    https://leetcode.com/problems/minimum-path-sum/description/
+
+        */
+
+        public int MinPathSum(int[][] grid)
+        {
+
+            /*
+            Approach 1: Brute Force
+            Complexity Analysis
+    •	Time complexity : O(2^(m+n)). For every move, we have at most 2 options.
+    •	Space complexity : O(m+n). Recursion of depth m+n.
+
+            */
+            int minPathSum = MinPathSumNaive(grid);
+            /*
+    Approach 2: Dynamic Programming 2D
+    Complexity Analysis
+    •	Time complexity : O(mn). We traverse the entire matrix once.
+    •	Space complexity : O(mn). Another matrix of the same size is used.
+
+            */
+            minPathSum = MinPathSumDP2D(grid);
+            /*
+      Approach 3: Dynamic Programming 1D
+      Complexity Analysis
+
+    Time complexity : O(mn). We traverse the entire matrix once.
+
+    Space complexity : O(n). Another array of row size is used.    
+            */
+            minPathSum = MinPathSumDP1D(grid);
+            /*
+            Approach 4: Dynamic Programming (Without Extra Space)
+
+        Complexity Analysis
+
+        Time complexity : O(mn). We traverse the entire matrix once.
+
+        Space complexity : O(1). No extra space is used.
+            */
+            minPathSum = MinPathSumDPSpaceOptimal(grid);
+
+            return minPathSum;
+
+        }
+        private int Calculate(int[][] grid, int i, int j)
+        {
+            if (i == grid.Length || j == grid[0].Length)
+                return int.MaxValue;
+            if (i == grid.Length - 1 && j == grid[0].Length - 1)
+                return grid[i][j];
+            return grid[i][j] +
+                   Math.Min(Calculate(grid, i + 1, j), Calculate(grid, i, j + 1));
+        }
+
+        public int MinPathSumNaive(int[][] grid)
+        {
+            return Calculate(grid, 0, 0);
+        }
+
+        public int MinPathSumDP2D(int[][] grid)
+        {
+            int[][] dp = new int[grid.Length][];
+            for (int i = 0; i < grid.Length; i++) dp[i] = new int[grid[0].Length];
+            for (int i = grid.Length - 1; i >= 0; i--)
+            {
+                for (int j = grid[0].Length - 1; j >= 0; j--)
+                {
+                    if (i == grid.Length - 1 && j != grid[0].Length - 1)
+                        dp[i][j] = grid[i][j] + dp[i][j + 1];
+                    else if (j == grid[0].Length - 1 && i != grid.Length - 1)
+                        dp[i][j] = grid[i][j] + dp[i + 1][j];
+                    else if (j != grid[0].Length - 1 && i != grid.Length - 1)
+                        dp[i][j] =
+                            grid[i][j] + Math.Min(dp[i + 1][j], dp[i][j + 1]);
+                    else
+                        dp[i][j] = grid[i][j];
+                }
+            }
+
+            return dp[0][0];
+        }
+
+        public int MinPathSumDP1D(int[][] grid)
+        {
+            int[] dp = new int[grid[0].Length];
+            for (int i = grid.Length - 1; i >= 0; i--)
+            {
+                for (int j = grid[0].Length - 1; j >= 0; j--)
+                {
+                    if (i == grid.Length - 1 && j != grid[0].Length - 1)
+                        dp[j] = grid[i][j] + dp[j + 1];
+                    else if (j == grid[0].Length - 1 && i != grid.Length - 1)
+                        dp[j] = grid[i][j] + dp[j];
+                    else if (i != grid.Length - 1 && j != grid[0].Length - 1)
+                        dp[j] = grid[i][j] + Math.Min(dp[j], dp[j + 1]);
+                    else
+                        dp[j] = grid[i][j];
+                }
+            }
+
+            return dp[0];
+        }
+        public int MinPathSumDPSpaceOptimal(int[][] grid)
+        {
+            for (int i = grid.Length - 1; i >= 0; i--)
+            {
+                for (int j = grid[0].Length - 1; j >= 0; j--)
+                {
+                    if (i == grid.Length - 1 && j != grid[0].Length - 1)
+                        grid[i][j] += grid[i][j + 1];
+                    else if (j == grid[0].Length - 1 && i != grid.Length - 1)
+                        grid[i][j] += grid[i + 1][j];
+                    else if (j != grid[0].Length - 1 && i != grid.Length - 1)
+                        grid[i][j] += Math.Min(grid[i + 1][j], grid[i][j + 1]);
+                }
+            }
+
+            return grid[0][0];
+        }
+
+        /*
+        741. Cherry Pickup
+        https://leetcode.com/problems/cherry-pickup/description/
+
+        */
+        public int CherryPickup(int[][] grid)
+        {
+            /*
+            Approach #1: Greedy [Wrong Answer]
+            Complexity Analysis
+•	Time Complexity: O(N^2), where N is the length of grid. Our dynamic programming consists of two for-loops of length N.
+•	Space Complexity: O(N^2), the size of dp.
+
+            */
+            int maxNumOfCherrysPicked = CherryPickupNaiveWrongAnswer(grid);
+            /*
+Approach #2: Dynamic Programming (Top Down) (DPTD)
+Complexity Analysis
+•	Time Complexity: O(N^3), where N is the length of grid. Our dynamic programming has N3 states, and each state is calculated once.
+•	Space Complexity: O(N^3), the size of memo.
+
+            */
+                 maxNumOfCherrysPicked = CherryPickupDPTD(grid);
+            /*
+Approach #3: Dynamic Programming (Bottom Up)   (DPBU)          
+ Complexity Analysis
+•	Time Complexity: O(N^3), where N is the length of grid. We have three for-loops of size N.
+•	Space Complexity: O(N^2), the sizes of dp and dp2.
+
+            */
+             maxNumOfCherrysPicked = CherryPickupDPBU(grid);
+
+             return maxNumOfCherrysPicked;
+        }
+
+
+        public int CherryPickupNaiveWrongAnswer(int[][] grid)
+        {
+            int ans = 0;
+            int[][] path = BestPath(grid);
+            if (path == null)
+            {
+                return 0;
+            }
+            foreach (int[] step in path)
+            {
+                ans += grid[step[0]][step[1]];
+                grid[step[0]][step[1]] = 0;
+            }
+
+            foreach (int[] step in BestPath(grid))
+            {
+                ans += grid[step[0]][step[1]];
+            }
+
+            return ans;
+        }
+
+        public int[][] BestPath(int[][] grid)
+        {
+            int N = grid.Length;
+            int[][] dp = new int[N][];
+            foreach (int[] row in dp)
+            {
+                Array.Fill(row, int.MinValue);
+            }
+            dp[N - 1][N - 1] = grid[N - 1][N - 1];
+            for (int r = N - 1; r >= 0; --r)
+            {
+                for (int c = N - 1; c >= 0; --c)
+                {
+                    if (grid[r][c] >= 0 && (r != N - 1 || c != N - 1))
+                    {
+                        dp[r][c] = Math.Max(r + 1 < N ? dp[r + 1][c] : int.MinValue,
+                                            c + 1 < N ? dp[r][c + 1] : int.MinValue);
+                        dp[r][c] += grid[r][c];
+                    }
+                }
+            }
+            if (dp[0][0] < 0)
+            {
+                return null;
+            }
+            int[][] ans = new int[2 * N - 1][];
+            int i = 0, j = 0, t = 0;
+            while (i != N - 1 || j != N - 1)
+            {
+                if (j + 1 == N || i + 1 < N && dp[i + 1][j] >= dp[i][j + 1])
+                {
+                    i++;
+                }
+                else
+                {
+                    j++;
+                }
+
+                ans[t][0] = i;
+                ans[t][1] = j;
+                t++;
+            }
+            return ans;
+        }
+
+        int N;
+        int[][][] memo;
+        public int CherryPickupDPTD(int[][] grid)
+        {
+            this.grid = grid;
+            N = grid.Length;
+            memo = new int[N][][];
+            foreach (int[][] layer in memo)
+            {
+                foreach (int[] row in layer)
+                {
+                    Array.Fill(row, int.MinValue);
+                }
+            }
+            return Math.Max(0, CherryPickupDPTDRec(0, 0, 0));
+        }
+        public int CherryPickupDPTDRec(int r1, int c1, int c2)
+        {
+            int r2 = r1 + c1 - c2;
+            if (N == r1 || N == r2 || N == c1 || N == c2 ||
+                    grid[r1][c1] == -1 || grid[r2][c2] == -1)
+            {
+                return -999999;
+            }
+            else if (r1 == N - 1 && c1 == N - 1)
+            {
+                return grid[r1][c1];
+            }
+            else if (memo[r1][c1][c2] != int.MinValue)
+            {
+                return memo[r1][c1][c2];
+            }
+            else
+            {
+                int ans = grid[r1][c1];
+                if (c1 != c2)
+                {
+                    ans += grid[r2][c2];
+                }
+                ans += Math.Max(Math.Max(CherryPickupDPTDRec(r1, c1 + 1, c2 + 1), CherryPickupDPTDRec(r1 + 1, c1, c2 + 1)),
+                                Math.Max(CherryPickupDPTDRec(r1, c1 + 1, c2), CherryPickupDPTDRec(r1 + 1, c1, c2)));
+                memo[r1][c1][c2] = ans;
+                return ans;
+            }
+        }
+        public int CherryPickupDPBU(int[][] grid)
+        {
+            int N = grid.Length;
+            int[][] dp = new int[N][];
+            foreach (int[] row in dp)
+            {
+                Array.Fill(row, int.MinValue);
+            }
+            dp[0][0] = grid[0][0];
+
+            for (int t = 1; t <= 2 * N - 2; ++t)
+            {
+                int[][] dp2 = new int[N][];
+                foreach (int[] row in dp2)
+                {
+                    Array.Fill(row, int.MinValue);
+                }
+
+                for (int i = Math.Max(0, t - (N - 1)); i <= Math.Min(N - 1, t); ++i)
+                {
+                    for (int j = Math.Max(0, t - (N - 1)); j <= Math.Min(N - 1, t); ++j)
+                    {
+                        if (grid[i][t - i] == -1 || grid[j][t - j] == -1)
+                        {
+                            continue;
+                        }
+                        int val = grid[i][t - i];
+                        if (i != j)
+                        {
+                            val += grid[j][t - j];
+                        }
+                        for (int pi = i - 1; pi <= i; ++pi)
+                        {
+                            for (int pj = j - 1; pj <= j; ++pj)
+                            {
+                                if (pi >= 0 && pj >= 0)
+                                {
+                                    dp2[i][j] = Math.Max(dp2[i][j], dp[pi][pj] + val);
+                                }
+                            }
+                        }
+                    }
+                }
+                dp = dp2;
+            }
+            return Math.Max(0, dp[N - 1][N - 1]);
+        }
+
+
+
+
+
+
+
     }
 
+
+
+
 }
+
+

@@ -11,6 +11,7 @@ namespace AlgoDSPlay.DataStructures
         public T2 Value;
         public DoublyLinkedListNode<T1, T2> Prev = null;
         public DoublyLinkedListNode<T1,T2> Next = null;
+        
 
 
         public DoublyLinkedListNode(T1 key, T2 value){

@@ -593,8 +593,137 @@ namespace AlgoDSPlay
             return segmentTree.max();
         }
 
+        /*
+        3. Longest Substring Without Repeating Characters
+        https://leetcode.com/problems/longest-substring-without-repeating-characters/description/
+
+        */
+        public int LengthOfLongestSubstring(string s)
+        {
+
+            /*
+            Approach 1: Brute Force
+            Complexity Analysis
+            •	Time complexity : O(n3).
+                    To verify if characters within index range [i,j) are all unique, we need to scan all of them. Thus, it costs O(j−i) time.
+                    For a given i, the sum of time costed by each j∈[i+1,n] is
+                    ∑i+1nO(j−i)
+                    Thus, the sum of all the time consumption is:
+                    O(∑i=0n−1(∑j=i+1n(j−i)))=O(∑i=0n−12(1+n−i)(n−i))=O(n3)
+            •	Space complexity : O(min(n,m)). We need O(k) space for checking a substring has no duplicate characters, where k is the size of the Set. The size of the Set is upper bounded by the size of the string n and the size of the charset/alphabet m.
+        
+            */
+            int lengthOfLongestSubstring = LengthOfLongestSubstringNaive(s);
+
+            /*
+Approach 2: Sliding Window
+Complexity Analysis
+•	Time complexity : O(2n)=O(n). In the worst case each character will be visited twice by i and j.
+•	Space complexity : O(min(m,n)). Same as the previous approach. We need O(k) space for the sliding window, where k is the size of the Set. The size of the Set is upper bounded by the size of the string n and the size of the charset/alphabet m.
+
+*/
+            lengthOfLongestSubstring = LengthOfLongestSubstringOptimal1(s);
+
+            /*            
+Approach 3: Sliding Window Optimized
+
+Complexity Analysis
+•	Time complexity : O(n). Index j will iterate n times.
+•	Space complexity : O(min(m,n)). Same as the previous approach.        
+*/
+            lengthOfLongestSubstring = LengthOfLongestSubstringOptimal2(s);
+
+            return lengthOfLongestSubstring;
+
+        }
+
+        private int LengthOfLongestSubstringOptimal2(string s)
+        {
+            Dictionary<char, int> map = new Dictionary<char, int>();
+            int maxLen = 0;
+            int left = 0;
+            for (int right = 0; right < s.Length; right++)
+            {
+                if (map.ContainsKey(s[right]))
+                {
+                    left = Math.Max(map[s[right]], left);
+                }
+
+                maxLen = Math.Max(maxLen, right - left + 1);
+                map[s[right]] = right + 1;
+            }
+
+            return maxLen;
+        }
 
 
+        private int LengthOfLongestSubstringOptimal1(string s)
+        {
+            Dictionary<char, int> chars = new Dictionary<char, int>();
 
+            int left = 0;
+            int right = 0;
+
+            int res = 0;
+            while (right < s.Length)
+            {
+                char r = s[right];
+                if (!chars.ContainsKey(r))
+                {
+                    chars[r] = 0;
+                }
+
+                chars[r]++;
+
+                while (chars[r] > 1)
+                {
+                    char l = s[left];
+                    chars[l]--;
+                    left++;
+                }
+
+                res = Math.Max(res, right - left + 1);
+
+                right++;
+            }
+
+            return res;
+        }
+
+        private int LengthOfLongestSubstringNaive(string s)
+        {
+            int n = s.Length;
+
+            int res = 0;
+            for (int i = 0; i < n; i++)
+            {
+                for (int j = i; j < n; j++)
+                {
+                    if (CheckRepetition(s, i, j))
+                    {
+                        res = Math.Max(res, j - i + 1);
+                    }
+                }
+            }
+
+            return res;
+        }
+        private bool CheckRepetition(string s, int start, int end)
+        {
+            HashSet<char> chars = new HashSet<char>();
+
+            for (int i = start; i <= end; i++)
+            {
+                char c = s[i];
+                if (chars.Contains(c))
+                {
+                    return false;
+                }
+
+                chars.Add(c);
+            }
+
+            return true;
+        }
     }
 }

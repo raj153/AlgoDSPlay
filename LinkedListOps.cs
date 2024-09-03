@@ -428,7 +428,7 @@ namespace AlgoDSPlay
             }
         }
 
-        
+
         public class LinkedList
         {
             public int Value;
@@ -580,8 +580,521 @@ namespace AlgoDSPlay
             }
         }
 
-        
+        /*
+        19. Remove Nth Node From End of List
+        https://leetcode.com/problems/remove-nth-node-from-end-of-list/description/
 
+        */
+        public ListNode RemoveNthFromEnd(ListNode head, int n)
+        {
+            /*
+Approach 1: Two pass algorithm (TP)
+Complexity Analysis
+•	Time complexity : O(L).
+The algorithm makes two traversal of the list, first to calculate list length L and second to find the (L−n) th node. There are 2L−n operations and time complexity is O(L).	
+•	Space complexity : O(1).
+We only used constant extra space.
+            
+            */
+            ListNode headNodeAfterRemovingNthNode = RemoveNthFromEndTP(head, n);
+            /*
+    Approach 2: One pass algorithm (OP)
+    Complexity Analysis
+    •	Time complexity : O(L).
+    The algorithm makes one traversal of the list of L nodes. Therefore time complexity is O(L).
+    •	Space complexity : O(1).
+    We only used constant extra space.
+
+            */
+            headNodeAfterRemovingNthNode = RemoveNthFromEndOP(head, n);
+
+            return headNodeAfterRemovingNthNode;
+
+        }
+        public class ListNode
+        {
+            public int Val;
+            public ListNode Next;
+
+            public ListNode(int val = 0, ListNode next = null)
+            {
+                this.Val = val;
+                this.Next = next;
+            }
+
+        }
+        public ListNode RemoveNthFromEndTP(ListNode head, int n)
+        {
+            ListNode dummy = new ListNode(0);
+            dummy.Next = head;
+            int length = 0;
+            ListNode first = head;
+            while (first != null)
+            {
+                length++;
+                first = first.Next;
+            }
+
+            length -= n;
+            first = dummy;
+            while (length > 0)
+            {
+                length--;
+                first = first.Next;
+            }
+
+            first.Next = first.Next.Next;
+            return dummy.Next;
+        }
+        public ListNode RemoveNthFromEndOP(ListNode head, int n)
+        {
+            ListNode dummy = new ListNode(0);
+            dummy.Next = head;
+            ListNode first = dummy;
+            ListNode second = dummy;
+            // Advances first pointer so that the gap between first and second is n
+            // nodes apart
+            for (int i = 1; i <= n + 1; i++)
+            {
+                first = first.Next;
+            }
+
+            // Move first to the end, maintaining the gap
+            while (first != null)
+            {
+                first = first.Next;
+                second = second.Next;
+            }
+
+            second.Next = second.Next.Next;
+            return dummy.Next;
+        }
+
+        /*
+        21. Merge Two Sorted Lists
+https://leetcode.com/problems/merge-two-sorted-lists/description/	
+        */
+        public ListNode MergeTwoLists(ListNode list1, ListNode list2)
+        {
+            /*
+  Approach 1: Recursion
+Complexity Analysis
+•	Time complexity : O(n+m)
+Because each recursive call increments the pointer to l1 or l2 by one (approaching the dangling null at the end of each list), there will be exactly one call to mergeTwoLists per element in each list. Therefore, the time complexity is linear in the combined size of the lists.
+•	Space complexity : O(n+m)
+The first call to mergeTwoLists does not return until the ends of both l1 and l2 have been reached, so n+m stack frames consume O(n+m) space.
+       
+            
+            */
+            ListNode mergedList = MergeTwoListsRec(list1, list2);
+
+            /*
+  Approach 2: Iteration          
+   Complexity Analysis
+•	Time complexity : O(n+m)
+Because exactly one of l1 and l2 is incremented on each loop
+iteration, the while loop runs for a number of iterations equal to the
+sum of the lengths of the two lists. All other work is constant, so the
+overall complexity is linear.
+•	Space complexity : O(1)
+The iterative approach only allocates a few pointers, so it has a
+constant overall memory footprint.
+         
+            */
+
+            mergedList = MergeTwoListsIterative(list1, list2);
+
+            return mergedList;
+
+        }
+        public ListNode MergeTwoListsRec(ListNode l1, ListNode l2)
+        {
+            if (l1 == null)
+            {
+                return l2;
+            }
+            else if (l2 == null)
+            {
+                return l1;
+            }
+            else if (l1.Val < l2.Val)
+            {
+                l1.Next = MergeTwoListsRec(l1.Next, l2);
+                return l1;
+            }
+            else
+            {
+                l2.Next = MergeTwoListsRec(l1, l2.Next);
+                return l2;
+            }
+        }
+        public ListNode MergeTwoListsIterative(ListNode l1, ListNode l2)
+        {
+            // maintain an unchanging reference to node ahead of the return node.
+            ListNode prehead = new ListNode(-1);
+            ListNode prev = prehead;
+            while (l1 != null && l2 != null)
+            {
+                if (l1.Val <= l2.Val)
+                {
+                    prev.Next = l1;
+                    l1 = l1.Next;
+                }
+                else
+                {
+                    prev.Next = l2;
+                    l2 = l2.Next;
+                }
+
+                prev = prev.Next;
+            }
+
+            // At least one of l1 and l2 can still have nodes at this point, so
+            // connect the non-null list to the end of the merged list.
+            prev.Next = l1 == null ? l2 : l1;
+            return prehead.Next;
+        }
+
+        /*
+  23. Merge k Sorted Lists
+https://leetcode.com/problems/merge-k-sorted-lists/description/
+      
+
+        */
+        public ListNode MergeKLists(ListNode[] lists)
+        {
+
+            /*
+     Approach 1: Brute Force       
+     Complexity Analysis
+    •	Time complexity : O(NlogN) where N is the total number of nodes.
+    o	Collecting all the values costs O(N) time.
+    o	A stable sorting algorithm costs O(NlogN) time.
+    o	Iterating for creating the linked list costs O(N) time.
+    •	Space complexity : O(N).
+    o	Sorting cost O(N) space (depends on the algorithm you choose).
+    o	Creating a new linked list costs O(N) space.
+
+            */
+            ListNode mergedNode = MergeKListsNaive(lists);
+
+            /*
+     Approach 2: Compare one by one       
+    Complexity Analysis
+    •	Time complexity : O(kN) where k is the number of linked lists.
+    o	Almost every selection of node in final linked costs O(k) (k-1 times comparison).
+    o	There are N nodes in the final linked list.
+    •	Space complexity :
+    o	O(n) Creating a new linked list costs O(n) space.
+    o	O(1) It's not hard to apply in-place method - connect selected nodes instead of creating new nodes to fill the new linked list
+
+            */
+
+            /*
+    Approach 3: Optimize Approach 2 by Priority Queue
+    Complexity Analysis
+    •	Time complexity : O(Nlogk) where k is the number of linked lists.
+    o	The comparison cost will be reduced to O(logk) for every pop and insertion to priority queue. But finding the node with the smallest value just costs O(1) time.
+    o	There are N nodes in the final linked list.
+    •	Space complexity :
+    o	O(n) Creating a new linked list costs O(n) space.
+    o	O(k) The code above present applies in-place method which cost O(1) space. And the priority queue (often implemented with heaps) costs O(k) space (it's far less than N in most situations).
+
+            */
+            mergedNode = MergeKListsPQ(lists);
+            /*
+      Approach 4: Merge lists one by one      
+    Complexity Analysis
+    •	Time complexity : O(kN) where k is the number of linked lists.
+    o	We can merge two sorted linked list in O(n) time where n is the total number of nodes in two lists.
+    o	Sum up the merge process and we can get: O(∑i=1k−1(i∗(kN)+kN))=O(kN).
+    •	Space complexity : O(1)
+    o	We can merge two sorted linked list in O(1) space.
+
+            */
+
+            /*
+    Approach 5: Merge with Divide And Conquer (DAC)
+    Complexity Analysis
+    •	Time complexity : O(Nlogk) where k is the number of linked lists.
+    o	We can merge two sorted linked list in O(n) time where n is the total number of nodes in two lists.
+    o	Sum up the merge process and we can get: O(∑i=1 to log2k(N))=O(Nlogk)
+    •	Space complexity : O(1)
+    o	We can merge two sorted linked lists in O(1) space
+
+            */
+            mergedNode = MergeKListsDAC(lists);
+
+            return mergedNode;
+
+        }
+        public ListNode MergeKListsNaive(ListNode[] lists)
+        {
+            List<int> nodes = new List<int>();
+            ListNode head = new ListNode(0);
+            ListNode point = head;
+            foreach (ListNode listNode in lists)
+            {
+                ListNode list = listNode;
+                while (list != null)
+                {
+                    nodes.Add(list.Val);
+                    list = list.Next;
+                }
+            }
+
+            nodes.Sort();
+            foreach (int val in nodes)
+            {
+                point.Next = new ListNode(val);
+                point = point.Next;
+            }
+
+            return head.Next;
+        }
+
+        public ListNode MergeKListsPQ(ListNode[] lists)
+        {
+            ListNode head = new ListNode(0);
+            ListNode point = head;
+            var q = new PriorityQueue<ListNode, int>();
+
+            foreach (var l in lists)
+            {
+                if (l != null)
+                {
+                    q.Enqueue(l, l.Val);
+                }
+            }
+
+            while (q.Count > 0)
+            {
+                point.Next = q.Dequeue();
+                point = point.Next;
+                if (point.Next != null)
+                {
+                    q.Enqueue(point.Next, point.Next.Val);
+                }
+            }
+
+            return head.Next;
+        }
+        public ListNode MergeKListsDAC(ListNode[] lists)
+        {
+            int amount = lists.Length;
+            int interval = 1;
+            while (interval < amount)
+            {
+                for (int i = 0; i < amount - interval; i += interval * 2)
+                {
+                    lists[i] = Merge2Lists(lists[i], lists[i + interval]);
+                }
+
+                interval *= 2;
+            }
+
+            return amount > 0 ? lists[0] : null;
+        }
+
+        public ListNode Merge2Lists(ListNode l1, ListNode l2)
+        {
+            ListNode head = new ListNode(0);
+            ListNode point = head;
+            while (l1 != null && l2 != null)
+            {
+                if (l1.Val <= l2.Val)
+                {
+                    point.Next = l1;
+                    l1 = l1.Next;
+                }
+                else
+                {
+                    point.Next = l2;
+                    l2 = l1;
+                    l1 = point.Next.Next;
+                }
+
+                point = point.Next;
+            }
+
+            if (l1 == null)
+                point.Next = l2;
+            else
+                point.Next = l1;
+            return head.Next;
+        }
+
+        /*
+        24. Swap Nodes in Pairs
+        https://leetcode.com/problems/swap-nodes-in-pairs/description/
+
+        */
+        public ListNode SwapPairs(ListNode head)
+        {
+            /*
+Approach 1: Recursive Approach
+ Complexity Analysis
+•	Time Complexity: O(N) where N is the size of the linked list.
+•	Space Complexity: O(N) stack space utilized for recursion
+           
+            */
+            ListNode swappedNodes = SwapPairsRec(head);
+            /*
+Approach 2: Iterative Approach            
+Complexity Analysis
+•	Time Complexity : O(N) where N is the size of the linked list.
+•	Space Complexity : O(1).
+
+            */
+            swappedNodes = SwapPairsIterative(head);
+
+            return swappedNodes;
+
+        }
+        public ListNode SwapPairsRec(ListNode head)
+        {
+            // If the list has no node or has only one node left.
+            if ((head == null) || (head.Next == null))
+            {
+                return head;
+            }
+
+            // Nodes to be swapped
+            ListNode firstNode = head;
+            ListNode secondNode = head.Next;
+            // Swapping
+            firstNode.Next = SwapPairs(secondNode.Next);
+            secondNode.Next = firstNode;
+            // Now the head is the second node
+            return secondNode;
+        }
+        public ListNode SwapPairsIterative(ListNode head)
+        {
+            // Dummy node acts as the prevNode for the head node
+            // of the list and hence stores pointer to the head node.
+            ListNode dummy = new ListNode(-1);
+            dummy.Next = head;
+            ListNode prevNode = dummy;
+            while ((head != null) && (head.Next != null))
+            {
+                // Nodes to be swapped
+                ListNode firstNode = head;
+                ListNode secondNode = head.Next;
+                // Swapping
+                prevNode.Next = secondNode;
+                firstNode.Next = secondNode.Next;
+                secondNode.Next = firstNode;
+                // Reinitializing the head and prevNode for next swap
+                prevNode = firstNode;
+                head = firstNode.Next;  // jump
+            }
+
+            // Return the new head node.
+            return dummy.Next;
+        }
+        /*
+        25. Reverse Nodes in k-Group
+https://leetcode.com/problems/reverse-nodes-in-k-group/description/
+
+        */
+        public ListNode ReverseKGroup(ListNode head, int k)
+        {
+            /*
+Approach 1: Recursion
+Complexity Analysis
+•	Time Complexity: O(N) since we process each node exactly twice. Once when we are counting the number of nodes in each recursive call, and then once when we are actually reversing the sub-list. A slightly optimized implementation here could be that we don't count the number of nodes at all and simply reverse k nodes. If at any point we find that we didn't have enough nodes, we can re-reverse the last set of nodes so as to keep the original structure as required by the problem statement. That ways, we can get rid of the extra counting.
+•	Space Complexity: O(N/k) used up by the recursion stack. The number of recursion calls is determined by both k and N. In every recursive call, we process k nodes and then make a recursive call to process the rest.
+
+            */
+            ListNode headAfterReverse = ReverseKGroupRec(head, k);
+            /*
+Approach 2: Iterative O(1) space
+
+•	Time Complexity: O(N) since we process each node exactly twice. Once when we are counting the number of nodes in each recursive call, and then once when we are actually reversing the sub-list.
+•	Space Complexity: O(1).
+            */
+            headAfterReverse = ReverseKGroupIterative(head, k);
+            
+            return headAfterReverse;
+
+        }
+        public ListNode ReverseLinkedList(ListNode head, int k)
+        {
+            ListNode new_head = null;
+            ListNode ptr = head;
+            while (k > 0)
+            {
+                ListNode next_node = ptr.Next;
+                ptr.Next = new_head;
+                new_head = ptr;
+                ptr = next_node;
+                k--;
+            }
+
+            return new_head;
+        }
+
+        public ListNode ReverseKGroupRec(ListNode head, int k)
+        {
+            int count = 0;
+            ListNode ptr = head;
+            while (count < k && ptr != null)
+            {
+                ptr = ptr.Next;
+                count++;
+            }
+
+            if (count == k)
+            {
+                ListNode reversedHead = this.ReverseLinkedList(head, k);
+                head.Next = this.ReverseKGroupRec(ptr, k);
+                return reversedHead;
+            }
+
+            return head;
+        }
+
+       
+        public ListNode ReverseKGroupIterative(ListNode head, int k)
+        {
+            ListNode ptr = head;
+            ListNode ktail = null;
+            ListNode newHead = null;
+            while (ptr != null)
+            {
+                int count = 0;
+                ptr = head;
+                while (count < k && ptr != null)
+                {
+                    ptr = ptr.Next;
+                    count += 1;
+                }
+
+                if (count == k)
+                {
+                    ListNode revHead = this.ReverseLinkedList(head, k);
+                    if (newHead == null)
+                    {
+                        newHead = revHead;
+                    }
+
+                    if (ktail != null)
+                    {
+                        ktail.Next = revHead;
+                    }
+
+                    ktail = head;
+                    head = ptr;
+                }
+            }
+
+            if (ktail != null)
+            {
+                ktail.Next = head;
+            }
+
+            return newHead == null ? head : newHead;
+        }
 
 
     }

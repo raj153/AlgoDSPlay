@@ -8,6 +8,7 @@ using System.Reflection;
 using System.Reflection.Metadata.Ecma335;
 using System.Reflection.PortableExecutable;
 using System.Runtime.Versioning;
+using System.Text;
 using System.Threading.Tasks;
 using AlgoDSPlay.DataStructures;
 
@@ -22,8 +23,8 @@ namespace AlgoDSPlay
 
             //1.Naive - T:O(n^2) | O(1) - Pair of loops
             var result = TwoNumberSumNaive(array, targetSum);
-            //2.Optimal - T: O(n) | O(n)
-             result = TwoNumberSumOptimal(array, targetSum);
+            //2.Optimal - T: O(n) | O(n) - 
+            result = TwoNumberSumOptimal(array, targetSum);
 
             //3.Optimal with Sorting - T: O(nlog(n)) | O(1)
             result = TwoNumberSumOptimal2(array, targetSum);
@@ -56,7 +57,7 @@ namespace AlgoDSPlay
             return new int[0];
 
         }
-          // O(n^2) time | O(1) space
+        // O(n^2) time | O(1) space
         public static int[] TwoNumberSumNaive(int[] array, int targetSum)
         {
             for (int i = 0; i < array.Length - 1; i++)
@@ -605,9 +606,9 @@ namespace AlgoDSPlay
             }
             return sum * multiplier;
         }
-        
 
-      
+
+
 
         //https://www.algoexpert.io/questions/three-number-sum
         public static List<int[]> ThreeNumberSum(int[] array, int targetSum)
@@ -1848,8 +1849,1686 @@ namespace AlgoDSPlay
 
             return inversions;
         }
+        /*
+      1. Two Sum
+      https://leetcode.com/problems/two-sum/description
+      */
+        public int[] TwoSum(int[] nums, int target)
+        {
+            int[] result = new int[2];
+
+            /*
+                Approach 1: Brute Force
+                Complexity Analysis
+                •	Time complexity: O(n2).
+                    For each element, we try to find its complement by looping through the rest of the array which takes O(n) time. Therefore, the time complexity is O(n2).
+                •	Space complexity: O(1).
+                    The space required does not depend on the size of the input array, so only constant space is used.
+            */
+            result = TwoSumNaive(nums, target);
+
+            /*
+Approach 2: Two-pass Hash Table
+Complexity Analysis
+•	Time complexity: O(n).
+    We traverse the list containing n elements exactly twice. Since the hash table reduces the lookup time to O(1), the overall time complexity is O(n).
+•	Space complexity: O(n).
+    The extra space required depends on the number of items stored in the hash table, which stores exactly n elements.
+*/
+            result = TwoSumOptimal1(nums, target);
+
+            /*
+            Approach 3: One-pass Hash Table
+
+            Complexity Analysis
+            •	Time complexity: O(n).
+                We traverse the list containing n elements only once. Each lookup in the table costs only O(1) time.
+            •	Space complexity: O(n).
+                The extra space required depends on the number of items stored in the hash table, which stores at most n elements.
+            */
+            result = TwoSumOptimal2(nums, target);
+
+            return result;
+        }
+
+        private int[] TwoSumOptimal2(int[] nums, int target)
+        {
+            Dictionary<int, int> map = new Dictionary<int, int>();
+            for (int i = 0; i < nums.Length; i++)
+            {
+                int complement = target - nums[i];
+                if (map.ContainsKey(complement))
+                {
+                    return new int[] { map[complement], i };
+                }
+
+                map[nums[i]] = i;
+            }
+
+            return null;
+        }
+
+        private int[] TwoSumOptimal1(int[] nums, int target)
+        {
+            Dictionary<int, int> map = new Dictionary<int, int>();
+            for (int i = 0; i < nums.Length; i++)
+            {
+                map[nums[i]] = i;
+            }
+
+            for (int i = 0; i < nums.Length; i++)
+            {
+                int complement = target - nums[i];
+                if (map.ContainsKey(complement) && map[complement] != i)
+                {
+                    return new int[] { i, map[complement] };
+                }
+            }
+
+            return null;
+        }
+
+        private int[] TwoSumNaive(int[] nums, int target)
+        {
+            for (int i = 0; i < nums.Length; i++)
+            {
+                for (int j = i + 1; j < nums.Length; j++)
+                {
+                    if (nums[j] == target - nums[i])
+                    {
+                        return new int[] { i, j };
+                    }
+                }
+            }
+
+            // In case there is no solution, return null
+            return null;
+        }
+        /*
+        474. Ones and Zeroes
+        https://leetcode.com/problems/ones-and-zeroes/description/	
+        */
+        public int FindMaxForm(string[] strs, int m, int n)
+        {
+            /*
+ Approach #1 Brute Force [Time Limit Exceeded]           
+Complexity Analysis
+•	Time complexity : O(2^l∗x).  2^l possible subsets, where l is the length of the list strs and x is the average string length.
+•	Space complexity : O(1). Constant Space required.
+            
+            */
+            int maxForm = FindMaxFormNaive(strs, m, n);
+            /*
+Approach #2 Better Brute Force [Time Limit Exceeded]
+
+Complexity Analysis
+•	Time complexity : O(2^l∗x). 2l possible subsets, where l is the length of the list strs and x is the average string length.
+•	Space complexity : O(1). Constant Space required.
+            
+            */
+            maxForm = FindMaxFormNaive2(strs, m, n);
+
+            /*
+Approach #3 Using Recursion [Time Limit Exceeded]
+Complexity Analysis
+•	Time complexity : O(2^l∗x). 2l possible subsets, where l is the length of the list strs and x is the average string length.
+•	Space complexity : O(l). Depth of recursion tree grows upto l.
+            
+            */
+            maxForm = FindMaxFormRec(strs, m, n);
+
+            /*
+Approach #4 Using Memoization [Accepted]
+Complexity Analysis**
+•	Time complexity : O(l∗m∗n). memo array of size l∗m∗n is filled, where l is the length of strs, m and n are the number of zeroes and ones respectively.
+•	Space complexity : O(l∗m∗n). 3D array memo is used.           
+            
+            */
+            maxForm = FindMaxFormMemo(strs, m, n);
+
+            /*
+Approach #5 Dynamic Programming 
+Complexity Analysis
+•	Time complexity : O(l∗m∗n). Three nested loops are their, where l is the length of strs, m and n are the number of zeroes and ones respectively.
+•	Space complexity : O(m∗n). dp array of size m∗n is used
+            
+            */
+            maxForm = FindMaxFormDP(strs, m, n);
+
+            return maxForm;
+
+        }
+
+        public int FindMaxFormNaive(String[] strs, int m, int n)
+        {
+            int maxlen = 0;
+            for (int i = 0; i < (1 << strs.Length); i++)
+            {
+                int zeroes = 0, ones = 0, len = 0;
+                for (int j = 0; j < strs.Length; j++)
+                {
+                    if ((i & (1 << j)) != 0)
+                    {
+                        int[] count = CountZeroesOnes(strs[j]);
+                        zeroes += count[0];
+                        ones += count[1];
+                        len++;
+                    }
+                }
+                if (zeroes <= m && ones <= n)
+                    maxlen = Math.Max(maxlen, len);
+            }
+            return maxlen;
+
+        }
+        public int[] CountZeroesOnes(String s)
+        {
+            int[] c = new int[2];
+            for (int i = 0; i < s.Length; i++)
+            {
+                c[s[i] - '0']++;
+            }
+            return c;
+        }
+
+        public int FindMaxFormNaive2(String[] strs, int m, int n)
+        {
+            int maxlen = 0;
+            for (int i = 0; i < (1 << strs.Length); i++)
+            {
+                int zeroes = 0, ones = 0, len = 0;
+                for (int j = 0; j < 32; j++)
+                {
+                    if ((i & (1 << j)) != 0)
+                    {
+                        int[] count = CountZeroesOnes(strs[j]);
+                        zeroes += count[0];
+                        ones += count[1];
+                        if (zeroes > m || ones > n)
+                            break;
+                        len++;
+                    }
+                }
+                if (zeroes <= m && ones <= n)
+                    maxlen = Math.Max(maxlen, len);
+            }
+            return maxlen;
+        }
+        public int FindMaxFormRec(String[] strs, int m, int n)
+        {
+            return Calculate(strs, 0, m, n);
+        }
+        public int Calculate(String[] strs, int i, int zeroes, int ones)
+        {
+            if (i == strs.Length)
+                return 0;
+            int[] count = CountZeroesOnes(strs[i]);
+            int taken = -1;
+            if (zeroes - count[0] >= 0 && ones - count[1] >= 0)
+                taken = Calculate(strs, i + 1, zeroes - count[0], ones - count[1]) + 1;
+            int not_taken = Calculate(strs, i + 1, zeroes, ones);
+            return Math.Max(taken, not_taken);
+        }
+        public int FindMaxFormMemo(string[] strs, int m, int n)
+        {
+            int[][][] memo = new int[strs.Length][][];
+            return Calculate(strs, 0, m, n, memo);
+        }
+        public int Calculate(string[] strs, int i, int zeroes, int ones, int[][][] memo)
+        {
+            if (i == strs.Length)
+                return 0;
+            if (memo[i][zeroes][ones] != 0)
+                return memo[i][zeroes][ones];
+            int[] count = CountZeroesOnes(strs[i]);
+            int taken = -1;
+            if (zeroes - count[0] >= 0 && ones - count[1] >= 0)
+                taken = Calculate(strs, i + 1, zeroes - count[0], ones - count[1], memo) + 1;
+            int not_taken = Calculate(strs, i + 1, zeroes, ones, memo);
+            memo[i][zeroes][ones] = Math.Max(taken, not_taken);
+            return memo[i][zeroes][ones];
+        }
+
+        public int FindMaxFormDP(String[] strs, int m, int n)
+        {
+            int[][] dp = new int[m + 1][];
+            foreach (string s in strs)
+            {
+                int[] count = CountZeroesOnes(s);
+                for (int zeroes = m; zeroes >= count[0]; zeroes--)
+                    for (int ones = n; ones >= count[1]; ones--)
+                        dp[zeroes][ones] = Math.Max(1 + dp[zeroes - count[0]][ones - count[1]], dp[zeroes][ones]);
+            }
+            return dp[m][n];
+        }
+
+        /*
+14. Longest Common Prefix
+https://leetcode.com/problems/longest-common-prefix/description/	
+
+        */
+        public string LongestCommonPrefix(string[] strs)
+        {
+            /*
+Approach 1: Horizontal scanning (HS)
+Complexity Analysis
+•	Time complexity : O(S) , where S is the sum of all characters in all strings.
+In the worst case all n strings are the same. The algorithm compares the string S1 with the other strings [S2…Sn] There are S character comparisons, where S is the sum of all characters in the input array.
+•	Space complexity : O(1). We only used constant extra space
 
 
+            */
+            string longestCommonPrefix = LongestCommonPrefixHS(strs);
+            /*
+Approach 2: Vertical scanning (VS)           
+  Complexity Analysis
+•	Time complexity : O(S) , where S is the sum of all characters in all strings.
+In the worst case there will be n equal strings with length m and the algorithm performs S=m⋅n character comparisons.
+Even though the worst case is still the same as Approach 1, in the best case there are at most n⋅minLen comparisons where minLen is the length of the shortest string in the array.
+•	Space complexity : O(1). We only used constant extra space
+          
+            */
+            longestCommonPrefix = LongestCommonPrefixVS(strs);
+            /*
+Approach 3: Divide and conquer (DAC)           
+Complexity Analysis
+In the worst case we have n equal strings with length m
+•	Time complexity : O(S), where S is the number of all characters in the array, S=m⋅n
+Time complexity is 2⋅T(2n)+O(m). Therefore time complexity is O(S).
+In the best case this algorithm performs O(minLen⋅n) comparisons, where minLen is the shortest string of the array
+•	Space complexity : O(m⋅logn)
+There is a memory overhead since we store recursive calls in the execution stack. There are logn recursive calls, each store need m space to store the result, so space complexity is O(m⋅logn)
 
+            
+            */
+            longestCommonPrefix = LongestCommonPrefixDAC(strs);
+            /*
+ Approach 4: Binary search (BS)
+Complexity Analysis
+In the worst case we have n equal strings with length m
+•	Time complexity : O(S⋅logm), where S is the sum of all characters in all strings.
+The algorithm makes logm iterations, for each of them there are S=m⋅n comparisons, which gives in total O(S⋅logm) time complexity.
+•	Space complexity : O(1). We only used constant extra space.
+
+
+            */
+            longestCommonPrefix = LongestCommonPrefixBS(strs);
+            /*
+Approach 5: Trie            
+Complexity Analysis
+In the worst case query q has length m and it is equal to all n strings of the array.
+•	Time complexity : preprocessing O(S), where S is the number of all characters in the array, LCP query O(m).
+Trie build has O(S) time complexity. To find the common prefix of q in the Trie takes in the worst case O(m).
+•	Space complexity : O(S). We only used additional S extra space for the Trie.
+
+            */
+            longestCommonPrefix = LongestCommonPrefixTrie("q", strs);
+
+            return longestCommonPrefix;
+        }
+        public string LongestCommonPrefixHS(string[] strs)
+        {
+            if (strs.Length == 0)
+                return "";
+            string prefix = strs[0];
+            for (int i = 1; i < strs.Length; i++)
+                while (strs[i].IndexOf(prefix) != 0)
+                {
+                    prefix = prefix.Substring(0, prefix.Length - 1);
+                    if (prefix == "")
+                        return "";
+                }
+
+            return prefix;
+        }
+
+        public string LongestCommonPrefixVS(string[] strs)
+        {
+            if (strs == null || strs.Length == 0)
+                return "";
+            for (int i = 0; i < strs[0].Length; i++)
+            {
+                char c = strs[0][i];
+                for (int j = 1; j < strs.Length; j++)
+                {
+                    if (i == strs[j].Length || strs[j][i] != c)
+                        return strs[0].Substring(0, i);
+                }
+            }
+
+            return strs[0];
+        }
+
+        public string LongestCommonPrefixDAC(string[] strs)
+        {
+            if (strs == null || strs.Length == 0)
+                return "";
+            return LongestCommonPrefixDAC(strs, 0, strs.Length - 1);
+        }
+
+        private string LongestCommonPrefixDAC(string[] strs, int l, int r)
+        {
+            if (l == r)
+            {
+                return strs[l];
+            }
+            else
+            {
+                int mid = (l + r) / 2;
+                var lcpLeft = LongestCommonPrefixDAC(strs, l, mid);
+                var lcpRight = LongestCommonPrefixDAC(strs, mid + 1, r);
+                return CommonPrefix(lcpLeft, lcpRight);
+            }
+        }
+
+        private string CommonPrefix(string left, string right)
+        {
+            int min = Math.Min(left.Length, right.Length);
+            for (int i = 0; i < min; i++)
+            {
+                if (left[i] != right[i])
+                    return left.Substring(0, i);
+            }
+
+            return left.Substring(0, min);
+        }
+        public string LongestCommonPrefixBS(string[] strs)
+        {
+            if (strs == null || strs.Length == 0)
+                return "";
+            int minLen = Int32.MaxValue;
+            foreach (string str in strs) minLen = Math.Min(minLen, str.Length);
+            int low = 1;
+            int high = minLen;
+            while (low <= high)
+            {
+                int middle = (low + high) / 2;
+                if (IsCommonPrefix(strs, middle))
+                    low = middle + 1;
+                else
+                    high = middle - 1;
+            }
+
+            return strs[0].Substring(0, (low + high) / 2);
+        }
+
+        private bool IsCommonPrefix(string[] strs, int len)
+        {
+            string str1 = strs[0].Substring(0, len);
+            for (int i = 1; i < strs.Length; i++)
+                if (!strs[i].StartsWith(str1))
+                    return false;
+            return true;
+        }
+        public string LongestCommonPrefixTrie(string q, string[] strs)
+        {
+            if (strs == null || strs.Length == 0)
+                return "";
+            if (strs.Length == 1)
+                return strs[0];
+            Trie trie = new Trie();
+            for (int i = 1; i < strs.Length; i++)
+            {
+                trie.Insert(strs[i]);
+            }
+
+            return trie.SearchLongestPrefix(q);
+        }
+        public class TrieNode
+        {
+            public TrieNode[] children = new TrieNode[26];
+            public bool isEnd;
+            private int linkCount;  // To count the number of children that are not null
+
+            public TrieNode()
+            {
+                isEnd = false;
+                for (int i = 0; i < 26; i++)
+                {
+                    children[i] = null;
+                }
+
+                linkCount = 0;
+            }
+
+            public void Put(char ch, TrieNode node)
+            {
+                int index = ch - 'a';
+                if (children[index] == null)
+                {
+                    children[index] = node;
+                    linkCount++;
+                }
+            }
+
+            public bool ContainsKey(char ch)
+            {
+                return children[ch - 'a'] != null;
+            }
+
+            public int GetLinks()
+            {
+                return linkCount;
+            }
+        }
+
+        public class Trie
+        {
+            private TrieNode root;
+
+            public Trie()
+            {
+                root = new TrieNode();
+            }
+
+            public void Insert(string word)
+            {
+                TrieNode node = root;
+                foreach (char c in word)
+                {
+                    if (!node.ContainsKey(c))
+                    {
+                        node.Put(c, new TrieNode());
+                    }
+
+                    node = node.children[c - 'a'];
+                }
+
+                node.isEnd = true;
+            }
+
+            public string SearchLongestPrefix(string word)
+            {
+                TrieNode node = root;
+                StringBuilder prefix = new StringBuilder();
+                foreach (char c in word)
+                {
+                    if (node.children[c - 'a'] != null && node.GetLinks() == 1 &&
+                        !node.isEnd)
+                    {
+                        prefix.Append(c);
+                        node = node.children[c - 'a'];
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+
+                return prefix.ToString();
+            }
+        }
+        /*
+
+        15. 3Sum
+https://leetcode.com/problems/3sum/description/
+
+        */
+        public IList<IList<int>> ThreeSum(int[] nums)
+        {
+
+            /*
+
+Approach 1: Two Pointers (TP)
+Complexity Analysis
+•	Time Complexity: O(n^2). twoSumII is O(n), and we call it n times.
+Sorting the array takes O(nlogn), so overall complexity is O(nlogn+n^2). This is asymptotically equivalent to O(n^2).
+•	Space Complexity: from O(logn) to O(n), depending on the implementation of the sorting algorithm. For the purpose of complexity analysis, we ignore the memory required for the output.
+
+
+            */
+            IList<IList<int>> tripletsSumToZero = ThreeSumTP(nums);
+            /*
+Approach 2: Hashset (HS)
+Complexity Analysis	
+Time Complexity: O(n^2). twoSum is O(n), and we call it n times.
+Sorting the array takes O(nlogn), so overall complexity is O(nlogn+n^2). This is asymptotically equivalent to O(n^2).
+•	Space Complexity: O(n) for the hashset.
+
+            */
+            tripletsSumToZero = ThreeSumHS(nums);
+            /*
+Approach 3: "No-Sort" (NS)
+Complexity Analysis
+•	Time Complexity: O(n^2). We have outer and inner loops, each going through n elements.
+While the asymptotic complexity is the same, this algorithm is noticeably slower than the previous approach. Lookups in a hashset, though requiring a constant time, are expensive compared to the direct memory access.
+•	Space Complexity: O(n) for the hashset/hashmap.
+For the purpose of complexity analysis, we ignore the memory required for the output. However, in this approach we also store output in the hashset for deduplication. In the worst case, there could be O(n^2) triplets in the output, like for this example: [-k, -k + 1, ..., -1, 0, 1, ... k - 1, k]. Adding a new number to this sequence will produce n / 3 new triplets.
+
+            */
+            tripletsSumToZero = ThreeSumNS(nums);
+
+            return tripletsSumToZero;
+
+        }
+
+        public IList<IList<int>> ThreeSumTP(int[] nums)
+        {
+            Array.Sort(nums);
+            List<IList<int>> res = new List<IList<int>>();
+            for (int i = 0; i < nums.Length && nums[i] <= 0; ++i)
+                if (i == 0 || nums[i - 1] != nums[i])
+                {
+                    TwoSumII(nums, i, res);
+                }
+
+            return res;
+        }
+
+        void TwoSumII(int[] nums, int i, List<IList<int>> res)
+        {
+            int lo = i + 1, hi = nums.Length - 1;
+            while (lo < hi)
+            {
+                int sum = nums[i] + nums[lo] + nums[hi];
+                if (sum < 0)
+                {
+                    ++lo;
+                }
+                else if (sum > 0)
+                {
+                    --hi;
+                }
+                else
+                {
+                    res.Add(new List<int> { nums[i], nums[lo++], nums[hi--] });
+                    while (lo < hi && nums[lo] == nums[lo - 1]) ++lo;
+                }
+            }
+        }
+
+        public IList<IList<int>> ThreeSumHS(int[] nums)
+        {
+            Array.Sort(nums);
+            List<IList<int>> res = new List<IList<int>>();
+            for (int i = 0; i < nums.Length && nums[i] <= 0; ++i)
+                if (i == 0 || nums[i - 1] != nums[i])
+                {
+                    TwoSum(nums, i, res);
+                }
+
+            return res;
+        }
+
+        void TwoSum(int[] nums, int i, List<IList<int>> res)
+        {
+            HashSet<int> seen = new HashSet<int>();
+            for (int j = i + 1; j < nums.Length; ++j)
+            {
+                int complement = -nums[i] - nums[j];
+                if (seen.Contains(complement))
+                {
+                    res.Add(new List<int> { nums[i], nums[j], complement });
+                    while (j + 1 < nums.Length && nums[j] == nums[j + 1]) ++j;
+                }
+
+                seen.Add(nums[j]);
+            }
+        }
+        public IList<IList<int>> ThreeSumNS(int[] nums)
+        {
+            var res = new List<IList<int>>();
+            Array.Sort(nums);
+            for (int i = 0; i < nums.Length - 2; i++)
+            {
+                if (i == 0 || nums[i] != nums[i - 1])
+                {
+                    int lo = i + 1, hi = nums.Length - 1, sum = 0 - nums[i];
+                    while (lo < hi)
+                    {
+                        if (nums[lo] + nums[hi] == sum)
+                        {
+                            res.Add(new List<int> { nums[i], nums[lo], nums[hi] });
+                            while (lo < hi && nums[lo] == nums[lo + 1]) lo++;
+                            while (lo < hi && nums[hi] == nums[hi - 1]) hi--;
+                            lo++;
+                            hi--;
+                        }
+                        else if (nums[lo] + nums[hi] < sum)
+                            lo++;
+                        else
+                            hi--;
+                    }
+                }
+            }
+
+            return res;
+        }
+
+        /*
+    167. Two Sum II - Input Array Is Sorted
+    https://leetcode.com/problems/two-sum-ii-input-array-is-sorted/description/	
+
+    Approach 1: Two Pointers
+    Complexity Analysis	
+    •	Time complexity: O(n).
+    The input array is traversed at most once. Thus the time complexity is O(n).
+    •	Space complexity: O(1).
+    We only use additional space to store two indices and the sum, so the space complexity is O(1).
+
+        */
+        public int[] TwoSumOfSortedArray(int[] numbers, int target)
+        {
+            int low = 0;
+            int high = numbers.Length - 1;
+            while (low < high)
+            {
+                int sum = numbers[low] + numbers[high];
+                if (sum == target)
+                {
+                    return new int[] { low + 1, high + 1 };
+                }
+                else if (sum < target)
+                {
+                    ++low;
+                }
+                else
+                {
+                    --high;
+                }
+            }
+
+            // In case there is no solution, return [-1, -1].
+            return new int[] { -1, -1 };
+        }
+
+        /*
+ 16. 3Sum Closest			
+https://leetcode.com/problems/3sum-closest/description/
+       
+        */
+        public int ThreeSumClosest(int[] nums, int target)
+        {
+            /*
+ Approach 1: Two Pointers (TP)           
+Complexity Analysis
+•	Time Complexity: O(n^2). We have outer and inner loops, each going through n elements.
+Sorting the array takes O(nlogn), so overall complexity is O(nlogn+n^2). This is asymptotically equivalent to O(n^2).
+•	Space Complexity: from O(logn) to O(n), depending on the implementation of the sorting algorithm.
+
+            */
+            int sumOfThreeNums = ThreeSumClosestTP(nums, target);
+
+            /*
+Approach 2: Binary Search (BS)
+Complexity Analysis
+•	Time Complexity: O(n^2logn). Binary search takes O(logn), and we do it n times in the inner loop. Since we are going through n elements in the outer loop, the overall complexity is O(n^2logn).
+•	Space Complexity: from O(logn) to O(n), depending on the implementation of the sorting algorithm.
+            
+            */
+            sumOfThreeNums = ThreeSumClosestBS(nums, target);
+
+            return sumOfThreeNums;
+
+        }
+
+        public int ThreeSumClosestTP(int[] nums, int target)
+        {
+            int diff = Int32.MaxValue;
+            int sz = nums.Length;
+            Array.Sort(nums);
+            for (int i = 0; i < sz && diff != 0; ++i)
+            {
+                int lo = i + 1;
+                int hi = sz - 1;
+                while (lo < hi)
+                {
+                    int sum = nums[i] + nums[lo] + nums[hi];
+                    if (Math.Abs(target - sum) < Math.Abs(diff))
+                    {
+                        diff = target - sum;
+                    }
+
+                    if (sum < target)
+                    {
+                        ++lo;
+                    }
+                    else
+                    {
+                        --hi;
+                    }
+                }
+            }
+
+            return target - diff;
+        }
+
+        public int ThreeSumClosestBS(int[] nums, int target)
+        {
+            int diff = int.MaxValue, sz = nums.Length;
+            Array.Sort(nums);
+            for (int i = 0; i < sz && diff != 0; ++i)
+            {
+                for (int j = i + 1; j < sz - 1; ++j)
+                {
+                    int complement = target - nums[i] - nums[j];
+                    int lo = j + 1, hi = sz;
+                    while (lo < hi)
+                    {
+                        int mid = lo + (hi - lo) / 2;
+                        if (nums[mid] <= complement)
+                            lo = mid + 1;
+                        else
+                            hi = mid;
+                    }
+
+                    int hi_idx = lo, lo_idx = lo - 1;
+                    if (hi_idx < sz &&
+                        Math.Abs(complement - nums[hi_idx]) < Math.Abs(diff))
+                        diff = complement - nums[hi_idx];
+                    if (lo_idx > j &&
+                        Math.Abs(complement - nums[lo_idx]) < Math.Abs(diff))
+                        diff = complement - nums[lo_idx];
+                }
+            }
+
+            return target - diff;
+        }
+
+        /*
+   18. 4Sum
+https://leetcode.com/problems/4sum/description/
+     
+        */
+        public IList<IList<int>> FourSum(int[] nums, int target)
+        {
+
+            /*
+    Approach 1: Two Pointers(TP)
+    Complexity Analysis
+    •	Time Complexity: O(n^(k−1)), or O(n^3) for 4Sum. We have k−2 loops, and twoSum is O(n).
+    Note that for k>2, sorting the array does not change the overall time complexity.
+    •	Space Complexity: O(n). We need O(k) space for the recursion. k can be the same as n in the worst case for the generalized algorithm.
+    Note that, for the purpose of complexity analysis, we ignore the memory required for the output.
+
+            */
+            IList<IList<int>> uniqueQuadraplesToTarget = FourSumTP(nums, target);
+            /*
+      Approach 2: Hash (HS))
+       Complexity Analysis
+    •	Time Complexity: O(n^(k−1)), or O(n^3) for 4Sum. We have k−2 loops iterating over n elements, and twoSum is O(n).
+    Note that for k>2, sorting the array does not change the overall time complexity.
+    •	Space Complexity: O(n) for the hash set. The space needed for the recursion will not exceed O(n).
+
+            */
+            uniqueQuadraplesToTarget = FourSumHS(nums, target);
+
+            return uniqueQuadraplesToTarget;
+
+        }
+        public IList<IList<int>> FourSumTP(int[] nums, int target)
+        {
+            Array.Sort(nums);
+            return KSum(nums, target, 0, 4);
+        }
+
+        public IList<IList<int>> KSum(int[] nums, long target, int start, int k)
+        {
+            List<IList<int>> res = new List<IList<int>>();
+            if (start == nums.Length)
+            {
+                return res;
+            }
+
+            long average_value = target / k;
+            if (nums[start] > average_value ||
+                average_value > nums[nums.Length - 1])
+            {
+                return res;
+            }
+
+            if (k == 2)
+            {
+                return TwoSum(nums, target, start);
+            }
+
+            for (int i = start; i < nums.Length; i++)
+            {
+                if (i == start || nums[i - 1] != nums[i])
+                {
+                    foreach (var subset in KSum(nums, target - nums[i], i + 1,
+                                                k - 1))
+                    {
+                        var list = new List<int> { nums[i] };
+                        list.AddRange(subset);
+                        res.Add(list);
+                    }
+                }
+            }
+
+            return res;
+        }
+
+        public IList<IList<int>> TwoSum(int[] nums, long target, int start)
+        {
+            List<IList<int>> res = new List<IList<int>>();
+            int lo = start, hi = nums.Length - 1;
+            while (lo < hi)
+            {
+                int curr_sum = nums[lo] + nums[hi];
+                if (curr_sum < target || (lo > start && nums[lo] == nums[lo - 1]))
+                {
+                    ++lo;
+                }
+                else if (curr_sum > target ||
+                           (hi < nums.Length - 1 && nums[hi] == nums[hi + 1]))
+                {
+                    --hi;
+                }
+                else
+                {
+                    res.Add(new List<int> { nums[lo++], nums[hi--] });
+                }
+            }
+
+            return res;
+        }
+
+        public IList<IList<int>> FourSumHS(int[] nums, int target)
+        {
+            Array.Sort(nums);
+            return KSumHS(nums, target, 0, 4);
+        }
+
+        private IList<IList<int>> KSumHS(int[] nums, long target, int start, int k)
+        {
+            List<IList<int>> res = new List<IList<int>>();
+            if (start == nums.Length)
+            {
+                return res;
+            }
+
+            long averageValue = target / k;
+            if (nums[start] > averageValue ||
+                averageValue > nums[nums.Length - 1])
+            {
+                return res;
+            }
+
+            if (k == 2)
+            {
+                return TwoSumHS(nums, target, start);
+            }
+
+            for (int i = start; i < nums.Length; ++i)
+            {
+                if (i == start || nums[i - 1] != nums[i])
+                {
+                    foreach (List<int> subset in KSumHS(nums, target - nums[i], i + 1,
+                                                      k - 1))
+                    {
+                        List<int> temp = new List<int> { nums[i] };
+                        temp.AddRange(subset);
+                        res.Add(temp);
+                    }
+                }
+            }
+
+            return res;
+        }
+
+        public IList<IList<int>> TwoSumHS(int[] nums, long target, int start)
+        {
+            List<IList<int>> res = new List<IList<int>>();
+            HashSet<long> s = new HashSet<long>();
+            for (int i = start; i < nums.Length; ++i)
+            {
+                if (res.Count == 0 || res[res.Count - 1][1] != nums[i])
+                {
+                    if (s.Contains(target - nums[i]))
+                    {
+                        res.Add(new List<int> { (int)target - nums[i], nums[i] });
+                    }
+                }
+
+                s.Add(nums[i]);
+            }
+
+            return res;
+        }
+
+        /*
+454. 4Sum II		
+https://leetcode.com/problems/4sum-ii/description/
+
+
+        */
+        public int FourSumCount(int[] nums1, int[] nums2, int[] nums3, int[] nums4)
+        {
+
+            /*
+Approach 1: Hashmap/Dict
+Complexity Analysis
+•	Time Complexity: O(n^2). We have 2 nested loops to count sums, and another 2 nested loops to find complements.
+•	Space Complexity: O(n^2) for the hashmap. There could be up to O(n^2) distinct a + b keys.
+
+*/
+            int numOfQuadruplesSumToZero = FourSumCountDict(nums1, nums2, nums3, nums4);
+
+            /*
+      Approach 2: kSum II
+      Complexity Analysis
+    •	Time Complexity: O(n^⌈k/2⌉), or O(n^2) for 4Sum II. We have to enumerate over at most n^⌊k/2⌋ sums in the left group and n^⌈k/2⌉ sums in the right group. Finally, we just need to check O*n^⌊k/2⌋ sums in the left group and search if their negated number exists in the right group.
+    •	Space Complexity: O(n^⌈k/2⌉), similarly, we create a HashMap for each group to store all sums, which contains at most n^⌈k/2⌉ keys.
+
+            */
+            numOfQuadruplesSumToZero = FourSumCountKSumII(nums1, nums2, nums3, nums4);
+
+            return numOfQuadruplesSumToZero;
+
+        }
+        public int FourSumCountDict(int[] A, int[] B, int[] C, int[] D)
+        {
+            int cnt = 0;
+            Dictionary<int, int> dict = new Dictionary<int, int>();
+            foreach (int a in A)
+            {
+                foreach (int b in B)
+                {
+                    dict.Add(a + b, dict.GetValueOrDefault(a + b, 0) + 1);
+                }
+            }
+            foreach (int c in C)
+            {
+                foreach (int d in D)
+                {
+                    cnt += dict.GetValueOrDefault(-(c + d), 0);
+                }
+            }
+            return cnt;
+        }
+        private int[][] lsts;
+
+        public int FourSumCountKSumII(int[] A, int[] B, int[] C, int[] D)
+        {
+            lsts = new int[][] { A, B, C, D };
+            int k = lsts.Length;
+            Dictionary<int, int> left = sumCount(0, k / 2);
+            Dictionary<int, int> right = sumCount(k / 2, k);
+            int res = 0;
+            foreach (int s in left.Keys)
+                res += left[s] * right.GetValueOrDefault(-s, 0);
+            return res;
+        }
+
+        private Dictionary<int, int> sumCount(int start, int end)
+        {
+            Dictionary<int, int> cnt = new Dictionary<int, int>();
+            cnt.Add(0, 1);
+            for (int i = start; i < end; i++)
+            {
+                Dictionary<int, int> map = new Dictionary<int, int>();
+                foreach (int a in lsts[i])
+                {
+                    foreach (int total in cnt.Keys)
+                    {
+                        map.Add(total + a, map.GetValueOrDefault(total + a, 0) + cnt[total]);
+                    }
+                }
+                cnt = map;
+            }
+            return cnt;
+        }
+
+        /*
+        26. Remove Duplicates from Sorted Array
+        https://leetcode.com/problems/remove-duplicates-from-sorted-array/description/
+
+        Complexity Analysis
+    Let N be the size of the input array.
+    •	Time Complexity: O(N), since we only have 2 pointers, and both the pointers will traverse the array at most once.
+    •	Space Complexity: O(1), since we are not using any extra space
+
+
+        */
+        public int RemoveDuplicates(int[] nums)
+        {
+            int insertIndex = 1;
+            for (int i = 1; i < nums.Length; i++)
+            {
+                // We skip to next index if we see a duplicate element
+                if (nums[i - 1] != nums[i])
+                {
+                    /* Storing the unique element at insertIndex index and
+                       incrementing the insertIndex by 1 */
+                    nums[insertIndex] = nums[i];
+                    insertIndex++;
+                }
+            }
+
+            return insertIndex;
+        }
+
+        /*
+ 27. Remove Element
+https://leetcode.com/problems/remove-element/description/	
+       
+        */
+        public int RemoveElement(int[] nums, int val)
+        {
+            /*
+ 
+Approach 1: Two Pointers(TP)
+ Complexity analysis
+•	Time complexity : O(n).
+Assume the array has a total of n elements, both i and j traverse at most 2n steps.
+•	Space complexity : O(1).
+          
+            
+            */
+            int removedElement = RemoveElementTP(nums, val);
+            /*
+  Approach 2: Two Pointers - when elements to remove are rare          
+Complexity analysis
+•	Time complexity : O(n).
+Both i and n traverse at most n steps. In this approach, the number of assignment operations is equal to the number of elements to remove. So it is more efficient if elements to remove are rare.
+•	Space complexity : O(1).
+
+            */
+            removedElement = RemoveElementTPOptimal(nums, val);
+
+            return removedElement;
+
+        }
+        public int RemoveElementTP(int[] nums, int val)
+        {
+            int i = 0;
+            for (int j = 0; j < nums.Length; j++)
+            {
+                if (nums[j] != val)
+                {
+                    nums[i] = nums[j];
+                    i++;
+                }
+            }
+
+            return i;
+        }
+        public int RemoveElementTPOptimal(int[] nums, int val)
+        {
+            int i = 0;
+            int n = nums.Length;
+            while (i < n)
+            {
+                if (nums[i] == val)
+                {
+                    nums[i] = nums[n - 1];
+                    // reduce array size by one
+                    n--;
+                }
+                else
+                {
+                    i++;
+                }
+            }
+
+            return n;
+        }
+
+        /*
+        33. Search in Rotated Sorted Array
+        https://leetcode.com/problems/search-in-rotated-sorted-array/description/
+
+        */
+        public int SearchInRotatedArray(int[] nums, int target)
+        {
+
+            /*
+    Approach 1: Find Pivot Index + Binary Search (PIBS)        
+    Complexity Analysis
+Let n be the length of nums.
+•	Time complexity: O(logn)
+o	The algorithm requires one binary search to locate pivot, and at most 2 binary searches to find target. Each binary search takes O(logn) time.
+•	Space complexity: O(1)
+o	We only need to update several parameters left, right and mid, which takes O(1) space.
+        
+            */
+            int indexOfTarget = SearchInRotatedSortedArrayPIBS(nums, target);
+            /*
+   Approach 2: Find Pivot Index + Binary Search with Shift (PIBSS)         
+   Complexity Analysis
+Let n be the length of nums.
+•	Time complexity: O(logn)
+o	The algorithm requires one binary search to locate pivot and one binary search over the shifted indices to find target. Each binary search takes O(logn) time.
+•	Space complexity: O(1)
+o	We only need to update several parameters left, right mid and shift, which takes O(1) space.
+         
+            */
+            indexOfTarget = SearchInRotatedSortedArrayPIBSS(nums, target);
+            /*
+  Approach 3: One Binary Search (OBS)          
+Complexity Analysis
+Let n be the length of nums.
+•	Time complexity: O(logn)
+o	This algorithm only requires one binary search over nums.
+•	Space complexity: O(1)
+o	We only need to update several parameters left, right and mid, which takes O(1) space.
+
+            */
+            indexOfTarget = SearchInRotatedSortedArrayOBS(nums, target);
+
+            return indexOfTarget;
+
+        }
+        public int SearchInRotatedSortedArrayPIBS(int[] nums, int target)
+        {
+            int n = nums.Length;
+            int left = 0, right = n - 1;
+            // Find the index of the pivot element (the smallest element)
+            while (left <= right)
+            {
+                int mid = (left + right) / 2;
+                if (nums[mid] > nums[n - 1])
+                {
+                    left = mid + 1;
+                }
+                else
+                {
+                    right = mid - 1;
+                }
+            }
+
+            // Binary search over elements on the pivot element's left
+            int answer = BinarySearch(nums, 0, left - 1, target);
+            if (answer != -1)
+            {
+                return answer;
+            }
+
+            // Binary search over elements on the pivot element's right
+            return BinarySearch(nums, left, n - 1, target);
+        }
+
+        // Binary search over an inclusive range [left_boundary ~ right_boundary]
+        private int BinarySearch(int[] nums, int left_boundary, int right_boundary,
+                                 int target)
+        {
+            int left = left_boundary, right = right_boundary;
+            while (left <= right)
+            {
+                int mid = (left + right) / 2;
+                if (nums[mid] == target)
+                {
+                    return mid;
+                }
+                else if (nums[mid] > target)
+                {
+                    right = mid - 1;
+                }
+                else
+                {
+                    left = mid + 1;
+                }
+            }
+
+            return -1;
+        }
+
+        public int SearchInRotatedSortedArrayPIBSS(int[] nums, int target)
+        {
+            int n = nums.Length;
+            int left = 0, right = n - 1;
+            // Find the index of the pivot element (the smallest element)
+            while (left <= right)
+            {
+                int mid = (left + right) / 2;
+                if (nums[mid] > nums[n - 1])
+                {
+                    left = mid + 1;
+                }
+                else
+                {
+                    right = mid - 1;
+                }
+            }
+
+            return ShiftedBinarySearch(nums, left, target);
+        }
+
+        // Shift elements in a circular manner, with the pivot element at index 0.
+        // Then perform a regular binary search
+        private int ShiftedBinarySearch(int[] nums, int pivot, int target)
+        {
+            int n = nums.Length;
+            int shift = n - pivot;
+            int left = (pivot + shift) % n;
+            int right = (pivot - 1 + shift) % n;
+            while (left <= right)
+            {
+                int mid = (left + right) / 2;
+                if (nums[(mid - shift + n) % n] == target)
+                {
+                    return (mid - shift + n) % n;
+                }
+                else if (nums[(mid - shift + n) % n] > target)
+                {
+                    right = mid - 1;
+                }
+                else
+                {
+                    left = mid + 1;
+                }
+            }
+
+            return -1;
+        }
+        public int SearchInRotatedSortedArrayOBS(int[] nums, int target)
+        {
+            int n = nums.Length;
+            int left = 0, right = n - 1;
+            while (left <= right)
+            {
+                int mid = left + (right - left) / 2;
+                // Case 1: find target
+                if (nums[mid] == target)
+                {
+                    return mid;
+                }
+                // Case 2: subarray on mid's left is sorted
+                else if (nums[mid] >= nums[left])
+                {
+                    if (target >= nums[left] && target < nums[mid])
+                    {
+                        right = mid - 1;
+                    }
+                    else
+                    {
+                        left = mid + 1;
+                    }
+                }
+                // Case 3: subarray on mid's right is sorted
+                else
+                {
+                    if (target <= nums[right] && target > nums[mid])
+                    {
+                        left = mid + 1;
+                    }
+                    else
+                    {
+                        right = mid - 1;
+                    }
+                }
+            }
+
+            return -1;
+        }
+        /*
+81. Search in Rotated Sorted Array II
+https://leetcode.com/problems/search-in-rotated-sorted-array-ii/description/
+
+  Approach 1: Binary Search      
+Complexity Analysis
+•	Time complexity : O(N) worst case, O(logN) best case, where N is the length of the input array.
+Worst case: This happens when all the elements are the same and we search for some different element. At each step, we will only be able to reduce the search space by 1 since arr[mid] equals arr[start] and it's not possible to decide the relative position of target from arr[mid].
+Example: [1, 1, 1, 1, 1, 1, 1], target = 2.
+Best case: This happens when all the elements are distinct. At each step, we will be able to divide our search space into half just like a normal binary search.
+This also answers the following follow-up question:
+1.	Would this (having duplicate elements) affect the run-time complexity? How and why?
+As we can see, by having duplicate elements in the array, we often miss the opportunity to apply binary search in certain search spaces. Hence, we get O(N) worst case (with duplicates) vs O(logN) best case complexity (without duplicates).
+•	Space complexity : O(1)
+        */
+        public bool SearchInRotatedSortedArrayII(int[] nums, int target)
+        {
+            if (nums.Length == null)
+                return false;
+            int end = nums.Length - 1;
+            int start = 0;
+            while (start <= end)
+            {
+                int mid = start + (end - start) / 2;
+                if (nums[mid] == target)
+                    return true;
+                if (nums[start] == nums[mid] && nums[end] == nums[mid])
+                {
+                    start++;
+                    end--;
+                }
+                else if (nums[start] <= nums[mid])
+                {
+                    if (nums[start] <= target && target < nums[mid])
+                        end = mid - 1;
+                    else
+                        start = mid + 1;
+                }
+                else
+                {
+                    if (nums[mid] < target && target <= nums[end])
+                        start = mid + 1;
+                    else
+                        end = mid - 1;
+                }
+            }
+
+            return false;
+        }
+
+        /*
+        153. Find Minimum in Rotated Sorted Array
+    https://leetcode.com/problems/find-minimum-in-rotated-sorted-array/description/
+
+    Complexity Analysis
+    •	Time Complexity : Same as Binary Search O(logN)
+    •	Space Complexity : O(1)
+
+        */
+        public int FindMinInRotatedSortedArray(int[] nums)
+        {
+            // If the list has just one element then return that element.
+            if (nums.Length == 1)
+            {
+                return nums[0];
+            }
+
+            // Initializing left and right pointers.
+            int left = 0, right = nums.Length - 1;
+
+            // If the last element is greater than the first element then there is no rotation.
+            // E.g. 1 < 2 < 3 < 4 < 5 < 7. Already sorted array.
+            // Hence the smallest element is first element. A[0]
+            if (nums[right] > nums[0])
+            {
+                return nums[0];
+            }
+
+            // Binary search way
+            while (right >= left)
+            {
+                // Find the mid element
+                int mid = left + (right - left) / 2;
+
+                // If the mid element is greater than its next element then mid+1 element is the smallest
+                // This point would be the point of change. From higher to lower value.
+                if (nums[mid] > nums[mid + 1])
+                {
+                    return nums[mid + 1];
+                }
+
+                // If the mid element is lesser than its previous element then mid element is the smallest
+                if (nums[mid - 1] > nums[mid])
+                {
+                    return nums[mid];
+                }
+
+                // If the mid elements value is greater than the 0th element this means
+                // the least value is still somewhere to the right as we are still dealing with elements greater than nums[0]
+                if (nums[mid] > nums[0])
+                {
+                    left = mid + 1;
+                }
+                else
+                {
+                    // If nums[0] is greater than the mid value then this means the smallest value is somewhere to the left
+                    right = mid - 1;
+                }
+            }
+
+            return Int32.MaxValue;
+        }
+
+        /*
+        34. Find First and Last Position of Element in Sorted Array
+        https://leetcode.com/problems/find-first-and-last-position-of-element-in-sorted-array/description/
+
+        Approach: Binary Search
+        Complexity Analysis
+        •	Time Complexity: O(logN) considering there are N elements in the array. This is because binary search takes logarithmic time to scan an array of N elements. Why? Because at each step we discard half of the array we are scanning and hence, we're done after a logarithmic number of steps. We simply perform binary search twice in this case.
+        •	Space Complexity: O(1) since we only use space for a few variables and our result array, all of which require constant space.
+
+        */
+        public int[] FindFirstAndLastPosOfTargetInSortedArray(int[] nums, int target)
+        {
+            int firstOccurrence = this.FindBound(nums, target, true);
+            if (firstOccurrence == -1)
+            {
+                return new int[] { -1, -1 };
+            }
+
+            int lastOccurrence = this.FindBound(nums, target, false);
+            return new int[] { firstOccurrence, lastOccurrence };
+
+        }
+        private int FindBound(int[] nums, int target, bool isFirst)
+        {
+            int N = nums.Length;
+            int begin = 0, end = N - 1;
+            while (begin <= end)
+            {
+                int mid = (begin + end) / 2;
+                if (nums[mid] == target)
+                {
+                    if (isFirst)
+                    {
+                        if (mid == begin || nums[mid - 1] != target)
+                        {
+                            return mid;
+                        }
+
+                        end = mid - 1;
+                    }
+                    else
+                    {
+                        if (mid == end || nums[mid + 1] != target)
+                        {
+                            return mid;
+                        }
+
+                        begin = mid + 1;
+                    }
+                }
+                else if (nums[mid] > target)
+                {
+                    end = mid - 1;
+                }
+                else
+                {
+                    begin = mid + 1;
+                }
+            }
+
+            return -1;
+        }
+        /*
+35. Search Insert Position
+https://leetcode.com/problems/search-insert-position/description/
+
+Approach 1: Binary Search.
+Complexity Analysis
+•	Time complexity : O(logN).
+•	Space complexity: O(1)
+
+        */
+        public int SearchInsertSortedArray(int[] nums, int target)
+        {
+            int pivot, left = 0, right = nums.Length - 1;
+            while (left <= right)
+            {
+                pivot = left + (right - left) / 2;
+                if (nums[pivot] == target)
+                    return pivot;
+                if (target < nums[pivot])
+                    right = pivot - 1;
+                else
+                    left = pivot + 1;
+            }
+
+            return left;
+
+        }
+
+        /*
+        41. First Missing Positive
+        https://leetcode.com/problems/first-missing-positive/description/
+
+        */
+        public int FirstMissingPositive(int[] nums)
+        {
+            /*
+Approach 1: Boolean Array (BA)
+Complexity Analysis
+Let n be the length of nums.
+•	Time complexity: O(n)
+Marking the values from nums in seen takes O(n).
+We check for values 1 to n in seen, which takes O(n).
+The total time complexity will be O(2n), which we can simplify to O(n).
+•	Space complexity: O(n)
+We initialize the array seen, which is size n + 1, so the space complexity is O(n).
+
+            
+            */
+            int firstMissingPositive = FirstMissingPositiveBA(nums);
+            /*
+Approach 2: Index as a Hash Key (IHK)
+ Complexity Analysis
+Let n be the length of nums,
+•	Time complexity: O(n)
+We traverse nums using a for loop three separate times, so the time complexity is O(n).
+•	Space complexity: O(n)
+We modify the array nums and use it to determine the answer, so the space complexity is O(n).
+nums is the input array, so the auxiliary space used is O(1).	
+           
+            
+            */
+            firstMissingPositive = FirstMissingPositiveIHK(nums);
+            /*
+            
+  Approach 3: Cycle Sort  (CS)        
+  Complexity Analysis
+Let n be the length of nums.
+•	Time complexity: O(n)
+We loop through the elements in nums once, swapping elements to sort the array. Swapping takes constant time. Sorting nums using cycle sort takes O(n) time.
+Iterating through the sorted array and finding the first missing positive can take up to O(n).
+The total time complexity is O(2n), which simplifies to O(n).
+•	Space complexity: O(n)
+We modify the array nums and use it to determine the answer, so the space complexity is O(n).
+nums is the input array, so the auxiliary space used is O(1).
+          
+            */
+            firstMissingPositive = FirstMissingPositiveCS(nums);
+
+            return firstMissingPositive;
+
+
+        }
+        public int FirstMissingPositiveBA(int[] nums)
+        {
+            int n = nums.Length;
+            bool[] seen = new bool[n + 1];  // Array for lookup
+                                            // Mark the elements from nums in the lookup array
+            foreach (int num in nums)
+            {
+                if (num > 0 && num <= n)
+                {
+                    seen[num] = true;
+                }
+            }
+
+            // Iterate through integers 1 to n
+            // return smallest missing positive integer
+            for (int i = 1; i <= n; i++)
+            {
+                if (!seen[i])
+                {
+                    return i;
+                }
+            }
+
+            // If seen contains all elements 1 to n
+            // the smallest missing positive number is n + 1
+            return n + 1;
+        }
+        public int FirstMissingPositiveIHK(int[] nums)
+        {
+            int arrayLength = nums.Length;
+            bool containsOne = false;
+
+            // Replace negative numbers, zeros,
+            // and numbers larger than n with 1s.
+            // After this nums contains only positive numbers.
+            for (int index = 0; index < arrayLength; index++)
+            {
+                // Check whether 1 is in the original array
+                if (nums[index] == 1)
+                {
+                    containsOne = true;
+                }
+                if (nums[index] <= 0 || nums[index] > arrayLength)
+                {
+                    nums[index] = 1;
+                }
+            }
+
+            if (!containsOne) return 1;
+
+            // Mark whether integers 1 to n are in nums
+            // Use index as a hash key and negative sign as a presence detector.
+            for (int index = 0; index < arrayLength; index++)
+            {
+                int value = Math.Abs(nums[index]);
+                if (value == arrayLength)
+                {
+                    nums[0] = -Math.Abs(nums[0]);
+                }
+                else
+                {
+                    nums[value] = -Math.Abs(nums[value]);
+                }
+            }
+
+            // First positive in nums is smallest missing positive integer
+            for (int index = 1; index < arrayLength; index++)
+            {
+                if (nums[index] > 0) return index;
+            }
+
+            // nums[0] stores whether n is in nums
+            if (nums[0] > 0)
+            {
+                return arrayLength;
+            }
+
+            // If nums contains all elements 1 to n
+            // the smallest missing positive number is n + 1
+            return arrayLength + 1;
+        }
+        public int FirstMissingPositiveCS(int[] nums)
+        {
+            int n = nums.Length;
+            // Use cycle sort to place positive elements smaller than n
+            // at the correct index
+            int i = 0;
+            while (i < n)
+            {
+                int correctIdx = nums[i] - 1;
+                if (nums[i] > 0 && nums[i] <= n && nums[i] != nums[correctIdx])
+                {
+                    Swap(nums, i, correctIdx);
+                }
+                else
+                {
+                    i++;
+                }
+            }
+
+            // Iterate through nums
+            // return smallest missing positive integer
+            for (i = 0; i < n; i++)
+            {
+                if (nums[i] != i + 1)
+                {
+                    return i + 1;
+                }
+            }
+
+            // If all elements are at the correct index
+            // the smallest missing positive number is n + 1
+            return n + 1;
+        }
+
+        
+        
     }
+
+
 }
+
+

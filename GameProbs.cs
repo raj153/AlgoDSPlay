@@ -337,7 +337,7 @@ namespace AlgoDSPlay
                     }
                 }
             }
-            while (q.Count >0)
+            while (q.Count > 0)
             {
                 int[] point = q.Dequeue();
                 int row = point[0];
@@ -405,5 +405,592 @@ namespace AlgoDSPlay
             return int.MaxValue;
 
         }
+        /*
+        36. Valid Sudoku
+        https://leetcode.com/problems/valid-sudoku/description/
+
+        */
+        public bool IsValidSudoku(char[][] board)
+        {
+            /*
+  Approach 1: Hash Set  (HS)       
+Complexity Analysis
+Let N be the board length, which is 9 in this question. Note that since the value of N is fixed, the time and space complexity of this algorithm can be interpreted as O(1). However, to better compare each of the presented approaches, we will treat N as an arbitrary value in the complexity analysis below.
+•	Time complexity: O(N^2) because we need to traverse every position in the board, and each of the four check steps is an O(1) operation.
+•	Space complexity: O(N^2) because in the worst-case scenario, if the board is full, we need a hash set each with size N to store all seen numbers for each of the N rows, N columns, and N boxes, respectively.
+
+            */
+            bool isValidSudoku = IsValidSudokuHS(board);
+            /*
+  Approach 2: Array of Fixed Length  (AFL)        
+  Complexity Analysis
+Let N be the board length, which is 9 in this question. Note that since the value of N is fixed, the time and space complexity of this algorithm can be interpreted as O(1). However, to better compare each of the presented approaches, we will treat N as an arbitrary value in the complexity analysis below.
+•	Time complexity: O(N^2) because we need to traverse every position in the board, and each of the four check steps is an O(1) operation.
+•	Space complexity: O(N^2) because we need to create 3N arrays each with size N to store all previously seen numbers for all rows, columns, and boxes.
+          
+            */
+            isValidSudoku = IsValidSudokuAFL(board);
+            /*
+   Approach 3: Bitmasking (BM)        
+   Complexity Analysis
+Let N be the board length, which is 9 in this question. Note that since the value of N is fixed, the time and space complexity of this algorithm can be interpreted as O(1). However, to better compare each of the presented approaches, we will treat N as an arbitrary value in the complexity analysis below.
+•	Time complexity: O(N^2) because we need to traverse every position in the board, and each of the four check steps is an O(1) operation.
+•	Space complexity: O(N) because in the worst-case scenario, if the board is full, we need 3N binary numbers to store all seen numbers in all rows, columns, and boxes. Using a binary number to record the occurrence of numbers is probably the most space-efficient method.
+         
+            */
+            isValidSudoku = IsValidSudokuBM(board);
+
+            return isValidSudoku;
+
+        }
+        public bool IsValidSudokuHS(char[][] board)
+        {
+            int N = 9;
+            // Use hash set to record the status
+            HashSet<char>[] rows = new HashSet<char>[N];
+            HashSet<char>[] cols = new HashSet<char>[N];
+            HashSet<char>[] boxes = new HashSet<char>[N];
+            for (int r = 0; r < N; r++)
+            {
+                rows[r] = new HashSet<char>();
+                cols[r] = new HashSet<char>();
+                boxes[r] = new HashSet<char>();
+            }
+
+            for (int r = 0; r < N; r++)
+            {
+                for (int c = 0; c < N; c++)
+                {
+                    char val = board[r][c];
+                    // Check if the position is filled with number
+                    if (val == '.')
+                    {
+                        continue;
+                    }
+
+                    // Check the row
+                    if (rows[r].Contains(val))
+                    {
+                        return false;
+                    }
+
+                    rows[r].Add(val);
+                    // Check the column
+                    if (cols[c].Contains(val))
+                    {
+                        return false;
+                    }
+
+                    cols[c].Add(val);
+                    // Check the box
+                    int idx = (r / 3) * 3 + c / 3;
+                    if (boxes[idx].Contains(val))
+                    {
+                        return false;
+                    }
+
+                    boxes[idx].Add(val);
+                }
+            }
+
+            return true;
+        }
+
+        public bool IsValidSudokuAFL(char[][] board)
+        {
+            int N = 9;
+            // Use an array to record the status
+            int[][] rows = new int[N][];
+            int[][] cols = new int[N][];
+            int[][] boxes = new int[N][];
+            for (int i = 0; i < N; i++)
+            {
+                rows[i] = new int[N];
+                cols[i] = new int[N];
+                boxes[i] = new int[N];
+            }
+
+            for (int r = 0; r < N; r++)
+            {
+                for (int c = 0; c < N; c++)
+                {
+                    // Check if the position is filled with number
+                    if (board[r][c] == '.')
+                    {
+                        continue;
+                    }
+
+                    int pos = board[r][c] - '1';
+                    // Check the row
+                    if (rows[r][pos] == 1)
+                    {
+                        return false;
+                    }
+
+                    rows[r][pos] = 1;
+                    // Check the column
+                    if (cols[c][pos] == 1)
+                    {
+                        return false;
+                    }
+
+                    cols[c][pos] = 1;
+                    // Check the box
+                    int idx = (r / 3) * 3 + c / 3;
+                    if (boxes[idx][pos] == 1)
+                    {
+                        return false;
+                    }
+
+                    boxes[idx][pos] = 1;
+                }
+            }
+
+            return true;
+        }
+
+        public bool IsValidSudokuBM(char[][] board)
+        {
+            int N = 9;
+            // Use a binary number to record previous occurrence
+            int[] rows = new int[N];
+            int[] cols = new int[N];
+            int[] boxes = new int[N];
+            for (int r = 0; r < N; r++)
+            {
+                for (int c = 0; c < N; c++)
+                {
+                    // Check if the position is filled with number
+                    if (board[r][c] == '.')
+                    {
+                        continue;
+                    }
+
+                    int val = board[r][c] - '0';
+                    int pos = 1 << (val - 1);
+                    // Check the row
+                    if ((rows[r] & pos) > 0)
+                    {
+                        return false;
+                    }
+
+                    rows[r] |= pos;
+                    // Check the column
+                    if ((cols[c] & pos) > 0)
+                    {
+                        return false;
+                    }
+
+                    cols[c] |= pos;
+                    // Check the box
+                    int idx = (r / 3) * 3 + c / 3;
+                    if ((boxes[idx] & pos) > 0)
+                    {
+                        return false;
+                    }
+
+                    boxes[idx] |= pos;
+                }
+            }
+
+            return true;
+        }
+
+        /*
+        37. Sudoku Solver		
+        https://leetcode.com/problems/sudoku-solver/description/
+
+        Approach 0: Brute Force
+
+        Approach 1: Backtracking
+        Complexity Analysis
+        •	Time complexity is constant here since the board size is fixed and there is no N-parameter to measure. Though let's discuss the number of operations needed : (9!)^9. Let's consider one row, i.e. not more than 9 cells to fill. There are not more than 9 possibilities for the first number to put, not more than 9×8 for the second one, not more than 9×8×7 for the third one, etc. In total that results in not more than 9! possibilities for just one row, which means no more than (9!)9 operations in total.
+        Let's compare:
+        o	981=196627050475552913618075908526912116283103450944214766927315415537966391196809
+        for the brute force,
+        o	and (9!)^9=109110688415571316480344899355894085582848000000000
+        for the standard backtracking, i.e. the number of operations is reduced in 1027 times!
+        •	Space complexity: the board size is fixed, and the space is used to store board, rows, columns, and box structures, each containing 81 elements.
+
+        */
+        public class SudokuSolution
+        {
+            // box size
+            int n;
+
+            // row size
+            int N;
+            int[][] rows;
+            int[][] columns;
+            int[][] boxes;
+            char[][] board;
+            bool sudokuSolved = false;
+
+            public SudokuSolution()
+            {
+                n = 3;
+                N = n * n;
+                rows = new int[N][];
+                columns = new int[N][];
+                boxes = new int[N][];
+                for (int k = 0; k < N; k++)
+                {
+                    rows[k] = new int[N + 1];
+                    columns[k] = new int[N + 1];
+                    boxes[k] = new int[N + 1];
+                }
+            }
+
+            public bool CouldPlace(int d, int row, int col)
+            {
+                int idx = (row / n) * n + col / n;
+                return rows[row][d] + columns[col][d] + boxes[idx][d] == 0;
+            }
+
+            public void PlaceNumber(int d, int row, int col)
+            {
+                int idx = (row / n) * n + col / n;
+                rows[row][d]++;
+                columns[col][d]++;
+                boxes[idx][d]++;
+                board[row][col] = (char)(d + '0');
+            }
+
+            public void RemoveNumber(int d, int row, int col)
+            {
+                int idx = (row / n) * n + col / n;
+                rows[row][d]--;
+                columns[col][d]--;
+                boxes[idx][d]--;
+                board[row][col] = '.';
+            }
+
+            public void PlaceNextNumbers(int row, int col)
+            {
+                if ((col == N - 1) && (row == N - 1))
+                {
+                    sudokuSolved = true;
+                }
+                else
+                {
+                    if (col == N - 1)
+                        Backtrack(row + 1, 0);
+                    else
+                        Backtrack(row, col + 1);
+                }
+            }
+
+            public void Backtrack(int row, int col)
+            {
+                if (board[row][col] == '.')
+                {
+                    for (int d = 1; d < 10; d++)
+                    {
+                        if (CouldPlace(d, row, col))
+                        {
+                            PlaceNumber(d, row, col);
+                            PlaceNextNumbers(row, col);
+                            if (!sudokuSolved)
+                                RemoveNumber(d, row, col);
+                        }
+                    }
+                }
+                else
+                    PlaceNextNumbers(row, col);
+            }
+
+            public void SolveSudoku(char[][] board)
+            {
+                this.board = board;
+                for (int i = 0; i < N; i++)
+                {
+                    for (int j = 0; j < N; j++)
+                    {
+                        char num = board[i][j];
+                        if (num != '.')
+                        {
+                            int d = (int)char.GetNumericValue(num);
+                            PlaceNumber(d, i, j);
+                        }
+                    }
+                }
+
+                Backtrack(0, 0);
+            }
+        }
+
+        /*
+        174. Dungeon Game
+        https://leetcode.com/problems/dungeon-game/description/
+
+        */
+        public int CalculateMinimumHP(int[][] dungeon)
+        {
+            /*
+Approach 1: Dynamic Programming
+Complexity
+
+Time Complexity: O(M⋅N) where M⋅N is the size of the dungeon. We iterate through the entire dungeon once and only once.
+
+Space Complexity: O(M⋅N) where M⋅N is the size of the dungeon. In the algorithm, we keep a dp matrix that is of the same size as the dungeon.
+            
+            */
+            int minHealth = CalculateMinimumHPDP(dungeon);
+
+            /*
+Approach 2: Dynamic Programming with Circular Queue (DPCQ)
+Complexity
+
+Time Complexity: O(M⋅N) where M⋅N is the size of the dungeon. We iterate through the entire dungeon once and only once.
+
+Space Complexity: O(N) where N is the number of columns in the dungeon
+            
+            */
+            minHealth = CalculateMinimumHPDPCQ(dungeon);
+
+            return minHealth;
+        }
+
+        const int inf = int.MaxValue;
+        int[,] dp;
+        int rows, cols;
+
+        public int GetMinHealth(int currCell, int nextRow, int nextCol)
+        {
+            if (nextRow >= this.rows || nextCol >= this.cols)
+                return inf;
+            int nextCell = this.dp[nextRow, nextCol];
+            // hero needs at least 1 point to survive
+            return Math.Max(1, nextCell - currCell);
+        }
+
+        public int CalculateMinimumHPDP(int[][] dungeon)
+        {
+            this.rows = dungeon.Length;
+            this.cols = dungeon[0].Length;
+            this.dp = new int[rows, cols];
+            for (int i = 0; i < rows; i++)
+            {
+                for (int j = 0; j < cols; j++)
+                {
+                    dp[i, j] = inf;
+                }
+            }
+
+            int currCell, rightHealth, downHealth, nextHealth, minHealth;
+            for (int row = this.rows - 1; row >= 0; --row)
+            {
+                for (int col = this.cols - 1; col >= 0; --col)
+                {
+                    currCell = dungeon[row][col];
+
+                    rightHealth = GetMinHealth(currCell, row, col + 1);
+                    downHealth = GetMinHealth(currCell, row + 1, col);
+                    nextHealth = Math.Min(rightHealth, downHealth);
+
+                    if (nextHealth != inf)
+                    {
+                        minHealth = nextHealth;
+                    }
+                    else
+                    {
+                        minHealth = currCell >= 0 ? 1 : 1 - currCell;
+                    }
+
+                    this.dp[row, col] = minHealth;
+                }
+            }
+
+            return this.dp[0, 0];
+        }
+
+        public class MyCircularQueue
+        {
+            protected int capacity;
+            protected int tailIndex;
+            public int[] queue;
+
+            public MyCircularQueue(int capacity)
+            {
+                this.queue = new int[capacity];
+                this.tailIndex = 0;
+                this.capacity = capacity;
+            }
+
+            public void EnQueue(int value)
+            {
+                this.queue[this.tailIndex] = value;
+                this.tailIndex = (this.tailIndex + 1) % this.capacity;
+            }
+
+            public int Get(int index)
+            {
+                return this.queue[index % this.capacity];
+            }
+        }
+        MyCircularQueue dpCQ;
+
+        public int GetMinHealth2(int currCell, int nextRow, int nextCol)
+        {
+            if (nextRow < 0 || nextCol < 0)
+                return inf;
+
+            int index = cols * nextRow + nextCol;
+            int nextCell = this.dpCQ.Get(index);
+            return Math.Max(1, nextCell - currCell);
+        }
+
+        public int CalculateMinimumHPDPCQ(int[][] dungeon)
+        {
+            this.rows = dungeon.Length;
+            this.cols = dungeon[0].Length;
+            this.dpCQ = new MyCircularQueue(this.cols);
+
+            int currCell, rightHealth, downHealth, nextHealth, minHealth;
+            for (int row = 0; row < this.rows; ++row)
+            {
+                for (int col = 0; col < this.cols; ++col)
+                {
+                    currCell = dungeon[rows - row - 1][cols - col - 1];
+
+                    rightHealth = GetMinHealth2(currCell, row, col - 1);
+                    downHealth = GetMinHealth2(currCell, row - 1, col);
+                    nextHealth = Math.Min(rightHealth, downHealth);
+
+                    if (nextHealth != inf)
+                    {
+                        minHealth = nextHealth;
+                    }
+                    else
+                    {
+                        minHealth = currCell >= 0 ? 1 : 1 - currCell;
+                    }
+
+                    this.dpCQ.EnQueue(minHealth);
+                }
+            }
+
+            return this.dpCQ.Get(this.cols - 1);
+        }
+
+
+        /*
+
+        2214. Minimum Health to Beat Game
+        https://leetcode.com/problems/minimum-health-to-beat-game/description/	
+
+        Approach: Greedy
+        Complexity Analysis
+        Here, n is the number of levels in the game.
+        •	Time complexity: O(n)
+        o	We iterate once through the complete array damage to compute the totalDamage and maxDamage.
+        •	Space complexity: O(1)
+        o	We only used two variables: maxDamage and totalDamage.
+
+
+        */
+        public long MinimumHealth(int[] damage, int armor)
+        {
+            int maxDamage = 0;
+            long totalDamage = 0;
+
+            foreach (int d in damage)
+            {
+                totalDamage += d;
+                maxDamage = Math.Max(maxDamage, d);
+            }
+
+            return totalDamage - Math.Min(armor, maxDamage) + 1;
+        }
+
+        /*
+        1921. Eliminate Maximum Number of Monsters
+        https://leetcode.com/problems/eliminate-maximum-number-of-monsters/description/
+
+        */
+        public int EliminateMaximum(int[] dist, int[] speed)
+        {
+            /*
+            
+Approach 1: Sort By Arrival Time
+ Complexity Analysis
+Given n as the length of dist and speed,
+•	Time complexity: O(n⋅logn)
+Creating arrival costs O(n). Then, we sort it which costs O(n⋅logn). Finally, we iterate up to n times.
+•	Space complexity: O(n)
+arrival has a size of O(n). Note that we could instead modify one of the input arrays and use that as arrival. However, it is generally considered bad practice to modify the input, especially when it is something passed by reference like an array. Also, many people will argue that if you modify the input, you must include it as part of the space complexity anyway.
+           
+            */
+
+            int maxNumOfMonstersEleminated = EliminateMaximumSort(dist, speed);
+
+
+
+            /*            
+ Approach 2: Heap           
+ Complexity Analysis
+Given n as the length of dist and speed,
+•	Time complexity: O(n⋅logn)
+The heap operations will cost O(logn). If all monsters can be killed, then we will perform O(n) iterations and thus use O(n⋅logn) time.
+Note: an array can be converted to a heap in linear time. In fact, Python's heapq.heapify does this, as does C++ std::priority_queue constructor. Without linear time heapify, we always use O(n⋅logn) time since we need to build the heap. However, if we have linear time heapify and a monster reaches our city early, then this algorithm will have a better theoretical performance, since not many O(logn) operations will occur.
+•	Space complexity: O(n)
+heap uses O(n) space.
+
+            
+            */
+
+
+            maxNumOfMonstersEleminated = EliminateMaximumHeap(dist, speed);
+
+            return maxNumOfMonstersEleminated;
+
+        }
+        public int EliminateMaximumSort(int[] dist, int[] speed)
+        {
+            double[] arrival = new double[dist.Length];
+            for (int i = 0; i < dist.Length; i++)
+            {
+                arrival[i] = (double)dist[i] / speed[i];
+            }
+
+            Array.Sort(arrival);
+            int ans = 0;
+
+            for (int i = 0; i < arrival.Length; i++)
+            {
+                if (arrival[i] <= i)
+                {
+                    break;
+                }
+
+                ans++;
+            }
+
+            return ans;
+        }
+        public int EliminateMaximumHeap(int[] dist, int[] speed)
+        {
+            PriorityQueue<double,double> minHeap = new PriorityQueue<double, double>();
+            for (int i = 0; i < dist.Length; i++)
+            {
+                var arrivalTime =(double)dist[i] / speed[i];
+                minHeap.Enqueue(arrivalTime, arrivalTime);
+            }
+
+            int ans = 0;
+            while (minHeap.Count>0)
+            {
+                if (minHeap.Dequeue() <= ans)
+                {
+                    break;
+                }
+
+                ans++;
+            }
+
+            return ans;
+        }
+
+
     }
 }
