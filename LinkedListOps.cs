@@ -275,24 +275,66 @@ namespace AlgoDSPlay
             return slow;
 
         }
-        //https://www.algoexpert.io/questions/reverse-linked-list
-        public static LinkedList ReverseLinkedList(LinkedList head)
+        /*
+        206. Reverse Linked List
+https://leetcode.com/problems/reverse-linked-list/description/ 
+https://www.youtube.com/watch?v=N6dOwBde7-M
+//https://www.algoexpert.io/questions/reverse-linked-list
+
+        */
+        public class ReverseLinkedListSol
         {
-            //T:O(n) | S:O(1)
-            LinkedList prevNode = null;
-            LinkedList currNode = head;
+            /*
+            Approach 1: Iterative
+Time complexity : O(n).
+Assume that n is the list's length, the time complexity is O(n).
 
-            while (currNode != null)
+Space complexity : O(1).
+
+
+            */
+            public static LinkedList ReverseLinkedListIterative(LinkedList head)
             {
-                LinkedList nxtNode = currNode.Next;
-                currNode.Next = prevNode;
-                prevNode = currNode;
-                currNode = nxtNode;
+                //T:O(n) | S:O(1)
+                LinkedList prevNode = null;
+                LinkedList currNode = head;
 
+                while (currNode != null)
+                {
+                    LinkedList nxtNode = currNode.Next;
+                    currNode.Next = prevNode;
+                    prevNode = currNode;
+                    currNode = nxtNode;
+
+                }
+                return prevNode;
             }
-            return prevNode;
-        }
 
+            /*
+            Approach 2: Recursive
+
+Complexity Analysis
+
+Time complexity : O(n).
+Assume that n is the list's length, the time complexity is O(n).
+
+Space complexity : O(n).
+The extra space comes from implicit stack space due to recursion. The recursion could go up to n levels deep.
+
+
+            */
+            public ListNode ReverseLinkedListRec(ListNode head)
+            {
+                if (head == null || head.Next == null)
+                {
+                    return head;
+                }
+                ListNode p = ReverseLinkedListRec(head.Next);
+                head.Next.Next = head;
+                head.Next = null;
+                return p;
+            }
+        }
         //https://www.algoexpert.io/questions/node-swap
         public static LinkedList NodeSwap(LinkedList head)
         {
@@ -1014,7 +1056,7 @@ Approach 2: Iterative O(1) space
 •	Space Complexity: O(1).
             */
             headAfterReverse = ReverseKGroupIterative(head, k);
-            
+
             return headAfterReverse;
 
         }
@@ -1054,7 +1096,7 @@ Approach 2: Iterative O(1) space
             return head;
         }
 
-       
+
         public ListNode ReverseKGroupIterative(ListNode head, int k)
         {
             ListNode ptr = head;
@@ -1095,6 +1137,264 @@ Approach 2: Iterative O(1) space
 
             return newHead == null ? head : newHead;
         }
+        /*
+        61. Rotate List
+        https://leetcode.com/problems/rotate-list/description/
+
+        Complexity Analysis
+        •	Time complexity : O(N) where N is a number of elements in the list.
+        •	Space complexity : O(1) since it's a constant space solution.
+
+
+        */
+        public ListNode RotateList(ListNode head, int k)
+        {
+            // base cases
+            if (head == null)
+                return null;
+            if (head.Next == null)
+                return head;
+            // close the linked list into the ring
+            ListNode old_tail = head;
+            int n;
+            for (n = 1; old_tail.Next != null; n++) old_tail = old_tail.Next;
+            old_tail.Next = head;
+            // find new tail : (n - k % n - 1)th node
+            // and new head : (n - k % n)th node
+            ListNode new_tail = head;
+            for (int i = 0; i < n - k % n - 1; i++) new_tail = new_tail.Next;
+            ListNode new_head = new_tail.Next;
+            // break the ring
+            new_tail.Next = null;
+            return new_head;
+        }
+
+        /*
+        83. Remove Duplicates from Sorted List
+https://leetcode.com/problems/remove-duplicates-from-sorted-list/description/
+
+Approach 1: Straight-Forward Approach
+Complexity Analysis
+•	Time complexity : O(n). Because each node in the list is checked exactly once to determine if it is a duplicate or not, the total run time is O(n), where n is the number of nodes in the list.
+•	Space complexity : O(1). No additional space is used.
+
+        */
+        public ListNode DeleteDuplicatesSortedList(ListNode head)
+        {
+            ListNode current = head;
+            while (current != null && current.Next != null)
+            {
+                if (current.Next.Val == current.Val)
+                {
+                    current.Next = current.Next.Next;
+                }
+                else
+                {
+                    current = current.Next;
+                }
+            }
+
+            return head;
+        }
+
+        /*
+        82. Remove Duplicates from Sorted List II
+https://leetcode.com/problems/remove-duplicates-from-sorted-list-ii/
+
+Approach 1: Sentinel Head + Predecessor
+Complexity Analysis
+•	Time complexity: O(N) since it's one pass along the input list.
+•	Space complexity: O(1) because we don't allocate any additional data structure.
+
+        */
+        public ListNode DeleteDuplicatesSortedListII(ListNode head)
+        {
+            // sentinel
+            ListNode sentinel = new ListNode(0, head);
+            // predecessor = the last node
+            // before the sublist of duplicates
+            ListNode pred = sentinel;
+            while (head != null)
+            {
+                // If it's a beginning of duplicates sublist
+                // skip all duplicates
+                if (head.Next != null && head.Val == head.Next.Val)
+                {
+                    // move till the end of duplicates sublist
+                    while (head.Next != null && head.Val == head.Next.Val)
+                    {
+                        head = head.Next;
+                    }
+
+                    // Skip all duplicates
+                    pred.Next = head.Next;
+                    // otherwise, move predecessor
+                }
+                else
+                {
+                    pred = pred.Next;
+                }
+
+                // move forward
+                head = head.Next;
+            }
+
+            return sentinel.Next;
+        }
+
+        /*
+        86. Partition List
+https://leetcode.com/problems/partition-list/description/
+
+Approach 1: Two Pointer Approach
+
+Complexity Analysis
+•	Time Complexity: O(N), where N is the number of nodes in the original
+linked list and we iterate the original list.
+•	Space Complexity: O(1), we have not utilized any extra space, the point to
+note is that we are reforming the original list, by moving the original nodes, we
+have not used any extra space as such.
+
+        */
+        public ListNode PartitionList(ListNode head, int x)
+        {
+            ListNode before_head = new ListNode(0);
+            ListNode before = before_head;
+            ListNode after_head = new ListNode(0);
+            ListNode after = after_head;
+            while (head != null)
+            {
+                if (head.Val < x)
+                {
+                    before.Next = head;
+                    before = before.Next;
+                }
+                else
+                {
+                    after.Next = head;
+                    after = after.Next;
+                }
+
+                head = head.Next;
+            }
+
+            after.Next = null;
+            before.Next = after_head.Next;
+            return before_head.Next;
+        }
+
+
+        /*
+        92. Reverse Linked List II
+        https://leetcode.com/problems/reverse-linked-list-ii/description/
+        */
+
+        public class ReverseListBetweenSol
+        {
+            /*
+            Approach 1: Recursion
+            Complexity Analysis
+•	Time Complexity: O(N) since we process all the nodes at-most twice. Once during the normal recursion process and once during the backtracking process. During the backtracking process we only just swap half of the list if you think about it, but the overall complexity is O(N).
+•	Space Complexity: O(N) in the worst case when we have to reverse the entire list. This is the space occupied by the recursion stack.
+
+
+            */
+            public ListNode ReverseListBetweenRec(ListNode head, int m, int n)
+            {
+                stop = false;
+                left = head;
+                RecurseAndReverse(head, m, n);
+                return head;
+
+            }
+            private ListNode left = null;
+            private bool stop = false;
+
+            private void RecurseAndReverse(ListNode right, int m, int n)
+            {
+                if (n == 1)
+                    return;
+                right = right.Next;
+                if (m > 1)
+                    this.left = this.left.Next;
+                this.RecurseAndReverse(right, m - 1, n - 1);
+                if (this.left == right || right.Next == this.left)
+                    this.stop = true;
+                if (!this.stop)
+                {
+                    int tmp = this.left.Val;
+                    this.left.Val = right.Val;
+                    right.Val = tmp;
+                    this.left = this.left.Next;
+                }
+            }
+
+            /*
+            Approach 2: Iterative Link Reversal. (ILR)
+
+            Complexity Analysis
+•	Time Complexity: O(N) considering the list consists of N nodes. We process each of the nodes at most once (we don't process the nodes after the nth node from the beginning.
+•	Space Complexity: O(1) since we simply adjust some pointers in the original linked list and only use O(1) additional memory for achieving the final result.
+
+            */
+            public ListNode ReverseListBetweenILR(ListNode head, int m, int n)
+            {
+                // Empty list
+                if (head == null)
+                {
+                    return null;
+                }
+
+                // Move the two pointers until they reach the proper starting point
+                // in the list.
+                ListNode cur = head, prev = null;
+                while (m > 1)
+                {
+                    prev = cur;
+                    cur = cur.Next;
+                    m--;
+                    n--;
+                }
+
+                // The two pointers that will fix the final connections.
+                ListNode con = prev, tail = cur;
+                // Iteratively reverse the nodes until n becomes 0.
+                ListNode third = null;
+                while (n > 0)
+                {
+                    third = cur.Next;
+                    cur.Next = prev;
+                    prev = cur;
+                    cur = third;
+                    n--;
+                }
+
+                // Adjust the final connections as explained in the algorithm
+                if (con != null)
+                {
+                    con.Next = prev;
+                }
+                else
+                {
+                    head = prev;
+                }
+
+                tail.Next = cur;
+                return head;
+            }
+
+        }
+
+
+
+
+
+
+
+
+
+
+
 
 
     }

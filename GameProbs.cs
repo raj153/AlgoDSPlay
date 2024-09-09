@@ -204,15 +204,98 @@ namespace AlgoDSPlay
             }
             return -1;
         }
+        /*
+        2664. The Knight’s Tour
+https://leetcode.com/problems/the-knights-tour/
+https://algo.monster/liteproblems/2664
+
+        */
+        class TourOfKnightSol
+        {
+            private int[][] chessboard; // The chessboard representation
+            private int numberOfRows;     // Number of rows in the chessboard
+            private int numberOfColumns;   // Number of columns in the chessboard
+            private bool isSolutionFound; // Flag to indicate if a solution is found
+
+            // Method to generate the tour of a knight on a chessboard
+            public int[][] Backtrack(int rows, int cols, int startRow, int startCol)
+            {
+                this.numberOfRows = rows;
+                this.numberOfColumns = cols;
+                this.chessboard = new int[rows][];
+                for (int i = 0; i < rows; i++)
+                {
+                    chessboard[i] = new int[cols];
+                }
+                this.isSolutionFound = false;
+
+                // Initialize all cells as unvisited by setting them to -1
+                for (int rowIndex = 0; rowIndex < chessboard.Length; rowIndex++)
+                {
+                    Array.Fill(chessboard[rowIndex], -1);
+                }
+
+                // Start tour at the given starting position by setting it to 0
+                chessboard[startRow][startCol] = 0;
+
+                // Use Depth-First Search to explore all possible moves
+                Dfs(startRow, startCol);
+                return chessboard; // Return the completed tour grid
+            }
+
+            // Helper method for DFS traversal from a given cell (i, j)
+            private void Dfs(int currentRow, int currentCol)
+            {
+                // Check if we've visited all cells, meaning a full tour is complete
+                if (chessboard[currentRow][currentCol] == numberOfRows * numberOfColumns - 1)
+                {
+                    isSolutionFound = true;
+                    return; // Found a solution, so backtrack
+                }
+
+                // Array of possible moves a knight can make (8 possible moves)
+                int[] moveX = { -2, -1, 1, 2, 2, 1, -1, -2 };
+                int[] moveY = { 1, 2, 2, 1, -1, -2, -2, -1 };
+
+                // Explore all possible moves
+                for (int moveIndex = 0; moveIndex < 8; ++moveIndex)
+                {
+                    int nextRow = currentRow + moveX[moveIndex];
+                    int nextCol = currentCol + moveY[moveIndex];
+
+                    // Check if the move is within bounds and the cell is not yet visited
+                    if (IsValidMove(nextRow, nextCol))
+                    {
+                        chessboard[nextRow][nextCol] = chessboard[currentRow][currentCol] + 1; // Mark the cell with the move number
+                        Dfs(nextRow, nextCol); // Continue dfs from the new cell
+
+                        // If a solution is found, no need to explore further; start backtracking
+                        if (isSolutionFound)
+                        {
+                            return;
+                        }
+
+                        // Backtrack: Unmark the cell as part of the path as it leads to no solution
+                        chessboard[nextRow][nextCol] = -1;
+                    }
+                }
+            }
+
+            // Helper method to check if a move is valid and legal on the chessboard
+            private bool IsValidMove(int x, int y)
+            {
+                return x >= 0 && x < numberOfRows && y >= 0 && y < numberOfColumns && chessboard[x][y] == -1;
+            }
+        }
         //https://www.algoexpert.io/questions/solve-sudoku
         // O(1) time | O(1) space - assuming a 9x9 input board
         public List<List<int>> SolveSudoku(List<List<int>> board)
         {
-            solvePartialSudoku(0, 0, board);
+            SolvePartialSudoku(0, 0, board);
             return board;
         }
 
-        public bool solvePartialSudoku(int row, int col, List<List<int>> board)
+        public bool SolvePartialSudoku(int row, int col, List<List<int>> board)
         {
             int currentRow = row;
             int currentCol = col;
@@ -232,7 +315,7 @@ namespace AlgoDSPlay
                 return tryDigitsAtPosition(currentRow, currentCol, board);
             }
 
-            return solvePartialSudoku(currentRow, currentCol + 1, board);
+            return SolvePartialSudoku(currentRow, currentCol + 1, board);
         }
         public bool tryDigitsAtPosition(int row, int col, List<List<int>> board)
         {
@@ -241,7 +324,7 @@ namespace AlgoDSPlay
                 if (isValidAtPosition(digit, row, col, board))
                 {
                     board[row][col] = digit;
-                    if (solvePartialSudoku(row, col + 1, board))
+                    if (SolvePartialSudoku(row, col + 1, board))
                     {
                         return true;
                     }
@@ -970,15 +1053,15 @@ heap uses O(n) space.
         }
         public int EliminateMaximumHeap(int[] dist, int[] speed)
         {
-            PriorityQueue<double,double> minHeap = new PriorityQueue<double, double>();
+            PriorityQueue<double, double> minHeap = new PriorityQueue<double, double>();
             for (int i = 0; i < dist.Length; i++)
             {
-                var arrivalTime =(double)dist[i] / speed[i];
+                var arrivalTime = (double)dist[i] / speed[i];
                 minHeap.Enqueue(arrivalTime, arrivalTime);
             }
 
             int ans = 0;
-            while (minHeap.Count>0)
+            while (minHeap.Count > 0)
             {
                 if (minHeap.Dequeue() <= ans)
                 {

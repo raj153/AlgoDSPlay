@@ -9,6 +9,7 @@ using System.Data;
 using System.Text.RegularExpressions;
 using System.Runtime.CompilerServices;
 using System.Security.Principal;
+using static AlgoDSPlay.LinkedListOps;
 
 namespace AlgoDSPlay
 {
@@ -1574,7 +1575,7 @@ namespace AlgoDSPlay
                         continue;
                     }
 
-                    findOnesConnectedToBorder(matrix, row, col, onesConnectedToBorder);
+                    FindOnesConnectedToBorder(matrix, row, col, onesConnectedToBorder);
                 }
             }
 
@@ -1592,7 +1593,7 @@ namespace AlgoDSPlay
 
             return matrix;
         }
-        public void findOnesConnectedToBorder(
+        public void FindOnesConnectedToBorder(
           int[][] matrix, int startRow, int startCol, bool[,] onesConnectedToBorder
         )
         {
@@ -1613,7 +1614,7 @@ namespace AlgoDSPlay
 
                 onesConnectedToBorder[currentRow, currentCol] = true;
 
-                var neighbors = getNeighbors(matrix, currentRow, currentCol);
+                var neighbors = GetNeighbors(matrix, currentRow, currentCol);
                 foreach (var neighbor in neighbors)
                 {
                     int row = neighbor.Item1;
@@ -1628,7 +1629,7 @@ namespace AlgoDSPlay
             }
         }
 
-        public List<Tuple<int, int>> getNeighbors(int[][] matrix, int row, int col)
+        public List<Tuple<int, int>> GetNeighbors(int[][] matrix, int row, int col)
         {
             int numRows = matrix.Length;
             int numCols = matrix[row].Length;
@@ -1711,7 +1712,7 @@ namespace AlgoDSPlay
 
                 matrix[currentRow][currentCol] = 2;
 
-                var neighbors = getNeighbors(matrix, currentRow, currentCol);
+                var neighbors = GetNeighbors(matrix, currentRow, currentCol);
                 foreach (var neighbor in neighbors)
                 {
                     int row = neighbor.Item1;
@@ -2154,7 +2155,7 @@ namespace AlgoDSPlay
                 /*3. Using UnionFind
 
                     public int findCircleNum(int[][] isConnected) {
-        int n = isConnected.length;
+        int n = isConnected.Length;
         UnionFind dsu = new UnionFind(n);
         int numberOfComponents = n;
 
@@ -3005,7 +3006,7 @@ namespace AlgoDSPlay
                 We iterate on each land cell of the grid and perform union operations with its adjacent cells. In the worst case, we may traverse all cells of the grid.
                 Thus, in the worst case time complexity will be O(m∗n).
         •	Space complexity: O(m∗n)
-                We create an additional object uf and a boolean array isSubIsland of size m∗n.
+                We create an additional object uf and a bool array isSubIsland of size m∗n.
                 Thus, in the worst case space complexity will be O(m∗n).
 
             */
@@ -3378,6 +3379,101 @@ namespace AlgoDSPlay
             seen[r][c] = true;
             return (1 + MaxAreaOfIslandDFSRec(r + 1, c, seen) + MaxAreaOfIslandDFSRec(r - 1, c, seen)
                       + MaxAreaOfIslandDFSRec(r, c - 1, seen) + MaxAreaOfIslandDFSRec(r, c + 1, seen));
+        }
+
+        /*
+        463. Island Perimeter
+        https://leetcode.com/problems/island-perimeter/description/
+
+        */
+        public class IslandPerimeterSol
+        {
+            /*
+            Approach 1: Simple Counting
+            Complexity Analysis
+•	Time complexity : O(mn) where m is the number of rows of the grid and n is
+the number of columns of the grid. Since two for loops go through all
+the cells on the grid, for a two-dimensional grid of size m×n, the algorithm
+would have to check mn cells.
+•	Space complexity : O(1). Only the result variable is updated and there is
+no other space requirement.
+
+            */
+            public int SimpleCouting(int[][] grid)
+            {
+
+                int rows = grid.Length;
+                int cols = grid[0].Length;
+
+                int up, down, left, right;
+                int result = 0;
+
+                for (int r = 0; r < rows; r++)
+                {
+                    for (int c = 0; c < cols; c++)
+                    {
+                        if (grid[r][c] == 1)
+                        {
+                            if (r == 0) { up = 0; }
+                            else { up = grid[r - 1][c]; }
+
+                            if (c == 0) { left = 0; }
+                            else { left = grid[r][c - 1]; }
+
+                            if (r == rows - 1) { down = 0; }
+                            else { down = grid[r + 1][c]; }
+
+                            if (c == cols - 1) { right = 0; }
+                            else { right = grid[r][c + 1]; }
+
+                            result += 4 - (up + left + right + down);
+                        }
+                    }
+                }
+
+                return result;
+            }
+            /*
+Approach 2: Better Counting
+
+            Complexity Analysis
+•	Time complexity : O(mn) where m is the number of rows of the grid and n is
+the number of columns of the grid. Since two for loops go through all
+the cells on the grid, for a two-dimensional grid of size m×n, the algorithm
+would have to check mn cells.
+•	Space complexity : O(1). Only the result variable is updated and there is
+no other space requirement.
+            
+            */
+            public int islandPerimeter(int[][] grid)
+            {
+                int rows = grid.Length;
+                int cols = grid[0].Length;
+
+                int result = 0;
+                for (int r = 0; r < rows; r++)
+                {
+                    for (int c = 0; c < cols; c++)
+                    {
+                        if (grid[r][c] == 1)
+                        {
+                            result += 4;
+
+                            if (r > 0 && grid[r - 1][c] == 1)
+                            {
+                                result -= 2;
+                            }
+
+                            if (c > 0 && grid[r][c - 1] == 1)
+                            {
+                                result -= 2;
+                            }
+                        }
+                    }
+                }
+
+                return result;
+            }
         }
 
         /*
@@ -4352,7 +4448,7 @@ Complexity Analysis
 •	Space Complexity: O(N^3), the size of memo.
 
             */
-                 maxNumOfCherrysPicked = CherryPickupDPTD(grid);
+            maxNumOfCherrysPicked = CherryPickupDPTD(grid);
             /*
 Approach #3: Dynamic Programming (Bottom Up)   (DPBU)          
  Complexity Analysis
@@ -4360,9 +4456,9 @@ Approach #3: Dynamic Programming (Bottom Up)   (DPBU)
 •	Space Complexity: O(N^2), the sizes of dp and dp2.
 
             */
-             maxNumOfCherrysPicked = CherryPickupDPBU(grid);
+            maxNumOfCherrysPicked = CherryPickupDPBU(grid);
 
-             return maxNumOfCherrysPicked;
+            return maxNumOfCherrysPicked;
         }
 
 
@@ -4480,50 +4576,2198 @@ Approach #3: Dynamic Programming (Bottom Up)   (DPBU)
         }
         public int CherryPickupDPBU(int[][] grid)
         {
-            int N = grid.Length;
-            int[][] dp = new int[N][];
-            foreach (int[] row in dp)
+            if (grid == null || grid.Length == 0 || grid.Any(row => row.Length != grid.Length))
             {
-                Array.Fill(row, int.MinValue);
+                throw new ArgumentException("Input must be a valid square matrix.");
             }
-            dp[0][0] = grid[0][0];
 
-            for (int t = 1; t <= 2 * N - 2; ++t)
+            int n = grid.Length;
+            int[][] dp = InitializeDPArray(n);
+
+            for (int step = 1; step <= 2 * n - 2; step++)
             {
-                int[][] dp2 = new int[N][];
-                foreach (int[] row in dp2)
-                {
-                    Array.Fill(row, int.MinValue);
-                }
+                int[][] dpNext = InitializeDPArray(n);
 
-                for (int i = Math.Max(0, t - (N - 1)); i <= Math.Min(N - 1, t); ++i)
+                for (int row = Math.Max(0, step - (n - 1)); row <= Math.Min(n - 1, step); row++)
                 {
-                    for (int j = Math.Max(0, t - (N - 1)); j <= Math.Min(N - 1, t); ++j)
+                    for (int col = Math.Max(0, step - (n - 1)); col <= Math.Min(n - 1, step); col++)
                     {
-                        if (grid[i][t - i] == -1 || grid[j][t - j] == -1)
+                        if (grid[row][step - row] == -1 || grid[col][step - col] == -1)
                         {
                             continue;
                         }
-                        int val = grid[i][t - i];
-                        if (i != j)
+
+                        int cherries = (row != col) ? grid[row][step - row] + grid[col][step - col] : grid[row][step - row];
+
+                        for (int prevRow = row - 1; prevRow <= row; prevRow++)
                         {
-                            val += grid[j][t - j];
-                        }
-                        for (int pi = i - 1; pi <= i; ++pi)
-                        {
-                            for (int pj = j - 1; pj <= j; ++pj)
+                            for (int prevCol = col - 1; prevCol <= col; prevCol++)
                             {
-                                if (pi >= 0 && pj >= 0)
+                                if (prevRow >= 0 && prevCol >= 0)
                                 {
-                                    dp2[i][j] = Math.Max(dp2[i][j], dp[pi][pj] + val);
+                                    dpNext[row][col] = Math.Max(dpNext[row][col], dp[prevRow][prevCol] + cherries);
                                 }
                             }
                         }
                     }
                 }
-                dp = dp2;
+
+                dp = dpNext;
             }
-            return Math.Max(0, dp[N - 1][N - 1]);
+
+            return Math.Max(0, dp[n - 1][n - 1]);
+
+
+        }
+
+
+
+        private int[][] InitializeDPArray(int n)
+        {
+            int[][] dpArray = new int[n][];
+            for (int i = 0; i < n; i++)
+            {
+                dpArray[i] = new int[n];
+                Array.Fill(dpArray[i], int.MinValue);
+            }
+            dpArray[0][0] = grid[0][0];
+            return dpArray;
+
+        }
+
+        /*
+        51. N-Queens
+        https://leetcode.com/problems/n-queens/description/	
+
+        Complexity Analysis
+        Given N as the number of queens (which is the same as the width and height of the board),
+        •	Time complexity: O(N!)
+        Unlike the brute force approach, we will only place queens on squares that aren't under attack. For the first queen, we have N options. For the next queen, we won't attempt to place it in the same column as the first queen, and there must be at least one square attacked diagonally by the first queen as well. Thus, the maximum number of squares we can consider for the second queen is N−2. For the third queen, we won't attempt to place it in 2 columns already occupied by the first 2 queens, and there must be at least two squares attacked diagonally from the first 2 queens. Thus, the maximum number of squares we can consider for the third queen is N−4. This pattern continues, resulting in an approximate time complexity of N!.
+        While it costs O(N^2) to build each valid solution, the amount of valid solutions S(N) does not grow nearly as fast as N!, so O(N!+S(N)∗N^2)=O(N!)
+        •	Space complexity: O(N^2)
+        Extra memory used includes the 3 sets used to store board state, as well as the recursion call stack. All of this scales linearly with the number of queens. However, to keep the board state costs O(N^2), since the board is of size N * N. Space used for the output does not count towards space complexity.
+
+        */
+        public class NQueenSolution
+        {
+            private int size;
+            private List<IList<string>> solutions = new List<IList<string>>();
+
+            public IList<IList<string>> SolveNQueens(int n)
+            {
+                size = n;
+                char[][] emptyBoard = new char[size][];
+                for (int i = 0; i < n; i++)
+                {
+                    emptyBoard[i] = new char[size];
+                    for (int j = 0; j < n; j++)
+                    {
+                        emptyBoard[i][j] = '.';
+                    }
+                }
+
+                Backtrack(0, new HashSet<int>(), new HashSet<int>(), new HashSet<int>(),
+                          emptyBoard);
+                return solutions;
+            }
+
+            // Making use of a helper function to get the
+            // solutions in the correct output format
+            private List<string> CreateBoard(char[][] state)
+            {
+                List<string> board = new List<string>();
+                for (int row = 0; row < size; row++)
+                {
+                    string current_row = new string(state[row]);
+                    board.Add(current_row);
+                }
+
+                return board;
+            }
+
+            private void Backtrack(int row, HashSet<int> diagonals,
+                                   HashSet<int> antiDiagonals, HashSet<int> cols,
+                                   char[][] state)
+            {
+                // Base case - N queens have been placed
+                if (row == size)
+                {
+                    solutions.Add(CreateBoard(state));
+                    return;
+                }
+
+                for (int col = 0; col < size; col++)
+                {
+                    int currDiagonal = row - col;
+                    int currAntiDiagonal = row + col;
+                    // If the queen is not placeable
+                    if (cols.Contains(col) || diagonals.Contains(currDiagonal) ||
+                        antiDiagonals.Contains(currAntiDiagonal))
+                    {
+                        continue;
+                    }
+
+                    // "Add" the queen to the board
+                    cols.Add(col);
+                    diagonals.Add(currDiagonal);
+                    antiDiagonals.Add(currAntiDiagonal);
+                    state[row][col] = 'Q';
+                    // Move on to the next row with the updated board state
+                    Backtrack(row + 1, diagonals, antiDiagonals, cols, state);
+                    // "Remove" the queen from the board since we have already
+                    // explored all valid paths using the above function call
+                    cols.Remove(col);
+                    diagonals.Remove(currDiagonal);
+                    antiDiagonals.Remove(currAntiDiagonal);
+                    state[row][col] = '.';
+                }
+            }
+        }
+
+        /*
+        52. N-Queens II
+https://leetcode.com/problems/n-queens-ii/description/
+
+        Approach: Backtracking
+Complexity Analysis
+•	Time complexity: O(N!), where N is the number of queens (which is the same as the width and height of the board).
+Unlike the brute force approach, we place a queen only on squares that aren't attacked. For the first queen, we have N options. For the next queen, we won't attempt to place it in the same column as the first queen, and there must be at least one square attacked diagonally by the first queen as well. Thus, the maximum number of squares we can consider for the second queen is N−2. For the third queen, we won't attempt to place it in 2 columns already occupied by the first 2 queens, and there must be at least two squares attacked diagonally from the first 2 queens. Thus, the maximum number of squares we can consider for the third queen is N−4. This pattern continues, giving an approximate time complexity of N! at the end.
+•	Space complexity: O(N), where N is the number of queens (which is the same as the width and height of the board).
+Extra memory used includes the 3 sets used to store board state, as well as the recursion call stack. All of this scales linearly with the number of queens.
+
+        */
+        public class TotalNQueensSolution
+        {
+            private int size;
+
+            public int TotalNQueens(int n)
+            {
+                size = n;
+                return Backtrack(0, new HashSet<int>(), new HashSet<int>(),
+                                 new HashSet<int>());
+            }
+
+            private int Backtrack(int row, HashSet<int> diagonals,
+                                  HashSet<int> antiDiagonals, HashSet<int> cols)
+            {
+                // Base case - N queens have been placed
+                if (row == size)
+                {
+                    return 1;
+                }
+
+                int solutions = 0;
+                for (int col = 0; col < size; col++)
+                {
+                    int currDiagonal = row - col;
+                    int currAntiDiagonal = row + col;
+                    // If the queen is not placeable
+                    if (cols.Contains(col) || diagonals.Contains(currDiagonal) ||
+                        antiDiagonals.Contains(currAntiDiagonal))
+                    {
+                        continue;
+                    }
+
+                    // "Add" the queen to the board
+                    cols.Add(col);
+                    diagonals.Add(currDiagonal);
+                    antiDiagonals.Add(currAntiDiagonal);
+                    // Move on to the next row with the updated board state
+                    solutions += Backtrack(row + 1, diagonals, antiDiagonals, cols);
+                    // "Remove" the queen from the board since we have already
+                    // explored all valid paths using the above function call
+                    cols.Remove(col);
+                    diagonals.Remove(currDiagonal);
+                    antiDiagonals.Remove(currAntiDiagonal);
+                }
+
+                return solutions;
+            }
+        }
+
+        /*
+        54. Spiral Matrix
+        https://leetcode.com/problems/spiral-matrix/description/
+
+        */
+        public IList<int> SpiralOrder(int[][] matrix)
+        {
+            /*
+Approach 1: Set Up Boundaries (SUB)
+Complexity Analysis
+
+Let M be the number of rows and N be the number of columns.
+Time complexity: O(M⋅N). This is because we visit each element once.
+Space complexity: O(1). This is because we don't use other data structures. Remember that we don't include the output array in the space complexity.
+            
+            */
+
+            IList<int> spiralOrder = SpiralOrderSUB(matrix);
+
+            /*
+           Approach 2: Mark Visited Elements (MVE)
+ Complexity Analysis
+
+Let M be the number of rows and N be the number of columns.
+Time complexity: O(M⋅N). This is because we visit each element once.
+Space complexity: O(1). This is because we don't use other data structures. Remember that we don't consider the output array or the input matrix when calculating the space complexity. However, if we were prohibited from mutating the input matrix, then this would be an O(M⋅N) space solution. This is because we would need to use a bool matrix to track all of the previously seen cells.
+
+            */
+            spiralOrder = SpiralOrderMVE(matrix);
+
+            return spiralOrder;
+
+        }
+        public IList<int> SpiralOrderSUB(int[][] matrix)
+        {
+            IList<int> result = new List<int>();
+            int rows = matrix.Length;
+            int columns = matrix[0].Length;
+            int up = 0;
+            int left = 0;
+            int right = columns - 1;
+            int down = rows - 1;
+            while (result.Count < rows * columns)
+            {
+                // Traverse from left to right.
+                for (int col = left; col <= right; col++)
+                {
+                    result.Add(matrix[up][col]);
+                }
+
+                // Traverse downwards.
+                for (int row = up + 1; row <= down; row++)
+                {
+                    result.Add(matrix[row][right]);
+                }
+
+                // Make sure we are now on a different row.
+                if (up != down)
+                {
+                    // Traverse from right to left.
+                    for (int col = right - 1; col >= left; col--)
+                    {
+                        result.Add(matrix[down][col]);
+                    }
+                }
+
+                // Make sure we are now on a different column.
+                if (left != right)
+                {
+                    // Traverse upwards.
+                    for (int row = down - 1; row > up; row--)
+                    {
+                        result.Add(matrix[row][left]);
+                    }
+                }
+
+                left++;
+                right--;
+                up++;
+                down--;
+            }
+
+            return result;
+        }
+        public IList<int> SpiralOrderMVE(int[][] matrix)
+        {
+            int VISITED = 101;
+            int rows = matrix.Length, columns = matrix[0].Length;
+            // Four directions that we will move: right, down, left, up.
+            int[][] directions =
+                new int[4][] { new int[] { 0, 1 }, new int[] { 1, 0 },
+                            new int[] { 0, -1 }, new int[] { -1, 0 } };
+            // Initial direction: moving right.
+            int currentDirection = 0;
+            // The number of times we change the direction.
+            int changeDirection = 0;
+            // Current place that we are at is (row, col).
+            // row is the row index; col is the column index.
+            int row = 0, col = 0;
+            // Store the first element and mark it as visited.
+            List<int> result = new List<int> { matrix[0][0] };
+            matrix[0][0] = VISITED;
+            while (changeDirection < 2)
+            {
+                while (0 <= row + directions[currentDirection][0] &&
+                       row + directions[currentDirection][0] < rows &&
+                       0 <= col + directions[currentDirection][1] &&
+                       col + directions[currentDirection][1] < columns &&
+                       matrix[row + directions[currentDirection][0]]
+                             [col + directions[currentDirection][1]] != VISITED)
+                {
+                    // Reset this to 0 since we did not break and change the
+                    // direction.
+                    changeDirection = 0;
+                    // Calculate the next place that we will move to.
+                    row += directions[currentDirection][0];
+                    col += directions[currentDirection][1];
+                    result.Add(matrix[row][col]);
+                    matrix[row][col] = VISITED;
+                }
+
+                // Change our direction.
+                currentDirection = (currentDirection + 1) % 4;
+                // Increment changeDirection because we changed our direction.
+                changeDirection++;
+            }
+
+            return result;
+        }
+
+        /*
+        59. Spiral Matrix II
+        https://leetcode.com/problems/spiral-matrix-ii/description/
+
+        */
+        public int[][] GenerateMatrix(int n)
+        {
+            /*
+          Approach 1: Traverse Layer by Layer in Spiral Form (TLLSF)
+  Complexity Analysis
+•	Time Complexity: O(n^2). Here, n is given input and we are iterating over n⋅n matrix in spiral form.
+•	Space Complexity: O(1) We use constant extra space for storing cnt
+
+            */
+            var matrixGenerated = GenerateMatrixTLLSF(n);
+            /*
+            Approach 2: Optimized spiral traversal (OST)
+       Complexity Analysis
+•	Time Complexity: O(n^2). Here, n is given input and we are iterating over n⋅n matrix in spiral form.
+•	Space Complexity: O(1) We use constant extra space for storing cnt.
+     
+            */
+            matrixGenerated = GenerateMatrixOST(n);
+
+            return matrixGenerated;
+
+
+        }
+
+        public int[][] GenerateMatrixTLLSF(int n)
+        {
+            int[][] result = new int[n][];
+            for (int i = 0; i < n; i++) result[i] = new int[n];
+            int cnt = 1;
+            for (int layer = 0; layer < (n + 1) / 2; layer++)
+            {
+                // direction 1 - traverse from left to right
+                for (int ptr = layer; ptr < n - layer; ptr++)
+                    result[layer][ptr] = cnt++;
+                // direction 2 - traverse from top to bottom
+                for (int ptr = layer + 1; ptr < n - layer; ptr++)
+                    result[ptr][n - layer - 1] = cnt++;
+                // direction 3 - traverse from right to left
+                for (int ptr = n - layer - 2; ptr >= layer; ptr--)
+                    result[n - layer - 1][ptr] = cnt++;
+                // direction 4 - traverse from bottom to top
+                for (int ptr = n - layer - 2; ptr > layer; ptr--)
+                    result[ptr][layer] = cnt++;
+            }
+
+            return result;
+        }
+        public int[][] GenerateMatrixOST(int n)
+        {
+            int[][] res = new int[n][];
+            for (int i = 0; i < n; i++) res[i] = new int[n];
+            int[][] helpers =
+                new int[4][] { new int[2] { 0, 1 }, new int[2] { 1, 0 },
+                            new int[2] { 0, -1 }, new int[2] { -1, 0 } };
+            int val = 1, d = 0, row = 0, col = 0;
+            while (val <= n * n)
+            {
+                res[row][col] = val++;
+                int r = (row + helpers[d][0] + n) % n;
+                int c = (col + helpers[d][1] + n) % n;
+                if (res[r][c] != 0)
+                    d = (d + 1) % 4;
+                row += helpers[d][0];
+                col += helpers[d][1];
+            }
+
+            return res;
+        }
+
+
+        /*
+        885. Spiral Matrix III
+        https://leetcode.com/problems/spiral-matrix-iii/description/
+
+        Complexity Analysis
+        Let rows be the number of rows and cols be the number of columns in the matrix.
+        •	Time complexity: O(max(rows,cols)^2)
+        We fill the traversed matrix with the values on the simulated path. However, we might also move out of the matrix during traversal. The total distance covered depends on max(rows,cols)^2. 
+        •	Space complexity: O(rows⋅cols)
+        Apart from the traversed matrix, no additional memory is used. The traversed matrix stores all the cells of the matrix, so its size is rows×cols. Therefore, the total space complexity is O(rows⋅cols).
+
+
+        */
+        public int[][] SpiralMatrixIII(int rows, int cols, int rStart, int cStart)
+        {
+            // Store all possible directions in an array.
+            int[][] dir = new int[][] { new int[] { 0, 1 }, new int[] { 1, 0 }, new int[] { 0, -1 }, new int[] { -1, 0 } };
+            int[][] traversed = new int[rows * cols][];
+            int idx = 0;
+
+            // Initial step size is 1, value of d represents the current direction.
+            for (int step = 1, direction = 0; idx < rows * cols;)
+            {
+                // direction = 0 -> East, direction = 1 -> South
+                // direction = 2 -> West, direction = 3 -> North
+                for (int i = 0; i < 2; ++i)
+                {
+                    for (int j = 0; j < step; ++j)
+                    {
+                        // Validate the current position
+                        if (
+                            rStart >= 0 &&
+                            rStart < rows &&
+                            cStart >= 0 &&
+                            cStart < cols
+                        )
+                        {
+                            traversed[idx][0] = rStart;
+                            traversed[idx][1] = cStart;
+                            ++idx;
+                        }
+                        // Make changes to the current position.
+                        rStart += dir[direction][0];
+                        cStart += dir[direction][1];
+                    }
+
+                    direction = (direction + 1) % 4;
+                }
+                ++step;
+            }
+            return traversed;
+        }
+
+        /*
+        2326. Spiral Matrix IV
+        https://leetcode.com/problems/spiral-matrix-iv/description/
+
+        Time: O(n) Solution
+        */
+        public int[][] SpiralMatrixIV(int m, int n, ListNode head)
+        {
+            int[][] res = new int[m][];
+            for (int i = 0; i < m; i++) res[i] = new int[n];
+            for (int i = 0; i < m; i++)
+                for (int j = 0; j < n; j++) res[i][j] = -1;
+            int top = 0, bottom = m, l = 0, r = n;
+
+            // Traverse the matrix in spiral form, and update with the values present in the head list.
+            // If head reacher NULL pointer break out from the loop, and return the spiral matrix.
+            while (head != null)
+            {
+                for (int i = l; i < r && head != null; i++)
+                {
+                    res[top][i] = head.Val;
+                    head = head.Next;
+                }
+                top++;
+                for (int i = top; i < bottom && head != null; i++)
+                {
+                    res[i][r - 1] = head.Val;
+                    head = head.Next;
+                }
+                r--;
+                for (int i = r - 1; i >= l && head != null; i--)
+                {
+                    res[bottom - 1][i] = head.Val;
+                    head = head.Next;
+                }
+                bottom--;
+                for (int i = bottom - 1; i >= top && head != null; i--)
+                {
+                    res[i][l] = head.Val;
+                    head = head.Next;
+                }
+                l++;
+            }
+            return res;
+        }
+
+        /*
+        57. Insert Interval
+        https://leetcode.com/problems/insert-interval/description/
+
+        */
+        public class InsertIntervalSol
+        {
+            public int[][] InsertInterval(int[][] intervals, int[] newInterval)
+            {
+                /*
+    Approach 1: Linear Search (LS)
+     Complexity Analysis
+    Let N be the number of intervals.
+    •	Time complexity: O(N)
+    We iterate through the intervals once, and each interval is considered and processed only once.
+    •	Space complexity: O(1)
+    We only use the result (res) array to store output, so this could be considered O(1).
+
+                */
+                var result = InsertIntervalLS(intervals, newInterval);
+
+                /*
+    Approach 2: Binary Search (BS)
+       Complexity Analysis
+    Let N be the number of intervals.
+    •	Time complexity: O(N)
+    The binary search for finding the position to insert the newInterval has a time complexity of O(logN). However, the insertion of the newInterval into the list may take O(N) time in the worst case, as it could involve shifting elements within the list. Consequently, the overall time complexity is O(N+logN), which simplifies to O(N).
+    •	Space complexity: O(N)
+    We use the additional space to store the result (res) and perform calculations using res, so it does count towards the space complexity. In the worst case, the size of res will be proportional to the number of intervals in the input list.
+
+                */
+                result = InsertIntervalBS(intervals, newInterval);
+
+                return result;
+
+            }
+
+            public int[][] InsertIntervalLS(int[][] intervals, int[] newInterval)
+            {
+                int n = intervals.Length, i = 0;
+                List<int[]> res = new List<int[]>();
+
+                // Case 1: No overlapping before merging intervals
+                while (i < n && intervals[i][1] < newInterval[0])
+                {
+                    res.Add(intervals[i]);
+                    i++;
+                }
+
+                // Case 2: Overlapping and merging intervals
+                while (i < n && newInterval[1] >= intervals[i][0])
+                {
+                    newInterval[0] = Math.Min(newInterval[0], intervals[i][0]);
+                    newInterval[1] = Math.Max(newInterval[1], intervals[i][1]);
+                    i++;
+                }
+
+                res.Add(newInterval);
+
+                // Case 3: No overlapping after merging newInterval
+                while (i < n)
+                {
+                    res.Add(intervals[i]);
+                    i++;
+                }
+
+                return res.ToArray();
+            }
+            public int[][] InsertIntervalBS(int[][] intervals, int[] newInterval)
+            {
+                // If the intervals vector is empty, return a vector containing the
+                // newInterval
+                if (intervals.Length == 0)
+                {
+                    return new int[][] { newInterval };
+                }
+
+                int n = intervals.Length;
+                int target = newInterval[0];
+                int left = 0, right = n - 1;
+
+                // Binary search to find the position to insert newInterval
+                while (left <= right)
+                {
+                    int mid = (left + right) / 2;
+                    if (intervals[mid][0] < target)
+                    {
+                        left = mid + 1;
+                    }
+                    else
+                    {
+                        right = mid - 1;
+                    }
+                }
+
+                // Insert newInterval at the found position
+                List<int[]> result = new List<int[]>();
+                for (int i = 0; i < left; i++)
+                {
+                    result.Add(intervals[i]);
+                }
+
+                result.Add(newInterval);
+                for (int i = left; i < n; i++)
+                {
+                    result.Add(intervals[i]);
+                }
+
+                // Merge overlapping intervals
+                List<int[]> merged = new List<int[]>();
+                foreach (int[] interval in result)
+                {
+                    // If res is empty or there is no overlap, add the interval to the
+                    // result
+                    if (merged.Count == 0 ||
+                        merged[merged.Count - 1][1] < interval[0])
+                    {
+                        merged.Add(interval);
+                        // If there is an overlap, merge the intervals by updating the
+                        // end of the last interval in res
+                    }
+                    else
+                    {
+                        merged[merged.Count - 1][1] =
+                            Math.Max(merged[merged.Count - 1][1], interval[1]);
+                    }
+                }
+
+                return merged.ToArray();
+            }
+
+        }
+
+
+
+        /*
+        73. Set Matrix Zeroes		
+        https://leetcode.com/problems/set-matrix-zeroes/description/
+
+        */
+        public class SetZeroesSol
+        {
+            /*
+            Approach 1: Additional Memory Approach (AM)
+            Complexity Analysis
+•	Time Complexity: O(M×N) where M and N are the number of rows and columns respectively.
+•	Space Complexity: O(M+N).
+
+            */
+            public void SetZeroesSAM(int[][] matrix)
+            {
+                int R = matrix.Length;
+                int C = matrix[0].Length;
+                HashSet<int> rows = new HashSet<int>();
+                HashSet<int> cols = new HashSet<int>();
+                // Essentially, we mark the rows and columns that are to be made zero
+                for (int i = 0; i < R; i++)
+                {
+                    for (int j = 0; j < C; j++)
+                    {
+                        if (matrix[i][j] == 0)
+                        {
+                            rows.Add(i);
+                            cols.Add(j);
+                        }
+                    }
+                }
+
+                // Iterate over the array once again and using the rows and cols sets,
+                // update the elements.
+                for (int i = 0; i < R; i++)
+                {
+                    for (int j = 0; j < C; j++)
+                    {
+                        if (rows.Contains(i) || cols.Contains(j))
+                        {
+                            matrix[i][j] = 0;
+                        }
+                    }
+                }
+            }
+
+            /*
+            Approach 2: O(1) Space, Efficient Solution
+Complexity Analysis
+•	Time Complexity : O(M×N)
+•	Space Complexity : O(1)
+
+            */
+            public void SetZeroesSpaceOptimal(int[][] matrix)
+            {
+                bool isCol = false;
+                int R = matrix.Length;
+                int C = matrix[0].Length;
+                for (int i = 0; i < R; i++)
+                {
+                    if (matrix[i][0] == 0)
+                    {
+                        isCol = true;
+                    }
+
+                    for (int j = 1; j < C; j++)
+                    {
+                        if (matrix[i][j] == 0)
+                        {
+                            matrix[0][j] = 0;
+                            matrix[i][0] = 0;
+                        }
+                    }
+                }
+
+                for (int i = 1; i < R; i++)
+                {
+                    for (int j = 1; j < C; j++)
+                    {
+                        if (matrix[i][0] == 0 || matrix[0][j] == 0)
+                        {
+                            matrix[i][j] = 0;
+                        }
+                    }
+                }
+
+                if (matrix[0][0] == 0)
+                {
+                    for (int j = 0; j < C; j++)
+                    {
+                        matrix[0][j] = 0;
+                    }
+                }
+
+                if (isCol)
+                {
+                    for (int i = 0; i < R; i++)
+                    {
+                        matrix[i][0] = 0;
+                    }
+                }
+            }
+
+        }
+
+
+        /*
+        289. Game of Life	
+        https://leetcode.com/problems/game-of-life/description/
+
+        */
+        public class GameOfLifeSol
+        {
+            /*
+            Approach 1: O(mn) Space Solution
+Complexity Analysis
+•	Time Complexity: O(M×N), where M is the number of rows and N is the number of columns of the Board.
+•	Space Complexity: O(M×N), where M is the number of rows and N is the number of columns of the Board. This is the space occupied by the copy board we created initially.
+
+            */
+            public void GameOfLife1(int[][] board)
+            {
+                // Neighbors array to find 8 neighboring cells for a given cell
+                int[] neighbors = { 0, 1, -1 };
+
+                int rows = board.Length;
+                int cols = board[0].Length;
+
+                // Create a copy of the original board
+                int[][] copyBoard = new int[rows][];
+
+                // Create a copy of the original board
+                for (int row = 0; row < rows; row++)
+                {
+                    for (int col = 0; col < cols; col++)
+                    {
+                        copyBoard[row][col] = board[row][col];
+                    }
+                }
+
+                // Iterate through board cell by cell.
+                for (int row = 0; row < rows; row++)
+                {
+                    for (int col = 0; col < cols; col++)
+                    {
+
+                        // For each cell count the number of live neighbors.
+                        int liveNeighbors = 0;
+
+                        for (int i = 0; i < 3; i++)
+                        {
+                            for (int j = 0; j < 3; j++)
+                            {
+
+                                if (!(neighbors[i] == 0 && neighbors[j] == 0))
+                                {
+                                    int r = (row + neighbors[i]);
+                                    int c = (col + neighbors[j]);
+
+                                    // Check the validity of the neighboring cell.
+                                    // and whether it was originally a live cell.
+                                    // The evaluation is done against the copy, since that is never updated.
+                                    if ((r < rows && r >= 0) && (c < cols && c >= 0) && (copyBoard[r][c] == 1))
+                                    {
+                                        liveNeighbors += 1;
+                                    }
+                                }
+                            }
+                        }
+
+                        // Rule 1 or Rule 3
+                        if ((copyBoard[row][col] == 1) && (liveNeighbors < 2 || liveNeighbors > 3))
+                        {
+                            board[row][col] = 0;
+                        }
+                        // Rule 4
+                        if (copyBoard[row][col] == 0 && liveNeighbors == 3)
+                        {
+                            board[row][col] = 1;
+                        }
+                    }
+                }
+
+            }
+
+
+
+            /*
+            Approach 2: O(1) Space Solution
+            Complexity Analysis
+    •	Time Complexity: O(M×N), where M is the number of rows and N is the number of columns of the Board.
+    •	Space Complexity: O(1)
+
+
+            */
+            public void GameOfLife2(int[][] board)
+            {
+
+                // Neighbors array to find 8 neighboring cells for a given cell
+                int[] neighbors = { 0, 1, -1 };
+
+                int rows = board.Length;
+                int cols = board[0].Length;
+
+                // Iterate through board cell by cell.
+                for (int row = 0; row < rows; row++)
+                {
+                    for (int col = 0; col < cols; col++)
+                    {
+
+                        // For each cell count the number of live neighbors.
+                        int liveNeighbors = 0;
+
+                        for (int i = 0; i < 3; i++)
+                        {
+                            for (int j = 0; j < 3; j++)
+                            {
+
+                                if (!(neighbors[i] == 0 && neighbors[j] == 0))
+                                {
+                                    int r = (row + neighbors[i]);
+                                    int c = (col + neighbors[j]);
+
+                                    // Check the validity of the neighboring cell.
+                                    // and whether it was originally a live cell.
+                                    if ((r < rows && r >= 0) && (c < cols && c >= 0) && (Math.Abs(board[r][c]) == 1))
+                                    {
+                                        liveNeighbors += 1;
+                                    }
+                                }
+                            }
+                        }
+
+                        // Rule 1 or Rule 3
+                        if ((board[row][col] == 1) && (liveNeighbors < 2 || liveNeighbors > 3))
+                        {
+                            // -1 signifies the cell is now dead but originally was live.
+                            board[row][col] = -1;
+                        }
+                        // Rule 4
+                        if (board[row][col] == 0 && liveNeighbors == 3)
+                        {
+                            // 2 signifies the cell is now live but was originally dead.
+                            board[row][col] = 2;
+                        }
+                    }
+                }
+
+                // Get the final representation for the newly updated board.
+                for (int row = 0; row < rows; row++)
+                {
+                    for (int col = 0; col < cols; col++)
+                    {
+                        if (board[row][col] > 0)
+                        {
+                            board[row][col] = 1;
+                        }
+                        else
+                        {
+                            board[row][col] = 0;
+                        }
+                    }
+                }
+            }
+
+
+        }
+
+        /*
+        240. Search a 2D Matrix II	
+        https://leetcode.com/problems/search-a-2d-matrix-ii/
+
+        */
+        public class SearchMatrixSol
+        {
+            /*
+            Approach 1: Brute Force
+
+            Complexity Analysis
+•	Time complexity : O(nm)
+Becase we perform a constant time operation for each element of an
+n×m element matrix, the overall time complexity is equal to the
+size of the matrix.
+•	Space complexity : O(1)
+The brute force approach does not allocate more additional space than a
+handful of pointers, so the memory footprint is constant.
+
+            */
+
+
+            public bool SearchMatrix(int[][] matrix, int target)
+            {
+                for (int i = 0; i < matrix.Length; i++)
+                {
+                    for (int j = 0; j < matrix[0].Length; j++)
+                    {
+                        if (matrix[i][j] == target)
+                        {
+                            return true;
+                        }
+                    }
+                }
+
+                return false;
+            }
+            /*
+    Approach 2: Binary Search
+    Complexity Analysis
+    •	Time complexity : O(log(n!))
+    It's not super obvious how O(log(n!)) time complexity arises
+    from this algorithm, so let's analyze it step-by-step. The
+    asymptotically-largest amount of work performed is in the main loop,
+    which runs for min(m,n) iterations, where m denotes the number
+    of rows and n denotes the number of columns. On each iteration, we
+    perform two binary searches on array slices of length m−i and
+    n−i. Therefore, each iteration of the loop runs in
+    O(log(m−i)+log(n−i)) time, where i denotes the current
+    iteration. We can simplify this to O(2⋅log(n−i))=O(log(n−i))
+    by seeing that, in the worst case, n≈m. To see why, consider
+    what happens when n≪m (without loss of generality); n will
+    dominate m in the asymptotic analysis. By summing the runtimes of all
+    iterations, we get the following expression:
+    (1)O(log(n)+log(n−1)+log(n−2)+…+log(1))
+    Then, we can leverage the log multiplication rule (log(a)+log(b)=log(ab))
+    to rewrite the complexity as:
+    (2)O(log(n)+log(n−1)+log(n−2)+…+log(1))=O(log(n⋅(n−1)⋅(n−2)⋅…⋅1))=O(log(1⋅…⋅(n−2)⋅(n−1)⋅n))=O(log(n!))
+    Because this time complexity is fairly uncommon, it is worth thinking about
+    its relation to the usual analyses. For one, log(n!)=O(nlogn).
+    To see why, recall step 1 from the analysis above; there are n terms, each no
+    greater than log(n). Therefore, the asymptotic runtime is certainly no worse than
+    that of an O(nlogn) algorithm.
+    •	Space complexity : O(1)
+    Because our binary search implementation does not literally slice out
+    copies of rows and columns from matrix, we can avoid allocating
+    greater-than-constant memory.
+
+            */
+            public bool SearchMatrixBS(int[][] matrix, int target)
+            {
+                // an empty matrix obviously does not contain `target`
+                if (matrix == null || matrix.Length == 0)
+                {
+                    return false;
+                }
+
+                // iterate over matrix diagonals
+                int shorterDim = Math.Min(matrix.Length, matrix[0].Length);
+                for (int i = 0; i < shorterDim; i++)
+                {
+                    bool verticalFound = BinarySearch(matrix, target, i, true);
+                    bool horizontalFound = BinarySearch(matrix, target, i, false);
+                    if (verticalFound || horizontalFound)
+                    {
+                        return true;
+                    }
+                }
+
+                return false;
+            }
+            private bool BinarySearch(int[][] matrix, int target, int start, bool vertical)
+            {
+                int lo = start;
+                int hi = vertical ? matrix[0].Length - 1 : matrix.Length - 1;
+
+                while (hi >= lo)
+                {
+                    int mid = (lo + hi) / 2;
+                    if (vertical)
+                    { // searching a column
+                        if (matrix[start][mid] < target)
+                        {
+                            lo = mid + 1;
+                        }
+                        else if (matrix[start][mid] > target)
+                        {
+                            hi = mid - 1;
+                        }
+                        else
+                        {
+                            return true;
+                        }
+                    }
+                    else
+                    { // searching a row
+                        if (matrix[mid][start] < target)
+                        {
+                            lo = mid + 1;
+                        }
+                        else if (matrix[mid][start] > target)
+                        {
+                            hi = mid - 1;
+                        }
+                        else
+                        {
+                            return true;
+                        }
+                    }
+                }
+
+                return false;
+            }
+
+
+            /*
+    Approach 3: Divide and Conquer (DAC)
+    Complexity Analysis
+    •	Time complexity : O(nlogn)
+    First, for ease of analysis, assume that n≈m, as in the
+    analysis of approach 2. Also, assign x=n^2=∣matrix∣; this will make
+    the master method
+    easier to apply. Now, let's model the runtime of the
+    divide & conquer approach as a recurrence relation:
+    T(x)=2⋅T(x/4)+ sqrt of x
+    The first term (2⋅T(x/4)) arises from the fact that we
+    recurse on two submatrices of roughly one-quarter size, while
+    x comes from the time spent seeking along a O(n)-length
+    column for the partition point. After binding the master method variables
+    (a=2;b=4;c=0.5) we notice that logba=c. Therefore, this
+    recurrence falls under case 2 of the master method, and the following
+    falls out:
+    T(x)=O(x^c⋅logx)=O(x^0.5⋅logx)=O(((n^2) ^0.5)⋅log(n^2))=O(n⋅log(n^2))=O(2n⋅logn)=O(n⋅logn)
+    Extension: what would happen to the complexity if we binary searched for
+    the partition point, rather than used a linear scan?
+    •	Space complexity : O(logn)
+    Although this approach does not fundamentally require
+    greater-than-constant addition memory, its use of recursion means that it
+    will use memory proportional to the height of its recursion tree. Because
+    this approach discards half of matrix on each level of recursion (and
+    makes two recursive calls), the height of the tree is bounded by logn.
+
+
+
+            */
+            private int[][] matrix;
+            private int target;
+
+            private bool SearchRec(int left, int up, int right, int down)
+            {
+                // this submatrix has no height or no width.
+                if (left > right || up > down)
+                {
+                    return false;
+                    // `target` is already larger than the largest element or smaller
+                    // than the smallest element in this submatrix.
+                }
+                else if (target < matrix[up][left] || target > matrix[down][right])
+                {
+                    return false;
+                }
+
+                int mid = left + (right - left) / 2;
+
+                // Locate `row` such that matrix[row-1][mid] < target < matrix[row][mid]
+                int row = up;
+                while (row <= down && matrix[row][mid] <= target)
+                {
+                    if (matrix[row][mid] == target)
+                    {
+                        return true;
+                    }
+                    row++;
+                }
+
+                return SearchRec(left, row, mid - 1, down) || SearchRec(mid + 1, up, right, row - 1);
+            }
+
+            public bool SearchMatrixDAC(int[][] mat, int targ)
+            {
+                // cache input values in object to avoid passing them unnecessarily
+                // to `searchRec`
+                matrix = mat;
+                target = targ;
+
+                // an empty matrix obviously does not contain `target`
+                if (matrix == null || matrix.Length == 0)
+                {
+                    return false;
+                }
+
+                return SearchRec(0, 0, matrix[0].Length - 1, matrix.Length - 1);
+            }
+
+            /*
+      Approach 4: Search Space Reduction (SPC)
+      Complexity Analysis
+•	Time complexity : O(n+m)
+The key to the time complexity analysis is noticing that, on every
+iteration (during which we do not return true) either row or col is
+is decremented/incremented exactly once. Because row can only be
+decremented m times and col can only be incremented n times
+before causing the while loop to terminate, the loop cannot run for
+more than n+m iterations. Because all other work is constant, the
+overall time complexity is linear in the sum of the dimensions of the
+matrix.
+•	Space complexity : O(1)
+Because this approach only manipulates a few pointers, its memory
+footprint is constant.
+
+            */
+            public bool SearchMatrixSPC(int[][] matrix, int target)
+            {
+                // start our "pointer" in the bottom-left
+                int row = matrix.Length - 1;
+                int col = 0;
+
+                while (row >= 0 && col < matrix[0].Length)
+                {
+                    if (matrix[row][col] > target)
+                    {
+                        row--;
+                    }
+                    else if (matrix[row][col] < target)
+                    {
+                        col++;
+                    }
+                    else
+                    { // found it
+                        return true;
+                    }
+                }
+
+                return false;
+            }
+
+        }
+
+
+        /*
+        118. Pascal's Triangle
+        https://leetcode.com/problems/pascals-triangle/description/
+
+        */
+        public class GeneratePascalTriangleSol
+        {
+            /*
+            Approach 1: Dynamic Programming
+            Complexity Analysis
+•	Time complexity: O(numRows^2)
+Although updating each value of triangle happens in constant time, it is performed O(numRows2) times. 
+•	Space complexity: O(1)
+While O(numRows^2) space is used to store the output, the input and output generally do not count towards the space complexity.
+
+            */
+            public IList<IList<int>> IterateDP(int numRows)
+            {
+                List<IList<int>> triangle = new List<IList<int>>();
+                // Base case; first row is always [1].
+                triangle.Add(new List<int>());
+                triangle[0].Add(1);
+                for (int rowNum = 1; rowNum < numRows; rowNum++)
+                {
+                    List<int> row = new List<int>();
+                    List<int> prevRow = (List<int>)triangle[rowNum - 1];
+                    // The first row element is always 1.
+                    row.Add(1);
+                    // Each triangle element (other than the first and last of each row)
+                    // is equal to the sum of the elements above-and-to-the-left and
+                    // above-and-to-the-right.
+                    for (int j = 1; j < rowNum; j++)
+                    {
+                        row.Add(prevRow[j - 1] + prevRow[j]);
+                    }
+
+                    // The last row element is always 1.
+                    row.Add(1);
+                    triangle.Add(row);
+                }
+
+                return triangle;
+            }
+        }
+
+        /*
+        119. Pascal's Triangle II
+https://leetcode.com/problems/pascals-triangle-ii/description/
+        */
+        public class GetNthRowOfPascalTraingleSol
+        {
+            /*
+            Approach 1: Brute Force Recursion
+            Complexity Analysis
+Complexity Analysis
+•	Time complexity : O(2^k). The time complexity recurrence is straightforward:
+•	Space complexity : O(k)+O(k)≃O(k).
+o	We need O(k) space to store the output of the kth row.
+o	At worst, the recursive call stack has a maximum of k calls in memory, each call taking constant space. That's O(k) worst case recursive call stack space.
+
+            */
+            public static IList<int> Naive(int rowIndex)
+            {
+                IList<int> ans = new List<int>();
+                for (int i = 0; i <= rowIndex; i++)
+                {
+                    ans.Add(GetNum(rowIndex, i));
+                }
+
+                return ans;
+                int GetNum(int row, int col)
+                {
+                    if (row == 0 || col == 0 || row == col)
+                    {
+                        return 1;
+                    }
+
+                    return GetNum(row - 1, col - 1) + GetNum(row - 1, col);
+                }
+            }
+
+            /*
+            Approach 2: Dynamic Programming 
+            Complexity Analysis
+•	Time complexity : O(k^2).
+o	Simple memoization would make sure that a particular element in a row is only calculated once. Assuming that our memoization cache allows constant time lookup and updation (like a hash-map), it takes constant time to calculate each element in Pascal's triangle.
+o	Since calculating a row requires calculating all the previous rows as well, we end up calculating 1+2+3+...+(k+1)=((k+1)(k+2))/2≃k^2 elements for the kth row.
+•	Space complexity : O(k)+O(k)≃O(k).
+o	Simple memoization would need to hold all 1+2+3+...+(k+1)=((k+1)(k+2))/2 elements in the worst case. That would require O(k^2) space.
+o	Saving space by keeping only the latest generated row, we need only O(k) extra space, other than the O(k) space required to store the output.
+
+            */
+            public IList<int> DP(int rowIndex)
+            {
+                Dictionary<(int, int), int> cache = new Dictionary<(int, int), int>();
+                List<int> ans = new List<int>();
+                for (int i = 0; i <= rowIndex; i++)
+                {
+                    ans.Add(GetNum(rowIndex, i));
+                }
+
+                return ans;
+
+                int GetNum(int row, int col)
+                {
+                    if (cache.ContainsKey((row, col)))
+                    {
+                        return cache[(row, col)];
+                    }
+
+                    int computedVal = (row == 0 || col == 0 || row == col)
+                                          ? 1
+                                          : GetNum(row - 1, col - 1) + GetNum(row - 1, col);
+                    cache[(row, col)] = computedVal;
+                    return computedVal;
+                }
+            }
+            /*
+Simple memoization above caches results of deep recursive calls and provides significant savings on runtime.
+But, it is worth noting that generating a number for a particular row requires only two numbers from the previous row. Consequently, generating a row only requires numbers from the previous row.
+Thus, we could reduce our memory footprint by only keeping the latest row generated, as shown below, and use that to generate a new row.
+
+            */
+            public IList<int> DPSpaceOptimal(int rowIndex)
+            {
+                IList<int> prev = new List<int> { 1 };
+                for (int i = 1; i <= rowIndex; i++)
+                {
+                    IList<int> curr = new List<int>(new int[i + 1]);
+                    curr[0] = 1;
+                    curr[i] = 1;
+                    for (int j = 1; j < i; j++)
+                    {
+                        curr[j] = prev[j - 1] + prev[j];
+                    }
+
+                    prev = curr;
+                }
+
+                return prev;
+            }
+
+            /*
+       Approach 3: Memory-efficient Dynamic Programming
+
+Complexity Analysis
+•	Time complexity : O(k^2). Same as the previous dynamic programming approach.
+•	Space complexity : O(k). No extra space is used other than that required to hold the output.
+•	Although there is no savings in theoretical computational complexity, in practice there are some minor wins:
+o	We have one vector/array instead of two. So memory consumption is roughly half.
+o	No time wasted in swapping references to vectors for previous and current row.
+o	Locality of reference shines through here. Since every read is for consecutive memory locations in the array/vector, we get a performance boost.
+
+       */
+            public IList<int> MemoryEfficientDP(int rowIndex)
+            {
+                IList<int> row = new int[rowIndex + 1];
+                for (int i = 0; i <= rowIndex; i++)
+                {
+                    row[i] = 1;
+                }
+
+                for (int i = 1; i < rowIndex; i++)
+                {
+                    for (int j = i; j > 0; j--)
+                    {
+                        row[j] += row[j - 1];
+                    }
+                }
+
+                return row;
+            }
+
+            /*
+            Approach 4: Math! (specifically, Combinatorics)
+            Complexity Analysis
+            •	Time complexity : O(k). Each term is calculated once, in constant time.
+            •	Space complexity : O(k). No extra space required other than that required to hold the output.
+
+            */
+            public IList<int> Maths(int rowIndex)
+            {
+                List<int> row = new List<int>() { 1 };
+                for (int k = 1; k <= rowIndex; k++)
+                {
+                    row.Add((int)((row[row.Count - 1] * (long)(rowIndex - k + 1)) / k));
+                }
+
+                return row;
+            }
+
+        }
+
+
+
+        /*
+        120. Triangle
+    https://leetcode.com/problems/triangle/description/
+
+        */
+        public class MinPathSumFromTopToBottomOfTraingleSol
+        {
+            /*
+            Approach 1: Dynamic Programming (Bottom-up: In-place)
+Complexity Analysis
+Let n be the number of rows in the triangle.
+•	Time Complexity: O(n^2).
+A triangle with n rows and n columns contains (n(n+1))/2=(n^2+n)/2 cells. Recall that in big O notaton, we ignore the less significant terms. This gives us O((n^2+n)/2)=O(n^2) cells. For each cell, we are performing a constant number of operatons, therefore giving us a total time complexity of O(n^2).
+•	Space Complexity: O(1).
+As we're overwriting the input, we don't need any collections to store our calculations.
+
+            */
+            public static int BottomUpInPlaceDP(IList<IList<int>> triangle)
+            {
+                for (int row = 1; row < triangle.Count; row++)
+                {
+                    for (int col = 0; col <= row; col++)
+                    {
+                        int smallestAbove = int.MaxValue;
+                        if (col > 0)
+                        {
+                            smallestAbove = triangle[row - 1][col - 1];
+                        }
+
+                        if (col < row)
+                        {
+                            smallestAbove =
+                                Math.Min(smallestAbove, triangle[row - 1][col]);
+                        }
+
+                        int path = smallestAbove + triangle[row][col];
+                        triangle[row][col] = path;
+                    }
+                }
+
+                return triangle[triangle.Count - 1].Min();
+            }
+            /*
+            Approach 2: Dynamic Programming (Bottom-up: Auxiliary Space)
+Complexity Analysis
+•	Time Complexity: O(n^2).
+Same as Approach 1. We are still performing a constant number of operations for each cell in the input triangle.
+•	Space Complexity: O(n).
+We're using two arrays of up to size n each: prevRow and currRow. While this is a higher space complexity than Approach 1, the advantage of this approach is that the input triangle remains unmodified.
+
+            */
+            public static int BottomUpAuxSpaceDP(IList<IList<int>> triangle)
+            {
+                List<int> prevRow = triangle[0].ToList();
+                for (int row = 1; row < triangle.Count; row++)
+                {
+                    List<int> currRow = new List<int>();
+                    for (int col = 0; col <= row; col++)
+                    {
+                        int smallestAbove = int.MaxValue;
+                        if (col > 0)
+                        {
+                            smallestAbove = prevRow[col - 1];
+                        }
+
+                        if (col < row)
+                        {
+                            smallestAbove = Math.Min(smallestAbove, prevRow[col]);
+                        }
+
+                        currRow.Add(smallestAbove + triangle[row][col]);
+                    }
+
+                    prevRow = currRow;
+                }
+
+                return prevRow.Min();
+            }
+
+            /*
+            Approach 3: Dynamic Programming (Bottom-up: Flip Triangle Upside Down)
+Complexity Analysis
+The time and space complexity for Approach 3 depends on which implementation you're looking at. 
+The in-place implementation has the same complexity analysis as Approach 1, 
+whereas the auxiliary space implementation has the same complexity analysis as Approach 2.
+
+
+            */
+            public static int BottomUpFlipTriangleUpsideDownInPlaceDP(IList<IList<int>> triangle)
+            {
+                for (int row = triangle.Count - 2; row >= 0; row--)
+                {
+                    for (int col = 0; col <= row; col++)
+                    {
+                        int bestBelow = Math.Min(triangle[row + 1][col],
+                                                 triangle[row + 1][col + 1]);
+                        triangle[row][col] += bestBelow;
+                    }
+                }
+
+                return triangle[0][0];
+            }
+            public static int BottomUpFlipTriangleUpsideDownAuxSpaceeDP(IList<IList<int>> triangle)
+            {
+                IList<int> belowRow = triangle[triangle.Count - 1];
+                for (int row = triangle.Count - 2; row >= 0; row--)
+                {
+                    IList<int> currRow = new List<int>();
+                    for (int col = 0; col <= row; col++)
+                    {
+                        int bestBelow = Math.Min(belowRow[col], belowRow[col + 1]);
+                        currRow.Add(bestBelow + triangle[row][col]);
+                    }
+
+                    belowRow = currRow;
+                }
+
+                return belowRow[0];
+            }
+            /*
+            Approach 4: Memoization (Top-Down)
+  Complexity Analysis
+Let n be the number of rows in the triangle.
+•	Time Complexity: O(n^2).
+There are two steps to analyzing the time complexity of an algorithm that uses recursive memoization.
+Firstly, determine what the cost of each call to the recursive function is. That is, how much time is spent actively executing instructions within a single call. It does not include time spent in functions called by that function.
+Secondly, determine how many times the recursive function is called.
+Each call to minPath is O(1), because there are no loops. The memoization table ensures that minPath is only called once for each cell. As there are n^2 cells, we get a total time complexity of O(n^2).
+•	Space Complexity: O(n^2).
+Each time a base case cell is reached, there will be a path of n cells on the run-time stack, going from the triangle tip, down to that base case cell. This means that there is O(n) space on the run-time stack.
+Each time a subproblem is solved (a call to minPath), its result is stored in a memoization table. We determined above that there are O(n^2) such subproblems, giving a total space complexity of O(n^2) for the memoization table.
+          
+            */
+
+            public static int TopDownMemo(IList<IList<int>> triangle)
+            {
+                Dictionary<string, int> memoTable = new Dictionary<string, int>();
+                memoTable.Clear();
+                return MinPath(0, 0);
+
+
+                int MinPath(int row, int col)
+                {
+                    string paramsKey = row + ":" + col;
+                    if (memoTable.ContainsKey(paramsKey))
+                    {
+                        return memoTable[paramsKey];
+                    }
+
+                    int path = triangle[row][col];
+                    if (row < triangle.Count - 1)
+                    {
+                        path += Math.Min(MinPath(row + 1, col), MinPath(row + 1, col + 1));
+                    }
+
+                    memoTable[paramsKey] = path;
+                    return path;
+                }
+            }
+
+        }
+
+
+        /*
+        2473. Minimum Cost to Buy Apples
+https://leetcode.com/problems/minimum-cost-to-buy-apples/description/
+        */
+
+        public class MinCostToBuyApplesSol
+        {
+            /*
+            Approach 1: Shortest Path (modified Dijkstra’s Algo)
+Complexity Analysis
+Let n be the number of cities and r be the number of roads.
+•	Time complexity: O(n⋅(n+r)logn)
+Adding each of the r edges from the road array to the graph takes O(r).
+We push and pop up to n+r vertices from the heap. Pushing and popping vertices takes logn time. So for n vertices, the shortestPath function takes O((n+r)logn).
+In the main program, we call shortestPath n times, once for each city, so the time complexity of calculating the minimum cost to buy an apple for each city is O(n⋅(n+r)logn).
+Therefore, the total time complexity is O(r+n⋅(n+r)logn), which we can simplify to O(n⋅(n+r)logn).
+•	Space complexity: O(n+r)
+The list of lists of size (n+2r) stores the graph representation, the travelCost array of size n stores the travel costs, and the heap can grow up to size n.
+Therefore, the overall space complexity is O(n+r).
+            */
+            public long[] ShortestPathWithModifiedDijkstraAlgo(int n, int[][] roads, int[] appleCost, int k)
+            {
+                // Store the graph as a list of lists
+                // The rows represent the cities (vertices)
+                // The columns store an adjacency list of road, cost pairs (edge, weight)
+                List<List<(int, int)>> graph = new List<List<(int, int)>>();
+                for (int i = 0; i < n; i++)
+                {
+                    graph.Add(new List<(int, int)>());
+                }
+
+                // Add each road to the graph using adjacency lists
+                // Store each city at graph[city - 1]
+                foreach (int[] road in roads)
+                {
+                    int cityA = road[0] - 1, cityB = road[1] - 1, cost = road[2];
+                    graph[cityA].Add((cityB, cost));
+                    graph[cityB].Add((cityA, cost));
+                }
+
+                // Find the minimum cost to buy an apple starting in each city
+                long[] result = new long[n];
+                for (int startCity = 0; startCity < n; startCity++)
+                {
+                    result[startCity] = ShortestPath(startCity, graph, appleCost, k, n);
+                }
+
+                return result;
+            }
+
+            // Finds the minimum cost to buy an apple from the start city
+            private long ShortestPath(int startCity, List<List<(int, int)>> graph,
+                                      int[] appleCost, int k, int n)
+            {
+                // Stores the travel cost reach each city from the start city
+                int[] travelCosts = new int[n];
+                Array.Fill(travelCosts, int.MaxValue);
+                travelCosts[startCity] = 0;
+
+                // Initialize the heap (priority queue) with the starting city
+                PriorityQueue<int[], int> heap = new PriorityQueue<int[], int>(Comparer<int>.Create((a, b) => a.CompareTo(b)));
+                heap.Enqueue(new int[] { 0, startCity }, 0);
+                long minCost = int.MaxValue;
+
+                while (heap.Count > 0)
+                {
+                    // Remove the city with the minimum cost from the top of the heap
+                    int[] current = heap.Dequeue();
+                    int travelCost = current[0];
+                    int currCity = current[1];
+
+                    // Update the min cost if the curr city has a smaller total cost
+                    minCost = Math.Min(minCost,
+                                       (long)appleCost[currCity] + (k + 1) * travelCost);
+
+                    // Add each neighboring city to the heap if an apple is cheaper
+                    foreach ((int neighbor, int cost) in graph[currCity])
+                    {
+                        int nextCost = travelCost + cost;
+                        if (nextCost < travelCosts[neighbor])
+                        {
+                            travelCosts[neighbor] = nextCost;
+                            heap.Enqueue(new int[] { nextCost, neighbor }, nextCost);
+                        }
+                    }
+                }
+                return minCost;
+            }
+            /*            
+Approach 2: One Pass Shortest Path
+Complexity Analysis
+Let n be the number of cities and r be the number of roads.
+•	Time complexity: O((n+r)log(n+r))
+Adding each of the r edges from the road array to the graph takes O(r).
+Adding the local cost to buy an apple in each city to the result array takes O(n).
+To initialize the heap, we insert n cities into the heap. Pushing vertices to the heap takes logn time, so this step takes O(nlogn)
+In the main loop, we push and pop up to n+r pairs from the heap. Pushing and popping vertices from the heap takes logn time where n is the size of the heap. So for n+r pairs, the shortestPath function takes O((n+r)log(n+r)).
+Therefore, the total time complexity is O(r+n+nlogn+(n+r)log(n+r)), which we can simplify to O((n+r)log(n+r)).
+•	Space complexity: O(n+r)
+We use a list of lists of size n+2r to store the graph.
+The result array, which stores the minimum cost to buy an apple from each city, is of size n.
+The heap, which stores the cities to be explored during the shortest path algorithm, can grow up to size n+r.
+Therefore, the overall space complexity is O(n+r).	
+
+            */
+            public long[] OnePassShortestPath(int n, int[][] roads, int[] appleCost, int k)
+            {
+                // Store the graph as a list of lists
+                // Each element of the outer list represents a city,
+                // and each inner list contains pairs of neighboring city and its cost
+                List<List<(int, int)>> graph = new List<List<(int, int)>>();
+                for (int i = 0; i < n; ++i)
+                {
+                    graph.Add(new List<(int, int)>());
+                }
+
+                // Add each road to the graph using adjacency lists
+                // Store each city at `graph[city - 1]`
+                foreach (int[] road in roads)
+                {
+                    int cityA = road[0] - 1, cityB = road[1] - 1, cost = road[2];
+                    graph[cityA].Add((cityB, cost));
+                    graph[cityB].Add((cityA, cost));
+                }
+
+                // Store the cost to buy an apple in each city 
+                // without traveling in the result
+                long[] result = new long[n];
+                for (int startCity = 0; startCity < n; startCity++)
+                {
+                    result[startCity] = appleCost[startCity];
+                }
+
+                // Initialize the min heap (priority queue) with each starting city
+                // Each element of the heap is a pair with the cost and city
+                PriorityQueue<(long, int), long> heap = new PriorityQueue<(long, int), long>(Comparer<long>.Create((a, b) => a.CompareTo(b)));
+
+                for (int startCity = 0; startCity < n; startCity++)
+                {
+                    var cost = (long)appleCost[startCity];
+                    heap.Enqueue((cost, startCity), cost);
+                }
+
+                // Find the minimum cost to buy an apple starting in each city
+                while (heap.Count > 0)
+                {
+                    (long totalCost, int currCity) = heap.Dequeue();
+
+                    // If we have already found a path to buy an apple
+                    // for cheaper than the local apple cost, skip this city
+                    if (result[currCity] < totalCost)
+                        continue;
+
+                    // Add each neighboring city to the heap if it is cheaper to
+                    // start there, travel to the current city and buy an apple 
+                    // than buy in the neighboring city
+                    foreach ((int neighbor, int cost) in graph[currCity])
+                    {
+                        if (result[neighbor] > result[currCity] + (k + 1) * cost)
+                        {
+                            result[neighbor] = result[currCity] + (k + 1) * cost;
+                            heap.Enqueue((result[neighbor], neighbor), result[neighbor]);
+                        }
+                    }
+                }
+                return result;
+            }
+
+        }
+
+
+
+        /*
+        490. The Maze	
+        https://leetcode.com/problems/the-maze/description/
+        */
+        public class HasPathinMazeSol
+        {
+            /*
+            Approach 1: Depth First Search
+            Complexity Analysis
+Here, m and n are the number of rows and columns in maze.
+•	Time complexity: O(m⋅n⋅(m+n))
+o	Initializing the visit array takes O(m⋅n) time.
+o	The function dfs visits each node at most once, resulting in O(m⋅n) calls. For each call, we loop through the node's neighbors. To discover neighboring nodes for a node, we check in each direction with a while loop and it would take O(m) steps for vertical directions or O(n) steps for horizontal directions to reach a wall, resulting in O(m+n) operations. It would take O(m⋅n⋅(m+n)) in total for all the nodes.
+•	Space complexity: O(m⋅n)
+o	The visit array takes O(m⋅n) space.
+o	The recursion stack used by dfs can have no more than O(m⋅n) elements in the worst-case scenario. It would take up O(m⋅n) space in that case.
+
+            */
+            public bool DFS(int[][] maze, int[] start, int[] destination)
+            {
+                int m = maze.Length;
+                int n = maze[0].Length;
+                bool[][] visit = new bool[m][];
+                return DFSRec(m, n, maze, start, destination, visit);
+            }
+            private bool DFSRec(int m, int n, int[][] maze, int[] curr, int[] destination,
+            bool[][] visit)
+            {
+                if (visit[curr[0]][curr[1]])
+                {
+                    return false;
+                }
+                if (curr[0] == destination[0] && curr[1] == destination[1])
+                {
+                    return true;
+                }
+
+                visit[curr[0]][curr[1]] = true;
+                int[] dirX = { 0, 1, 0, -1 };
+                int[] dirY = { -1, 0, 1, 0 };
+
+                for (int i = 0; i < 4; i++)
+                {
+                    int r = curr[0], c = curr[1];
+                    // Move the ball in the chosen direction until it can.
+                    while (r >= 0 && r < m && c >= 0 && c < n && maze[r][c] == 0)
+                    {
+                        r += dirX[i];
+                        c += dirY[i];
+                    }
+                    // Revert the last move to get the cell to which the ball rolls.
+                    if (DFSRec(m, n, maze, new int[] { r - dirX[i], c - dirY[i] }, destination, visit))
+                    {
+                        return true;
+                    }
+                }
+                return false;
+            }
+
+            /*
+            Approach 2: Breadth First Search
+         Complexity Analysis
+    Here, m and n are the number of rows and columns in maze.
+    •	Time complexity: O(m⋅n⋅(m+n))
+    o	Initializing the visit array takes O(m⋅n) time.
+    o	Each queue operation in the BFS algorithm takes O(1) time, and a single node can be pushed once, leading to O(m⋅n) operations for m⋅n nodes. We iterate over all the neighbors of each node that is popped out of the queue. To discover neighboring nodes for a node, we check in each direction with a while loop and it would take O(m) steps for vertical directions or O(n) steps for horizontal directions to reach a wall, resulting in O(m+n) operations. It would take O(m⋅n⋅(m+n)) in total for all the nodes.
+    •	Space complexity: O(m⋅n)
+    o	The visit array takes O(m⋅n) space.
+    o	The BFS queue takes O(m⋅n) space in the worst-case because each node is added once.
+
+            */
+            public bool BFS(int[][] maze, int[] start, int[] destination)
+            {
+                int m = maze.Length;
+                int n = maze[0].Length;
+                bool[][] visit = new bool[m][];
+                int[] dirX = { 0, 1, 0, -1 };
+                int[] dirY = { -1, 0, 1, 0 };
+
+                Queue<int[]> queue = new Queue<int[]>();
+                queue.Enqueue(start);
+                visit[start[0]][start[1]] = true;
+
+                while (queue.Count > 0)
+                {
+                    int[] curr = queue.Dequeue();
+                    if (curr[0] == destination[0] && curr[1] == destination[1])
+                    {
+                        return true;
+                    }
+                    for (int i = 0; i < 4; i++)
+                    {
+                        int r = curr[0];
+                        int c = curr[1];
+                        // Move the ball in the chosen direction until it can.
+                        while (r >= 0 && r < m && c >= 0 && c < n && maze[r][c] == 0)
+                        {
+                            r += dirX[i];
+                            c += dirY[i];
+                        }
+                        // Revert the last move to get the cell to which the ball rolls.
+                        r -= dirX[i];
+                        c -= dirY[i];
+                        if (!visit[r][c])
+                        {
+                            queue.Enqueue(new int[] { r, c });
+                            visit[r][c] = true;
+                        }
+                    }
+                }
+                return false;
+            }
+
+        }
+
+
+        /*
+        505. The Maze II
+        https://leetcode.com/problems/the-maze-ii/description/
+        */
+        public class HasPathinMazeIISol
+        {
+            /*
+            Approach #1 Depth First Search 
+Complexity Analysis
+•	Time complexity : O(m∗n∗max(m,n)). Complete traversal of maze will be done in the worst case. Here, m and n refers to the number of rows and columns of the maze. Further, for every current node chosen, we can travel upto a maximum depth of max(m,n) in any direction.
+•	Space complexity : O(mn). distance array of size m∗n is used.
+
+            */
+            public int DFS(int[][] maze, int[] start, int[] dest)
+            {
+                int[][] distance = new int[maze.Length][];
+                for (int i = 0; i < distance.Length; i++)
+                {
+                    distance[i] = new int[maze[0].Length];
+                    Array.Fill(distance[i], int.MaxValue);
+                }
+                distance[start[0]][start[1]] = 0;
+                DFSRec(maze, start, distance);
+                return distance[dest[0]][dest[1]] == int.MaxValue ? -1 : distance[dest[0]][dest[1]];
+            }
+
+            public void DFSRec(int[][] maze, int[] start, int[][] distance)
+            {
+                int[][] directions = { new int[] { 0, 1 }, new int[] { 0, -1 }, new int[] { -1, 0 }, new int[] { 1, 0 } };
+                foreach (int[] direction in directions)
+                {
+                    int x = start[0] + direction[0];
+                    int y = start[1] + direction[1];
+                    int count = 0;
+                    while (x >= 0 && y >= 0 && x < maze.Length && y < maze[0].Length && maze[x][y] == 0)
+                    {
+                        x += direction[0];
+                        y += direction[1];
+                        count++;
+                    }
+                    if (distance[start[0]][start[1]] + count < distance[x - direction[0]][y - direction[1]])
+                    {
+                        distance[x - direction[0]][y - direction[1]] = distance[start[0]][start[1]] + count;
+                        DFSRec(maze, new int[] { x - direction[0], y - direction[1] }, distance);
+                    }
+                }
+            }
+
+            /*
+            Approach #2 Using Breadth First Search 
+            Complexity Analysis
+•	Time complexity : O(m∗n∗max(m,n)). Time complexity : O(m∗n∗max(m,n)). Complete traversal of maze will be done in the worst case. Here, m and n refers to the number of rows and columns of the maze. Further, for every current node chosen, we can travel upto a maximum depth of max(m,n) in any direction.
+•	Space complexity : O(mn). queue size can grow upto m∗n in the worst case.
+
+            */
+            public int BFS(int[][] maze, int[] start, int[] destination)
+            {
+                int[][] distance = new int[maze.Length][];
+                for (int i = 0; i < distance.Length; i++)
+                {
+                    distance[i] = new int[maze[0].Length];
+                    Array.Fill(distance[i], int.MaxValue);
+                }
+
+                distance[start[0]][start[1]] = 0;
+                int[][] directions = { new int[] { 0, 1 }, new int[] { 0, -1 }, new int[] { -1, 0 }, new int[] { 1, 0 } };
+                Queue<int[]> queue = new Queue<int[]>();
+                queue.Enqueue(start);
+
+                while (queue.Count > 0)
+                {
+                    int[] current = queue.Dequeue();
+                    foreach (int[] direction in directions)
+                    {
+                        int x = current[0] + direction[0];
+                        int y = current[1] + direction[1];
+                        int count = 0;
+
+                        while (x >= 0 && y >= 0 && x < maze.Length && y < maze[0].Length && maze[x][y] == 0)
+                        {
+                            x += direction[0];
+                            y += direction[1];
+                            count++;
+                        }
+
+                        if (distance[current[0]][current[1]] + count < distance[x - direction[0]][y - direction[1]])
+                        {
+                            distance[x - direction[0]][y - direction[1]] = distance[current[0]][current[1]] + count;
+                            queue.Enqueue(new int[] { x - direction[0], y - direction[1] });
+                        }
+                    }
+                }
+
+                return distance[destination[0]][destination[1]] == int.MaxValue ? -1 : distance[destination[0]][destination[1]];
+            }
+            /*
+            Approach #3 Using Dijkstra Algorithm 
+Complexity Analysis**
+•	Time complexity : O((mn)^2). Complete traversal of maze will be done in the worst case and function minDistance takes O(mn) time.
+•	Space complexity : O(mn). distance array of size m∗n is used.
+
+            */
+            public int Dijkstra(int[][] maze, int[] start, int[] dest)
+            {
+                int[][] distance = new int[maze.Length][];
+                for (int i = 0; i < maze.Length; i++)
+                {
+                    distance[i] = new int[maze[0].Length];
+                    Array.Fill(distance[i], int.MaxValue);
+                }
+
+                bool[][] visited = new bool[maze.Length][];
+                for (int i = 0; i < maze.Length; i++)
+                {
+                    visited[i] = new bool[maze[0].Length];
+                }
+
+                distance[start[0]][start[1]] = 0;
+                DijkstraAlgo(maze, distance, visited);
+                return distance[dest[0]][dest[1]] == int.MaxValue ? -1 : distance[dest[0]][dest[1]];
+            }
+
+            public int[] MinDistance(int[][] distance, bool[][] visited)
+            {
+                int[] min = { -1, -1 };
+                int minValue = int.MaxValue;
+                for (int i = 0; i < distance.Length; i++)
+                {
+                    for (int j = 0; j < distance[0].Length; j++)
+                    {
+                        if (!visited[i][j] && distance[i][j] < minValue)
+                        {
+                            min = new int[] { i, j };
+                            minValue = distance[i][j];
+                        }
+                    }
+                }
+                return min;
+            }
+
+            public void DijkstraAlgo(int[][] maze, int[][] distance, bool[][] visited)
+            {
+                int[][] directions = { new int[] { 0, 1 }, new int[] { 0, -1 }, new int[] { -1, 0 }, new int[] { 1, 0 } };
+                while (true)
+                {
+                    int[] current = MinDistance(distance, visited);
+                    if (current[0] < 0)
+                        break;
+                    visited[current[0]][current[1]] = true;
+                    foreach (int[] direction in directions)
+                    {
+                        int x = current[0] + direction[0];
+                        int y = current[1] + direction[1];
+                        int count = 0;
+                        while (x >= 0 && y >= 0 && x < maze.Length && y < maze[0].Length && maze[x][y] == 0)
+                        {
+                            x += direction[0];
+                            y += direction[1];
+                            count++;
+                        }
+                        if (distance[current[0]][current[1]] + count < distance[x - direction[0]][y - direction[1]])
+                        {
+                            distance[x - direction[0]][y - direction[1]] = distance[current[0]][current[1]] + count;
+                        }
+                    }
+                }
+            }
+            /*
+            Approach #4 Using Dijkstra Algorithm and Priority Queue
+Complexity Analysis**
+•	Time complexity : O(mn∗log(mn)). Complete traversal of maze will be done in the worst case giving a factor of mn. Further, poll method is a combination of heapifying(O(log(n))) and removing the top element(O(1)) from the priority queue, and it takes O(n) time for n elements. In the current case, poll introduces a factor of log(mn).
+•	Space complexity : O(mn). distance array of size m∗n is used and queue size can grow upto m∗n in worst case.
+
+            */
+            public int DijkstraWithPQ(int[][] maze, int[] start, int[] dest)
+            {
+                int[][] distance = new int[maze.Length][];
+                for (int i = 0; i < maze.Length; i++)
+                {
+                    distance[i] = new int[maze[0].Length];
+                    Array.Fill(distance[i], int.MaxValue);
+                }
+                distance[start[0]][start[1]] = 0;
+                Dijkstra(maze, start, distance);
+                return distance[dest[0]][dest[1]] == int.MaxValue ? -1 : distance[dest[0]][dest[1]];
+            }
+
+            public void Dijkstra(int[][] maze, int[] start, int[][] distance)
+            {
+                int[][] directions = { new int[] { 0, 1 }, new int[] { 0, -1 }, new int[] { -1, 0 }, new int[] { 1, 0 } };
+                PriorityQueue<int[], int> queue = new PriorityQueue<int[], int>(Comparer<int>.Create((a, b) => a.CompareTo(b)));
+                queue.Enqueue(new int[] { start[0], start[1], 0 }, 0);
+                while (queue.Count > 0)
+                {
+                    int[] current = queue.Dequeue();
+                    if (distance[current[0]][current[1]] < current[2])
+                        continue;
+                    foreach (int[] direction in directions)
+                    {
+                        int x = current[0] + direction[0];
+                        int y = current[1] + direction[1];
+                        int count = 0;
+                        while (x >= 0 && y >= 0 && x < maze.Length && y < maze[0].Length && maze[x][y] == 0)
+                        {
+                            x += direction[0];
+                            y += direction[1];
+                            count++;
+                        }
+                        if (distance[current[0]][current[1]] + count < distance[x - direction[0]][y - direction[1]])
+                        {
+                            distance[x - direction[0]][y - direction[1]] = distance[current[0]][current[1]] + count;
+                            var dist = distance[x - direction[0]][y - direction[1]];
+                            queue.Enqueue(new int[] { x - direction[0], y - direction[1], dist }, dist);
+                        }
+                    }
+                }
+            }
+        }
+
+
+        /*
+        499. The Maze III
+        https://leetcode.com/problems/the-maze-iii/description/
+
+        */
+        public class FindShortestWaySol
+        {
+            private int[][] directions = new int[][] { new int[] { 0, -1 }, new int[] { -1, 0 }, new int[] { 0, 1 }, new int[] { 1, 0 } };
+            private string[] textDirections = new string[] { "l", "u", "r", "d" };
+            private int m;
+            private int n;
+
+            /*
+            Approach: Dijkstra's Wiht Priority Queue
+Complexity Analysis
+Given n as the number of squares in maze,
+•	Time complexity: O(n⋅logn)
+In a typical graph problem, most if not all nodes are visited by the algorithm. In this problem, due to the nature of the edges, the majority of test cases will result in most squares not being visited. However, one can think of a worst-case scenario where O(n) nodes are visited. 
+•	Space complexity: O(n)
+The heap and seen both require up to O(n) space.
+Note: this problem can also be solved using DFS or BFS, but Dijkstra's is the most intuitive option once we recognize the edges are weighted, and also more efficient as performing DFS or BFS without a heap on a weighted graph requires modifications.
+
+            */
+            public string DijkstraWithPQ(int[][] maze, int[] ball, int[] hole)
+            {
+                m = maze.Length;
+                n = maze[0].Length;
+
+                PriorityQueue<State,State> heap = new PriorityQueue<State,State>(Comparer<State>.Create((a, b) =>
+                {
+                    int distA = a.Dist;
+                    int distB = b.Dist;
+
+                    if (distA == distB)
+                    {
+                        return string.Compare(a.Path, b.Path);
+                    }
+
+                    return distA - distB;
+                }));
+
+                bool[,] seen = new bool[m, n];
+                var state= new State(ball[0], ball[1], 0, "");
+                heap.Enqueue(state, state);
+
+                while (heap.Count > 0)
+                {
+                    State curr = heap.Dequeue();
+                    int row = curr.Row;
+                    int col = curr.Col;
+
+                    if (seen[row, col])
+                    {
+                        continue;
+                    }
+
+                    if (row == hole[0] && col == hole[1])
+                    {
+                        return curr.Path;
+                    }
+
+                    seen[row, col] = true;
+
+                    foreach (State nextState in GetNeighbors(row, col, maze, hole))
+                    {
+                        int nextRow = nextState.Row;
+                        int nextCol = nextState.Col;
+                        int nextDist = nextState.Dist;
+                        string nextChar = nextState.Path;
+                        var newState = new State(nextRow, nextCol, curr.Dist + nextDist, curr.Path + nextChar);
+                        heap.Enqueue(newState, newState);
+                    }
+                }
+
+                return "impossible";
+            }
+
+            private bool Valid(int row, int col, int[][] maze)
+            {
+                if (row < 0 || row >= m || col < 0 || col >= n)
+                {
+                    return false;
+                }
+
+                return maze[row][col] == 0;
+            }
+
+            private List<State> GetNeighbors(int row, int col, int[][] maze, int[] hole)
+            {
+                List<State> neighbors = new List<State>();
+
+                for (int i = 0; i < 4; i++)
+                {
+                    int dy = directions[i][0];
+                    int dx = directions[i][1];
+                    string direction = textDirections[i];
+
+                    int currRow = row;
+                    int currCol = col;
+                    int dist = 0;
+
+                    while (Valid(currRow + dy, currCol + dx, maze))
+                    {
+                        currRow += dy;
+                        currCol += dx;
+                        dist++;
+                        if (currRow == hole[0] && currCol == hole[1])
+                        {
+                            break;
+                        }
+                    }
+
+                    neighbors.Add(new State(currRow, currCol, dist, direction));
+                }
+
+                return neighbors;
+
+
+            }
+
+            class State
+            {
+                public int Row { get; set; }
+                public int Col { get; set; }
+                public int Dist { get; set; }
+                public string Path { get; set; }
+
+                public State(int row, int col, int dist, string path)
+                {
+                    Row = row;
+                    Col = col;
+                    Dist = dist;
+                    Path = path;
+                }
+            }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         }
 
 
@@ -4532,11 +6776,13 @@ Approach #3: Dynamic Programming (Bottom Up)   (DPBU)
 
 
 
+
+
+
+
+
+
+
     }
-
-
-
-
 }
-
 

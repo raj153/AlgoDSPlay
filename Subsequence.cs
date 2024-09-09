@@ -725,5 +725,186 @@ Complexity Analysis
 
             return true;
         }
+
+
+        /*
+        128. Longest Consecutive Sequence
+        https://leetcode.com/problems/longest-consecutive-sequence/description/
+
+        */
+        public class LongestConsecutiveSeqOfArraySol
+        {
+            /*
+          Approach 1: Brute Force
+  Complexity Analysis
+•	Time complexity : O(n^3).
+The outer loop runs exactly n times, and because currentNum
+increments by 1 during each iteration of the while loop, it runs in
+O(n) time. Then, on each iteration of the while loop, an O(n)
+lookup in the array is performed. Therefore, this brute force algorithm
+is really three nested O(n) loops, which compound multiplicatively to a
+cubic runtime.
+•	Space complexity : O(1).
+The brute force algorithm only allocates a handful of integers, so it uses constant
+additional space.
+
+            */
+            public int Naive(int[] nums)
+            {
+                int longestStreak = 0;
+                for (int i = 0; i < nums.Length; i++)
+                {
+                    int currentNum = nums[i];
+                    int currentStreak = 1;
+                    while (ArrayContains(nums, currentNum + 1))
+                    {
+                        currentNum += 1;
+                        currentStreak += 1;
+                    }
+
+                    longestStreak = Math.Max(longestStreak, currentStreak);
+                }
+
+                return longestStreak;
+
+                bool ArrayContains(int[] arr, int num)
+                {
+                    for (int i = 0; i < arr.Length; i++)
+                    {
+                        if (arr[i] == num)
+                        {
+                            return true;
+                        }
+                    }
+
+                    return false;
+                }
+            }
+            /*
+            Approach 2: Sorting
+Complexity Analysis
+•	Time complexity : O(nlogn)
+The main for loop does constant work n times, so the algorithm's time
+complexity is dominated by the invocation of sort, which will run in
+O(nlogn) time for any sensible implementation.
+•	Space complexity : O(logn) or O(n)
+Note that some extra space is used when we sort an array in place. The space complexity of the sorting algorithm depends on the programming language.
+o	In Python, the sort method sorts a list using the Tim Sort algorithm which is a combination of Merge Sort and Insertion Sort and has O(n) additional space. Additionally, Tim Sort is designed to be a stable algorithm.
+o	In Java, Arrays.sort() is implemented using a variant of the Quick Sort algorithm which has a space complexity of O(logn) for sorting an array.
+
+            */
+
+            public int Sort(int[] nums)
+            {
+                if (nums.Length == 0)
+                {
+                    return 0;
+                }
+
+                Array.Sort(nums);
+                int longestStreak = 1;
+                int currentStreak = 1;
+                for (int i = 1; i < nums.Length; i++)
+                {
+                    if (nums[i] != nums[i - 1])
+                    {
+                        if (nums[i] == nums[i - 1] + 1)
+                        {
+                            currentStreak += 1;
+                        }
+                        else
+                        {
+                            longestStreak = Math.Max(longestStreak, currentStreak);
+                            currentStreak = 1;
+                        }
+                    }
+                }
+
+                return Math.Max(longestStreak, currentStreak);
+            }
+
+            /*
+            Approach 3: HashSet and Intelligent Sequence Building
+Complexity Analysis
+•	Time complexity : O(n).
+Although the time complexity appears to be quadratic due to the while
+loop nested within the for loop, closer inspection reveals it to be
+linear. Because the while loop is reached only when currentNum marks
+the beginning of a sequence (i.e. currentNum-1 is not present in
+nums), the while loop can only run for n iterations throughout the
+entire runtime of the algorithm. This means that despite looking like
+O(n⋅n) complexity, the nested loops actually run in O(n+n)=O(n)
+time. All other computations occur in constant time, so the overall
+runtime is linear.
+•	Space complexity : O(n).
+In order to set up O(1) containment lookups, we allocate linear space
+for a hash table to store the O(n) numbers in nums. Other than that,
+the space complexity is identical to that of the brute force solution.
+
+            */
+            public int HashSetWithIntelliSeqBuild(int[] nums)
+            {
+                HashSet<int> num_set = new HashSet<int>(nums);
+                int longestStreak = 0;
+                foreach (int num in num_set)
+                {
+                    if (!num_set.Contains(num - 1))
+                    {
+                        int currentNum = num;
+                        int currentStreak = 1;
+                        while (num_set.Contains(currentNum + 1))
+                        {
+                            currentNum += 1;
+                            currentStreak += 1;
+                        }
+
+                        longestStreak = Math.Max(longestStreak, currentStreak);
+                    }
+                }
+
+                return longestStreak;
+            }
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     }
 }

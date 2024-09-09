@@ -62,7 +62,7 @@ var resss = MatrixOps.KnapsackProblem(new int[,]{
 },200);
 var resu = RealProbs.GenerateDivTags(3);
 var ress = StringOps.IsBigStringContainsSmallStringUsingKMP("abxabcabcaby","abcaby");
-var res = StackProbs.CollidingAsteroids(new int[]{-3,5,-8,6,7,-4,-7});
+//var res = StackProbs.CollidingAsteroids(new int[]{-3,5,-8,6,7,-4,-7});
 var str=SubstringOps.LongestSubstringWithoutDuplication("clementisacap");
 MatrixOps.MinimumPassesOfMatrix(new int[][]{
                         new int[]{0,-1,-3,2,0},
@@ -78,6 +78,7 @@ sortedArray =BubbleSort.OptimalSort(new List<int>(){10,2,4,1});
 Console.WriteLine(MaxMin.FindMaxValueOfExpNaive(new int[]{3,6,1,-3,2,7}));
 Console.WriteLine(MaxMin.FindMaxValueOfExpDP(new int[]{3,6,1,-3,2,7}));
 Console.WriteLine();
+
 //Console.WriteLine(MinJump.FindMinimumNumberOfJumpsOptimal(new int[]{3,4,2,1,2,3,7,1,1,1,3}));
 LinkedList list = new LinkedList(1);
 list.Next = new LinkedList(2);

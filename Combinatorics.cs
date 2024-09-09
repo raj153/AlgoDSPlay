@@ -742,7 +742,7 @@ Approach #2 Backtracking
             for (int i = 1; i < n; ++i)
             {
                 // Generate nums 1, 2, ..., n
-                factorials[i] = factorials[i - 1] * i; 
+                factorials[i] = factorials[i - 1] * i;
                 nums.Add((char)(i + 1 + '0'));
             }
 
@@ -760,6 +760,301 @@ Approach #2 Backtracking
 
             return result.ToString();
         }
+
+        /*
+        567. Permutation in String
+        https://leetcode.com/problems/permutation-in-string/description/
+
+
+        */
+        public bool CheckPermuteInclusion(string s1, string s2)
+        {
+            /*
+Approach 1: Brute Force
+Complexity Analysis
+Let n be the length of s1
+•	Time complexity: O(n!).
+•	Space complexity: O(n2). The depth of the recursion tree is n(n refers to the length of the short string s1). Every node of the recursion tree contains a string of max. length n.
+
+            */
+
+            bool isPermuteIncluded= CheckPermuteInclusionNaive(s1, s2);
+            /*
+  Approach 2: Using sorting:          
+   Complexity Analysis
+Let l1 be the length of string s1 and l2 be the length of string s2.
+•	Time complexity: O(l1log(l1)+(l2−l1)l1log(l1)).
+•	Space complexity: O(l1). t array is used.
+         
+            */
+                isPermuteIncluded= CheckPermuteInclusionSort(s1, s2);
+
+            /*
+ Approach 3: Using Hashmap
+   Complexity Analysis
+Let l1 be the length of string s1 and l2 be the length of string s2.
+•	Time complexity: O(l1+26l1(l2−l1)). The hashmap contains at most 26 keys.
+•	Space complexity: O(1). Hashmap contains at most 26 key-value pairs.
+         
+            
+            */
+            isPermuteIncluded= CheckPermuteInclusionHM(s1, s2);
+
+            /*
+      Approach 4: Using Array [Accepted]           
+       Complexity Analysis
+     Let l1 be the length of string s1 and l2 be the length of string s2.
+     •	Time complexity: O(l1+26l1(l2−l1)).
+     •	Space complexity: O(1). s1map and s2map of size 26 is used.
+
+                 */
+            isPermuteIncluded= CheckPermuteInclusionArray(s1, s2);
+
+            /*
+     Approach 5: Sliding Window [Accepted]: (SW)
+      Complexity Analysis
+     Let l1 be the length of string s1 and l2 be the length of string s2.
+     •	Time complexity: O(l1+26∗(l2−l1)).
+     •	Space complexity: O(1). Constant space is used.
+
+                 */
+            isPermuteIncluded= CheckPermuteInclusionSW(s1, s2);                 
+
+
+            /*
+
+Approach 6: Optimized Sliding Window [Accepted]: (SWOptimal)
+Complexity Analysis
+Let l1 be the length of string s1 and l2 be the length of string s2.
+•	Time complexity: O(l1+(l2−l1)).
+•	Space complexity: O(1). Constant space is used.
+
+
+            */
+            isPermuteIncluded= CheckPermuteInclusionSWOptimal(s1, s2);
+
+            return isPermuteIncluded;
+
+        }
+
+        private bool isPermutationFound = false;
+
+        public bool CheckPermuteInclusionNaive(string string1, string string2)
+        {
+            GeneratePermutations(string1, string2, 0);
+            return isPermutationFound;
+        }
+
+        public string Swap(string inputString, int index0, int index1)
+        {
+            if (index0 == index1)
+                return inputString;
+
+            string substring1 = inputString.Substring(0, index0);
+            string substring2 = inputString.Substring(index0 + 1, index1 - index0 - 1);
+            string substring3 = inputString.Substring(index1 + 1);
+
+            return substring1 + inputString[index1] + substring2 + inputString[index0] + substring3;
+        }
+
+        private void GeneratePermutations(string string1, string string2, int leftIndex)
+        {
+            if (leftIndex == string1.Length)
+            {
+                if (string2.IndexOf(string1) >= 0)
+                    isPermutationFound = true;
+            }
+            else
+            {
+                for (int i = leftIndex; i < string1.Length; i++)
+                {
+                    string1 = Swap(string1, leftIndex, i);
+                    GeneratePermutations(string1, string2, leftIndex + 1);
+                    string1 = Swap(string1, leftIndex, i);
+                }
+            }
+        }
+
+        public bool CheckPermuteInclusionSort(string s1, string s2)
+        {
+            s1 = SortedString(s1);
+            for (int i = 0; i <= s2.Length - s1.Length; i++)
+            {
+                if (s1.Equals(SortedString(s2.Substring(i, i + s1.Length))))
+                    return true;
+            }
+            return false;
+        }
+
+        public string SortedString(String s)
+        {
+            char[] t = s.ToCharArray();
+            Array.Sort(t);
+            return new string(t);
+        }
+        public bool CheckPermuteInclusionHM(string s1, string s2)
+        {
+            if (s1.Length > s2.Length)
+                return false;
+
+            Dictionary<char, int> s1Map = new Dictionary<char, int>();
+
+            for (int i = 0; i < s1.Length; i++)
+                s1Map[s1[i]] = s1Map.GetValueOrDefault(s1[i], 0) + 1;
+
+            for (int i = 0; i <= s2.Length - s1.Length; i++)
+            {
+                Dictionary<char, int> s2Map = new Dictionary<char, int>();
+                for (int j = 0; j < s1.Length; j++)
+                {
+                    s2Map[s2[i + j]] = s2Map.GetValueOrDefault(s2[i + j], 0) + 1;
+                }
+                if (Matches(s1Map, s2Map))
+                    return true;
+            }
+            return false;
+        }
+
+        public bool Matches(Dictionary<char, int> s1Map, Dictionary<char, int> s2Map)
+        {
+            foreach (var key in s1Map.Keys)
+            {
+                if (s1Map[key] - s2Map.GetValueOrDefault(key, -1) != 0)
+                    return false;
+            }
+            return true;
+        }
+
+        public bool CheckPermuteInclusionArray(string firstString, string secondString)
+        {
+            if (firstString.Length > secondString.Length)
+                return false;
+
+            int[] firstStringMap = new int[26];
+            for (int index = 0; index < firstString.Length; index++)
+                firstStringMap[firstString[index] - 'a']++;
+
+            for (int index = 0; index <= secondString.Length - firstString.Length; index++)
+            {
+                int[] secondStringMap = new int[26];
+                for (int innerIndex = 0; innerIndex < firstString.Length; innerIndex++)
+                {
+                    secondStringMap[secondString[index + innerIndex] - 'a']++;
+                }
+                if (Matches(firstStringMap, secondStringMap))
+                    return true;
+            }
+            return false;
+        }
+
+        public bool Matches(int[] firstStringMap, int[] secondStringMap)
+        {
+            for (int index = 0; index < 26; index++)
+            {
+                if (firstStringMap[index] != secondStringMap[index])
+                    return false;
+            }
+            return true;
+        }
+        public bool CheckPermuteInclusionSW(string firstString, string secondString)
+        {
+            if (firstString.Length > secondString.Length)
+                return false;
+
+            int[] firstStringMap = new int[26];
+            int[] secondStringMap = new int[26];
+
+            for (int index = 0; index < firstString.Length; index++)
+            {
+                firstStringMap[firstString[index] - 'a']++;
+                secondStringMap[secondString[index] - 'a']++;
+            }
+
+            for (int index = 0; index < secondString.Length - firstString.Length; index++)
+            {
+                if (Matches(firstStringMap, secondStringMap))
+                    return true;
+
+                secondStringMap[secondString[index + firstString.Length] - 'a']++;
+                secondStringMap[secondString[index] - 'a']--;
+            }
+
+            return Matches(firstStringMap, secondStringMap);
+        }
+
+        public bool CheckPermuteInclusionSWOptimal(string string1, string string2)
+        {
+            if (string1.Length > string2.Length)
+                return false;
+
+            int[] string1Map = new int[26];
+            int[] string2Map = new int[26];
+
+            for (int index = 0; index < string1.Length; index++)
+            {
+                string1Map[string1[index] - 'a']++;
+                string2Map[string2[index] - 'a']++;
+            }
+
+            int matchingCount = 0;
+            for (int index = 0; index < 26; index++)
+            {
+                if (string1Map[index] == string2Map[index])
+                    matchingCount++;
+            }
+
+            for (int index = 0; index < string2.Length - string1.Length; index++)
+            {
+                int rightCharIndex = string2[index + string1.Length] - 'a';
+                int leftCharIndex = string2[index] - 'a';
+
+                if (matchingCount == 26)
+                    return true;
+
+                string2Map[rightCharIndex]++;
+                if (string2Map[rightCharIndex] == string1Map[rightCharIndex])
+                {
+                    matchingCount++;
+                }
+                else if (string2Map[rightCharIndex] == string1Map[rightCharIndex] + 1)
+                {
+                    matchingCount--;
+                }
+
+                string2Map[leftCharIndex]--;
+                if (string2Map[leftCharIndex] == string1Map[leftCharIndex])
+                {
+                    matchingCount++;
+                }
+                else if (string2Map[leftCharIndex] == string1Map[leftCharIndex] - 1)
+                {
+                    matchingCount--;
+                }
+            }
+
+            return matchingCount == 26;
+        }
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

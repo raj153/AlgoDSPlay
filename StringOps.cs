@@ -331,12 +331,12 @@ namespace AlgoDSPlay
             return locations;
         }
         //https://www.algoexpert.io/questions/longest-string-chain
-        public class stringChain
+        public class StringChain
         {
             public string nextstring;
             public int maxChainLength;
 
-            public stringChain(string nextstring, int maxChainLength)
+            public StringChain(string nextstring, int maxChainLength)
             {
                 this.nextstring = nextstring;
                 this.maxChainLength = maxChainLength;
@@ -344,29 +344,29 @@ namespace AlgoDSPlay
         }
 
         // O(n * m^2 + nlog(n)) time | O(nm) space - where n is the number of strings
-        public static void findLongeststringChain(
-            string str, Dictionary<string, stringChain> stringChains
+        public static void FindLongeststringChain(
+            string str, Dictionary<string, StringChain> stringChains
         )
         {
             // Try removing every letter of the current string to see if the
             // remaining strings form a string chain.
             for (int i = 0; i < str.Length; i++)
             {
-                string smallerstring = getSmallerstring(str, i);
+                string smallerstring = GetSmallerstring(str, i);
                 if (!stringChains.ContainsKey(smallerstring)) continue;
-                tryUpdateLongeststringChain(str, smallerstring, stringChains);
+                TryUpdateLongeststringChain(str, smallerstring, stringChains);
             }
         }
 
-        public static string getSmallerstring(string str, int index)
+        public static string GetSmallerstring(string str, int index)
         {
             return str.Substring(0, index) + str.Substring(index + 1);
         }
 
-        public static void tryUpdateLongeststringChain(
+        public static void TryUpdateLongeststringChain(
             string currentstring,
             string smallerstring,
-            Dictionary<string, stringChain> stringChains
+            Dictionary<string, StringChain> stringChains
         )
         {
             int smallerstringChainLength = stringChains[smallerstring].maxChainLength;
@@ -381,7 +381,7 @@ namespace AlgoDSPlay
         }
 
         public static List<string> buildLongeststringChain(
-            List<string> strings, Dictionary<string, stringChain> stringChains
+            List<string> strings, Dictionary<string, StringChain> stringChains
         )
         {
             // Find the string that starts the longest string chain.
@@ -408,135 +408,306 @@ namespace AlgoDSPlay
             return ourLongeststringChain.Count == 1 ? new List<string>()
                                                     : ourLongeststringChain;
         }
-        //https://www.algoexpert.io/questions/interweaving-strings
 
-        // O(2^(n + m)) time | O(n + m) space - where n is the length
-        // of the first string and m is the length of the second string
-        public static bool InterweavingstringsNaive(string one, string two, string three)
+        /*
+        97. Interleaving String
+        https://leetcode.com/problems/interleaving-string/description/
+
+        https://www.algoexpert.io/questions/interweaving-strings
+
+
+        */
+        public class InterleavingStringsSol
         {
-            if (three.Length != one.Length + two.Length)
+            /*
+            
+            Approach 1: Brute Force
+Complexity Analysis
+•	Time complexity : O(2^(m+n)). m is the length of s1 and n is the length of s2.
+•	Space complexity : O(m+n). The size of stack for recursive calls can go upto m+n.
+
+            */
+
+            public static bool Naive(string one, string two, string three)
             {
-                return false;
-            }
-
-            return areInterwoven(one, two, three, 0, 0);
-        }
-
-        public static bool areInterwoven(
-          string one, string two, string three, int i, int j
-        )
-        {
-            int k = i + j;
-            if (k == three.Length) return true;
-
-            if (i < one.Length && one[i] == three[k])
-            {
-                if (areInterwoven(one, two, three, i + 1, j)) return true;
-            }
-
-            if (j < two.Length && two[j] == three[k])
-            {
-                return areInterwoven(one, two, three, i, j + 1);
-            }
-
-            return false;
-        }
-        // O(nm) time | O(nm) space - where n is the length of the
-        // first string and m is the length of the second string
-        public static bool InterweavingstringsOptimal(string one, string two, string three)
-        {
-            if (three.Length != one.Length + two.Length)
-            {
-                return false;
-            }
-
-            bool?[,] cache = new bool?[one.Length + 1, two.Length + 1];
-            return AreInterwoven(one, two, three, 0, 0, cache);
-        }
-
-        public static bool AreInterwoven(
-          string one, string two, string three, int i, int j, bool?[,] cache
-        )
-        {
-            if (cache[i, j].HasValue)
-            {
-                return cache[i, j].Value;
-            }
-
-            int k = i + j;
-            if (k == three.Length)
-            {
-                return true;
-            }
-
-            if (i < one.Length && one[i] == three[k])
-            {
-                cache[i, j] = AreInterwoven(one, two, three, i + 1, j, cache);
-                if (cache[i, j].HasValue && cache[i, j].Value)
-                {
-                    return true;
-                }
-            }
-
-            if (j < two.Length && two[j] == three[k])
-            {
-                cache[i, j] = AreInterwoven(one, two, three, i, j + 1, cache);
-                return cache[i, j].Value;
-            }
-
-            cache[i, j] = false;
-            return false;
-        }
-        //https://www.algoexpert.io/questions/palindrome-
-        // O(n^2) time | O(n) space
-        public static bool IsPalindromeNaive(string str)
-        {
-            string reversedstring = "";
-            for (int i = str.Length - 1; i >= 0; i--)
-            {
-                reversedstring += str[i];
-            }
-            return str.Equals(reversedstring);
-        }
-
-        // O(n) time | O(n) space
-        public static bool IsPalindrome1(string str)
-        {
-            StringBuilder reversedstring = new StringBuilder();
-            for (int i = str.Length - 1; i >= 0; i--)
-            {
-                reversedstring.Append(str[i]);
-            }
-            return str.Equals(reversedstring.ToString());
-        }
-
-        // O(n) time | O(n) space
-        public static bool IsPalindromeRec(string str)
-        {
-            return IsPalindromeRec(str, 0);
-        }
-
-        public static bool IsPalindromeRec(string str, int i)
-        {
-            int j = str.Length - 1 - i;
-            return i >= j ? true : str[i] == str[j] && IsPalindromeRec(str, i + 1);
-        }
-
-        // O(n) time | O(1) space
-        public static bool IsPalindromeOptimal(string str)
-        {
-            int leftIdx = 0;
-            int rightIdx = str.Length - 1;
-            while (leftIdx < rightIdx)
-            {
-                if (str[leftIdx] != str[rightIdx])
+                if (three.Length != one.Length + two.Length)
                 {
                     return false;
                 }
-                leftIdx++;
-                rightIdx--;
+
+                return AreInterwoven(one, two, three, 0, 0);
             }
-            return true;
+
+            public static bool AreInterwoven(
+              string s1, string s2, string s3, int i = 0, int j = 0, string res = ""
+            )
+            {
+                // If result matches with third string and we have reached the end of
+                // the all strings, return true.
+                if (res == s3 && i == s1.Length && j == s2.Length)
+                    return true;
+                bool ans = false;
+                // Recurse for s1 & s2 if "ans" is false
+                if (i < s1.Length)
+                    ans |= AreInterwoven(s1, s2, s3, i + 1, j, res + s1[i]);
+                if (j < s2.Length)
+                    ans |= AreInterwoven(s1, s2, s3, i, j + 1, res + s2[j]);
+                return ans;
+            }
+            /*
+            Approach 2: Recursion with memoization (RecMem)
+            
+            Complexity Analysis
+•	Time complexity: O(m⋅n), where
+m is the length of s1 and n is the length of s2.
+That's a consequence of the fact that each (i, j) combination is computed only once.
+•	Space complexity: O(m⋅n) to keep double array memo.
+
+            */
+
+            public static bool RecMemo(string one, string two, string three)
+            {
+                if (three.Length != one.Length + two.Length)
+                {
+                    return false;
+                }
+
+                bool?[,] cache = new bool?[one.Length + 1, two.Length + 1];
+                return AreInterwoven(one, two, three, 0, 0, cache);
+            }
+
+            private static bool AreInterwoven(
+              string one, string two, string three, int i, int j, bool?[,] cache
+            )
+            {
+                if (cache[i, j].HasValue)
+                {
+                    return cache[i, j].Value;
+                }
+
+                int k = i + j;
+                if (k == three.Length)
+                {
+                    return true;
+                }
+
+                if (i < one.Length && one[i] == three[k])
+                {
+                    cache[i, j] = AreInterwoven(one, two, three, i + 1, j, cache);
+                    if (cache[i, j].HasValue && cache[i, j].Value)
+                    {
+                        return true;
+                    }
+                }
+
+                if (j < two.Length && two[j] == three[k])
+                {
+                    cache[i, j] = AreInterwoven(one, two, three, i, j + 1, cache);
+                    return cache[i, j].Value;
+                }
+
+                cache[i, j] = false;
+                return false;
+            }
+
+            /*            
+Approach 3: Using 2D Dynamic Programming
+Complexity Analysis
+•	Time complexity : O(m⋅n). dp array of size m∗n is filled.
+•	Space complexity : O(m⋅n). 2D dp of size (m+1)∗(n+1) is required. m and n are the lengths of strings s1 and s2 respectively.
+            
+            */
+            public bool DP2D(string s1, string s2, string s3)
+            {
+                if (s3.Length != s1.Length + s2.Length)
+                {
+                    return false;
+                }
+
+                bool[,] dp = new bool[s1.Length + 1, s2.Length + 1];
+                for (int i = 0; i <= s1.Length; i++)
+                {
+                    for (int j = 0; j <= s2.Length; j++)
+                    {
+                        if (i == 0 && j == 0)
+                        {
+                            dp[i, j] = true;
+                        }
+                        else if (i == 0)
+                        {
+                            dp[i, j] = dp[i, j - 1] && s2[j - 1] == s3[i + j - 1];
+                        }
+                        else if (j == 0)
+                        {
+                            dp[i, j] = dp[i - 1, j] && s1[i - 1] == s3[i + j - 1];
+                        }
+                        else
+                        {
+                            dp[i, j] = (dp[i - 1, j] && s1[i - 1] == s3[i + j - 1]) ||
+                                       (dp[i, j - 1] && s2[j - 1] == s3[i + j - 1]);
+                        }
+                    }
+                }
+
+                return dp[s1.Length, s2.Length];
+            }
+
+            /*
+            
+Approach 4: Using 1D Dynamic Programming
+Complexity Analysis
+•	Time complexity : O(m⋅n). dp array of size n is filled m times.
+•	Space complexity : O(n). n is the length of the string s1.
+            */
+            public bool DP1D(string s1, string s2, string s3)
+            {
+                if (s3.Length != s1.Length + s2.Length)
+                {
+                    return false;
+                }
+
+                bool[] dp = new bool[s2.Length + 1];
+                for (int i = 0; i <= s1.Length; i++)
+                {
+                    for (int j = 0; j <= s2.Length; j++)
+                    {
+                        if (i == 0 && j == 0)
+                        {
+                            dp[j] = true;
+                        }
+                        else if (i == 0)
+                        {
+                            dp[j] = dp[j - 1] && s2[j - 1] == s3[i + j - 1];
+                        }
+                        else if (j == 0)
+                        {
+                            dp[j] = dp[j] && s1[i - 1] == s3[i + j - 1];
+                        }
+                        else
+                        {
+                            dp[j] = (dp[j] && s1[i - 1] == s3[i + j - 1]) ||
+                                    (dp[j - 1] && s2[j - 1] == s3[i + j - 1]);
+                        }
+                    }
+                }
+
+                return dp[s2.Length];
+            }
+
+        }
+
+        /*
+        125. Valid Palindrome	
+        https://leetcode.com/problems/valid-palindrome/description/
+
+        https://www.algoexpert.io/questions/palindrome-
+        */
+        public class IsPalindromeSol
+        {
+
+            /*
+            Approach 1: Compare with Reverse
+            
+            Complexity Analysis
+•	Time complexity : O(n), in length n of the string.
+We need to iterate thrice through the string:
+1.	When we filter out non-alphanumeric characters, and convert the remaining characters to lower-case.
+2.	When we reverse the string.
+3.	When we compare the original and the reversed strings.
+Each iteration runs linear in time (since each character operation completes in constant time). Thus, the effective run-time complexity is linear.
+•	Space complexity : O(n), in length n of the string. We need O(n) additional space to stored the filtered string and the reversed string.
+
+            */
+
+            public static bool CompareWithReverse(string str)
+            {
+                string filteredString = String.Empty;
+                foreach (char ch in str)
+                {
+                    if (Char.IsLetterOrDigit(ch))
+                    {
+                        filteredString += Char.ToLower(ch);
+                    }
+                }
+
+                char[] reversedChars = filteredString.ToCharArray();
+                Array.Reverse(reversedChars);
+                string reversedString = new string(reversedChars);
+                return filteredString == reversedString;
+            }
+
+            // O(n) time | O(n) space - Using StringBuilder instead String
+            public static bool IsPalindrome1(string str)
+            {
+                StringBuilder reversedstring = new StringBuilder();
+                for (int i = str.Length - 1; i >= 0; i--)
+                {
+                    reversedstring.Append(str[i]);
+                }
+                return str.Equals(reversedstring.ToString());
+            }
+
+            /*
+            Approach 2: Two Pointers
+            Complexity Analysis
+    •	Time complexity : O(n), in length n of the string. We traverse over each character at-most once, until the two pointers meet in the middle, or when we break and return early.
+    •	Space complexity : O(1). No extra space required, at all.
+
+
+            */
+            public bool TwoPointers(string s)
+            {
+                int i = 0;
+                int j = s.Length - 1;
+                while (i < j)
+                {
+                    while (i < j && !Char.IsLetterOrDigit(s[i]))
+                    {
+                        i++;
+                    }
+
+                    while (i < j && !Char.IsLetterOrDigit(s[j]))
+                    {
+                        j--;
+                    }
+
+                    if (char.ToLower(s[i]) != char.ToLower(s[j]))
+                        return false;
+                    i++;
+                    j--;
+                }
+
+                return true;
+            }
+            // O(n) time | O(1) space
+            public static bool IsPalindromeOptimal(string str)
+            {
+                int leftIdx = 0;
+                int rightIdx = str.Length - 1;
+                while (leftIdx < rightIdx)
+                {
+                    if (str[leftIdx] != str[rightIdx])
+                    {
+                        return false;
+                    }
+                    leftIdx++;
+                    rightIdx--;
+                }
+                return true;
+            }
+            // O(n) time | O(n) space
+            public static bool IsPalindromeRec(string str)
+            {
+                return IsPalindromeRec(str, 0);
+            }
+
+            public static bool IsPalindromeRec(string str, int i)
+            {
+                int j = str.Length - 1 - i;
+                return i >= j ? true : str[i] == str[j] && IsPalindromeRec(str, i + 1);
+            }
+
+
         }
 
         //https://www.algoexpert.io/questions/first-non-repeating-character
@@ -2470,7 +2641,7 @@ One example where the worst case occurs is when needle is "aaaaab", while haysta
 There are a handful of variables in the code (m, n, i, window_start), and all of them use constant space, hence, the space complexity is constant.
            
             */
-            int indexOfFirstOccur = FindIndexOfFirstOccurSW(haystack,needle);
+            int indexOfFirstOccur = FindIndexOfFirstOccurSW(haystack, needle);
             /*
  Approach 2: Rabin-Karp Algorithm (Single Hash)(RKSH)           
 Complexity Analysis
@@ -2481,7 +2652,7 @@ But in the best case, if no hash value of the haystack substring matches with ha
 There are a handful of variables in the code, namely, hashNeedle, hashHay, windowStart, windowEnd, m, n, MAX_WEIGHT, RADIX, MOD. All of them use constant space, and hence, the space complexity is O(1).
             
             */
-            indexOfFirstOccur = FindIndexOfFirstOccurRKSH(haystack,needle);
+            indexOfFirstOccur = FindIndexOfFirstOccurRKSH(haystack, needle);
             /*
 Approach 3: Rabin-Karp algorithm (Double Hash) (RKDH)
 Complexity Analysis
@@ -2494,7 +2665,7 @@ o	Moreover, we are proceeding only when n≥m, thus final time complexity is O(n
 There are a handful of variables in the code, and all of them use constant space, hence, the space complexity is O(1).
 
             */
-            indexOfFirstOccur = FindIndexOfFirstOccurRKDH(haystack,needle);
+            indexOfFirstOccur = FindIndexOfFirstOccurRKDH(haystack, needle);
             /*
 Approach 4: Knuth–Morris–Pratt Algorithm (KMP)
 Implementation
@@ -2517,9 +2688,9 @@ o	No worst-case or accidental inputs exist here.
 Note: Although KMP is fast, still built-in functions of many programming languages use Brute Force. KMP is based on assumption that there would be many duplicate similar substrings. In real-world strings, this is not the case. So, KMP is not used in real-world applications. Moreover, it requires linear space.
             
             */
-            indexOfFirstOccur = FindIndexOfFirstOccurKMP(haystack,needle);
+            indexOfFirstOccur = FindIndexOfFirstOccurKMP(haystack, needle);
 
-        return indexOfFirstOccur;
+            return indexOfFirstOccur;
 
         }
         public int FindIndexOfFirstOccurSW(string haystack, string needle)
@@ -2741,6 +2912,1309 @@ Note: Although KMP is fast, still built-in functions of many programming languag
             return -1;
         }
 
+        /*
+        58. Length of Last Word
+        https://leetcode.com/problems/length-of-last-word/description/
+
+        */
+        public int LengthOfLastWord(string s)
+        {
+            /*
+            Approach 1: String Index Manipulation with Two Loops (SIMTL)
+Complexity
+•	Time Complexity: O(N), where N is the length of the input string.
+In the worst case, the input string might contain only a single word, which implies that we would need to iterate through the entire string to obtain the result.
+•	Space Complexity: O(1), only constant memory is consumed, regardless the input.
+
+            */
+            int len = LengthOfLastWordSIMTL(s);
+
+            /*
+Approach 2: One-Loop Iteration (OLI)
+  Complexity
+•	Time Complexity: O(N), where N is the length of the input string.
+This approach has the same time complexity as the previous approach. The only difference is that we combined two loops into one.
+•	Space Complexity: O(1), again a constant memory is consumed, regardless the input.
+          
+            */
+            len = LengthOfLastWordOLI(s);
+
+            /*
+   Approach 3: Built-in String Functions (BSF)        
+Complexity Analysis
+•	Time Complexity: O(N), where N is the length of the input string.
+Since we use some built-in function from the String data type, we should look into the complexity of each built-in function that we used, in order to obtain the overall time complexity of our algorithm.
+It would be safe to assume the time complexity of the methods such as str.split() and String.lastIndexOf() to be O(N), since in the worst case we would need to scan the entire string for both methods.
+•	Space Complexity: O(N). Again, we should look into the built-in functions that we used in the algorithm.
+In the Java implementation, we used the function String.trim() which returns a copy of the input string without leading and trailing whitespace. Therefore, we would need O(N) space for our algorithm to hold this copy.
+
+            */
+            len = LengthOfLastWordBSF(s);
+
+            return len;
+
+
+        }
+        public int LengthOfLastWordSIMTL(string s)
+        {
+            // trim the trailing spaces
+            int p = s.Length - 1;
+            while (p >= 0 && s[p] == ' ')
+            {
+                p--;
+            }
+
+            // compute the length of last word
+            int length = 0;
+            while (p >= 0 && s[p] != ' ')
+            {
+                p--;
+                length++;
+            }
+
+            return length;
+        }
+
+        public int LengthOfLastWordOLI(string s)
+        {
+            int p = s.Length, length = 0;
+            while (p > 0)
+            {
+                p--;
+                // we're in the middle of the last word
+                if (s[p] != ' ')
+                {
+                    length++;
+                }
+                // here is the end of last word
+                else if (length > 0)
+                {
+                    return length;
+                }
+            }
+
+            return length;
+        }
+        public int LengthOfLastWordBSF(string s)
+        {
+            s = s.Trim();  // trim the trailing spaces in the string
+            return s.Length - s.LastIndexOf(" ") - 1;
+        }
+
+        /*
+        65. Valid Number		
+        https://leetcode.com/problems/valid-number/description/
+
+        */
+        public bool IsValidNumber(string s)
+        {
+            /*
+   Approach 1: Follow The Rules! (FTR)         
+   Complexity Analysis
+•	Time complexity: O(N), where N is the length of s.
+We simply iterate over the input once. The number of operations we perform for each character in the input is independent of the length of the string, and therefore only requires constant time. This results in N⋅O(1)=O(N).
+•	Space complexity: O(1).
+Regardless of the input size, we only store 3 variables, seenDigit, seenExponent, and seenDot.
+         
+            */
+            bool isValidNumber = IsValidNumberFTR(s);
+            /*
+   Approach 2: Deterministic Finite Automaton (DFA)         
+    Complexity Analysis
+•	Time complexity: O(N), where N is the length of s.
+We simply iterate through the input once. The number of operations we perform for each character in the input is independent of the length of the string, and therefore each operation requires constant time. So we get N⋅O(1)=O(N).
+•	Space complexity: O(1).
+We will construct the same DFA regardless of the input size.
+        
+            */
+            isValidNumber = IsValidNumberDFA(s);
+
+            return isValidNumber;
+
+        }
+        public bool IsValidNumberFTR(string s)
+        {
+            bool seenDigit = false;
+            bool seenExponent = false;
+            bool seenDot = false;
+            for (int i = 0; i < s.Length; i++)
+            {
+                char curr = s[i];
+                if (Char.IsDigit(curr))
+                {
+                    seenDigit = true;
+                }
+                else if (curr == '+' || curr == '-')
+                {
+                    if (i > 0 && s[i - 1] != 'e' && s[i - 1] != 'E')
+                    {
+                        return false;
+                    }
+                }
+                else if (curr == 'e' || curr == 'E')
+                {
+                    if (seenExponent || !seenDigit)
+                    {
+                        return false;
+                    }
+
+                    seenExponent = true;
+                    seenDigit = false;
+                }
+                else if (curr == '.')
+                {
+                    if (seenDot || seenExponent)
+                    {
+                        return false;
+                    }
+
+                    seenDot = true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+
+            return seenDigit;
+        }
+
+        public bool IsValidNumberDFA(string s)
+        {
+            // This is the DFA we have designed above
+            var dfa = new Dictionary<string, int>[] {
+            new Dictionary<string, int> {
+                { "digit", 1 }, { "sign", 2 }, { "dot", 3 }
+            },
+            new Dictionary<string, int> {
+                { "digit", 1 }, { "dot", 4 }, { "exponent", 5 }
+            },
+            new Dictionary<string, int> { { "digit", 1 }, { "dot", 3 } },
+            new Dictionary<string, int> { { "digit", 4 } },
+            new Dictionary<string, int> { { "digit", 4 }, { "exponent", 5 } },
+            new Dictionary<string, int> { { "sign", 6 }, { "digit", 7 } },
+            new Dictionary<string, int> { { "digit", 7 } },
+            new Dictionary<string, int> { { "digit", 7 } }
+        };
+            int currentState = 0;
+            string group;
+            foreach (char curr in s)
+            {
+                if (Char.IsDigit(curr))
+                {
+                    group = "digit";
+                }
+                else if (curr == '+' || curr == '-')
+                {
+                    group = "sign";
+                }
+                else if (curr == 'e' || curr == 'E')
+                {
+                    group = "exponent";
+                }
+                else if (curr == '.')
+                {
+                    group = "dot";
+                }
+                else
+                {
+                    return false;
+                }
+
+                if (!dfa[currentState].ContainsKey(group))
+                {
+                    return false;
+                }
+
+                currentState = dfa[currentState][group];
+            }
+
+            return currentState == 1 || currentState == 4 || currentState == 7;
+        }
+
+
+        /*
+        68. Text Justification
+        https://leetcode.com/problems/text-justification/description/
+        Complexity Analysis
+        Let n be words.Length, k be the average length of a word, and m be maxWidth.
+        Here, we are assuming that you are using immutable strings. A language like C++ has mutable strings and thus the complexity analysis will be slightly different.
+        •	Time complexity: O(n⋅k)
+        getWords
+        The work done in each while loop iteration is O(1). Thus the cost of each call is equal to the number of times the while loop runs in each call. This is amortized throughout the runtime of the algorithm - each index of words can only be iterated over once throughout all calls, so the time complexity of all calls to getWords is O(n).
+        createLine
+        First, we iterate over the words in line to calculate baseLength. Again, this is amortized over the runtime of the algorithm as each word in the input can only be iterated over once here. Therefore, this loop contributes O(n) over all calls to createLine.
+        If we are dealing with the special case (one word line or last lane), we create a string of length maxWidth. This costs O(m).
+        Otherwise, we iterate over the words in line and perform string operations on each. The first for loop which adds the mandatory space costs O(k) per iteration. In the worst-case scenario, we won't have any lines with only one word and the final line has only one word. In this scenario, over the runtime of the algorithm, this for loop will iterate over every word except for the final one, which would cost O(n⋅k).
+        The second for loop which adds the extra spaces is harder to analyze. At a minimum, each operation will cost O(k). The amount of spaces we add is a function of maxWidth and the number of words in line, as well as the sum of their lengths. One thing is for certain though: on a given call, the strings we create in this for loop cannot exceed maxWidth in length combined. Therefore, we can say that this for loop costs O(m) per call to createLine.
+        Finally, we join the line with a delimiter, which costs O(m).
+        Overall, this function contributes O(n⋅k) to the overall runtime, and O(m) per call.
+        Main section
+        We already determined that all calls to getWords contribute O(n) in total, so we don't have to worry about that.
+        Each call to createLine costs O(m). We call it in each while loop iteration. The number of while loop iterations is a function of n, k, and m. On average, we can fit km words per line. Because we have n words, that implies O(kmn)=O(mn⋅k) iterations. Each iteration costs O(m), so this gives us O(n⋅k).
+        Summing it all up and canceling constants, we have a time complexity of O(n⋅k) - the sum of the characters in all the words.
+        •	Space complexity: O(m)
+        We don't count the answer as part of the space complexity.
+        We handle one line at a time and each line has a length of m. The intermediate arrays we use like currentLine hold strings, but the sum of the lengths of these strings cannot exceed m either.
+
+
+        */
+        public class FullTextJustifySolution
+        {
+            public IList<string> FullTextJustify(string[] words, int maxWidth)
+            {
+                var ans = new List<string>();
+                int i = 0;
+                while (i < words.Length)
+                {
+                    var currentLine = GetWords(i, words, maxWidth);
+                    i += currentLine.Count;
+                    ans.Add(CreateLine(currentLine, i, words, maxWidth));
+                }
+
+                return ans;
+            }
+
+            private List<string> GetWords(int i, string[] words, int maxWidth)
+            {
+                var currentLine = new List<string>();
+                int currLength = 0;
+                while (i < words.Length && currLength + words[i].Length <= maxWidth)
+                {
+                    currentLine.Add(words[i]);
+                    currLength += words[i].Length + 1;
+                    i++;
+                }
+
+                return currentLine;
+            }
+
+            private string CreateLine(List<string> line, int i, string[] words,
+                                      int maxWidth)
+            {
+                int baseLength = -1;
+                foreach (var word in line)
+                {
+                    baseLength += word.Length + 1;
+                }
+
+                int extraSpaces = maxWidth - baseLength;
+                if (line.Count == 1 || i == words.Length)
+                {
+                    return string.Join(" ", line) + new string(' ', extraSpaces);
+                }
+
+                int wordCount = line.Count - 1;
+                int spacesPerWord = extraSpaces / wordCount;
+                int needsExtraSpace = extraSpaces % wordCount;
+                for (int j = 0; j < needsExtraSpace; j++)
+                {
+                    line[j] += " ";
+                }
+
+                for (int j = 0; j < wordCount; j++)
+                {
+                    line[j] += new string(' ', spacesPerWord);
+                }
+
+                return string.Join(" ", line);
+            }
+        }
+
+        /*
+        87. Scramble String
+https://leetcode.com/problems/scramble-string/description/
+
+Approach: Dynamic Programming
+
+Complexity Analysis
+•	Time complexity: O(n4).
+We have four nested for loops (for length, i, j, newLength), each doing O(n) iterations.
+•	Space complexity: O(n3).
+We store the matrix dp[n+1][n][n] for dynamic programming.
+
+        */
+        public bool IsStringScrambled(string s1, string s2)
+        {
+            int n = s1.Length;
+            bool[][][] dp = new bool[n + 1][][];
+            for (int i = 0; i < dp.Length; i++)
+            {
+                dp[i] = new bool[n][];
+                for (int j = 0; j < dp[i].Length; j++)
+                {
+                    dp[i][j] = new bool[n];
+                }
+            }
+
+            for (int i = 0; i < n; i++)
+            {
+                for (int j = 0; j < n; j++)
+                {
+                    dp[1][i][j] = s1[i] == s2[j];
+                }
+            }
+
+            for (int length = 2; length <= n; length++)
+            {
+                for (int i = 0; i < n + 1 - length; i++)
+                {
+                    for (int j = 0; j < n + 1 - length; j++)
+                    {
+                        for (int newLength = 1; newLength < length; newLength++)
+                        {
+                            bool[] dp1 = dp[newLength][i];
+                            bool[] dp2 = dp[length - newLength][i + newLength];
+                            dp[length][i][j] |= dp1[j] && dp2[j + newLength];
+                            dp[length][i][j] |=
+                                dp1[j + length - newLength] && dp2[j];
+                        }
+                    }
+                }
+            }
+
+            return dp[n][0][0];
+        }
+        /*
+        91. Decode Ways
+        https://leetcode.com/problems/decode-ways/description/
+
+        */
+
+        public class NumWaysDecodeStringSol
+        {
+            /*
+            Approach 1: Recursive Approach with Memoization
+Complexity Analysis
+•	Time Complexity: O(N), where N is length of the string. Memoization helps in pruning the recursion tree and hence decoding for an index only once. Thus this solution is linear time complexity.
+•	Space Complexity: O(N). The dictionary used for memoization would take the space equal to the length of the string. There would be an entry for each index value. The recursion stack would also be equal to the length of the string.
+
+            */
+            public int NumWaysDecodeStringRecMemo(string s)
+            {
+                return RecursiveWithMemo(0, s);
+            }
+            private Dictionary<int, int> memo = new Dictionary<int, int>();
+
+            private int RecursiveWithMemo(int index, string s)
+            {
+                if (memo.ContainsKey(index))
+                {
+                    return memo[index];
+                }
+
+                if (index == s.Length)
+                {
+                    return 1;
+                }
+
+                if (s[index] == '0')
+                {
+                    return 0;
+                }
+
+                if (index == s.Length - 1)
+                {
+                    return 1;
+                }
+
+                int ans = RecursiveWithMemo(index + 1, s);
+                if (int.Parse(s.Substring(index, 2)) <= 26)
+                {
+                    ans += RecursiveWithMemo(index + 2, s);
+                }
+
+                memo[index] = ans;
+                return ans;
+            }
+
+            /*
+            Approach 2: Iterative Approach
+    Complexity Analysis
+    •	Time Complexity: O(N), where N is length of the string. We iterate the length of dp array which is N+1.
+    •	Space Complexity: O(N). The length of the DP array.
+
+            */
+            public int NumWaysDecodeStringIterative(string s)
+            {
+                // DP array to store the subproblem results
+                var dp = new int[s.Length + 1];
+                dp[0] = 1;
+                // Ways to decode a string of size 1 is 1. Unless the string is '0'.
+                // '0' doesn't have a single digit decode.
+                dp[1] = s[0] == '0' ? 0 : 1;
+                for (var i = 2; i < dp.Length; i++)
+                {
+                    // Check if successful single digit decode is possible.
+                    if (s[i - 1] != '0')
+                    {
+                        dp[i] = dp[i - 1];
+                    }
+
+                    // Check if successful two digit decode is possible.
+                    int twoDigit = Int32.Parse(s.Substring(i - 2, 2));
+                    if (twoDigit >= 10 && twoDigit <= 26)
+                    {
+                        dp[i] += dp[i - 2];
+                    }
+                }
+
+                return dp[s.Length];
+            }
+
+            /*
+            Approach 3: Iterative, Constant Space
+
+    Complexity Analysis
+    •	Time Complexity: O(N), where N is length of the string. We're essentially doing the same work as what we were in Approach 2, except this time we're throwing away calculation results when we no longer need them.
+    •	Space Complexity: O(1). Instead of a dp array, we're simply using two variables.
+
+            */
+
+
+            public int NumWaysDecodeStringIterativeSpaceOptimal(string s)
+            {
+                if (s[0] == '0')
+                {
+                    return 0;
+                }
+
+                int n = s.Length;
+                int twoBack = 1;
+                int oneBack = 1;
+                for (int i = 1; i < n; i++)
+                {
+                    int current = 0;
+                    if (s[i] != '0')
+                    {
+                        current = oneBack;
+                    }
+
+                    int twoDigit = int.Parse(s.Substring(i - 1, 2));
+                    if (twoDigit >= 10 && twoDigit <= 26)
+                    {
+                        current += twoBack;
+                    }
+
+                    twoBack = oneBack;
+                    oneBack = current;
+                }
+
+                return oneBack;
+            }
+
+        }
+
+        /*
+        639. Decode Ways II
+https://leetcode.com/problems/decode-ways-ii/description/
+
+        */
+        public class NumWaysDecodeStringIISol
+        {
+            /*
+            Approach 1: Recursion with Memoization
+
+            Complexity Analysis
+•	Time complexity : O(n). Size of recursion tree can go up to n, since memo array is filled exactly once. Here, n refers to the length of the input
+string.
+•	Space complexity : O(n). The depth of recursion tree can go up to n.
+
+            */
+
+            private const int Modulus = 1000000007;
+
+            public int NumWaysDecodeStringIIRecMemo(string inputString)
+            {
+                long?[] memoizationArray = new long?[inputString.Length];
+                return (int)CalculateWays(inputString, inputString.Length - 1, memoizationArray);
+            }
+
+            private long CalculateWays(string inputString, int index, long?[] memoizationArray)
+            {
+                if (index < 0)
+                    return 1;
+
+                if (memoizationArray[index] != null)
+                    return memoizationArray[index].Value;
+
+                if (inputString[index] == '*')
+                {
+                    long result = 9 * CalculateWays(inputString, index - 1, memoizationArray) % Modulus;
+                    if (index > 0 && inputString[index - 1] == '1')
+                        result = (result + 9 * CalculateWays(inputString, index - 2, memoizationArray)) % Modulus;
+                    else if (index > 0 && inputString[index - 1] == '2')
+                        result = (result + 6 * CalculateWays(inputString, index - 2, memoizationArray)) % Modulus;
+                    else if (index > 0 && inputString[index - 1] == '*')
+                        result = (result + 15 * CalculateWays(inputString, index - 2, memoizationArray)) % Modulus;
+
+                    memoizationArray[index] = result;
+                    return memoizationArray[index].Value;
+                }
+
+                long resultForNonStar = inputString[index] != '0' ? CalculateWays(inputString, index - 1, memoizationArray) : 0;
+
+                if (index > 0 && inputString[index - 1] == '1')
+                    resultForNonStar = (resultForNonStar + CalculateWays(inputString, index - 2, memoizationArray)) % Modulus;
+                else if (index > 0 && inputString[index - 1] == '2' && inputString[index] <= '6')
+                    resultForNonStar = (resultForNonStar + CalculateWays(inputString, index - 2, memoizationArray)) % Modulus;
+                else if (index > 0 && inputString[index - 1] == '*')
+                    resultForNonStar = (resultForNonStar + (inputString[index] <= '6' ? 2 : 1) * CalculateWays(inputString, index - 2, memoizationArray)) % Modulus;
+
+                memoizationArray[index] = resultForNonStar;
+                return memoizationArray[index].Value;
+            }
+
+
+            /*
+            Approach 2: Dynamic Programming
+
+            Complexity Analysis
+    •	Time complexity : O(n). dp array of size n+1 is filled once only. Here, n refers to the length of the input string.
+    •	Space complexity : O(n). dp array of size n+1 is used.
+
+            */
+            public int NumWaysDecodeStringIIDP(String s)
+            {
+                long[] dp = new long[s.Length + 1];
+                dp[0] = 1;
+                dp[1] = s[0] == '*' ? 9 : s[0] == '0' ? 0 : 1;
+                for (int i = 1; i < s.Length; i++)
+                {
+                    if (s[i] == '*')
+                    {
+                        dp[i + 1] = 9 * dp[i] % Modulus;
+                        if (s[i - 1] == '1')
+                            dp[i + 1] = (dp[i + 1] + 9 * dp[i - 1]) % Modulus;
+                        else if (s[i - 1] == '2')
+                            dp[i + 1] = (dp[i + 1] + 6 * dp[i - 1]) % Modulus;
+                        else if (s[i - 1] == '*')
+                            dp[i + 1] = (dp[i + 1] + 15 * dp[i - 1]) % Modulus;
+                    }
+                    else
+                    {
+                        dp[i + 1] = s[i] != '0' ? dp[i] : 0;
+                        if (s[i - 1] == '1')
+                            dp[i + 1] = (dp[i + 1] + dp[i - 1]) % Modulus;
+                        else if (s[i - 1] == '2' && s[i] <= '6')
+                            dp[i + 1] = (dp[i + 1] + dp[i - 1]) % Modulus;
+                        else if (s[i - 1] == '*')
+                            dp[i + 1] = (dp[i + 1] + (s[i] <= '6' ? 2 : 1) * dp[i - 1]) % Modulus;
+                    }
+                }
+                return (int)dp[s.Length];
+            }
+            /*
+            Approach 3: Constant Space Dynamic Programming (DPCS)
+    Complexity Analysis
+    •	Time complexity : O(n). Single loop up to n is required to find the required result. Here, n refers to the length of the input string s.
+    •	Space complexity : O(1). Constant space is used.
+
+
+            */
+            public int NumWaysDecodeStringIIDPCS(string inputString)
+            {
+                long previousDecodings = 1;
+                long currentDecodings = inputString[0] == '*' ? 9 : inputString[0] == '0' ? 0 : 1;
+
+                for (int index = 1; index < inputString.Length; index++)
+                {
+                    long tempDecodings = currentDecodings;
+
+                    if (inputString[index] == '*')
+                    {
+                        currentDecodings = 9 * currentDecodings % Modulus;
+                    }
+                    else
+                    {
+                        currentDecodings = (currentDecodings + previousDecodings) % Modulus;
+                        if (inputString[index - 1] == '*')
+                        {
+                            currentDecodings = (currentDecodings + previousDecodings) % Modulus;
+                        }
+                    }
+
+                    previousDecodings = tempDecodings;
+                }
+
+                return (int)currentDecodings;
+            }
+
+        }
+
+        /*
+                115. Distinct Subsequences
+        https://leetcode.com/problems/distinct-subsequences/description/
+        */
+
+        public class NumDistinctSubseqSol
+        {
+            /*
+            Approach 1: Recursion + Memoization
+
+Complexity Analysis
+•	Time Complexity: The time complexity for a recursive solution is defined by two things: the number of recursive calls that we make and the time it takes to process a single call.
+o	If you notice the solution closely, all we are doing in the function is to check the dictionary for a key, and then we make a couple of function calls. So the time it takes to process a single call is actually O(1).
+o	The number of unique recursive calls is defined by the two state variables that we have. Potentially, we can make O(M×N) calls where M and N represent the lengths of the two strings. Thus, the time complexity for this solution would be O(M×N).
+•	Space Complexity: The maximum space is utilized by the dictionary that we are using and the size of that dictionary would also be controlled by the total possible combinations of i and j which turns out to be O(M×N) as well. We also have the space utilized by the recursion stack which is O(M) where M is the length of string S. This is because in one of our recursion calls, we don't progress at all in the string T. Hence, we would have a branch in the tree where only the index i progresses one step until it reaches the end of string S. The number of nodes in this branch would be equal to the length of string S.
+            */
+
+            public static int RecMemo(string s, string t)
+            {
+                Dictionary<string, int> memo;
+                if (s.Length < t.Length)
+                    return 0;
+                if (s == t || t == "")
+                    return 1;
+                memo = new Dictionary<string, int>();
+                return DistinctHelper(s.Substring(0, s.Length - 1), t) +
+                       ((s[s.Length - 1] == t[t.Length - 1])
+                            ? DistinctHelper(s.Substring(0, s.Length - 1),
+                                             t.Substring(0, t.Length - 1))
+                            : 0);
+
+                int DistinctHelper(string s, string t)
+                {
+                    if (memo.ContainsKey(s + "," + t))
+                        return memo[s + "," + t];
+                    if (s.Length < t.Length)
+                        return 0;
+                    if (s == t || t == "")
+                        return 1;
+                    memo[s + "," + t] = DistinctHelper(s.Substring(0, s.Length - 1), t) +
+                                        ((s[s.Length - 1] == t[t.Length - 1])
+                                             ? DistinctHelper(s.Substring(0, s.Length - 1),
+                                                              t.Substring(0, t.Length - 1))
+                                             : 0);
+                    return memo[s + "," + t];
+                }
+
+            }
+
+            /*
+            Approach 2: Iterative Dynamic Programming
+
+Complexity Analysis
+Time Complexity: The time complexity is much more clear in this approach since we have two for loops with clearly defined executions. The outer loop runs for M+1 iterations while the inner loop runs for N+1 iterations. So, combined together we have a time complexity of O(M×N).
+Space Complexity: O(M×N) which is occupied by the 2D dp array that we create.
+
+            */
+            public int IterateDP(string s, string t)
+            {
+                int M = s.Length;
+                int N = t.Length;
+                int[,] dp = new int[M + 1, N + 1];
+                // Base case initialization
+                for (int j = 0; j <= N; j++) dp[M, j] = 0;
+                // Base case initialization
+                for (int i = 0; i <= M; i++) dp[i, N] = 1;
+                // Iterate over the strings in reverse so as to
+                // satisfy the way we've modeled our recursive solution
+                for (int i = M - 1; i >= 0; i--)
+                {
+                    for (int j = N - 1; j >= 0; j--)
+                    {
+                        // Remember, we always need this result
+                        dp[i, j] = dp[i + 1, j];
+                        // If the characters match, we add the
+                        // result of the next recursion call (in this
+                        // case, the value of a cell in the dp table)
+                        if (s[i] == t[j])
+                            dp[i, j] += dp[i + 1, j + 1];
+                    }
+                }
+
+                return dp[0, 0];
+            }
+
+            /*
+            Approach 3: Space optimized Dynamic Programming
+Complexity Analysis
+Time Complexity: O(M×N)
+Space Complexity: O(N) since we are using a single array which is the size of the string T. This is a major size reduction over the previous solution and this is a much more elegant solution than the initial recursive solution we saw earlier on.
+
+            */
+            public int IterateDPSpaceOptimal(string s, string t)
+            {
+                int M = s.Length;
+                int N = t.Length;
+                int[] dp = new int[N];
+                int prev = 1;
+                for (int i = M - 1; i >= 0; i--)
+                {
+                    prev = 1;
+                    for (int j = N - 1; j >= 0; j--)
+                    {
+                        int old_dpj = dp[j];
+                        if (s[i] == t[j])
+                        {
+                            dp[j] += prev;
+                        }
+
+                        prev = old_dpj;
+                    }
+                }
+
+                return dp[0];
+            }
+
+        }
+
+
+        /*
+        127. Word Ladder
+        https://leetcode.com/problems/word-ladder/description/
+
+        */
+        public class LadderLengthSol
+        {
+            /*
+            Approach 1: Breadth First Search
+            Complexity Analysis
+•	Time Complexity: O(M2×N), where M is the length of each word and N is the total number of words in the input word list.
+o	For each word in the word list, we iterate over its length to find all the intermediate words corresponding to it. Since the length of each word is M and we have N words, the total number of iterations the algorithm takes to create all_combo_dict is M×N. Additionally, forming each of the intermediate word takes O(M) time because of the substring operation used to create the new string. This adds up to a complexity of O(M2×N).
+o	Breadth first search in the worst case might go to each of the N words. For each word, we need to examine M possible intermediate words/combinations. Notice, we have used the substring operation to find each of the combination. Thus, M combinations take O(M2) time. As a result, the time complexity of BFS traversal would also be O(M2×N).
+Combining the above steps, the overall time complexity of this approach is O(M2×N).
+•	Space Complexity: O(M2×N).
+o	Each word in the word list would have M intermediate combinations. To create the all_combo_dict dictionary we save an intermediate word as the key and its corresponding original words as the value. Note, for each of M intermediate words we save the original word of length M. This simply means, for every word we would need a space of M2 to save all the transformations corresponding to it. Thus, all_combo_dict would need a total space of O(M2×N).
+o	Visited dictionary would need a space of O(M×N) as each word is of length M.
+o	Queue for BFS in worst case would need a space for all O(N) words and this would also result in a space complexity of O(M×N).
+Combining the above steps, the overall space complexity is O(M2×N) + O(M∗N) + O(M∗N) = O(M2×N) space.
+Optimization:
+We can definitely reduce the space complexity of this algorithm by storing the indices corresponding to each word instead of storing the word itself.
+
+
+            */
+            public static int BFS(string beginWord, string endWord,
+                         IList<string> wordList)
+            {
+                int L = beginWord.Length;
+                Dictionary<string, List<string>> allComboDict =
+                    new Dictionary<string, List<string>>();
+                foreach (string word in wordList)
+                {
+                    for (int i = 0; i < L; i++)
+                    {
+                        string newWord = word.Substring(0, i) + '*' +
+                                         word.Substring(i + 1, L - i - 1);
+                        if (!allComboDict.ContainsKey(newWord))
+                            allComboDict[newWord] = new List<string>();
+                        allComboDict[newWord].Add(word);
+                    }
+                }
+
+                Queue<Tuple<string, int>> Q = new Queue<Tuple<string, int>>();
+                Q.Enqueue(new Tuple<string, int>(beginWord, 1));
+                Dictionary<string, bool> visited = new Dictionary<string, bool>();
+                visited[beginWord] = true;
+                while (Q.Any())
+                {
+                    var node = Q.Dequeue();
+                    string word = node.Item1;
+                    int level = node.Item2;
+                    for (int i = 0; i < L; i++)
+                    {
+                        string newWord = word.Substring(0, i) + '*' +
+                                         word.Substring(i + 1, L - i - 1);
+                        foreach (string adjacentWord in allComboDict.GetValueOrDefault(
+                                     newWord, new List<string>()))
+                        {
+                            if (adjacentWord.Equals(endWord))
+                                return level + 1;
+                            if (!visited.ContainsKey(adjacentWord))
+                            {
+                                visited[adjacentWord] = true;
+                                Q.Enqueue(
+                                    new Tuple<string, int>(adjacentWord, level + 1));
+                            }
+                        }
+                    }
+                }
+
+                return 0;
+            }
+
+            /*
+            Approach 2: Bidirectional Breadth First Search
+            Complexity Analysis
+    •	Time Complexity: O(M2×N), where M is the length of words and N is the total number of words in the input word list. Similar to one directional, bidirectional also takes O(M2×N) time for finding out all the transformations. But the search time reduces to half, since the two parallel searches meet somewhere in the middle.
+    •	Space Complexity: O(M2×N), to store all M transformations for each of the N words in the all_combo_dict dictionary, same as one directional. But bidirectional reduces the search space. It narrows down because of meeting in the middle.
+
+            */
+
+
+
+
+            public int LadderLength(string beginWord, string endWord,
+                                    IList<string> wordList)
+            {
+                int L;
+                Dictionary<string, List<string>> allComboDict;
+                Queue<Tuple<string, int>> Q_begin;
+                Queue<Tuple<string, int>> Q_end;
+                Dictionary<string, int> visitedBegin;
+                Dictionary<string, int> visitedEnd;
+                if (!wordList.Contains(endWord))
+                {
+                    return 0;
+                }
+
+                L = beginWord.Length;
+                allComboDict = new Dictionary<string, List<string>>();
+                foreach (string word in wordList)
+                {
+                    for (int i = 0; i < L; i++)
+                    {
+                        string newWord = word.Substring(0, i) + '*' +
+                                         word.Substring(i + 1, L - i - 1);
+                        if (allComboDict.ContainsKey(newWord))
+                        {
+                            allComboDict[newWord].Add(word);
+                        }
+                        else
+                        {
+                            List<string> tempList = new List<string>();
+                            tempList.Add(word);
+                            allComboDict.Add(newWord, tempList);
+                        }
+                    }
+                }
+
+                Q_begin = new Queue<Tuple<string, int>>();
+                Q_begin.Enqueue(new Tuple<string, int>(beginWord, 1));
+                Q_end = new Queue<Tuple<string, int>>();
+                Q_end.Enqueue(new Tuple<string, int>(endWord, 1));
+                visitedBegin = new Dictionary<string, int> { { beginWord, 1 } };
+                visitedEnd = new Dictionary<string, int> { { endWord, 1 } };
+                while (Q_begin.Count != 0 && Q_end.Count != 0)
+                {
+                    int ans = -1;
+                    if (Q_begin.Count <= Q_end.Count)
+                    {
+                        ans = VisitWordNode(Q_begin, visitedBegin,
+                                                 visitedEnd);
+                    }
+                    else
+                    {
+                        ans = VisitWordNode(Q_end, visitedEnd,
+                                                 visitedBegin);
+                    }
+
+                    if (ans > -1)
+                    {
+                        return ans;
+                    }
+                }
+
+                return 0;
+
+                int VisitWordNode(Queue<Tuple<string, int>> Q,
+                                      Dictionary<string, int> visited,
+                                      Dictionary<string, int> othersVisited)
+                {
+                    int x = Q.Count;
+                    while (x > 0)
+                    {
+                        var node = Q.Dequeue();
+                        string word = node.Item1;
+                        int level = node.Item2;
+                        for (int i = 0; i < L; i++)
+                        {
+                            string newWord = word.Substring(0, i) + '*' +
+                                             word.Substring(i + 1, L - i - 1);
+                            if (allComboDict.ContainsKey(newWord))
+                            {
+                                foreach (string adjacentWord in allComboDict[newWord])
+                                {
+                                    if (othersVisited.ContainsKey(adjacentWord))
+                                    {
+                                        return level + othersVisited[adjacentWord];
+                                    }
+
+                                    if (!visited.ContainsKey(adjacentWord))
+                                    {
+                                        visited.Add(adjacentWord, level + 1);
+                                        Q.Enqueue(new Tuple<string, int>(adjacentWord,
+                                                                         level + 1));
+                                    }
+                                }
+                            }
+                        }
+
+                        x--;
+                    }
+
+                    return -1;
+                }
+            }
+
+        }
+
+
+        /*
+        126. Word Ladder II
+        https://leetcode.com/problems/word-ladder-ii/description/
+
+        */
+        public class FindLaddersSol
+        {
+            /*
+            
+Approach 1: Breadth-First Search (BFS) + Backtracking
+Complexity Analysis
+•	Time complexity: O(NK2+α).
+Here N is the number of words in wordList, K is the maximum length of a word, α is the number of possible paths from beginWord to endWord in the directed graph we have.
+Copying the wordList into the set will take O(N).
+In BFS, every word will be traversed and for each word, we will find the neighbors using the function findNeighbors which has a time complexity of O(K2). Therefore the total complexity for all the N words will be O(NK2). Also, each word will be enqueued and will be removed from the set hence it will take O(N). The total time complexity of BFS will therefore be equal to O(NK2).
+While backtracking, we will essentially be finding all the paths from beginWord to
+endWord. Thus the time complexity will be equal to O(α).
+We can estimate the upper bound for α by assuming that every layer except the first and the last layer in the DAG has x number of words and is fully connected to the next layer. Let h represent the height of the DAG, so the total number of paths will be xh (because we can choose any one word out of x words in each layer and each choice will be part of a valid shortest path that leads to the endWord). Here, h equals (N−2)/x. This would result in x(N−2)/x total paths, which is maximized when x=2.718, which we will round to 3 because x must be an integer. Thus the upper bound for α is 3(N/3), however, this is a very loose bound because the nature of this problem precludes the possibility of a DAG where every layer is fully connected to the next layer.
+The total time complexity is therefore equal to O(NK2+α).
+•	Space complexity: O(NK).
+Here N is the Number of words in wordList, K is the Maximum length of a word.
+Storing the words in a set will take O(NK) space.
+To build the adjacency list O(N) space is required as the BFS will produce a directed
+graph and hence there will be at max (N−1) edges.
+In backtracking, stack space will be consumed which will be equal to the maximum number of active functions in the stack which is equal to the N as the path can have all the words in the wordList. Hence space required is O(N).
+The total space complexity is therefore equal to O(NK).
+
+
+            */
+
+
+            public IList<IList<string>> BSFWithBacktrack(string beginWord, string endWord,
+                                                    IList<string> wordList)
+            {
+                Dictionary<string, List<string>> adjList =
+   new Dictionary<string, List<string>>();
+
+                List<string> currPath = new List<string>();
+                List<IList<string>> shortestPaths = new List<IList<string>>();
+                // copying the words into the set for efficient deletion in BFS
+                HashSet<string> copiedWordList = new HashSet<string>(wordList);
+                BFS(beginWord, endWord, copiedWordList);
+
+                // every path will start from the endWord
+                currPath.Add(endWord);
+                // traverse the DAG to find all the paths between endWord and beginWord
+                Backtrack(endWord, beginWord);
+
+                return shortestPaths;
+
+
+
+                List<string> FindNeighbors(string word, HashSet<string> wordList)
+                {
+                    List<string> neighbors = new List<string>();
+                    char[] charList = word.ToCharArray();
+                    for (int i = 0; i < word.Length; i++)
+                    {
+                        char oldChar = charList[i];
+
+                        // replace the i-th character with all letters from a to z except
+                        // the original character
+                        for (char c = 'a'; c <= 'z'; c++)
+                        {
+                            charList[i] = c;
+
+                            // skip if the character is same as original or if the word is
+                            // not present in the wordList
+                            if (c == oldChar ||
+                                !wordList.Contains(string.Join("", charList)))
+                            {
+                                continue;
+                            }
+
+                            neighbors.Add(string.Join("", charList));
+                        }
+
+                        charList[i] = oldChar;
+                    }
+
+                    return neighbors;
+                }
+
+                void Backtrack(string source, string destination)
+                {
+                    // store the path if we reached the endWord
+                    if (source.Equals(destination))
+                    {
+                        List<string> tempPath = new List<string>(currPath);
+                        tempPath.Reverse();
+                        shortestPaths.Add(tempPath);
+                    }
+
+                    if (!adjList.ContainsKey(source))
+                    {
+                        return;
+                    }
+
+                    for (int i = 0; i < adjList[source].Count; i++)
+                    {
+                        currPath.Add(adjList[source][i]);
+                        Backtrack(adjList[source][i], destination);
+                        currPath.RemoveAt(currPath.Count - 1);
+                    }
+                }
+
+                void BFS(string beginWord, string endWord,
+                                HashSet<string> wordList)
+                {
+                    Queue<string> q = new Queue<string>();
+                    q.Enqueue(beginWord);
+
+                    // remove the root word which is the first layer in the BFS
+                    if (wordList.Contains(beginWord))
+                    {
+                        wordList.Remove(beginWord);
+                    }
+
+                    Dictionary<string, int> isEnqueued = new Dictionary<string, int>();
+                    isEnqueued[beginWord] = 1;
+
+                    while (q.Count > 0)
+                    {
+                        List<string> visited = new List<string>();
+                        for (int i = q.Count - 1; i >= 0; i--)
+                        {
+                            string currWord = q.Peek();
+                            q.Dequeue();
+
+                            // findNeighbors will have the adjacent words of the currWord
+                            List<string> neighbors = FindNeighbors(currWord, wordList);
+                            foreach (string word in neighbors)
+                            {
+                                visited.Add(word);
+                                if (!adjList.ContainsKey(word))
+                                {
+                                    adjList[word] = new List<string>();
+                                }
+
+                                // add the edge from word to currWord in the list
+                                adjList[word].Add(currWord);
+                                if (!isEnqueued.ContainsKey(word))
+                                {
+                                    q.Enqueue(word);
+                                    isEnqueued[word] = 1;
+                                }
+                            }
+                        }
+
+                        // removing the words of the previous layer
+                        for (int i = 0; i < visited.Count; i++)
+                        {
+                            if (wordList.Contains(visited[i]))
+                            {
+                                wordList.Remove(visited[i]);
+                            }
+                        }
+                    }
+                }
+            }
+
+            /*
+            Approach 2: Bidirectional Breadth-First Search (BFS) + Backtracking
+Complexity Analysis
+•	Time complexity: O(NK2+α).
+Here N is the Number of words in wordList, K is the maximum length of a word, α is the Number of possible paths from beginWord to endWord in the directed graph we have.
+Copying the wordList into the set will take O(N).
+In the worst-case scenario, the number of operations in the bidirectional BFS will be equal to the BFS approach discussed before. However, in some cases, this approach will perform better because the search space is reduced by selecting the shorter queue at each iteration. In bidirectional BFS, at most, every word will be traversed once, and for each word, we will find the neighbors using the function findNeighbors which has a time complexity of O(K2). Therefore the total complexity for all the N words will be O(NK2). Also, each word will be enqueued and will be removed from the set which will take O(N). Thus, the total time complexity of bidirectional BFS will be O(NK22).
+In the backtracking process, we will essentially find all of the paths from beginWord to endWord. Thus, the time complexity is equal to O(α).
+We can estimate the upper bound for α by assuming that every layer except the first and the last layer in the DAG has x number of words and is fully connected to the next layer. Let h represent the height of the DAG, so the total number of paths will be xh (because we can choose any one word out of x words in each layer and each choice will be part of a valid shortest path that leads to the endWord). Here, h equals (N−2)/x. This would result in x(N−2)/x total paths, which is maximized when x=2.718, which we will round to 3 because x must be an integer. Thus the upper bound for α is 3(N/3), however, this is a very loose bound because the nature of this problem precludes the possibility of a DAG where every layer is fully connected to the next layer.
+The total time complexity is therefore equal to O(NK2+α).
+•	Space complexity: O(NK).
+Here N is the Number of words in wordList, K is the Maximum length of a word.
+Storing the words in a set will take O(NK) space.
+To build the adjacency list O(N) space is required as the BFS will produce a directed graph and hence there will be at most (N−1) edges. Also, in the worst-case scenario, the combined size of both queues will be equal to N.
+In backtracking, stack space will be consumed which will be equal to the maximum number of active functions in the stack, which is equal to the N as the path can have all the words in the wordList. Hence the space required is O(N).
+The total space complexity is therefore equal to O(NK).
+
+            */
+
+
+            public IList<IList<string>> BidirectionBFSWithBacktrack(string beginWord, string endWord,
+                                                    IList<string> wordList)
+            {
+                Dictionary<string, List<string>> adjList =
+   new Dictionary<string, List<string>>();
+
+                List<string> currPath = new List<string>();
+                List<List<string>> shortestPaths = new List<List<string>>();
+                HashSet<string> copiedWordList = new HashSet<string>(wordList);
+                bool sequence_found = BFS(beginWord, endWord, copiedWordList);
+                if (sequence_found == false)
+                {
+                    return shortestPaths.ToArray();
+                }
+
+                currPath.Add(beginWord);
+                Backtrack(beginWord, endWord);
+                return shortestPaths.ToArray();
+
+
+
+                List<string> findNeighbors(string word, HashSet<string> wordList)
+                {
+                    List<string> neighbors = new List<string>();
+                    char[] charList = word.ToCharArray();
+                    for (int i = 0; i < word.Length; i++)
+                    {
+                        char oldChar = charList[i];
+                        for (char c = 'a'; c <= 'z'; c++)
+                        {
+                            charList[i] = c;
+                            if (c == oldChar || !wordList.Contains(new String(charList)))
+                            {
+                                continue;
+                            }
+
+                            neighbors.Add(new String(charList));
+                        }
+
+                        charList[i] = oldChar;
+                    }
+
+                    return neighbors;
+                }
+
+                void Backtrack(string source, string destination)
+                {
+                    if (source.Equals(destination))
+                    {
+                        List<string> tempPath = new List<string>(currPath);
+                        shortestPaths.Add(tempPath);
+                    }
+
+                    if (!adjList.ContainsKey(source))
+                    {
+                        return;
+                    }
+
+                    for (int i = 0; i < adjList[source].Count; i++)
+                    {
+                        currPath.Add(adjList[source][i]);
+                        Backtrack(adjList[source][i], destination);
+                        currPath.RemoveAt(currPath.Count - 1);
+                    }
+                }
+
+                void AddEdge(string word1, string word2, int direction)
+                {
+                    if (direction == 1)
+                    {
+                        if (!adjList.ContainsKey(word1))
+                        {
+                            adjList[word1] = new List<string>();
+                        }
+
+                        adjList[word1].Add(word2);
+                    }
+                    else
+                    {
+                        if (!adjList.ContainsKey(word2))
+                        {
+                            adjList[word2] = new List<string>();
+                        }
+
+                        adjList[word2].Add(word1);
+                    }
+                }
+
+                bool BFS(string beginWord, string endWord,
+                                HashSet<string> wordList)
+                {
+                    if (!wordList.Contains(endWord))
+                    {
+                        return false;
+                    }
+
+                    if (wordList.Contains(beginWord))
+                    {
+                        wordList.Remove(beginWord);
+                    }
+
+                    HashSet<string> forwardQueue = new HashSet<string>();
+                    HashSet<string> backwardQueue = new HashSet<string>();
+                    forwardQueue.Add(beginWord);
+                    backwardQueue.Add(endWord);
+                    bool found = false;
+                    int direction = 1;
+                    while (forwardQueue.Count != 0)
+                    {
+                        HashSet<string> visited = new HashSet<string>();
+                        if (forwardQueue.Count > backwardQueue.Count)
+                        {
+                            HashSet<string> temp = forwardQueue;
+                            forwardQueue = backwardQueue;
+                            backwardQueue = temp;
+                            direction ^= 1;
+                        }
+
+                        foreach (string currWord in forwardQueue)
+                        {
+                            List<string> neighbors = findNeighbors(currWord, wordList);
+                            foreach (string word in neighbors)
+                            {
+                                if (backwardQueue.Contains(word))
+                                {
+                                    found = true;
+                                    AddEdge(currWord, word, direction);
+                                }
+                                else if (!found && wordList.Contains(word) &&
+                                           !forwardQueue.Contains(word))
+                                {
+                                    visited.Add(word);
+                                    AddEdge(currWord, word, direction);
+                                }
+                            }
+                        }
+
+                        foreach (string currWord in forwardQueue)
+                        {
+                            if (wordList.Contains(currWord))
+                            {
+                                wordList.Remove(currWord);
+                            }
+                        }
+
+                        if (found)
+                        {
+                            break;
+                        }
+
+                        forwardQueue = visited;
+                    }
+
+                    return found;
+                }
+            }
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     }
+
+
+
+
+
+
+
+
+
 }

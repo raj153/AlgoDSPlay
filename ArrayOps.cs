@@ -2900,6 +2900,100 @@ Complexity Analysis
         }
 
         /*
+        80. Remove Duplicates from Sorted Array II
+        https://leetcode.com/problems/remove-duplicates-from-sorted-array-ii/description/
+
+        */
+        public class RemoveDuplicatesSortedArrayIISolution
+        {
+            /*
+            Approach 1: Popping Unwanted Duplicates (PUD)
+            Complexity Analysis
+•	Time Complexity: Let's see what the costly operations in our array are:
+o	We have to iterate over all the elements in the array. Suppose that the original array contains N elements, the time taken here would be O(N).
+o	Next, for every unwanted duplicate element, we will have to perform a delete operation and deletions in arrays are also O(N).
+o	The worst case would be when all the elements in the array are the same. In that case, we would be performing N−2 deletions thus giving us O(N2) complexity for deletions
+o	Overall complexity = O(N)+O(N^2)≡O(N^2).
+•	Space Complexity: O(1) since we are modifying the array in-place.
+
+            */
+            public int RemoveDuplicatesSortedArrayIIPUD(int[] nums)
+            {
+                if (nums.Length == 0)
+                {
+                    return 0;
+                }
+
+                int i = 1; // Pointer for current index in the array
+                int count = 1; // Count of the current element occurrences
+
+                for (int j = 1; j < nums.Length; j++)
+                {
+                    if (nums[j] == nums[j - 1])
+                    {
+                        count++; // Increment count for the current element
+                    }
+                    else
+                    {
+                        count = 1; // Reset count for new element
+                    }
+
+                    if (count <= 2)
+                    {
+                        nums[i++] = nums[j]; // Update the array in place
+                    }
+                }
+
+                return i; // Return the new array length
+            }
+            /*
+            Approach 2: Overwriting unwanted duplicates (OUD)
+
+            Complexity Analysis
+Time Complexity: O(N) since we process each element exactly once.
+Space Complexity: O(1).
+            
+            */
+            public int RemoveDuplicatesSortedArrayIIOUD(int[] nums)
+            {
+                if (nums.Length == 0)
+                {
+                    return 0;
+                }
+
+                int i = 1; // Pointer to iterate through the array
+                int j = 1; // Pointer to track position for valid elements
+                int count = 1; // Count of occurrences of the current element
+
+                while (i < nums.Length)
+                {
+                    if (nums[i] == nums[i - 1])
+                    {
+                        count++;
+                        if (count > 2)
+                        {
+                            i++;
+                            continue;
+                        }
+                    }
+                    else
+                    {
+                        count = 1;
+                    }
+                    nums[j] = nums[i];
+                    j++;
+                    i++;
+                }
+
+                // Java arrays can't be resized like C++ vectors,
+                // so we return the size directly.
+                return j;
+            }
+
+
+        }
+
+        /*
  27. Remove Element
 https://leetcode.com/problems/remove-element/description/	
        
@@ -3524,8 +3618,598 @@ nums is the input array, so the auxiliary space used is O(1).
             return n + 1;
         }
 
-        
-        
+        /*
+        53. Maximum Subarray
+        https://leetcode.com/problems/maximum-subarray/description/
+
+        */
+        public int MaxSubArray(int[] nums)
+        {
+            /*
+       Approach 1: Optimized Brute Force     
+         Complexity Analysis
+•	Time complexity: O(N^2), where N is the length of nums.
+We use 2 nested for loops, with each loop iterating through nums.
+•	Space complexity: O(1)
+No matter how big the input is, we are only ever using 2 variables: ans and currentSubarray.
+   
+            */
+            int maxSuAArray = MaxSubArrayNaiveOptimal(nums);
+            /*
+Approach 2: Dynamic Programming, Kadane's Algorithm (DPsKA)
+Complexity Analysis
+•	Time complexity: O(N), where N is the length of nums.
+We iterate through every element of nums exactly once.
+•	Space complexity: O(1)
+No matter how long the input is, we are only ever using 2 variables: currentSubarray and maxSubarray.
+          
+            */
+            maxSuAArray = MaxSubArrayDPKA(nums);
+            /*
+Approach 3: Divide and Conquer (Advanced) (DAC)
+   Complexity Analysis
+•	Time complexity: O(N⋅logN), where N is the length of nums.
+On our first call to findBestSubarray, we use for loops to visit every element of nums. Then, we split the array in half and call findBestSubarray with each half. Both those calls will then iterate through every element in that half, which combined is every element of nums again. Then, both those halves will be split in half, and 4 more calls to findBestSubarray will happen, each with a quarter of nums. As you can see, every time the array is split, we still need to handle every element of the original input nums. We have to do this logN times since that's how many times an array can be split in half.
+•	Space complexity: O(logN), where N is the length of nums.
+The extra space we use relative to input size is solely occupied by the recursion stack. Each time the array gets split in half, another call of findBestSubarray will be added to the recursion stack, until calls start to get resolved by the base case - remember, the base case happens at an empty array, which occurs after logN calls.
+         
+            */
+            maxSuAArray = MaxSubArrayDAC(nums);
+            return maxSuAArray;
+
+        }
+        public int MaxSubArrayNaiveOptimal(int[] nums)
+        {
+            int max_subarray = int.MinValue;
+            for (int i = 0; i < nums.Length; i++)
+            {
+                int current_subarray = 0;
+                for (int j = i; j < nums.Length; j++)
+                {
+                    current_subarray += nums[j];
+                    max_subarray = Math.Max(max_subarray, current_subarray);
+                }
+            }
+
+            return max_subarray;
+        }
+
+        public int MaxSubArrayDPKA(int[] nums)
+        {
+            // Initialize our variables using the first element.
+            int currentSubarray = nums[0];
+            int maxSubarray = nums[0];
+            // Start with the 2nd element since we already used the first one.
+            for (int i = 1; i < nums.Length; i++)
+            {
+                // If current_subarray is negative, throw it away. Otherwise, keep
+                // adding to it.
+                currentSubarray = Math.Max(nums[i], currentSubarray + nums[i]);
+                maxSubarray = Math.Max(maxSubarray, currentSubarray);
+            }
+
+            return maxSubarray;
+
+        }
+
+        private int[] numsArray;
+
+        public int MaxSubArrayDAC(int[] nums)
+        {
+            numsArray = nums;
+            // Our helper function is designed to solve this problem for
+            // any array - so just call it using the entire input!
+            return FindBestSubarray(0, numsArray.Length - 1);
+        }
+
+        private int FindBestSubarray(int left, int right)
+        {
+            // Base case - empty array.
+            if (left > right)
+            {
+                return Int32.MinValue;
+            }
+
+            int mid = (left + right) / 2;
+            int curr = 0;
+            int bestLeftSum = 0;
+            int bestRightSum = 0;
+            // Iterate from the middle to the beginning.
+            for (int i = mid - 1; i >= left; i--)
+            {
+                curr += numsArray[i];
+                bestLeftSum = Math.Max(bestLeftSum, curr);
+            }
+
+            // Reset curr and iterate from the middle to the end.
+            curr = 0;
+            for (int i = mid + 1; i <= right; i++)
+            {
+                curr += numsArray[i];
+                bestRightSum = Math.Max(bestRightSum, curr);
+            }
+
+            // The bestCombinedSum uses the middle element and the best possible sum
+            // from each half.
+            int bestCombinedSum = numsArray[mid] + bestLeftSum + bestRightSum;
+            // Find the best subarray possible from both halves.
+            int leftHalf = FindBestSubarray(left, mid - 1);
+            int rightHalf = FindBestSubarray(mid + 1, right);
+            // The largest of the 3 is the answer for any given input array.
+            return Math.Max(bestCombinedSum, Math.Max(leftHalf, rightHalf));
+        }
+
+        /*
+        189. Rotate Array
+        https://leetcode.com/problems/rotate-array/description/
+
+        */
+        public class RotateArraySol
+        {
+            public void RotateArray(int[] nums, int k)
+            {
+                /*
+         Approach 1: Brute Force       
+          Complexity Analysis
+    •	Time complexity: O(n×k).
+    All the numbers are shifted by one step(O(n))
+    k times.
+    •	Space complexity: O(1). No extra space is used.
+
+                */
+                RotateArrayNaive(nums, k);
+                /*
+    Approach 2: Using Extra Array (EA)
+    Complexity Analysis
+    •	Time complexity: O(n).
+    One pass is used to put the numbers in the new array.
+    And another pass to copy the new array to the original one.
+    •	Space complexity: O(n). Another array of the same size is used.
+
+                */
+                RotateArrayEA(nums, k);
+                /*
+
+    Approach 3: Using Cyclic Replacements (CR)
+    Complexity Analysis
+    •	Time complexity: O(n). Only one pass is used.
+    •	Space complexity: O(1). Constant extra space is used.
+
+
+                */
+                RotateArrayCR(nums, k);
+
+                /*
+
+        Approach 4: Using Reverse (Rev)
+        Complexity Analysis
+        •	Time complexity: O(n). n elements are reversed a total of three times.
+        •	Space complexity: O(1). No extra space is used.
+
+                */
+                RotateArrayRev(nums, k);
+
+            }
+
+            public void RotateArrayNaive(int[] nums, int k)
+            {
+                // speed up the rotation
+                k %= nums.Length;
+                int temp, previous;
+                for (int i = 0; i < k; i++)
+                {
+                    previous = nums[nums.Length - 1];
+                    for (int j = 0; j < nums.Length; j++)
+                    {
+                        temp = nums[j];
+                        nums[j] = previous;
+                        previous = temp;
+                    }
+                }
+            }
+            public void RotateArrayEA(int[] nums, int k)
+            {
+                int[] a = new int[nums.Length];
+                for (int i = 0; i < nums.Length; i++)
+                {
+                    a[(i + k) % nums.Length] = nums[i];
+                }
+                for (int i = 0; i < nums.Length; i++)
+                {
+                    nums[i] = a[i];
+                }
+            }
+            public void RotateArrayCR(int[] nums, int k)
+            {
+                k = k % nums.Length;
+                int count = 0;
+                for (int start = 0; count < nums.Length; start++)
+                {
+                    int current = start;
+                    int prev = nums[start];
+                    do
+                    {
+                        int next = (current + k) % nums.Length;
+                        int temp = nums[next];
+                        nums[next] = prev;
+                        prev = temp;
+                        current = next;
+                        count++;
+                    } while (start != current);
+                }
+            }
+            public void RotateArrayRev(int[] nums, int k)
+            {
+                k %= nums.Length;
+                Reverse(nums, 0, nums.Length - 1);
+                Reverse(nums, 0, k - 1);
+                Reverse(nums, k, nums.Length - 1);
+            }
+
+            public void Reverse(int[] nums, int start, int end)
+            {
+                while (start < end)
+                {
+                    int temp = nums[start];
+                    nums[start] = nums[end];
+                    nums[end] = temp;
+                    start++;
+                    end--;
+                }
+            }
+
+        }
+
+
+
+        /*
+        75. Sort Colors
+https://leetcode.com/problems/sort-colors/description/
+
+Approach 1: One Pass
+
+Complexity Analysis
+•	Time complexity : O(N) since it's one pass along the array of length N.
+•	Space complexity : O(1) since it's a constant space solution.
+
+        */
+        /*
+   Dutch National Flag problem solution.
+   */
+        public void SortColors(int[] nums)
+        {
+            // For all idx < i : nums[idx < i] = 0
+            // j is an index of elements under consideration
+            var p0 = 0;
+            var curr = 0;
+            // For all idx > k : nums[idx > k] = 2
+            var p2 = nums.Length - 1;
+            while (curr <= p2)
+            {
+                if (nums[curr] == 0)
+                {
+                    // Swap p0-th and curr-th elements
+                    // i++ and j++
+                    int temp = nums[p0];
+                    nums[p0++] = nums[curr];
+                    nums[curr++] = temp;
+                }
+                else if (nums[curr] == 2)
+                {
+                    // Swap k-th and curr-th elements
+                    // p2--
+                    int temp = nums[curr];
+                    nums[curr] = nums[p2];
+                    nums[p2--] = temp;
+                }
+                else
+                    curr++;
+            }
+        }
+
+        /*
+        280. Wiggle Sort
+        https://leetcode.com/problems/wiggle-sort/description/
+
+        */
+        public class WiggleSortSolution
+        {
+            /*
+            Approach 1: Sorting
+       Complexity Analysis
+Let, n be the size of nums.
+•	Time complexity: O(n⋅log(n))
+o	The time it takes to sort nums is O(n⋅log(n)).
+o	We iterate over all the odd indices in O(n) time, then use the swap method to swap every odd index element with its next adjacent element in O(1) time per swap operation.
+•	Space complexity: O(1)
+o	For sorting, it depends on which algorithm we use to determine the space. However, sorting algorithms like heapsort take O(1) space.
+o	Other than a few integers i, j, and temp, we do not need any space.
+     
+            */
+            public void Swap(int[] nums, int i, int j)
+            {
+                int temp = nums[i];
+                nums[i] = nums[j];
+                nums[j] = temp;
+            }
+
+            public void WiggleSort(int[] nums)
+            {
+                Array.Sort(nums);
+                for (int i = 1; i < nums.Length - 1; i += 2)
+                {
+                    Swap(nums, i, i + 1);
+                }
+            }
+        }
+
+        /*
+        Approach 2: Greedy
+Complexity Analysis
+Let, n be the size of nums.
+•	Time complexity: O(n)
+o	We iterate over each nums element in O(n) time and, if necessary, use the swap method to swap the current element with the next element in O(1) time per swap operation.
+•	Space complexity: O(1)
+o	Other than a few integers i, j, and temp, we do not need any space.
+
+        */
+
+        public void WiggleSortGreedy(int[] nums)
+        {
+            for (int i = 0; i < nums.Length - 1; i++)
+            {
+                // Check if the current element is out of order with the next element
+                // For even indices, the current element should be less than or equal to the next element
+                // For odd indices, the current element should be greater than or equal to the next element
+                if (((i % 2 == 0) && nums[i] > nums[i + 1])
+                        || ((i % 2 == 1) && nums[i] < nums[i + 1]))
+                {
+                    Swap(nums, i, i + 1);
+                }
+            }
+        }
+
+        /*
+        88. Merge Sorted Array
+https://leetcode.com/problems/merge-sorted-array/description/
+
+        */
+        public class MergeSortedArraySol
+        {
+
+            /*
+            Approach 1: Merge and sort
+
+            Implementation
+•	Time complexity: O((n+m)log(n+m)).
+The cost of sorting a list of length x using a built-in sorting algorithm is O(xlogx). Because in this case, we're sorting a list of length m+n, we get a total time complexity of O((n+m)log(n+m)).
+•	Space complexity: O(n), but it can vary.
+Most programming languages have a built-in sorting algorithm that uses O(n) space.
+
+            */
+            public void MergeSortedArraySort(int[] nums1, int m, int[] nums2, int n)
+            {
+                for (int i = 0; i < n; i++)
+                {
+                    nums1[i + m] = nums2[i];
+                }
+
+                Array.Sort(nums1);
+            }
+
+            /*
+            
+Approach 2: Three Pointers (Start From the Beginning) (TPFrmBegin)
+Complexity Analysis
+•	Time complexity: O(n+m).
+We are performing n+2⋅m reads and n+2⋅m writes. Because constants are ignored in Big O notation, this gives us a time complexity of O(n+m).
+•	Space complexity: O(m).
+We are allocating an additional array of length m
+
+
+            */
+
+            public void MergeSortedArrayTPFrmBegin(int[] nums1, int m, int[] nums2, int n)
+            {
+                // Make a copy of the first m elements of nums1.
+                int[] nums1Copy = new int[m];
+                Array.Copy(nums1, 0, nums1Copy, 0, m);
+                // Read pointers for nums1Copy and nums2 respectively.
+                int p1 = 0;
+                int p2 = 0;
+                // Compare elements from nums1Copy and nums2 and write the smallest to
+                // nums1.
+                for (int p = 0; p < m + n; p++)
+                {
+                    // We also need to ensure that p1 and p2 aren't over the boundaries
+                    // of their respective arrays.
+                    if (p2 >= n || (p1 < m && nums1Copy[p1] < nums2[p2]))
+                    {
+                        nums1[p] = nums1Copy[p1++];
+                    }
+                    else
+                    {
+                        nums1[p] = nums2[p2++];
+                    }
+                }
+            }
+
+
+            /*
+            Approach 3: Three Pointers (Start From the End) (TPFrmEnd)
+
+            Complexity Analysis
+    •	Time complexity: O(n+m).
+    Same as Approach 2.
+    •	Space complexity: O(1).
+    Unlike Approach 2, we're not using an extra array.
+
+
+            */
+            public void MergeSortedArrayTPFrmEnd(int[] nums1, int m, int[] nums2, int n)
+            {
+                // Set p1 and p2 to point to the end of their respective arrays.
+                int p1 = m - 1;
+                int p2 = n - 1;
+                // And move p backward through the array, each time writing
+                // the smallest value pointed at by p1 or p2.
+                for (int p = m + n - 1; p >= 0; p--)
+                {
+                    if (p2 < 0)
+                    {
+                        break;
+                    }
+
+                    if (p1 >= 0 && nums1[p1] > nums2[p2])
+                    {
+                        nums1[p] = nums1[p1--];
+                    }
+                    else
+                    {
+                        nums1[p] = nums2[p2--];
+                    }
+                }
+            }
+
+
+        }
+
+
+        /*
+        2613. Beautiful Pairs
+        https://leetcode.com/problems/beautiful-pairs/description/
+        */
+        public class BeautifulPairSol
+        {
+            private List<int[]> points = new List<int[]>();
+
+            /*
+            Approach: Divide And Conquer
+            Time and Space Complexity
+The given code is a Python class method solving a problem similar in nature to the closest pair of points problem, but with the added goal of finding the "beautiful" pair with the smallest indices. The beautifulPair function implements a divide-and-conquer strategy with additional sorting and filtering. It is important to note that the problem has been slightly modified to find a pair within two lists of integers with additional adherence to the index-based constraints.
+Time Complexity:
+•	The initial sorting of points has a time complexity of O(N log N), where N is the length of the list nums1 (and nums2, which is assumed to be the same length).
+•	In the first loop to populate the points list and find duplicates, each iteration has constant time complexity, O(1), so the entire loop has a time complexity of O(N).
+•	The dfs function represents a modified version of the divide-and-conquer algortihm to find the closest pair of points, with the recursive calls happening twice for each level of recursion, and an additional step to filter and sort t :
+o	The recursive division of the dataset occurs log N times since the dataset is halved each time.
+o	The filtering of points (within the dist threshold) and sorting of subarray t will have a worst-case complexity of O(N log N).
+o	The nested loop comparison within the local sorted subset of points is O(N) in the worst case, as the inner loop breaks once d1 is exceeded. However, due to geometry, it is often seen as O(1) on average.
+•	The overall time complexity of the dfs function is thus O(N log^2 N) due to the combination of recursive splitting (logarithmic) and sorting within each recursive call (logarithmic).
+So, the total time complexity, taken by the sum of all contributing factors, is O(N log N) + O(N) + O(N log^2 N), which simplifies to O(N log^2 N) for large N.
+Space Complexity:
+•	Intermediate lists such as t in the dfs function can potentially store all points, leading to a space complexity of O(N).
+•	The points list which stores the input points with their indices incurs a space complexity of O(N).
+•	The recursion stack of the dfs function will use O(log N) space due to the divide-and-conquer approach.
+The total space complexity is therefore the sum of these, dominated by the space required for storage of point information, resulting in O(N) space complexity.
+
+            */
+            // Main method to find the 'beautiful pair' according to the problem statement
+            public int[] DivideAndConquer(int[] nums1, int[] nums2)
+            {
+                int length = nums1.Length;
+                Dictionary<long, List<int>> pairsList = new Dictionary<long, List<int>>();
+                for (int i = 0; i < length; ++i)
+                {
+                    long compositeNum = ComputeCompositeNumber(nums1[i], nums2[i]);
+                    // Map the composite number to its indices in the arrays
+                    if (!pairsList.ContainsKey(compositeNum))
+                        pairsList[compositeNum] = new List<int>();
+                    pairsList[compositeNum].Add(i);
+                }
+                for (int i = 0; i < length; ++i)
+                {
+                    long compositeNum = ComputeCompositeNumber(nums1[i], nums2[i]);
+                    // Quick check for a beautiful pair if more than one occurrence is found
+                    if (pairsList[compositeNum].Count > 1)
+                    {
+                        return new int[] { i, pairsList[compositeNum][1] };
+                    }
+                    // Store points along with their original indexes for later processing
+                    points.Add(new int[] { nums1[i], nums2[i], i });
+                }
+                // Sort points based on the value of the first element
+                points.Sort((a, b) => a[0].CompareTo(b[0]));
+                // Recursively find the beautiful pair by using divide-and-conquer strategy
+                int[] answer = FindClosestPair(0, points.Count - 1);
+                // Return the indices of the pair found
+                return new int[] { answer[1], answer[2] };
+            }
+
+            // Helper method to create a composite number for easy mapping
+            private long ComputeCompositeNumber(int x, int y)
+            {
+                return x * 100000L + y;
+            }
+
+            // Method to calculate Manhattan distance between two points
+            private int Distance(int x1, int y1, int x2, int y2)
+            {
+                return Math.Abs(x1 - x2) + Math.Abs(y1 - y2);
+            }
+
+            // Helper method that implements the divide-and-conquer approach to find the closest pair
+            private int[] FindClosestPair(int left, int right)
+            {
+                if (left >= right)
+                {
+                    // Return maximum possible value if no pair found
+                    return new int[] { int.MaxValue, -1, -1 };
+                }
+                int middle = (left + right) >> 1; // Find the midpoint
+                int pivotX = points[middle][0];
+                // Recursive calls to find the smallest pair in each half
+                int[] resultLeft = FindClosestPair(left, middle);
+                int[] resultRight = FindClosestPair(middle + 1, right);
+                // Determine the smaller distance of the pairs found
+                if (resultLeft[0] > resultRight[0]
+                    || (resultLeft[0] == resultRight[0] && (resultLeft[1] > resultRight[1]
+                    || (resultLeft[1] == resultRight[1] && resultLeft[2] > resultRight[2]))))
+                {
+                    resultLeft = resultRight;
+                }
+                List<int[]> filteredPoints = new List<int[]>();
+                for (int i = left; i <= right; ++i)
+                {
+                    // Filtering points that can possibly form the closest pair
+                    if (Math.Abs(points[i][0] - pivotX) <= resultLeft[0])
+                    {
+                        filteredPoints.Add(points[i]);
+                    }
+                }
+                // Sort the filtered points based on the second dimension
+                filteredPoints.Sort((a, b) => a[1].CompareTo(b[1]));
+                for (int i = 0; i < filteredPoints.Count; ++i)
+                {
+                    for (int j = i + 1; j < filteredPoints.Count; ++j)
+                    {
+                        // No farther points need to be checked after a certain threshold
+                        if (filteredPoints[j][1] - filteredPoints[i][1] > resultLeft[0])
+                        {
+                            break;
+                        }
+                        int firstIndex = Math.Min(filteredPoints[i][2], filteredPoints[j][2]);
+                        int secondIndex = Math.Max(filteredPoints[i][2], filteredPoints[j][2]);
+                        // Calculate the Manhattan distance between the pair of points
+                        int d = Distance(filteredPoints[i][0], filteredPoints[i][1],
+                                         filteredPoints[j][0], filteredPoints[j][1]);
+                        // Update the result if a closer pair is found
+                        if (d < resultLeft[0] || (d == resultLeft[0] && (firstIndex < resultLeft[1]
+                            || (firstIndex == resultLeft[1] && secondIndex < resultLeft[2]))))
+                        {
+                            resultLeft = new int[] { d, firstIndex, secondIndex };
+                        }
+                    }
+                }
+                return resultLeft;
+            }
+        }
+
+
+
+
+
+
+
     }
 
 
