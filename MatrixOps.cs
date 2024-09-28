@@ -3477,6 +3477,283 @@ no other space requirement.
         }
 
         /*
+        827. Making A Large Island
+        https://leetcode.com/problems/making-a-large-island/description/
+        */
+        public class LargestIslandSol
+        {
+            int[] directionRows = new int[] { -1, 0, 1, 0 };
+            int[] directionColumns = new int[] { 0, -1, 0, 1 };
+
+            /*
+            Approach 1: Naive Depth First Search
+           Complexity Analysis
+•	Time Complexity: O(N^4), where N is the length and width of the grid.
+•	Space Complexity: O(N^2), the additional space used in the depth first search by stack and seen.
+ 
+            */
+            public int NaiveDFS(int[][] grid)
+            {
+                int size = grid.Length;
+
+                int maximumArea = 0;
+                bool hasZero = false;
+                for (int row = 0; row < size; ++row)
+                    for (int column = 0; column < size; ++column)
+                        if (grid[row][column] == 0)
+                        {
+                            hasZero = true;
+                            grid[row][column] = 1;
+                            maximumArea = Math.Max(maximumArea, Check(grid, row, column));
+                            grid[row][column] = 0;
+                        }
+
+                return hasZero ? maximumArea : size * size;
+            }
+
+            private int Check(int[][] grid, int initialRow, int initialColumn)
+            {
+                int size = grid.Length;
+                Stack<int> positionStack = new Stack<int>();
+                HashSet<int> visitedPositions = new HashSet<int>();
+                positionStack.Push(initialRow * size + initialColumn);
+                visitedPositions.Add(initialRow * size + initialColumn);
+
+                while (positionStack.Count > 0)
+                {
+                    int code = positionStack.Pop();
+                    int row = code / size, column = code % size;
+                    for (int direction = 0; direction < 4; ++direction)
+                    {
+                        int newRow = row + directionRows[direction], newColumn = column + directionColumns[direction];
+                        if (!visitedPositions.Contains(newRow * size + newColumn) &&
+                            0 <= newRow && newRow < size &&
+                            0 <= newColumn && newColumn < size && grid[newRow][newColumn] == 1)
+                        {
+                            positionStack.Push(newRow * size + newColumn);
+                            visitedPositions.Add(newRow * size + newColumn);
+                        }
+                    }
+                }
+
+                return visitedPositions.Count;
+            }
+            /*
+            Approach #2: Component Sizes
+            Complexity Analysis
+•	Time Complexity: O(N^2), where N is the length and width of the grid.
+•	Space Complexity: O(N^2), the additional space used in the depth first search by area.
+
+            */
+            private int[,] grid;
+            private int gridSize;
+
+            public int UsingComponentSizes(int[,] grid)
+            {
+                this.grid = grid;
+                gridSize = grid.GetLength(0);
+
+                int index = 2;
+                int[] area = new int[gridSize * gridSize + 2];
+                for (int row = 0; row < gridSize; ++row)
+                    for (int column = 0; column < gridSize; ++column)
+                        if (grid[row, column] == 1)
+                            area[index] = Dfs(row, column, index++);
+
+                int maxArea = 0;
+                foreach (int x in area) maxArea = Math.Max(maxArea, x);
+                for (int row = 0; row < gridSize; ++row)
+                    for (int column = 0; column < gridSize; ++column)
+                        if (grid[row, column] == 0)
+                        {
+                            HashSet<int> seen = new HashSet<int>();
+                            foreach (int move in GetNeighbors(row, column))
+                                if (grid[move / gridSize, move % gridSize] > 1)
+                                    seen.Add(grid[move / gridSize, move % gridSize]);
+
+                            int bonus = 1;
+                            foreach (int i in seen) bonus += area[i];
+                            maxArea = Math.Max(maxArea, bonus);
+                        }
+
+                return maxArea;
+            }
+
+            private int Dfs(int row, int column, int index)
+            {
+                int areaCount = 1;
+                grid[row, column] = index;
+                foreach (int move in GetNeighbors(row, column))
+                {
+                    if (grid[move / gridSize, move % gridSize] == 1)
+                    {
+                        grid[move / gridSize, move % gridSize] = index;
+                        areaCount += Dfs(move / gridSize, move % gridSize, index);
+                    }
+                }
+
+                return areaCount;
+            }
+
+            private List<int> GetNeighbors(int row, int column)
+            {
+                List<int> neighbors = new List<int>();
+                for (int k = 0; k < 4; ++k)
+                {
+                    int newRow = row + directionRows[k];
+                    int newColumn = column + directionColumns[k];
+                    if (0 <= newRow && newRow < gridSize && 0 <= newColumn && newColumn < gridSize)
+                        neighbors.Add(newRow * gridSize + newColumn);
+                }
+
+                return neighbors;
+            }
+
+        }
+
+        /* 1254. Number of Closed Islands
+        https://leetcode.com/problems/number-of-closed-islands/description/
+         */
+        public class ClosedIslandSol
+        {
+            /*
+            Approach 1: Breadth First Search
+Complexity Analysis
+Here, m and n are the number of rows and columns in the given grid.
+•	Time complexity: O(m⋅n)
+o	Initializing the visit array takes O(m⋅n) time.
+o	We iterate over all the cells and find unvisited land cells to perform BFS traversal from those. This takes O(m⋅n) time.
+o	Each queue operation in the BFS algorithm takes O(1) time, and a single node can be pushed once, leading to O(m⋅n) operations for m⋅n nodes. We iterate over all the neighbors of each node that is popped out of the queue. So for every node, we would iterate four times to iterate over the neighbors, resulting in O(4⋅m⋅n)=O(m⋅n) operations total for all the nodes.
+•	Space complexity: O(m⋅n)
+o	The visit array takes O(m⋅n) space.
+o	The BFS queue takes O(m⋅n) space in the worst-case because each node is added once.
+
+            */
+            public int BFS(int[][] grid)
+            {
+                int rows = grid.Length;
+                int columns = grid[0].Length;
+                bool[][] visited = new bool[rows][];
+                for (int i = 0; i < rows; i++)
+                {
+                    visited[i] = new bool[columns];
+                }
+                int count = 0;
+                for (int row = 0; row < rows; row++)
+                {
+                    for (int column = 0; column < columns; column++)
+                    {
+                        if (grid[row][column] == 0 && !visited[row][column] && Bfs(row, column, rows, columns, grid, visited))
+                        {
+                            count++;
+                        }
+                    }
+                }
+                return count;
+            }
+
+            private bool Bfs(int x, int y, int rows, int columns, int[][] grid, bool[][] visited)
+            {
+                Queue<int[]> queue = new Queue<int[]>();
+                queue.Enqueue(new int[] { x, y });
+                visited[x][y] = true;
+                bool isClosed = true;
+
+                int[] directionX = { 0, 1, 0, -1 };
+                int[] directionY = { -1, 0, 1, 0 };
+
+                while (queue.Count > 0)
+                {
+                    int[] temp = queue.Dequeue();
+                    x = temp[0];
+                    y = temp[1];
+
+                    for (int i = 0; i < 4; i++)
+                    {
+                        int newRow = x + directionX[i];
+                        int newColumn = y + directionY[i];
+                        if (newRow < 0 || newRow >= rows || newColumn < 0 || newColumn >= columns)
+                        {
+                            // (x, y) is a boundary cell.
+                            isClosed = false;
+                        }
+                        else if (grid[newRow][newColumn] == 0 && !visited[newRow][newColumn])
+                        {
+                            queue.Enqueue(new int[] { newRow, newColumn });
+                            visited[newRow][newColumn] = true;
+                        }
+                    }
+                }
+
+                return isClosed;
+            }
+
+            /*
+            Approach 2: Depth First Search
+           Complexity Analysis
+Here, m and n are the number of rows and columns in the given grid.
+•	Time complexity: O(m⋅n)
+o	Initializing the visit array takes O(m⋅n) time.
+o	We iterate over all the cells and find unvisited land cells to perform DFS traversal from those. This takes O(m⋅n) time.
+o	The dfs function visits each node once, leading to O(m⋅n) operations for m⋅n nodes. We iterate over all the neighbors of each node that is popped out of the queue. So for every node, we would iterate four times to iterate over the neighbors, resulting in O(4⋅m⋅n)=O(m⋅n) operations total for all the nodes.
+•	Space complexity: O(m⋅n)
+o	The visit array takes O(m⋅n) space.
+o	The recursion stack used by dfs can have no more than O(m⋅n) elements in the worst-case scenario. It would take up O(m⋅n) space in that case.
+ 
+            */
+            public int DFS(int[][] grid)
+            {
+                int rowCount = grid.Length;
+                int columnCount = grid[0].Length;
+                bool[][] visited = new bool[rowCount][];
+                for (int i = 0; i < rowCount; i++)
+                {
+                    visited[i] = new bool[columnCount];
+                }
+                int closedIslandCount = 0;
+                for (int i = 0; i < rowCount; i++)
+                {
+                    for (int j = 0; j < columnCount; j++)
+                    {
+                        if (grid[i][j] == 0 && !visited[i][j] && Dfs(i, j, rowCount, columnCount, grid, visited))
+                        {
+                            closedIslandCount++;
+                        }
+                    }
+                }
+                return closedIslandCount;
+            }
+
+            public bool Dfs(int x, int y, int rowCount, int columnCount, int[][] grid, bool[][] visited)
+            {
+                if (x < 0 || x >= grid.Length || y < 0 || y >= grid[0].Length)
+                {
+                    return false;
+                }
+                if (grid[x][y] == 1 || visited[x][y])
+                {
+                    return true;
+                }
+
+                visited[x][y] = true;
+                bool isClosed = true;
+                int[] directionX = { 0, 1, 0, -1 };
+                int[] directionY = { -1, 0, 1, 0 };
+
+                for (int i = 0; i < 4; i++)
+                {
+                    int newRow = x + directionX[i];
+                    int newColumn = y + directionY[i];
+                    if (!Dfs(newRow, newColumn, rowCount, columnCount, grid, visited))
+                    {
+                        isClosed = false;
+                    }
+                }
+
+                return isClosed;
+            }
+        }
+        /*
         79. Word Search	
         https://leetcode.com/problems/word-search/description/
 
@@ -4633,6 +4910,124 @@ Approach #3: Dynamic Programming (Bottom Up)   (DPBU)
             dpArray[0][0] = grid[0][0];
             return dpArray;
 
+        }
+
+        /* 1463. Cherry Pickup II
+        https://leetcode.com/problems/cherry-pickup-ii/description/
+         */
+        class CherryPickupIISol
+        {
+            /*
+            Approach #1: Dynamic Programming (Top Down)
+            Complexity Analysis
+Let M be the number of rows in grid and N be the number of columns in grid.
+•	Time Complexity: O(M(N^2)), since our helper function have three variables as input, which have M, N, and N possible values respectively. In the worst case, we have to calculate them all once, so that would cost O(M⋅N⋅N)=O(M(N^2). Also, since we save the results after calculating, we would not have repeated calculation.
+•	Space Complexity: O(M(N^2), since our helper function have three variables as input, and they have M, N, and N possible values respectively. We need a map with size of O(M⋅N⋅N)=O(M(N^2) to store the results.
+
+            */
+            public int TopDownDP(int[][] grid)
+            {
+                int m = grid.Length;
+                int n = grid[0].Length;
+                int[][][] dpCache = new int[m][][];
+                // initial all elements to -1 to mark unseen
+                for (int i = 0; i < m; i++)
+                {
+                    for (int j = 0; j < n; j++)
+                    {
+                        for (int k = 0; k < n; k++)
+                        {
+                            dpCache[i][j][k] = -1;
+                        }
+                    }
+                }
+                return dp(0, 0, n - 1, grid, dpCache);
+            }
+
+            private int dp(int row, int col1, int col2, int[][] grid, int[][][] dpCache)
+            {
+                if (col1 < 0 || col1 >= grid[0].Length || col2 < 0 || col2 >= grid[0].Length)
+                {
+                    return 0;
+                }
+                // check cache
+                if (dpCache[row][col1][col2] != -1)
+                {
+                    return dpCache[row][col1][col2];
+                }
+                // current cell
+                int result = 0;
+                result += grid[row][col1];
+                if (col1 != col2)
+                {
+                    result += grid[row][col2];
+                }
+                // transition
+                if (row != grid.Length - 1)
+                {
+                    int max = 0;
+                    for (int newCol1 = col1 - 1; newCol1 <= col1 + 1; newCol1++)
+                    {
+                        for (int newCol2 = col2 - 1; newCol2 <= col2 + 1; newCol2++)
+                        {
+                            max = Math.Max(max, dp(row + 1, newCol1, newCol2, grid, dpCache));
+                        }
+                    }
+                    result += max;
+                }
+
+                dpCache[row][col1][col2] = result;
+                return result;
+            }
+            /*
+            Approach #2: Dynamic Programming (Bottom Up)
+Complexity Analysis
+Let M be the number of rows in grid and N be the number of columns in grid.
+•	Time Complexity: O(M(N^2)), since our dynamic programming has three nested for-loops, which have M, N, and N iterations respectively. In total, it costs O(M⋅N⋅N)=O(M(N^2)).
+•	Space Complexity: O(M(N^2)) if not use state compression, since our dp array has O(M⋅N⋅N)=O(M(N^2)) elements. O(N^2) if use state compression, since we can reuse the first dimension, and our dp array only has O(N⋅N)=O(N^2) elements.
+
+            */
+            public int BottomUpDP(int[][] grid)
+            {
+                int m = grid.Length;
+                int n = grid[0].Length;
+                int[][][] dp = new int[m][][];
+
+                for (int row = m - 1; row >= 0; row--)
+                {
+                    for (int col1 = 0; col1 < n; col1++)
+                    {
+                        for (int col2 = 0; col2 < n; col2++)
+                        {
+                            int result = 0;
+                            // current cell
+                            result += grid[row][col1];
+                            if (col1 != col2)
+                            {
+                                result += grid[row][col2];
+                            }
+                            // transition
+                            if (row != m - 1)
+                            {
+                                int max = 0;
+                                for (int newCol1 = col1 - 1; newCol1 <= col1 + 1; newCol1++)
+                                {
+                                    for (int newCol2 = col2 - 1; newCol2 <= col2 + 1; newCol2++)
+                                    {
+                                        if (newCol1 >= 0 && newCol1 < n && newCol2 >= 0 && newCol2 < n)
+                                        {
+                                            max = Math.Max(max, dp[row + 1][newCol1][newCol2]);
+                                        }
+                                    }
+                                }
+                                result += max;
+                            }
+                            dp[row][col1][col2] = result;
+                        }
+                    }
+                }
+                return dp[0][0][n - 1];
+            }
         }
 
         /*
@@ -6646,7 +7041,7 @@ Note: this problem can also be solved using DFS or BFS, but Dijkstra's is the mo
                 m = maze.Length;
                 n = maze[0].Length;
 
-                PriorityQueue<State,State> heap = new PriorityQueue<State,State>(Comparer<State>.Create((a, b) =>
+                PriorityQueue<State, State> heap = new PriorityQueue<State, State>(Comparer<State>.Create((a, b) =>
                 {
                     int distA = a.Dist;
                     int distB = b.Dist;
@@ -6660,7 +7055,7 @@ Note: this problem can also be solved using DFS or BFS, but Dijkstra's is the mo
                 }));
 
                 bool[,] seen = new bool[m, n];
-                var state= new State(ball[0], ball[1], 0, "");
+                var state = new State(ball[0], ball[1], 0, "");
                 heap.Enqueue(state, state);
 
                 while (heap.Count > 0)

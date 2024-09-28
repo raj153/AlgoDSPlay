@@ -1,247 +1,159 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using System.Reflection.Metadata;
 using System.Threading.Tasks;
 
 namespace AlgoDSPlay.Design
 {
-
-    /*
-    588. Design In-Memory File System
-    https://leetcode.com/problems/design-in-memory-file-system/
-
-    //Approach #1 Using separate Directory and File List
-    */
+    /*     1166. Design File System
+        https://leetcode.com/problems/design-file-system/description/
+     */
     public class FileSystem
     {
-
-        class Dir
-        {
-            public Dictionary<string, Dir> Dirs = new Dictionary<string, Dir>();
-            public Dictionary<string, string> Files = new Dictionary<string, string>();
-        }
-        Dir root;
-
-        public FileSystem()
-        {
-            root = new Dir();
-
-        }
         /*
-        The time complexity of executing an ls command is O(m+n+klog(k)). Here, m refers to the length of the input string. 
-        We need to scan the input string once to split it and determine the various levels. 
-        n refers to the depth of the last directory level in the given input for ls. 
-        This factor is taken because we need to enter n levels of the tree structure to reach the last level. k refers to the number of entries(files+subdirectories) in the last level directory(in the current input). 
-        We need to sort these names giving a factor of klog(k).
-        */
-        public List<string> Ls(string path)
-        {
-            Dir dir = root;
+        Approach 1: Dictionary for storing paths
+        Complexity Analysis
+•	Time Complexity: O(M), where M is the length of path. All the time is actually consumed by the operation that gives us the parent path. We first spend O(M) on finding the last "/" of the path and then another O(M) to obtain the parent string. Searching and addition into a HashMap/dictionary takes an ammortized O(1) time.
+•	Space Complexity: O(K) where K represents the number of unique paths that we add.
 
-            List<string> files = new List<string>();
-            if (!path.Equals("/"))
+        */
+        class FileSystemUsingDict
+        {
+            private Dictionary<string, int> paths;
+
+            public FileSystemUsingDict()
             {
-                string[] dirArr = path.Split("/");
-                for (int i = 0; i < dirArr.Length - 1; i++)
+                this.paths = new Dictionary<string, int>();
+            }
+
+            public bool CreatePath(string path, int value)
+            {
+                // Step-1: basic path validations
+                if (string.IsNullOrEmpty(path) || (path.Length == 1 && path.Equals("/")) || this.paths.ContainsKey(path))
                 {
-                    dir = dir.Dirs[dirArr[i]];
+                    return false;
                 }
-                if (dir.Files.ContainsKey(dirArr[dirArr.Length - 1]))
+
+                int delimIndex = path.LastIndexOf("/");
+                string parent = path.Substring(0, delimIndex);
+
+                // Step-2: if the parent doesn't exist. Note that "/" is a valid parent.
+                if (parent.Length > 1 && !this.paths.ContainsKey(parent))
                 {
-                    files.Add(dirArr[dirArr.Length - 1]);
-                    return files;
+                    return false;
                 }
-                else
+
+                // Step-3: add this new path and return true.
+                this.paths[path] = value;
+                return true;
+            }
+
+            public int Get(string path)
+            {
+                return this.paths.TryGetValue(path, out int value) ? value : -1;
+            }
+        }
+
+        /*
+        Approach 2: Trie based approach
+Complexity Analysis
+Before we get into the complexity analysis, let's see why one might prefer the Trie approach. The main advantage of the trie based approach is that we are able to save on space. All the paths sharing common prefixes can be represented by a common branch in the tree. The disadvantage however is that the get operation no longer remains O(1).
+•	Time Complexity:
+o	create ~ It takes O(T) to add a path to the trie if it contains T components.
+o	get ~ It takes O(T) to find a path in the trie if it contains T components.
+•	Space Complexity:
+o	create ~ Lets look at the worst case space complexity. In the worst case, none of the paths will have any common prefixes. We are not considering the ancestors of a larger path here. In such a case, each unique path will end up taking a different branch in the trie. Also, for a path containing T components, there will be T nodes in the trie.
+o	get ~ O(1).
+
+        */
+        public class FileSystemUsingTrie
+        {
+            // The TrieNode data structure.
+            private class TrieNode
+            {
+                public string Name { get; }
+                public int Value { get; set; } = -1;
+                public Dictionary<string, TrieNode> Map { get; } = new Dictionary<string, TrieNode>();
+
+                public TrieNode(string name)
                 {
-                    dir = dir.Dirs[dirArr[dirArr.Length - 1]];
+                    Name = name;
                 }
             }
-            files.AddRange(new List<string>(dir.Dirs.Keys));
-            files.AddRange(new List<string>(dir.Files.Keys));
-            files.Sort();
-            return files;
 
-        }
-        /*
-        The time complexity of executing an mkdir command is O(m+n). Here, m refers to the length of the input string. We need to scan the input string once to split it and determine the various levels. 
-                n refers to the depth of the last directory level in the mkdir input. This factor is taken because we need to enter n levels of the tree structure to reach the last level.
-        */
-        public void Mkdir(string path)
-        {
-            Dir curr = root;
-            String[] dirArr = path.Split("/");
-            foreach (string dir in dirArr)
+            private TrieNode root;
+
+            // Root node contains the empty string.
+            public FileSystemUsingTrie()
             {
-                if (!curr.Dirs.ContainsKey(dir))
-                    curr.Dirs.Add(dir, new Dir());
-
-                curr = curr.Dirs[dir];
-            }
-        }
-        /*
-        The time complexity of addContentToFile is O(m+n). 
-        Here, m refers to the length of the input string. We need to scan the input string once to split it and determine the various levels.
-        n refers to the depth of the file name in the current input. This factor is taken because we need to enter n levels of the tree structure to reach the level where the files's contents need to be added/read from.
-        */
-        public void AddContentToFile(string filePath, string content)
-        {
-            Dir curr = root;
-            string[] pathArr = filePath.Split("/");
-            for (int i = 0; i < pathArr.Length - 1; i++)
-            {
-                if (string.IsNullOrEmpty(pathArr[i])) continue;
-                curr = curr.Dirs[pathArr[i]];
-            }
-            string fileName = pathArr[pathArr.Length - 1];
-            if (!curr.Files.ContainsKey(fileName))
-            {
-                curr.Files.Add(fileName, "");
-                
-            }
-            curr.Files[fileName] += content;
-            
-        }
-
-        /*
-        The time complexity of addContentToFile is O(m+n). 
-        Here, m refers to the length of the input string. We need to scan the input string once to split it and determine the various levels.
-        n refers to the depth of the file name in the current input. This factor is taken because we need to enter n levels of the tree structure to reach the level where the files's contents need to be added/read from.
-        */
-
-        public string ReadContentFromFile(string filePath)
-        {            
-            Dir curr = root;
-
-            string[] pathArr = filePath.Split("/");
-            for (int i = 0; i < pathArr.Length - 1; i++)
-            {
-                if (string.IsNullOrEmpty(pathArr[i])) continue;
-                curr = curr.Dirs[pathArr[i]];
+                root = new TrieNode("");
             }
 
-            string fileName = pathArr[pathArr.Length - 1];
-
-            return curr.Files[fileName];
-        }
-
-
-
-        //Approach #2 Using unified Directory and File List[
-        public class FileSystemOptimal
-        {
-
-            class File
+            public bool CreatePath(string path, int value)
             {
-                public bool IsFile = false;
-                public string Content = "";
-                public Dictionary<string, File> Files = new Dictionary<string, File>();
-            }
-            File root;
+                // Obtain all the components
+                string[] components = path.Split('/');
 
-            public FileSystemOptimal()
-            {
-                root = new File();
+                // Start "current" from the root node.
+                TrieNode current = root;
 
-            }
-            /*
-            The time complexity of executing an ls command is O(m+n+klog(k)). Here, m refers to the length of the input string. 
-            We need to scan the input string once to split it and determine the various levels. 
-            n refers to the depth of the last directory level in the given input for ls. 
-            This factor is taken because we need to enter n levels of the tree structure to reach the last level. k refers to the number of entries(files+subdirectories) in the last level directory(in the current input). 
-            We need to sort these names giving a factor of klog(k).
-            */
-            public List<string> Ls(string path)
-            {
-                File file = root;
-
-                List<string> files = new List<string>();
-                if (!path.Equals("/"))
+                // Iterate over all the components.
+                for (int i = 1; i < components.Length; i++)
                 {
-                    string[] pathArr = path.Split("/");
-                    for (int i = 0; i < pathArr.Length -1; i++)
+                    string currentComponent = components[i];
+
+                    // For each component, we check if it exists in the current node's dictionary.
+                    if (!current.Map.ContainsKey(currentComponent))
                     {
-                        file = file.Files[pathArr[i]];
+                        // If it doesn't and it is the last node, add it to the Trie.
+                        if (i == components.Length - 1)
+                        {
+                            current.Map[currentComponent] = new TrieNode(currentComponent);
+                        }
+                        else
+                        {
+                            return false;
+                        }
                     }
-                    if (file.IsFile)
+
+                    current = current.Map[currentComponent];
+                }
+
+                // Value not equal to -1 means the path already exists in the trie. 
+                if (current.Value != -1)
+                {
+                    return false;
+                }
+
+                current.Value = value;
+                return true;
+            }
+
+            public int Get(string path)
+            {
+                // Obtain all the components
+                string[] components = path.Split('/');
+
+                // Start "current" from the root node.
+                TrieNode current = root;
+
+                // Iterate over all the components.
+                for (int i = 1; i < components.Length; i++)
+                {
+                    string currentComponent = components[i];
+
+                    // For each component, we check if it exists in the current node's dictionary.
+                    if (!current.Map.ContainsKey(currentComponent))
                     {
-                        files.Add(pathArr[pathArr.Length - 1]);
-                        return files;
+                        return -1;
                     }
-                    else
-                    {
-                        file = file.Files[pathArr[pathArr.Length - 1]];
-                    }
+
+                    current = current.Map[currentComponent];
                 }
-                files.AddRange(new List<string>(file.Files.Keys));
-                files.Sort();
-                return files;
 
-            }
-            /*
-            The time complexity of executing an mkdir command is O(m+n). Here, m refers to the length of the input string. We need to scan the input string once to split it and determine the various levels. 
-                    n refers to the depth of the last directory level in the mkdir input. This factor is taken because we need to enter n levels of the tree structure to reach the last level.
-            */
-            public void Mkdir(string path)
-            {
-                File file = root;
-                String[] pathArr = path.Split("/");
-                for (int i = 1; i < pathArr.Length; i++)
-                {
-                    if (!file.Files.ContainsKey(pathArr[i]))
-                        file.Files.Add(pathArr[i], new File());
-
-                    file = file.Files[pathArr[i]];
-                }
-            }
-            /*
-            The time complexity of addContentToFile is O(m+n). 
-            Here, m refers to the length of the input string. We need to scan the input string once to split it and determine the various levels.
-            n refers to the depth of the file name in the current input. This factor is taken because we need to enter n levels of the tree structure to reach the level where the files's contents need to be added/read from.
-            */
-            public void AddContentToFile(string filePath, string content)
-            {
-                File file = root;
-                string[] pathArr = filePath.Split("/");
-                for (int i = 1; i < pathArr.Length - 1; i++)
-                {
-                    file = file.Files[pathArr[i]];
-                }
-                if (!file.Files.ContainsKey(pathArr[pathArr.Length - 1]))
-                    file.Files[pathArr[pathArr.Length - 1]] = new File();
-
-                file = file.Files[pathArr[pathArr.Length - 1]];
-                file.IsFile = true;
-                file.Content += content;
-
-
-            }
-
-            /*
-            The time complexity of  readContentFromFile is O(m+n). 
-            Here, m refers to the length of the input string. We need to scan the input string once to split it and determine the various levels.
-            n refers to the depth of the file name in the current input. This factor is taken because we need to enter n levels of the tree structure to reach the level where the files's contents need to be added/read from.
-            */
-            public String ReadContentFromFile(String filePath)
-            {
-                File t = root;
-                String[] d = filePath.Split("/");
-                for (int i = 1; i < d.Length - 1; i++)
-                {
-                    t = t.Files[d[i]];
-                }
-                return t.Files[d[d.Length - 1]].Content;
+                return current.Value;
             }
         }
+
     }
-
-    /**
- * Your FileSystem object will be instantiated and called as such:
- * FileSystem obj = new FileSystem();
- * IList<string> param_1 = obj.Ls(path);
- * obj.Mkdir(path);
- * obj.AddContentToFile(filePath,content);
- * string param_4 = obj.ReadContentFromFile(filePath);
- */
 }
