@@ -4451,17 +4451,287 @@ Additional space is used for the TreeNode objects themselves, but that's account
         }
 
 
+        /* 834. Sum of Distances in Tree
+        https://leetcode.com/problems/sum-of-distances-in-tree/description/
+         */
+        public class SumOfDistancesInTreeSol
+        {
+            private int[] answerArray, nodeCount;
+            private List<HashSet<int>> adjacencyList;
+            private int totalNodes;
+
+            /*
+            Approach #1: Subtree Sum and Count [Accepted]
+            Complexity Analysis
+            •	Time Complexity: O(N), where N is the number of nodes in the graph.
+            •	Space Complexity: O(N).
+
+            */
+            public int[] SubtreeSumAndCount(int nodeCount, int[][] edges)
+            {
+                this.totalNodes = nodeCount;
+                adjacencyList = new List<HashSet<int>>();
+                answerArray = new int[nodeCount];
+                this.nodeCount = new int[nodeCount];
+                Array.Fill(this.nodeCount, 1);
+
+                for (int i = 0; i < nodeCount; ++i)
+                    adjacencyList.Add(new HashSet<int>());
+                foreach (int[] edge in edges)
+                {
+                    adjacencyList[edge[0]].Add(edge[1]);
+                    adjacencyList[edge[1]].Add(edge[0]);
+                }
+                DepthFirstSearch(0, -1);
+                DepthFirstSearchSecondPass(0, -1);
+                return answerArray;
+            }
+
+            private void DepthFirstSearch(int currentNode, int parentNode)
+            {
+                foreach (int childNode in adjacencyList[currentNode])
+                {
+                    if (childNode != parentNode)
+                    {
+                        DepthFirstSearch(childNode, currentNode);
+                        nodeCount[currentNode] += nodeCount[childNode];
+                        answerArray[currentNode] += answerArray[childNode] + nodeCount[childNode];
+                    }
+                }
+            }
+
+            private void DepthFirstSearchSecondPass(int currentNode, int parentNode)
+            {
+                foreach (int childNode in adjacencyList[currentNode])
+                {
+                    if (childNode != parentNode)
+                    {
+                        answerArray[childNode] = answerArray[currentNode] - nodeCount[childNode] + totalNodes - nodeCount[childNode];
+                        DepthFirstSearchSecondPass(childNode, currentNode);
+                    }
+                }
+            }
+        }
 
 
+        /* 3229. Minimum Operations to Make Array Equal to Target
+        https://leetcode.com/problems/minimum-operations-to-make-array-equal-to-target/description/
+         */
+        public class MinimumOperationsToMakeArrayEqualToTargetSol
+        {
+            /*
+            Appraoch1: keep track of how many increments & decrements are done till now
+            Complexity
+Time complexity: O(n)
+Space complexity: O(1)
+
+            */
+            public long MinimumOperations(int[] nums, int[] target)
+            {
+                var n = nums.Length;
+                long incr = 0, decr = 0, ops = 0;
+
+                for (var i = 0; i < n; i++)
+                {
+                    var diff = target[i] - nums[i];
+
+                    if (diff > 0)
+                    {
+                        if (incr < diff)
+                            ops += diff - incr;
+                        incr = diff;
+                        decr = 0;
+                    }
+                    else if (diff < 0)
+                    {
+                        if (diff < decr)
+                            ops += decr - diff;
+                        decr = diff;
+                        incr = 0;
+                    }
+                    else
+                    {
+                        incr = decr = 0;
+                    }
+                }
+
+                return ops;
+            }
+        }
+
+        /* 843. Guess the Word
+        https://leetcode.com/problems/guess-the-word/description/
+         */
+        class GuessTheWordSol
+        {
+            /*
+            4. Complexity
+Time Complexity: O(10n) = O(n), beucase the for loop runs 10 or less times and in each iteration, we traverse the wordlist,
+Space Complexity: O(10n) = O(n)
 
 
+            */
+            public class Master
+            {
+                public int Guess(string word) { return -1; } //Dummy code
+            }
+            public void FindSecretWord(string[] wordList, Master master)
+            {
+                Random randomGenerator = new Random();
+                for (int attempt = 0, matchCount = 0; attempt < 10 && matchCount != 6; attempt++)
+                {
+                    string guess = wordList[randomGenerator.Next(wordList.Length)];
+                    matchCount = master.Guess(guess);
+                    List<string> candidateWords = new List<string>();
+                    foreach (string word in wordList)
+                    {
+                        if (matchCount == GetMatches(guess, word))
+                        {
+                            candidateWords.Add(word);
+                        }
+                    }
 
+                    wordList = candidateWords.ToArray();
+                }
+            }
 
+            private int GetMatches(string firstWord, string secondWord)
+            {
+                int matchCount = 0;
+                for (int index = 0; index < firstWord.Length; index++)
+                {
+                    if (firstWord[index] == secondWord[index])
+                    {
+                        matchCount++;
+                    }
+                }
 
+                return matchCount;
+            }
+        }
 
+        /* 2035. Partition Array Into Two Arrays to Minimize Sum Difference
+        https://leetcode.com/problems/partition-array-into-two-arrays-to-minimize-sum-difference/description/
+         */
+        public class MinimumDifferenceSol
+        {
+            /*
+            Approach 1: Meet In Middle
+            TC
+O(2^n * log(2^n))
 
+            */
+            public int MeetInMiddle(int[] nums)
+            {
+                // Total sum.
+                int totalSum = 0;
+                foreach (int number in nums) totalSum += number;
 
+                // You can enumerate all sets using binary mask.
+                int halfLength = nums.Length / 2;
+                // 2^n * n
+                int[][] leftSums = SubsetSums(nums, halfLength, 0);
+                int[][] rightSums = SubsetSums(nums, halfLength, halfLength);
 
+                // Enumerate each left sum, find the best right sum
+                // which mins abs diff.
+                // n * 2^n, n ~= 15.
+                int minimumDifference = int.MaxValue;
+                for (int leftLength = 0; leftLength <= halfLength; leftLength++)
+                {
+                    int rightLength = halfLength - leftLength;
+                    int[] rightArray = rightSums[rightLength];
+                    foreach (int leftSum in leftSums[leftLength])
+                    {
+                        // search for closest r in terms of abs(r - target).
+                        int target = (totalSum - 2 * leftSum) / 2;
+                        int closestRightValue = BinarySearch(rightArray, target);
+
+                        minimumDifference = Math.Min(minimumDifference,
+                                  Math.Abs(2 * (leftSum + closestRightValue) - totalSum));
+                    }
+                }
+
+                return minimumDifference;
+            }
+
+            public int BinarySearch(int[] array, int target)
+            {
+                // searching for val closest to target.
+                // abs(*)
+                int leftIndex = 0;
+                int rightIndex = array.Length - 1;
+                while (leftIndex + 1 < rightIndex)
+                {
+                    int middleIndex = leftIndex + (rightIndex - leftIndex) / 2;
+                    if (array[middleIndex] <= target)
+                    {
+                        // -> last target
+                        leftIndex = middleIndex;
+                    }
+                    else
+                    {
+                        rightIndex = middleIndex;
+                    }
+                }
+
+                // leftIndex + 1 == rightIndex.
+                // return the closest one to target.
+                return Math.Abs(array[leftIndex] - target) > Math.Abs(array[rightIndex] - target) ?
+                    array[rightIndex] : array[leftIndex];
+            }
+
+            public int[][] SubsetSums(int[] nums, int size, int offset)
+            {
+                // picking subsets from n size sub array
+                // picking from: offset -> offset + n (excl).
+
+                // The bit mask stands for a subset, 1 means selected.
+                // We can pick masks upto this value.
+                // Any binary mask below this value stands for a valid subset.
+                int maxState = (1 << size) - 1;
+                // Len can be 0 -> n (incl)
+                // init res with prefixed size, determined by binomial (i, n);
+                int[][] result = new int[size + 1][];
+                int binomialCoefficient = 1;
+                result[0] = new int[binomialCoefficient];
+                for (int i = 1; i < size + 1; i++)
+                {
+                    binomialCoefficient = binomialCoefficient * (size - i + 1) / i;
+                    result[i] = new int[binomialCoefficient];
+                }
+
+                int[] lengthCounter = new int[size + 1];
+                for (int state = 0; state <= maxState; state++)
+                {
+                    // cur subset is s state.
+                    int length = CountBits(state);
+                    int sum = 0;
+                    for (int i = 0; i < size; i++)
+                    {
+                        // offset + i -> ele in nums.
+                        if ((state & (1 << i)) > 0) sum += nums[offset + i];
+                    }
+
+                    result[length][lengthCounter[length]] = sum;
+                    lengthCounter[length] += 1;
+                }
+
+                foreach (int[] array in result) Array.Sort(array);
+                return result;
+            }
+
+            private int CountBits(int number)
+            {
+                int count = 0;
+                while (number > 0)
+                {
+                    count += (number & 1);
+                    number >>= 1;
+                }
+                return count;
+            }
+        }
 
 
 

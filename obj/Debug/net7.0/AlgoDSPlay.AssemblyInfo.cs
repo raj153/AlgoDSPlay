@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("AlgoDSPlay")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+2d46d281498991b3cec26da0f6a1155106561bbb")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+c47c561dcc51513c2a324b32525da05ebc458607")]
 [assembly: System.Reflection.AssemblyProductAttribute("AlgoDSPlay")]
 [assembly: System.Reflection.AssemblyTitleAttribute("AlgoDSPlay")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

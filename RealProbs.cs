@@ -12177,7 +12177,299 @@ The dp array takes O(n) space. The set words takes up O(m⋅k) space.
 
         }
 
+        /* 140. Word Break II
+        https://leetcode.com/problems/word-break-ii/description/
+         */
 
+        public class WordBreakIISol
+        {
+            /*
+            Approach 1: Backtracking
+Complexity Analysis
+Let n be the length of the input string.
+•	Time complexity: O(n⋅(2^n))
+The algorithm explores all possible ways to break the string into words. In the worst case, where each character can be treated as a word, the recursion tree has 2n leaf nodes, resulting in an exponential time complexity. For each leaf node, O(n) work is performed, so the overall complexity is O(n⋅(2^n)).
+•	Space complexity: O(2^n)
+The recursion stack can grow up to a depth of n, where each recursive call consumes additional space for storing the current state.
+Since each position in the string can be a split point or not, and for n positions, there are (2^n) possible combinations of splits. Thus, in the worst case, each combination generates a different sentence that needs to be stored, leading to exponential space complexity.
+
+            */
+            public IList<string> UsingBacktracking(string inputString, IList<string> wordDictionary)
+            {
+                // Convert wordDictionary to a HashSet for O(1) lookups
+                HashSet<string> wordSet = new HashSet<string>(wordDictionary);
+                List<string> results = new List<string>();
+                // Start the backtracking process
+                Backtrack(inputString, wordSet, new StringBuilder(), results, 0);
+                return results;
+            }
+
+            private void Backtrack(
+                string inputString,
+                HashSet<string> wordSet,
+                StringBuilder currentSentence,
+                List<string> results,
+                int startIndex
+            )
+            {
+                // If we've reached the end of the string, add the current sentence to results
+                if (startIndex == inputString.Length)
+                {
+                    results.Add(currentSentence.ToString().Trim());
+                    return;
+                }
+
+                // Iterate over possible end indices
+                for (int endIndex = startIndex + 1; endIndex <= inputString.Length; endIndex++)
+                {
+                    string word = inputString.Substring(startIndex, endIndex - startIndex);
+                    // If the word is in the set, proceed with backtracking
+                    if (wordSet.Contains(word))
+                    {
+                        int currentLength = currentSentence.Length;
+                        currentSentence.Append(word).Append(" ");
+                        // Recursively call backtrack with the new end index
+                        Backtrack(inputString, wordSet, currentSentence, results, endIndex);
+                        // Reset currentSentence to its original length
+                        currentSentence.Length = currentLength;
+                    }
+                }
+
+            }
+            /*
+            Approach 2: Dynamic Programming - Memoization
+            Complexity Analysis
+           Let n be the length of the input string.
+           •	Time complexity: O(n⋅(2^n))
+           While memoization avoids redundant computations, it does not change the overall number of subproblems that need to be solved. In the worst case, there are still unique (2^n) possible substrings that need to be explored, leading to an exponential time complexity. For each subproblem, O(n) work is performed, so the overall complexity is O(n⋅(2^n)).
+           •	Space complexity: O(n⋅(2^n))
+           The recursion stack can grow up to a depth of n, where each recursive call consumes additional space for storing the current state.
+           The memoization map needs to store the results for all possible substrings, which can be up to (2^n) substrings of size n in the worst case, resulting in an exponential space complexity.
+
+
+           */
+            // Main function to break the string into words
+            public List<string> DPMemoDFS(string inputString, List<string> wordDictionary)
+            {
+                HashSet<string> wordSet = new HashSet<string>(wordDictionary);
+                Dictionary<string, List<string>> memoization = new Dictionary<string, List<string>>();
+                return DepthFirstSearch(inputString, wordSet, memoization);
+            }
+
+            // Depth-first search function to find all possible word break combinations
+            private List<string> DepthFirstSearch(
+                string remainingString,
+                HashSet<string> wordSet,
+                Dictionary<string, List<string>> memoization
+            )
+            {
+                // Check if result for this substring is already memoized
+                if (memoization.ContainsKey(remainingString))
+                {
+                    return memoization[remainingString];
+                }
+
+                // Base case: when the string is empty, return a list containing an empty string
+                if (remainingString == string.Empty) return new List<string> { string.Empty };
+                List<string> results = new List<string>();
+                for (int index = 1; index <= remainingString.Length; ++index)
+                {
+                    string currentWord = remainingString.Substring(0, index);
+                    // If the current substring is a valid word
+                    if (wordSet.Contains(currentWord))
+                    {
+                        foreach (string nextWord in DepthFirstSearch(
+                            remainingString.Substring(index),
+                            wordSet,
+                            memoization
+                        ))
+                        {
+                            // Append current word and next word with space in between if next word exists
+                            results.Add(currentWord + (nextWord == string.Empty ? string.Empty : " ") + nextWord);
+                        }
+                    }
+                }
+                // Memoize the results for the current substring
+                memoization[remainingString] = results;
+                return results;
+            }
+            /*
+            Approach 3: Dynamic Programming - Tabulation
+Complexity Analysis
+Let n be the length of the input string.
+•	Time complexity: O(n⋅(2^n))
+Similar to memoization, the tabulation approach still needs to explore all possible substrings, which can be up to (2^n) in the worst case, leading to an exponential time complexity. O(n) work is performed to explore each substring, so the overall complexity is O(n⋅(2^n)).
+•	Space complexity: O(n⋅(2^n))
+The dynamic programming table or map needs to store the valid sentences for all possible starting indices, which can be up to (2^n) strings of size n in the worst case, resulting in an exponential space complexity.
+
+            */
+            public List<string> DPTabulation(string inputString, List<string> wordDictionary)
+            {
+                // Dictionary to store results of subproblems
+                Dictionary<int, List<string>> dynamicProgramming = new Dictionary<int, List<string>>();
+
+                // Iterate from the end of the string to the beginning
+                for (int startIndex = inputString.Length; startIndex >= 0; startIndex--)
+                {
+                    // List to store valid sentences starting from startIndex
+                    List<string> validSentences = new List<string>();
+
+                    // Iterate from startIndex to the end of the string
+                    for (int endIndex = startIndex; endIndex < inputString.Length; endIndex++)
+                    {
+                        // Extract substring from startIndex to endIndex
+                        string currentWord = inputString.Substring(startIndex, endIndex - startIndex + 1);
+
+                        // Check if the current substring is a valid word
+                        if (IsWordInDictionary(currentWord, wordDictionary))
+                        {
+                            // If it's the last word, add it as a valid sentence
+                            if (endIndex == inputString.Length - 1)
+                            {
+                                validSentences.Add(currentWord);
+                            }
+                            else
+                            {
+                                // If it's not the last word, append it to each sentence formed by the remaining substring
+                                List<string> sentencesFromNextIndex;
+                                if (dynamicProgramming.TryGetValue(endIndex + 1, out sentencesFromNextIndex))
+                                {
+                                    foreach (string sentence in sentencesFromNextIndex)
+                                    {
+                                        validSentences.Add(currentWord + " " + sentence);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    // Store the valid sentences in dynamicProgramming
+                    dynamicProgramming[startIndex] = validSentences;
+                }
+                // Return the sentences formed from the entire string
+                return dynamicProgramming.ContainsKey(0) ? dynamicProgramming[0] : new List<string>();
+            }
+
+            // Helper function to check if a word is in the word dictionary
+            private bool IsWordInDictionary(string word, List<string> wordDictionary)
+            {
+                return wordDictionary.Contains(word);
+            }
+            /*
+            Approach 4: Trie Optimization
+           Complexity Analysis
+Let n be the length of the input string.
+•	Time complexity: O(n⋅(2^n))
+Even though the trie-based approach uses an efficient data structure for word lookup, it still needs to explore all possible ways to break the string into words. In the worst case, there are (2^n)unique possible partitions, leading to an exponential time complexity. O(n) work is performed for each partition, so the overall complexity is O(n⋅(2^n)).
+•	Space complexity: O(n⋅(2^n))
+The trie data structure itself can have a maximum of (2^n) nodes in the worst case, where each character in the string represents a separate word. Additionally, the tabulation map used in this approach can also store up to (2^n) strings of size n, resulting in an overall exponential space complexity.
+ 
+            */
+            public IList<string> UsingTrie(string s, IList<string> wordDict)
+            {
+                // Build the Trie from the word dictionary
+                Trie trie = new Trie();
+                foreach (string word in wordDict)
+                {
+                    trie.Insert(word);
+                }
+
+                // Map to store results of subproblems
+                Dictionary<int, List<string>> dp = new Dictionary<int, List<string>>();
+
+                // Iterate from the end of the string to the beginning
+                for (int startIdx = s.Length; startIdx >= 0; startIdx--)
+                {
+                    // List to store valid sentences starting from startIdx
+                    List<string> validSentences = new List<string>();
+
+                    // Initialize current node to the root of the trie
+                    TrieNode currentNode = trie.Root;
+
+                    // Iterate from startIdx to the end of the string
+                    for (int endIdx = startIdx; endIdx < s.Length; endIdx++)
+                    {
+                        char c = s[endIdx];
+                        int index = c - 'a';
+
+                        // Check if the current character exists in the trie
+                        if (currentNode.Children[index] == null)
+                        {
+                            break;
+                        }
+
+                        // Move to the next node in the trie
+                        currentNode = currentNode.Children[index];
+
+                        // Check if we have found a valid word
+                        if (currentNode.IsEnd)
+                        {
+                            string currentWord = s.Substring(startIdx, endIdx - startIdx + 1);
+
+                            // If it's the last word, add it as a valid sentence
+                            if (endIdx == s.Length - 1)
+                            {
+                                validSentences.Add(currentWord);
+                            }
+                            else
+                            {
+                                // If it's not the last word, append it to each sentence formed by the remaining substring
+                                if (dp.TryGetValue(endIdx + 1, out List<string> sentencesFromNextIndex))
+                                {
+                                    foreach (string sentence in sentencesFromNextIndex)
+                                    {
+                                        validSentences.Add(currentWord + " " + sentence);
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    // Store the valid sentences in dp
+                    dp[startIdx] = validSentences;
+                }
+
+                // Return the sentences formed from the entire string
+                return dp.TryGetValue(0, out List<string> result) ? result : new List<string>();
+            }
+            public class TrieNode
+            {
+                public bool IsEnd;
+                public TrieNode[] Children;
+
+                public TrieNode()
+                {
+                    IsEnd = false;
+                    Children = new TrieNode[26];
+                }
+            }
+
+            public class Trie
+            {
+                public TrieNode Root;
+
+                public Trie()
+                {
+                    Root = new TrieNode();
+                }
+
+                public void Insert(string word)
+                {
+                    TrieNode node = Root;
+                    foreach (char c in word)
+                    {
+                        int index = c - 'a';
+                        if (node.Children[index] == null)
+                        {
+                            node.Children[index] = new TrieNode();
+                        }
+                        node = node.Children[index];
+                    }
+                    node.IsEnd = true;
+                }
+            }
+
+        }
+      
         /*
         2534. Time Taken to Cross the Door
         https://leetcode.com/problems/time-taken-to-cross-the-door/description/

@@ -283,99 +283,239 @@ namespace AlgoDSPlay
 
         }
         //https://www.algoexpert.io/questions/median-of-two-sorted-arrays
-        public float MedianOfTwoSortedArrays(int[] arrayOne, int[] arrayTwo)
+        /*         4. Median of Two Sorted Arrays
+        https://leetcode.com/problems/median-of-two-sorted-arrays/description
+         */
+        public class MedianOfTwoSortedArraysSol
         {
-        TODO:
-
-            //1. Naive - T:O(n+m) | O(1)
-            float median = MedianOfTwoSortedArraysNaive(arrayOne, arrayTwo);
-
-            //2Optimal.T:O(log(min(n+m))) | O(1) - using Binary Search variation
-            median = MedianOfTwoSortedArraysOptimal(arrayOne, arrayTwo);
-
-            return median;
-
-        }
-
-        private float MedianOfTwoSortedArraysOptimal(int[] arrayOne, int[] arrayTwo)
-        {
-            int[] smallArray = arrayOne.Length <= arrayTwo.Length ? arrayOne : arrayTwo;
-            int[] bigArray = arrayOne.Length >= arrayTwo.Length ? arrayOne : arrayTwo;
-
-            int leftIdx = 0;
-            int rightIdx = smallArray.Length - 1;
-            int mergeLeftIdx = (smallArray.Length + bigArray.Length - 1) / 2;
-            while (true)
+            //0. Naive - T:O(n+m) | s:O(1)
+            public float MedianOfTwoSortedArraysNaive(int[] arrayOne, int[] arrayTwo)
             {
+                int idxOne = 0, idxTwo = 0;
+                int midIdx = (arrayOne.Length + arrayTwo.Length - 1) / 2;
 
-                int smallPartitionIdx = (int)Math.Floor((double)(leftIdx + rightIdx) / 2);
-
-                int bigPartitionIdx = mergeLeftIdx - smallPartitionIdx - 1;
-
-                int smallMaxLeftValue = smallPartitionIdx >= 0 ? smallArray[smallPartitionIdx] : Int32.MinValue;
-                int smallMinRightValue = smallPartitionIdx + 1 < smallArray.Length ? smallArray[smallPartitionIdx + 1] : Int32.MaxValue;
-
-
-                int bigMaxLeftValue = bigPartitionIdx >= 0 ? bigArray[bigPartitionIdx] : Int32.MinValue;
-                int bigMinRightValue = bigPartitionIdx + 1 < bigArray.Length ? bigArray[bigPartitionIdx + 1] : Int32.MaxValue;
-
-                if (smallMaxLeftValue > bigMinRightValue)
+                while (idxOne + idxTwo < midIdx)
                 {
-                    rightIdx = smallPartitionIdx - 1;
+                    if (idxOne >= arrayOne.Length)
+                        idxTwo++;
+                    else if (idxTwo >= arrayTwo.Length)
+                    {
+                        idxOne++;
+                    }
+                    else if (arrayOne[idxOne] < arrayTwo[idxTwo])
+                    {
+                        idxOne++;
+                    }
+                    else idxTwo++;
                 }
-                else if (bigMaxLeftValue > smallMinRightValue)
+                int valueOne, valueTwo;
+                if (arrayOne.Length + arrayTwo.Length % 2 == 0)
+                { // case of even number size
+
+                    bool areBothValuesArrayOne = idxTwo >= arrayTwo.Length || (idxOne + 1 < arrayOne.Length && arrayTwo[idxTwo] > arrayOne[idxOne + 1]);
+                    bool areBothValuesArrayTwo = idxOne >= arrayOne.Length || (idxTwo + 1 < arrayTwo.Length && arrayOne[idxOne] > arrayTwo[idxTwo + 1]);
+
+                    valueOne = areBothValuesArrayOne ? arrayOne[idxOne + 1] : arrayTwo[idxTwo];
+                    valueTwo = areBothValuesArrayTwo ? arrayTwo[idxTwo + 1] : arrayOne[idxOne];
+
+                    return (float)(valueOne + valueTwo) / 2;
+                }
+                valueOne = idxOne < arrayOne.Length ? arrayOne[idxOne] : Int32.MaxValue;
+                valueTwo = idxTwo < arrayTwo.Length ? arrayTwo[idxTwo] : Int32.MaxValue;
+
+                return Math.Min(valueOne, valueTwo);
+            }
+
+            int p1 = 0, p2 = 0;
+            /*
+            Approach 1: Merge Sort
+Complexity Analysis
+Let m be the size of array nums1 and n be the size of array nums2.
+•	Time complexity: O(m+n)
+o	We get the smallest element by comparing two values at p1 and p2, it takes O(1) to compare two elements and move the corresponding pointer to the right.
+o	We need to traverse half of the arrays before reaching the median element(s).
+o	To sum up, the time complexity is O(m+n).
+•	Space complexity: O(1)
+o	We only need to maintain two pointers p1 and p2.
+
+            */
+            public double UsingMergeSort(int[] nums1, int[] nums2)
+            {
+                int m = nums1.Length, n = nums2.Length;
+                if ((m + n) % 2 == 0)
                 {
-                    leftIdx = smallPartitionIdx + 1;
+                    for (int i = 0; i < (m + n) / 2 - 1; ++i)
+                    {
+                        int tmp = GetMin(nums1, nums2);
+                    }
+
+                    return (double)(GetMin(nums1, nums2) + GetMin(nums1, nums2)) / 2;
                 }
                 else
                 {
-                    if ((smallArray.Length + bigArray.Length) % 2 == 0)
+                    for (int i = 0; i < (m + n) / 2; ++i)
                     {
-                        return (float)(Math.Max(smallMaxLeftValue, bigMaxLeftValue) +
-                                        Math.Min(smallMinRightValue, bigMinRightValue)) / 2;
+                        int tmp = GetMin(nums1, nums2);
                     }
-                    return Math.Max(smallMaxLeftValue, bigMaxLeftValue);
+
+                    return GetMin(nums1, nums2);
                 }
             }
-
-        }
-
-        private float MedianOfTwoSortedArraysNaive(int[] arrayOne, int[] arrayTwo)
-        {
-            int idxOne = 0, idxTwo = 0;
-            int midIdx = (arrayOne.Length + arrayTwo.Length - 1) / 2;
-
-            while (idxOne + idxTwo < midIdx)
+            private int GetMin(int[] nums1, int[] nums2)
             {
-                if (idxOne >= arrayOne.Length)
-                    idxTwo++;
-                else if (idxTwo >= arrayTwo.Length)
+                if (p1 < nums1.Length && p2 < nums2.Length)
                 {
-                    idxOne++;
+                    return nums1[p1] < nums2[p2] ? nums1[p1++] : nums2[p2++];
                 }
-                else if (arrayOne[idxOne] < arrayTwo[idxTwo])
+                else if (p1 < nums1.Length)
                 {
-                    idxOne++;
+                    return nums1[p1++];
                 }
-                else idxTwo++;
+                else if (p2 < nums2.Length)
+                {
+                    return nums2[p2++];
+                }
+
+                return -1;
             }
-            int valueOne, valueTwo;
-            if (arrayOne.Length + arrayTwo.Length % 2 == 0)
-            { // case of even number size
+            /*
+            Approach 2: Binary Search, Recursive
+Complexity Analysis
+Let m be the size of array nums1 and n be the size of array nums2.
+•	Time complexity: O(log(m⋅n))
+o	At each step, we cut one half off from either nums1 or nums2. If one of the arrays is emptied, we can directly get the target from the other array in a constant time. Therefore, the total time spent depends on when one of the arrays is cut into an empty array.
+o	In the worst-case scenario, we may need to cut both arrays before finding the target element.
+o	One of the two arrays is cut in half at each step, thus it takes logarithmic time to empty an array. The time to empty two arrays are independent of each other.
+o	Therefore, the time complexity is O(logm+logn).
+O(logm+logn)=O(log(m⋅n))
+•	Space complexity: O(logm+logn)
+o	Similar to the analysis on time complexity, the recursion steps depend on the number of iterations before we cut an array into an empty array. In the worst-case scenario, we need O(logm+logn) recursion steps.
+o	However, during the recursive self-call, we only need to maintain 4 pointers: a_start, a_end, b_start and b_end. The last step of the function is to call itself, so if tail call optimization is implemented, the call stack always has O(1) records.
+o	Please refer to Tail Call for more information on tail call optimization.
 
-                bool areBothValuesArrayOne = idxTwo >= arrayTwo.Length || (idxOne + 1 < arrayOne.Length && arrayTwo[idxTwo] > arrayOne[idxOne + 1]);
-                bool areBothValuesArrayTwo = idxOne >= arrayOne.Length || (idxTwo + 1 < arrayTwo.Length && arrayOne[idxOne] > arrayTwo[idxTwo + 1]);
-
-                valueOne = areBothValuesArrayOne ? arrayOne[idxOne + 1] : arrayTwo[idxTwo];
-                valueTwo = areBothValuesArrayTwo ? arrayTwo[idxTwo + 1] : arrayOne[idxOne];
-
-                return (float)(valueOne + valueTwo) / 2;
+            */
+            public double BinarySearchRec(int[] A, int[] B)
+            {
+                int na = A.Length, nb = B.Length;
+                int n = na + nb;
+                if ((na + nb) % 2 == 1)
+                {
+                    return Solve(A, B, n / 2, 0, na - 1, 0, nb - 1);
+                }
+                else
+                {
+                    return (double)(Solve(A, B, n / 2, 0, na - 1, 0, nb - 1) +
+                                    Solve(A, B, n / 2 - 1, 0, na - 1, 0, nb - 1)) /
+                           2;
+                }
             }
-            valueOne = idxOne < arrayOne.Length ? arrayOne[idxOne] : Int32.MaxValue;
-            valueTwo = idxTwo < arrayTwo.Length ? arrayTwo[idxTwo] : Int32.MaxValue;
 
-            return Math.Min(valueOne, valueTwo);
+            private int Solve(int[] A, int[] B, int k, int aStart, int aEnd, int bStart,
+                             int bEnd)
+            {
+                // If the segment of on array is empty, it means we have passed all
+                // its element, just return the corresponding element in the other
+                // array.
+                if (aEnd < aStart)
+                {
+                    return B[k - aStart];
+                }
+
+                if (bEnd < bStart)
+                {
+                    return A[k - bStart];
+                }
+
+                // Get the middle indexes and middle values of A and B.
+                int aIndex = (aStart + aEnd) / 2, bIndex = (bStart + bEnd) / 2;
+                int aValue = A[aIndex], bValue = B[bIndex];
+
+                // If k is in the right half of A + B, remove the smaller left half.
+                if (aIndex + bIndex < k)
+                {
+                    if (aValue > bValue)
+                    {
+                        return Solve(A, B, k, aStart, aEnd, bIndex + 1, bEnd);
+                    }
+                    else
+                    {
+                        return Solve(A, B, k, aIndex + 1, aEnd, bStart, bEnd);
+                    }
+                }
+                // Otherwise, remove the larger right half.
+                else
+                {
+                    if (aValue > bValue)
+                    {
+                        return Solve(A, B, k, aStart, aIndex - 1, bStart, bEnd);
+                    }
+                    else
+                    {
+                        return Solve(A, B, k, aStart, aEnd, bStart, bIndex - 1);
+                    }
+                }
+            }
+            /*
+            Approach 3: A Better Binary Search
+            Complexity Analysis
+            Let m be the size of array nums1 and n be the size of array nums2.
+            •	Time complexity: O(log(min(m,n)))
+            o	We perform a binary search over the smaller array of size min(m,n).
+            •	Space complexity: O(1)
+            o	The algorithm only requires a constant amount of additional space to store and update a few parameters during the binary search.
+
+            */
+            public double FindMedianSortedArrays(int[] nums1, int[] nums2)
+            {
+                if (nums1.Length > nums2.Length)
+                {
+                    return FindMedianSortedArrays(nums2, nums1);
+                }
+
+                int m = nums1.Length, n = nums2.Length;
+                int left = 0, right = m;
+
+                while (left <= right)
+                {
+                    int partitionA = (left + right) / 2;
+                    int partitionB = (m + n + 1) / 2 - partitionA;
+
+                    int maxLeftA =
+                        (partitionA == 0) ? int.MinValue : nums1[partitionA - 1];
+                    int minRightA =
+                        (partitionA == m) ? int.MaxValue : nums1[partitionA];
+                    int maxLeftB =
+                        (partitionB == 0) ? int.MinValue : nums2[partitionB - 1];
+                    int minRightB =
+                        (partitionB == n) ? int.MaxValue : nums2[partitionB];
+
+                    if (maxLeftA <= minRightB && maxLeftB <= minRightA)
+                    {
+                        if ((m + n) % 2 == 0)
+                        {
+                            return (Math.Max(maxLeftA, maxLeftB) +
+                                    Math.Min(minRightA, minRightB)) /
+                                   2.0;
+                        }
+                        else
+                        {
+                            return Math.Max(maxLeftA, maxLeftB);
+                        }
+                    }
+                    else if (maxLeftA > minRightB)
+                    {
+                        right = partitionA - 1;
+                    }
+                    else
+                    {
+                        left = partitionA + 1;
+                    }
+                }
+
+                return 0.0;
+            }
         }
+
         //https://www.algoexpert.io/questions/sort-k-sorted-array
         public static int[] SortedKSortedArray(int[] array, int k)
         {
@@ -4203,6 +4343,185 @@ The total space complexity is therefore the sum of these, dominated by the space
                 return resultLeft;
             }
         }
+
+        /* 2366. Minimum Replacements to Sort the Array
+        https://leetcode.com/problems/minimum-replacements-to-sort-the-array/description/
+         */
+        class MinimumReplacementToSortArraySol
+        {
+            /*
+            Approach: Greedy
+            Complexity Analysis
+Let n be the size of nums.
+•	Time complexity: O(n)
+o	We iterate over nums once in reverse.
+o	At each step, we calculate num_elements, answer and nums[i], which takes O(1) time.
+•	Space complexity: O(1)
+o	We're modifying nums in place and not using any additional data structures that scale with the size of the input.
+o	Note that some interviewers might not want you to modify the input as it is not considered good practice in real-world coding. If that's the case, you could slightly modify the algorithm to use an integer to track the most recently split numbers.
+
+            */
+            public long WithGreedy(int[] nums)
+            {
+                long answer = 0;
+                int n = nums.Length;
+
+                // Start from the second last element, as the last one is always sorted.
+                for (int i = n - 2; i >= 0; i--)
+                {
+                    // No need to break if they are already in order.
+                    if (nums[i] <= nums[i + 1])
+                    {
+                        continue;
+                    }
+
+                    // Count how many elements are made from breaking nums[i].
+                    long numElements = (long)(nums[i] + nums[i + 1] - 1) / (long)nums[i + 1];
+
+                    // It requires numElements - 1 replacement operations.
+                    answer += numElements - 1;
+
+                    // Maximize nums[i] after replacement.
+                    nums[i] = nums[i] / (int)numElements;
+                }
+
+                return answer;
+            }
+        }
+
+        /* 1526. Minimum Number of Increments on Subarrays to Form a Target Array
+        https://leetcode.com/problems/minimum-number-of-increments-on-subarrays-to-form-a-target-array/description/
+         */
+        public class MinNumberOperationsSol
+        {
+            public int MinNumberOperations(int[] target)
+            {
+                int count = target[0];
+
+                for (int i = 1; i < target.Length; i++)
+                    count += Math.Max(target[i] - target[i - 1], 0);
+
+                return count;
+
+            }
+        }
+
+
+        /* 472. Concatenated Words
+        https://leetcode.com/problems/concatenated-words/description/
+         */
+        public class FindAllConcatenatedWordsInADictionarySol
+        {
+            /*
+            
+Approach 1: Dynamic Programming
+Complexity Analysis
+Here, N is the total number of strings in the array words, namely words.length, and M is the length of the longest string in the array words.
+•	Time complexity: O(M^3⋅N).
+Although we use HashSet, we need to consider the cost to calculate the hash value of a string internally which would be O(M). So putting all words into the HashSet takes O(N∗M).
+For each word, the i and j loops take O(M^2). The internal logic to take the substring and search in the HashSet needs to calculate the hash value for the substring too, and it should take another O(M), so for each word, the time complexity is O(M^3) and the total time complexity for N words is O(M^3⋅N)
+•	Space complexity: O(N⋅M).
+This is just the space to save all words in the dictionary, if we don't take M as a constant.
+
+            */
+            public List<string> FindAllConcatenatedWordsInADictionary(string[] words)
+            {
+                HashSet<string> dictionary = new HashSet<string>(words);
+                List<string> concatenatedWords = new List<string>();
+
+                foreach (string word in words)
+                {
+                    int wordLength = word.Length;
+                    bool[] dynamicProgramming = new bool[wordLength + 1];
+                    dynamicProgramming[0] = true;
+
+                    for (int i = 1; i <= wordLength; ++i)
+                    {
+                        for (int j = (i == wordLength ? 1 : 0); !dynamicProgramming[i] && j < i; ++j)
+                        {
+                            dynamicProgramming[i] = dynamicProgramming[j] && dictionary.Contains(word.Substring(j, i - j));
+                        }
+                    }
+
+                    if (dynamicProgramming[wordLength])
+                    {
+                        concatenatedWords.Add(word);
+                    }
+                }
+                return concatenatedWords;
+            }
+
+            /*
+            Approach 2: DFS
+Complexity Analysis
+Here, N is the total number of strings in the array words, namely words.length, and M is the length of the longest string in the array words.
+•	Time complexity: O(M^3⋅N).
+For each word, the constructed graph has M nodes and O(M^2) edges, and the DFS algorithm for reachability is O(M^2) without considering the time complexities of substring and HashSet. If we consider everything, the time complexity to check one word is O(M^3) and the total time complexity to check all words is O(M^3⋅N).
+•	Space complexity: O(N⋅M).
+This is the space to save all words in the dictionary, if we don't take M as a constant, there is also O(M) for the call stack to execute DFS, which wouldn't affect the space complexity anyways.
+
+            */
+            public List<string> DFS(string[] words)
+            {
+                HashSet<string> dictionary = new HashSet<string>(words);
+                List<string> answer = new List<string>();
+                foreach (string word in words)
+                {
+                    int length = word.Length;
+                    bool[] visited = new bool[length];
+                    if (DepthFirstSearch(word, 0, visited, dictionary))
+                    {
+                        answer.Add(word);
+                    }
+                }
+                return answer;
+            }
+            private bool DepthFirstSearch(string word, int length, bool[] visited, HashSet<string> dictionary)
+            {
+                if (length == word.Length)
+                {
+                    return true;
+                }
+                if (visited[length])
+                {
+                    return false;
+                }
+                visited[length] = true;
+                for (int i = word.Length - (length == 0 ? 1 : 0); i > length; --i)
+                {
+                    if (dictionary.Contains(word.Substring(length, i - length))
+                        && DepthFirstSearch(word, i, visited, dictionary))
+                    {
+                        return true;
+                    }
+                }
+                return false;
+            }
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

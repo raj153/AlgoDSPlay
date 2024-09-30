@@ -1545,187 +1545,6 @@ namespace AlgoDSPlay
             return transposedMatrix;
         }
 
-        //https://www.algoexpert.io/questions/remove-islands
-        // O(wh) time | O(wh) space - where w and h
-        // are the width and height of the input matrix
-        public int[][] RemoveIslands1(int[][] matrix)
-        {
-            bool[,] onesConnectedToBorder = new bool[matrix.Length, matrix[0].Length];
-            for (int i = 0; i < matrix.Length; i++)
-            {
-                onesConnectedToBorder[i, matrix[0].Length - 1] = false;
-            }
-
-            // Find all the 1s that are not islands
-            for (int row = 0; row < matrix.Length; row++)
-            {
-                for (int col = 0; col < matrix[row].Length; col++)
-                {
-                    bool rowIsBorder = row == 0 || row == matrix.Length - 1;
-                    bool colIsBorder = col == 0 || col == matrix[row].Length - 1;
-                    bool isBorder = rowIsBorder || colIsBorder;
-
-                    if (!isBorder)
-                    {
-                        continue;
-                    }
-
-                    if (matrix[row][col] != 1)
-                    {
-                        continue;
-                    }
-
-                    FindOnesConnectedToBorder(matrix, row, col, onesConnectedToBorder);
-                }
-            }
-
-            for (int row = 1; row < matrix.Length - 1; row++)
-            {
-                for (int col = 1; col < matrix[row].Length - 1; col++)
-                {
-                    if (onesConnectedToBorder[row, col])
-                    {
-                        continue;
-                    }
-                    matrix[row][col] = 0;
-                }
-            }
-
-            return matrix;
-        }
-        public void FindOnesConnectedToBorder(
-          int[][] matrix, int startRow, int startCol, bool[,] onesConnectedToBorder
-        )
-        {
-            Stack<Tuple<int, int>> stack = new Stack<Tuple<int, int>>();
-            stack.Push(new Tuple<int, int>(startRow, startCol));
-
-            while (stack.Count > 0)
-            {
-                var currentPosition = stack.Pop();
-                int currentRow = currentPosition.Item1;
-                int currentCol = currentPosition.Item2;
-
-                bool alreadyVisited = onesConnectedToBorder[currentRow, currentCol];
-                if (alreadyVisited)
-                {
-                    continue;
-                }
-
-                onesConnectedToBorder[currentRow, currentCol] = true;
-
-                var neighbors = GetNeighbors(matrix, currentRow, currentCol);
-                foreach (var neighbor in neighbors)
-                {
-                    int row = neighbor.Item1;
-                    int col = neighbor.Item2;
-
-                    if (matrix[row][col] != 1)
-                    {
-                        continue;
-                    }
-                    stack.Push(neighbor);
-                }
-            }
-        }
-
-        public List<Tuple<int, int>> GetNeighbors(int[][] matrix, int row, int col)
-        {
-            int numRows = matrix.Length;
-            int numCols = matrix[row].Length;
-            List<Tuple<int, int>> neighbors = new List<Tuple<int, int>>();
-
-            if (row - 1 >= 0)
-            {
-                neighbors.Add(new Tuple<int, int>(row - 1, col));  // UP
-            }
-            if (row + 1 < numRows)
-            {
-                neighbors.Add(new Tuple<int, int>(row + 1, col));  // DOWN
-            }
-            if (col - 1 >= 0)
-            {
-                neighbors.Add(new Tuple<int, int>(row, col - 1));  // LEFT
-            }
-            if (col + 1 < numCols)
-            {
-                neighbors.Add(new Tuple<int, int>(row, col + 1));  // RIGHT
-            }
-            return neighbors;
-        }
-        // O(wh) time | O(wh) space - where w and h
-        // are the width and height of the input matrix
-        public int[][] RemoveIslands2(int[][] matrix)
-        {
-            for (int row = 0; row < matrix.Length; row++)
-            {
-                for (int col = 0; col < matrix[row].Length; col++)
-                {
-                    bool rowIsBorder = row == 0 || row == matrix.Length - 1;
-                    bool colIsBorder = col == 0 || col == matrix[row].Length - 1;
-                    bool isBorder = rowIsBorder || colIsBorder;
-
-                    if (!isBorder)
-                    {
-                        continue;
-                    }
-
-                    if (matrix[row][col] != 1)
-                    {
-                        continue;
-                    }
-
-                    changeOnesConnectedToBorderToTwos(matrix, row, col);
-                }
-            }
-
-            for (int row = 0; row < matrix.Length; row++)
-            {
-                for (int col = 0; col < matrix[row].Length; col++)
-                {
-                    int color = matrix[row][col];
-                    if (color == 1)
-                    {
-                        matrix[row][col] = 0;
-                    }
-                    else if (color == 2)
-                    {
-                        matrix[row][col] = 1;
-                    }
-                }
-            }
-
-            return matrix;
-        }
-        public void changeOnesConnectedToBorderToTwos(
-      int[][] matrix, int startRow, int startCol
-    )
-        {
-            Stack<Tuple<int, int>> stack = new Stack<Tuple<int, int>>();
-            stack.Push(new Tuple<int, int>(startRow, startCol));
-
-            while (stack.Count > 0)
-            {
-                var currentPosition = stack.Pop();
-                int currentRow = currentPosition.Item1;
-                int currentCol = currentPosition.Item2;
-
-                matrix[currentRow][currentCol] = 2;
-
-                var neighbors = GetNeighbors(matrix, currentRow, currentCol);
-                foreach (var neighbor in neighbors)
-                {
-                    int row = neighbor.Item1;
-                    int col = neighbor.Item2;
-
-                    if (matrix[row][col] != 1)
-                    {
-                        continue;
-                    }
-                    stack.Push(neighbor);
-                }
-            }
-        }
 
         //https://www.algoexpert.io/questions/zigzag-traverse
         // O(n) time | O(n) space - where n is the total number of elements in the
@@ -1793,171 +1612,7 @@ namespace AlgoDSPlay
             }
 
         }
-        ////https://www.algoexpert.io/questions/largest-island
 
-        //1.  O(w^2 * h^2) time | O(w * h) space - where w is the width of the matrix,
-        // and h is the height of the matrix
-        public int LargestIslandNaive(int[][] matrix)
-        {
-            int maxSize = 0;
-            for (int row = 0; row < matrix.Length; row++)
-            {
-                for (int col = 0; col < matrix[row].Length; col++)
-                {
-                    if (matrix[row][col] == 0)
-                    {
-                        continue;
-                    }
-                    maxSize = Math.Max(maxSize, getSizeFromNode(row, col, matrix));
-                }
-            }
-
-            return maxSize;
-        }
-
-        private int getSizeFromNode(int row, int col, int[][] matrix)
-        {
-            int size = 1;
-            bool[,] visited = new bool[matrix.Length, matrix[0].Length];
-            Stack<List<int>> nodesToExplore = new Stack<List<int>>();
-            getLandNeighbors(row, col, matrix, nodesToExplore);
-
-            while (nodesToExplore.Count > 0)
-            {
-                List<int> currentNode = nodesToExplore.Pop();
-                int currentRow = currentNode[0];
-                int currentCol = currentNode[1];
-
-                if (visited[currentRow, currentCol])
-                {
-                    continue;
-                }
-                visited[currentRow, currentCol] = true;
-
-                size++;
-                getLandNeighbors(currentRow, currentCol, matrix, nodesToExplore);
-            }
-            return size;
-        }
-
-        private void getLandNeighbors(
-          int row, int col, int[][] matrix, Stack<List<int>> nodesToExplore
-        )
-        {
-            if (row > 0 && matrix[row - 1][col] != 1)
-            {
-                nodesToExplore.Push(new List<int> { row - 1, col });
-            }
-            if (row < matrix.Length - 1 && matrix[row + 1][col] != 1)
-            {
-                nodesToExplore.Push(new List<int> { row + 1, col });
-            }
-            if (col > 0 && matrix[row][col - 1] != 1)
-            {
-                nodesToExplore.Push(new List<int> { row, col - 1 });
-            }
-            if (col < matrix[0].Length - 1 && matrix[row][col + 1] != 1)
-            {
-                nodesToExplore.Push(new List<int> { row, col + 1 });
-            }
-        }
-
-        //2. O(w * h) time | O(w * h) space - where w is the width of the matrix, and
-        // h is the height of the matrix
-        public int LargestIslandOptimal(int[][] matrix)
-        {
-            List<int> islandSizes = new List<int>();
-            // islandNumber starts at 2 to avoid overwriting existing 0s and 1s
-            int islandNumber = 2;
-            for (int row = 0; row < matrix.Length; row++)
-            {
-                for (int col = 0; col < matrix[row].Length; col++)
-                {
-                    if (matrix[row][col] == 0)
-                    {
-                        islandSizes.Add(getSizeFromNode(row, col, matrix, islandNumber));
-                        islandNumber++;
-                    }
-                }
-            }
-
-            int maxSize = 0;
-            for (int row = 0; row < matrix.Length; row++)
-            {
-                for (int col = 0; col < matrix[row].Length; col++)
-                {
-                    if (matrix[row][col] != 1)
-                    {
-                        continue;
-                    }
-
-                    List<List<int>> landNeighbors = getLandNeighbors(row, col, matrix);
-                    HashSet<int> islands = new HashSet<int>();
-                    foreach (var neighbor in landNeighbors)
-                    {
-                        islands.Add(matrix[neighbor[0]][neighbor[1]]);
-                    }
-
-                    int size = 1;
-                    foreach (var island in islands)
-                    {
-                        size += islandSizes[island - 2];
-                    }
-                    maxSize = Math.Max(maxSize, size);
-                }
-            }
-            return maxSize;
-        }
-        private int getSizeFromNode(int row, int col, int[][] matrix, int islandNumber)
-        {
-            int size = 0;
-            Stack<List<int>> nodesToExplore = new Stack<List<int>>();
-            nodesToExplore.Push(new List<int> { row, col });
-
-            while (nodesToExplore.Count > 0)
-            {
-                List<int> currentNode = nodesToExplore.Pop();
-                int currentRow = currentNode[0];
-                int currentCol = currentNode[1];
-
-                if (matrix[currentRow][currentCol] != 0)
-                {
-                    continue;
-                }
-                matrix[currentRow][currentCol] = islandNumber;
-
-                size++;
-                List<List<int>> newNeighbors =
-                  getLandNeighbors(currentRow, currentCol, matrix);
-                foreach (var neighbor in newNeighbors)
-                {
-                    nodesToExplore.Push(neighbor);
-                }
-            }
-            return size;
-        }
-
-        private List<List<int>> getLandNeighbors(int row, int col, int[][] matrix)
-        {
-            List<List<int>> landNeighbors = new List<List<int>>();
-            if (row > 0 && matrix[row - 1][col] != 1)
-            {
-                landNeighbors.Add(new List<int> { row - 1, col });
-            }
-            if (row < matrix.Length - 1 && matrix[row + 1][col] != 1)
-            {
-                landNeighbors.Add(new List<int> { row + 1, col });
-            }
-            if (col > 0 && matrix[row][col - 1] != 1)
-            {
-                landNeighbors.Add(new List<int> { row, col - 1 });
-            }
-            if (col < matrix[0].Length - 1 && matrix[row][col + 1] != 1)
-            {
-                landNeighbors.Add(new List<int> { row, col + 1 });
-            }
-            return landNeighbors;
-        }
         //https://www.algoexpert.io/questions/line-through-points
         // O(n^2) time | O(n) space - where n is the number of points
         public int LineThroughPoints(int[][] points)
@@ -2267,1492 +1922,7 @@ namespace AlgoDSPlay
             throw new Exception("No redundant connection found.");
 
         }
-        /*
-        305. Number of Islands II
-        https://leetcode.com/problems/number-of-islands-ii/description/
 
-        UNION FIND
-    
-        •	Time complexity: O(m⋅n+l)
-            o	For T operations, the amortized time complexity of the union-find algorithm (using path compression with union by rank) is O(alpha(T)). Here, α(T) is the inverse Ackermann function that grows so slowly, that it doesn't exceed 4 for all reasonable T (approximately T<10600). You can read more about the complexity of union-find here. Because the function grows so slowly, we consider it to be O(1).
-            o	Initializing UnionFind takes O(m⋅n) time beacuse we are initializing the parent and rank arrays of size m∗n each.
-            o	For each position in positions, we perform addLand which takes O(1) time. Furthermore, we check all four neighbors of every position and if there is land at any neighbor, we perform union of position and the neighbor. Because there can only be four union operations at a time, each union operation would take O(4)=O(1) time. It would take O(l) time for l positions.
-            o	Obtaining the number of islands for each position and pushing it to answer takes O(1) per position. For l positions, it would take O(l) time.
-            o	As a result, the total time required is O(m⋅n+l).
-        •	Space complexity: O(m⋅n)
-            o	We are using the parent and rank arrays, both of which require O(m⋅n) space.
-            o	Other integers, such as count, and arrays, such as x and y take up O(1) space.
-
-        */
-
-        public List<int> NumIslands2(int rows, int columns, int[][] positions)
-        {
-            int[] xOffsets = { -1, 1, 0, 0 };
-            int[] yOffsets = { 0, 0, -1, 1 };
-            UnionFindExt unionFind = new UnionFindExt(rows * columns);
-            List<int> result = new List<int>();
-
-            foreach (int[] position in positions)
-            {
-                int landPosition = position[0] * columns + position[1];
-                unionFind.AddLand(landPosition);
-
-                for (int i = 0; i < 4; i++)
-                {
-                    int neighborRow = position[0] + xOffsets[i];
-                    int neighborColumn = position[1] + yOffsets[i];
-                    int neighborPosition = neighborRow * columns + neighborColumn;
-
-                    // If neighborRow and neighborColumn correspond to a point in the grid and there is a
-                    // land at that point, then merge it with the current land.
-                    if (neighborRow >= 0 && neighborRow < rows && neighborColumn >= 0 && neighborColumn < columns &&
-                            unionFind.IsLand(neighborPosition))
-                    {
-                        unionFind.Union(landPosition, neighborPosition);
-                    }
-                }
-                result.Add(unionFind.NumberOfIslands());
-            }
-            return result;
-        }
-
-        class UnionFindExt
-        {
-            private int[] parent;
-            private int[] rank;
-            private int count;
-
-            public UnionFindExt(int size)
-            {
-                parent = new int[size];
-                rank = new int[size];
-                for (int i = 0; i < size; i++)
-                    parent[i] = -1;
-                count = 0;
-            }
-
-            public void AddLand(int landIndex)
-            {
-                if (parent[landIndex] >= 0)
-                    return;
-                parent[landIndex] = landIndex;
-                count++;
-            }
-
-            public bool IsLand(int landIndex)
-            {
-                return parent[landIndex] >= 0;
-            }
-
-            public int NumberOfIslands()
-            {
-                return count;
-            }
-
-            public int Find(int landIndex)
-            {
-                if (parent[landIndex] != landIndex)
-                    parent[landIndex] = Find(parent[landIndex]);
-                return parent[landIndex];
-            }
-
-            public void Union(int landIndex1, int landIndex2)
-            {
-                int set1 = Find(landIndex1), set2 = Find(landIndex2);
-                if (set1 == set2)
-                {
-                    return;
-                }
-                else if (rank[set1] < rank[set2])
-                {
-                    parent[set1] = set2;
-                }
-                else if (rank[set1] > rank[set2])
-                {
-                    parent[set2] = set1;
-                }
-                else
-                {
-                    parent[set2] = set1;
-                    rank[set1]++;
-                }
-                count--;
-            }
-        }
-        /*
-        200. Number of Islands	
-        https://leetcode.com/problems/number-of-islands/description/
-        */
-        public int NumIslands(int[][] grid)
-        {
-            if (grid == null || grid.Length == 0) return 0;
-            int numberOfIslands = 0;
-
-            //1.DFS 
-            /*
-            Time complexity : O(M×N) where M is the number of rows and N is the number of columns.
-            Space complexity : worst case O(M×N) in case that the grid map is filled with lands where DFS goes by M×N deep.
-            */
-            numberOfIslands = NumIslandsDFS(grid);
-
-            //2.BFS 
-            /*
-            Time complexity : O(M×N) where M is the number of rows and N is the number of columns.
-            Space complexity : O(min(M,N)) because in worst case where the grid is filled with lands, the size of queue can grow up to min(M,N).
-            */
-            numberOfIslands = NumIslandsBFS(grid);
-
-            //3.Union Find (aka Disjoint Set)
-            /*
-            Time complexity : O(M×N) where M is the number of rows and N is the number of columns. Note that Union operation takes essentially constant time when UnionFind is implemented with both path compression and union by rank.
-            Space complexity : O(M×N) as required by UnionFind data structure.
-            */
-            numberOfIslands = NumIslandsUnionFind(grid);
-
-            return numberOfIslands;
-        }
-
-        private int NumIslandsUnionFind(int[][] grid)
-        {
-            if (grid == null || grid.Length == 0)
-            {
-                return 0;
-            }
-
-            int nr = grid.GetLength(0);
-            int nc = grid.GetLength(1);
-            UnionFindExt1 uf = new UnionFindExt1(grid);
-            for (int r = 0; r < nr; ++r)
-            {
-                for (int c = 0; c < nc; ++c)
-                {
-                    if (grid[r][c] == 1)
-                    {
-                        grid[r][c] = 0;
-                        if (r - 1 >= 0 && grid[r - 1][c] == 1)
-                        {
-                            uf.Union(r * nc + c, (r - 1) * nc + c);
-                        }
-                        if (r + 1 < nr && grid[r + 1][c] == 1)
-                        {
-                            uf.Union(r * nc + c, (r + 1) * nc + c);
-                        }
-                        if (c - 1 >= 0 && grid[r][c - 1] == 1)
-                        {
-                            uf.Union(r * nc + c, r * nc + c - 1);
-                        }
-                        if (c + 1 < nc && grid[r][c + 1] == 1)
-                        {
-                            uf.Union(r * nc + c, r * nc + c + 1);
-                        }
-                    }
-                }
-            }
-
-            return uf.GetCount();
-        }
-        private class UnionFindExt1
-        {
-            private int count; // # of connected components
-            private int[] parent;
-            private int[] rank;
-
-            public UnionFindExt1(int[][] grid)
-            { // for problem 200
-                count = 0;
-                int m = grid.GetLength(0);
-                int n = grid.GetLength(1);
-                parent = new int[m * n];
-                rank = new int[m * n];
-                for (int i = 0; i < m; ++i)
-                {
-                    for (int j = 0; j < n; ++j)
-                    {
-                        if (grid[i][j] == 1)
-                        {
-                            parent[i * n + j] = i * n + j;
-                            ++count;
-                        }
-                        rank[i * n + j] = 0;
-                    }
-                }
-            }
-
-            public int Find(int i)
-            { // path compression
-                if (parent[i] != i) parent[i] = Find(parent[i]);
-                return parent[i];
-            }
-
-            public void Union(int x, int y)
-            { // union with rank
-                int rootx = Find(x);
-                int rooty = Find(y);
-                if (rootx != rooty)
-                {
-                    if (rank[rootx] > rank[rooty])
-                    {
-                        parent[rooty] = rootx;
-                    }
-                    else if (rank[rootx] < rank[rooty])
-                    {
-                        parent[rootx] = rooty;
-                    }
-                    else
-                    {
-                        parent[rooty] = rootx;
-                        rank[rootx] += 1;
-                    }
-                    --count;
-                }
-            }
-
-            public int GetCount()
-            {
-                return count;
-            }
-        }
-        private int NumIslandsBFS(int[][] grid)
-        {
-            if (grid == null || grid.Length == 0)
-            {
-                return 0;
-            }
-
-            int nr = grid.GetLength(0);
-            int nc = grid.GetLength(1);
-            int numIslands = 0;
-
-            for (int r = 0; r < nr; ++r)
-            {
-                for (int c = 0; c < nc; ++c)
-                {
-                    if (grid[r][c] == 1)
-                    {
-                        ++numIslands;
-                        grid[r][c] = 0; // mark as visited
-                        Queue<int> neighbors = new Queue<int>();
-                        neighbors.Enqueue(r * nc + c);
-                        while (neighbors.Count > 0)
-                        {
-                            int id = neighbors.Dequeue();
-                            int row = id / nc;
-                            int col = id % nc;
-                            if (row - 1 >= 0 && grid[row - 1][col] == 1)
-                            {
-                                neighbors.Enqueue((row - 1) * nc + col);
-                                grid[row - 1][col] = 0;
-                            }
-                            if (row + 1 < nr && grid[row + 1][col] == 1)
-                            {
-                                neighbors.Enqueue((row + 1) * nc + col);
-                                grid[row + 1][col] = 0;
-                            }
-                            if (col - 1 >= 0 && grid[row][col - 1] == 1)
-                            {
-                                neighbors.Enqueue(row * nc + col - 1);
-                                grid[row][col - 1] = 0;
-                            }
-                            if (col + 1 < nc && grid[row][col + 1] == 1)
-                            {
-                                neighbors.Enqueue(row * nc + col + 1);
-                                grid[row][col + 1] = 0;
-                            }
-                        }
-                    }
-                }
-            }
-
-            return numIslands;
-        }
-
-        private int NumIslandsDFS(int[][] grid)
-        {
-            int numberOfIslands = 0;
-            for (int i = 0; i < grid.GetLength(0); i++)
-            {
-                for (int j = 0; j < grid.GetLength(1); j++)
-                {
-                    if (grid[i][j] == 1)
-                    {
-                        numberOfIslands++;
-                        NumIslandsDFS(grid, i, j);
-                    }
-                }
-            }
-            return numberOfIslands;
-
-        }
-
-        private void NumIslandsDFS(int[][] grid, int r, int c)
-        {
-            if (r < 0 || r >= grid.GetLength(0) || c < 0 || c >= grid.GetLength(1) || grid[r][c] != 1) return;
-
-            grid[r][c] = 0;
-
-            NumIslandsDFS(grid, r - 1, c);
-            NumIslandsDFS(grid, r, c + 1);
-            NumIslandsDFS(grid, r, c - 1);
-            NumIslandsDFS(grid, r + 1, c);
-
-        }
-
-        /*
-        694. Number of Distinct Islands
-        https://leetcode.com/problems/number-of-distinct-islands/description/
-        */
-        public int NumDistinctIslands(int[][] grid)
-        {
-            int numOFDistinctIslands = 0;
-            if (grid.Length == 0) return numOFDistinctIslands;
-
-            //1. BruteForce with DFS
-            /*Its inefficient because the operation for determining whether or not an island is unique requires looping through every coordinate of every island discovered so far
-
-            Time Complexity: O(M^2 * N^2).In the worst case, we would have a large grid, with many unique islands all of the same size, and the islands packed as closely together as possible. 
-                            This would mean that for each island we discover, we'd be looping over the cells of all the other islands we've discovered so far. 
-                            
-            Space complexity: O(N⋅M).The seen set requires O(N⋅M) memory. Additionally, each cell with land requires O(1) space in the islands array.
-            */
-            numOFDistinctIslands = NumDistinctIslandsNaive(grid);
-
-            //2. Hash By Local Coordinates with DFS
-            /* 
-            •	Time Complexity: O(M⋅N).
-            •	Space complexity: O(M⋅N). The seen set is the biggest use of additional memory
-            */
-
-            numOFDistinctIslands = NumDistinctIslandsOptimal(grid);
-
-            //3. Hash By Path Signature with DFS
-            /* 
-            •	Time Complexity: O(M⋅N).
-            •	Space complexity: O(M⋅N). The seen set is the biggest use of additional memory
-            */
-            numOFDistinctIslands = NumDistinctIslandsOptimal2(grid);
-
-            return numOFDistinctIslands;
-
-        }
-
-        private int NumDistinctIslandsOptimal2(int[][] grid)
-        {
-            if (grid == null || grid.Length == 0) return 0;
-            HashSet<string> set = new HashSet<string>();
-
-            for (int i = 0; i < grid.GetLength(0); i++)
-            {
-                for (int j = 0; j < grid.GetLength(1); j++)
-                {
-                    if (grid[i][j] == 1)
-                    {
-                        //START - X
-                        // Outofbounds or Water - O
-                        string path = ComputePath(grid, i, j, "X");
-                        set.Add(path);
-                    }
-                }
-            }
-
-            return set.Count();
-
-        }
-        private string ComputePath(int[][] grid, int i, int j, string direction)
-        {
-            if (i < 0 || i >= grid.GetLength(0) || j < 0 || j >= grid.GetLength(1) || grid[i][j] == 0) return "O";
-
-            grid[i][j] = 0;
-
-            string left = ComputePath(grid, i, j - 1, "L");
-            string right = ComputePath(grid, i, j + 1, "R");
-            string up = ComputePath(grid, i - 1, j, "U");
-            string down = ComputePath(grid, i + 1, j, "D");
-
-
-            return direction + left + right + up + down;
-        }
-
-        public int NumDistinctIslandsOptimal(int[][] grid)
-        {
-            this.grid = grid;
-            bool[][] seen = new bool[grid.Length][]; // Cells that have been explored. 
-
-            for (int i = 0; i < grid.Length; i++)
-            {
-                seen[i] = new bool[grid[0].Length];
-            }
-            HashSet<HashSet<(int, int)>> islands = new HashSet<HashSet<(int, int)>>();
-            for (int row = 0; row < grid.Length; row++)
-            {
-                for (int col = 0; col < grid[0].Length; col++)
-                {
-                    this.currentIslandSet = new HashSet<(int, int)>();
-                    this.currRowOrigin = row;
-                    this.currColOrigin = col;
-                    NumDistinctIslandsOptimalDfs(row, col, seen);
-                    if (currentIsland.Count > 0)
-                    {
-                        islands.Add(currentIslandSet);
-                    }
-                }
-            }
-            return islands.Count;
-        }
-        private void NumDistinctIslandsOptimalDfs(int row, int col, bool[][] seen)
-        {
-            if (row < 0 || row >= grid.Length || col < 0 || col >= grid[0].Length)
-            {
-                return;
-            }
-            if (grid[row][col] == 0 || seen[row][col])
-            {
-                return;
-            }
-            seen[row][col] = true;
-            currentIslandSet.Add((row - currRowOrigin, col - currColOrigin));
-            NumDistinctIslandsOptimalDfs(row + 1, col, seen);
-            NumDistinctIslandsOptimalDfs(row - 1, col, seen);
-            NumDistinctIslandsOptimalDfs(row, col + 1, seen);
-            NumDistinctIslandsOptimalDfs(row, col - 1, seen);
-        }
-
-        private int currRowOrigin;
-        private int currColOrigin;
-        private List<List<int[]>> uniqueIslands = new List<List<int[]>>(); // All known unique islands.        
-        private List<int[]> currentIsland = new List<int[]>(); // Current Island
-        HashSet<(int, int)> currentIslandSet; // Current Island
-        private int[][] grid; // Input grid
-
-        private int NumDistinctIslandsNaive(int[][] grid)
-        {
-            this.grid = grid;
-            bool[][] seen = new bool[grid.Length][]; // Cells that have been explored. 
-            for (int i = 0; i < grid.Length; i++)
-            {
-                seen[i] = new bool[grid[0].Length];
-            }
-            for (int row = 0; row < grid.Length; row++)
-            {
-                for (int col = 0; col < grid[0].Length; col++)
-                {
-                    NumDistinctIslandsNaiveDfs(row, col, seen);
-                    if (currentIsland.Count == 0)
-                    {
-                        continue;
-                    }
-                    // Translate the island we just found to the top left.
-                    int minCol = grid[0].Length - 1;
-                    for (int i = 0; i < currentIsland.Count; i++)
-                    {
-                        minCol = Math.Min(minCol, currentIsland[i][1]);
-                    }
-                    for (int j = 0; j < currentIsland.Count; j++)
-                    {
-                        currentIsland[j][0] -= row;
-                        currentIsland[j][1] -= minCol;
-                    }
-
-                    // If this island is unique, add it to the list.
-                    if (CurrentIslandUnique())
-                    {
-                        uniqueIslands.Add(new List<int[]>(currentIsland));
-                    }
-                    currentIsland = new List<int[]>();
-                }
-
-            }
-            return uniqueIslands.Count;
-        }
-
-        void NumDistinctIslandsNaiveDfs(int row, int col, bool[][] seen)
-        {
-            if (row < 0 || col < 0 || row >= grid.Length || col >= grid[0].Length) return;
-            if (seen[row][col] || grid[row][col] == 0) return;
-            seen[row][col] = true;
-            currentIsland.Add(new int[] { row, col });
-            NumDistinctIslandsNaiveDfs(row + 1, col, seen);
-            NumDistinctIslandsNaiveDfs(row - 1, col, seen);
-            NumDistinctIslandsNaiveDfs(row, col + 1, seen);
-            NumDistinctIslandsNaiveDfs(row, col - 1, seen);
-        }
-
-        private bool CurrentIslandUnique()
-        {
-            foreach (var otherIsland in uniqueIslands)
-            {
-                if (currentIsland.Count != otherIsland.Count)
-                {
-                    continue;
-                }
-                if (EqualIslands(currentIsland, otherIsland))
-                {
-                    return false;
-                }
-            }
-            return true;
-        }
-
-        private bool EqualIslands(List<int[]> island1, List<int[]> island2)
-        {
-            for (int i = 0; i < island1.Count; i++)
-            {
-                if (island1[i][0] != island2[i][0] || island1[i][1] != island2[i][1])
-                {
-                    return false;
-                }
-            }
-            return true;
-        }
-
-        /*
-        711. Number of Distinct Islands II
-        https://leetcode.com/problems/number-of-distinct-islands-ii/description/       
-        
-        */
-        public int NumDistinctIslands2(int[][] matrix)
-        {
-            //1. No Rotation or Reflection Calculation But using Maths
-            /*
-            Time Complexity: dfs will take overall O(n * m). positions will be size of n*m, and we nest for loop it, which is (n * m) ^2
-                          overall O(n * m) + O((n * m) ^ 2) -> O((n * m) ^ 2)
-            Space Complexity: 
-            */
-            int numberOfDistinctIslands = NumDistinctIslandsWihtMaths(matrix);
-
-            //2.using DFS +sorting+transpose/rotations to find canonical representation for each island 
-            /*
-            Time complexity:   O(mnlogm*n)
-            Space complexity: O(m*n)
-            */
-            numberOfDistinctIslands = NumDistinctIslands2Optimal(matrix);
-
-            return numberOfDistinctIslands;
-        }
-
-        private int NumDistinctIslandsWihtMaths(int[][] matrix)
-        {
-            HashSet<Dictionary<int, int>> allDistinctIslands = new HashSet<Dictionary<int, int>>();
-            int numberOfRows = matrix.Length;
-            int numberOfColumns = matrix[0].Length;
-
-            for (int row = 0; row < numberOfRows; row++)
-            {
-                for (int column = 0; column < numberOfColumns; column++)
-                {
-                    if (matrix[row][column] == 1)
-                    {
-                        List<int[]> positions = new List<int[]>();
-                        GetIsland(matrix, row, column, positions);
-                        Dictionary<int, int> distanceCountMap = new Dictionary<int, int>();
-
-                        for (int i = 0; i < positions.Count; i++)
-                        {
-                            for (int j = i + 1; j < positions.Count; j++)
-                            {
-                                int distance = (int)Math.Pow(positions[i][0] - positions[j][0], 2) + (int)Math.Pow(positions[i][1] - positions[j][1], 2);
-                                if (distanceCountMap.ContainsKey(distance))
-                                {
-                                    distanceCountMap[distance]++;
-                                }
-                                else
-                                {
-                                    distanceCountMap[distance] = 1;
-                                }
-                            }
-                        }
-                        allDistinctIslands.Add(distanceCountMap);
-                    }
-                }
-            }
-            return allDistinctIslands.Count;
-        }
-
-        private void GetIsland(int[][] matrix, int row, int column, List<int[]> positions)
-        {
-            positions.Add(new int[] { row, column });
-            matrix[row][column] = 0;
-
-            foreach (int[] direction in directions)
-            {
-                int nextRow = row + direction[0];
-                int nextColumn = column + direction[1];
-
-                if (nextRow < 0 || nextRow >= matrix.Length || nextColumn < 0 || nextColumn >= matrix[0].Length || matrix[nextRow][nextColumn] == 0)
-                {
-                    continue;
-                }
-                GetIsland(matrix, nextRow, nextColumn, positions);
-            }
-        }
-        private readonly int[][] directions = new int[][] { new int[] { 0, 1 }, new int[] { 0, -1 }, new int[] { 1, 0 }, new int[] { -1, 0 } };
-        private readonly int[][] trans = new int[][] { new int[] { 1, 1 }, new int[] { 1, -1 }, new int[] { -1, 1 }, new int[] { -1, -1 } };
-        public int NumDistinctIslands2Optimal(int[][] grid)
-        {
-            if (grid == null || grid.Length == 0 || grid[0].Length == 0) return 0;
-            int rowCount = grid.Length, columnCount = grid[0].Length;
-            HashSet<string> islands = new HashSet<string>();
-
-            for (int i = 0; i < rowCount; i++)
-            {
-                for (int j = 0; j < columnCount; j++)
-                {
-                    if (grid[i][j] == 1)
-                    {
-                        List<int[]> cells = new List<int[]>();
-                        NumDistinctIslands2OptimalDfs(grid, i, j, cells);
-                        string key = Normalize(cells);
-                        islands.Add(key);
-                    }
-                }
-            }
-            return islands.Count;
-        }
-        private void NumDistinctIslands2OptimalDfs(int[][] grid, int i, int j, List<int[]> cells)
-        {
-            cells.Add(new int[] { i, j });
-            grid[i][j] = -1;
-
-            foreach (int[] direction in directions)
-            {
-                int x = i + direction[0];
-                int y = j + direction[1];
-                if (x >= 0 && x < grid.Length && y >= 0 && y < grid[0].Length && grid[x][y] == 1)
-                    NumDistinctIslands2OptimalDfs(grid, x, y, cells);
-            }
-        }
-        private string Normalize(List<int[]> cells)
-        {
-            List<string> forms = new List<string>();
-            // generate the 8 different transformations
-            // (x, y), (x, -y), (-x, y), (-x, -y)
-            // (y, x), (-y, x), (y, -x), (-y, -x)
-            foreach (int[] transformation in trans)
-            {
-                List<int[]> list1 = new List<int[]>();
-                List<int[]> list2 = new List<int[]>();
-                foreach (int[] cell in cells)
-                {
-                    list1.Add(new int[] { cell[0] * transformation[0], cell[1] * transformation[1] });
-                    list2.Add(new int[] { cell[1] * transformation[1], cell[0] * transformation[0] });
-                }
-                forms.Add(GetKey(list1));
-                forms.Add(GetKey(list2));
-            }
-
-            // sort the keys: take the first one as the representative key
-            forms.Sort();
-            return forms[0];
-        }
-        private string GetKey(List<int[]> cells)
-        {
-            // sort the cells before generating the key
-            cells.Sort((a, b) =>
-            {
-                if (a[0] != b[0])
-                {
-                    return a[0] - b[0];
-                }
-                else
-                {
-                    return a[1] - b[1];
-                }
-            });
-
-            System.Text.StringBuilder sb = new System.Text.StringBuilder();
-            int x = cells[0][0], y = cells[0][1];
-            foreach (int[] cell in cells)
-                sb.Append((cell[0] - x) + ":" + (cell[1] - y) + ":");
-
-            return sb.ToString();
-        }
-
-        /*
-        1905. Count Sub Islands
-        https://leetcode.com/problems/count-sub-islands/description
-        */
-        public int CountSubIslands(int[][] grid1, int[][] grid2)
-        {
-            //1.Breadth-First Search (BFS)
-            /*
-            Let m and n represent the number of rows and columns, respectively.
-        •	Time complexity: O(m∗n)
-                We iterate on each grid cell and perform BFS to traverse all land cells of all the islands. Each land cell is only traversed once. In the worst case, we may traverse all cells of the grid.
-                Thus, in the worst case time complexity will be O(m∗n).
-        •	Space complexity: O(m∗n)
-                We create an additional grid visited of size m∗n and push the land cells in the queue.
-                Thus, in the worst case space complexity will be O(m∗n).
-
-            */
-            int countOfSubIslands = CountSubIslandsBFS(grid1, grid2);
-
-            //2.Depth-First Search
-            /*
-            Let m and n represent the number of rows and columns, respectively.
-        •	Time complexity: O(m∗n)
-                We iterate on each grid cell and perform DFS to traverse all land cells of all the islands. Each land cell is only traversed once. In the worst case, we may traverse all cells of the grid.
-                Thus, in the worst case time complexity will be O(m∗n).
-        •	Space complexity: O(m∗n)
-                We create an additional grid visited of size m∗n and push the land cells in the recursive stack.
-                Thus, in the worst case space complexity will be O(m∗n).
-
-            */
-
-            countOfSubIslands = CountSubIslandsDFS(grid1, grid2);
-
-            //3.Union-Find, or Disjoint Set Union (DSU)
-            /*
-            Let m and n represent the number of rows and columns, respectively.
-        •	Time complexity: O(m∗n)
-                We iterate on each land cell of the grid and perform union operations with its adjacent cells. In the worst case, we may traverse all cells of the grid.
-                Thus, in the worst case time complexity will be O(m∗n).
-        •	Space complexity: O(m∗n)
-                We create an additional object uf and a bool array isSubIsland of size m∗n.
-                Thus, in the worst case space complexity will be O(m∗n).
-
-            */
-            countOfSubIslands = CountSubIslandsUF(grid1, grid2);
-
-            return countOfSubIslands;
-
-
-        }
-
-
-        private int CountSubIslandsDFS(int[][] grid1, int[][] grid2)
-        {
-            int totalRows = grid2.Length;
-            int totalCols = grid2[0].Length;
-
-            bool[][] visited = new bool[totalRows][];
-            for (int i = 0; i < totalRows; i++)
-            {
-                visited[i] = new bool[totalCols];
-            }
-
-            int subIslandCounts = 0;
-
-            // Iterate over each cell in 'grid2'.
-            for (int x = 0; x < totalRows; ++x)
-            {
-                for (int y = 0; y < totalCols; ++y)
-                {
-                    // If the cell at position (x, y) in 'grid2' is not visited,
-                    // is a land cell in 'grid2', and the island starting from this cell is a sub-island in 'grid1',
-                    // then increment the count of sub-islands.
-                    if (!visited[x][y] && IsCellLand(x, y, grid2))
-                    {
-                        visited[x][y] = true;
-                        if (IsSubIslandDFS(x, y, grid1, grid2, visited))
-                        {
-                            subIslandCounts += 1;
-                        }
-                    }
-                }
-            }
-            // Return total count of sub-islands.
-            return subIslandCounts;
-
-
-        }
-        // Traverse all cells of island starting at position (x, y) in 'grid2',
-        // and check if this island is a sub-island in 'grid1'.
-        private bool IsSubIslandDFS(
-            int x,
-            int y,
-            int[][] grid1,
-            int[][] grid2,
-            bool[][] visited
-        )
-        {
-            int totalRows = grid2.Length;
-            int totalCols = grid2[0].Length;
-            // Traverse on all cells using the depth-first search method.
-            bool isSubIsland = true;
-
-            // If the current cell is not a land cell in 'grid1', then the current island can't be a sub-island.
-            if (!IsCellLand(x, y, grid1))
-            {
-                isSubIsland = false;
-            }
-
-            // Traverse on all adjacent cells.
-            foreach (int[] direction in directions)
-            {
-                int nextX = x + direction[0];
-                int nextY = y + direction[1];
-                // If the next cell is inside 'grid2', is not visited, and is a land cell,
-                // then we traverse to the next cell.
-                if (
-                    nextX >= 0 &&
-                    nextY >= 0 &&
-                    nextX < totalRows &&
-                    nextY < totalCols &&
-                    !visited[nextX][nextY] &&
-                    IsCellLand(nextX, nextY, grid2)
-                )
-                {
-                    // Mark the next cell as visited.
-                    visited[nextX][nextY] = true;
-                    bool nextCellIsPartOfSubIsland = IsSubIslandDFS(
-                        nextX,
-                        nextY,
-                        grid1,
-                        grid2,
-                        visited
-                    );
-                    isSubIsland = isSubIsland && nextCellIsPartOfSubIsland;
-                }
-            }
-            return isSubIsland;
-        }
-        private int CountSubIslandsUF(int[][] grid1, int[][] grid2)
-        {
-            int totalRows = grid2.Length;
-            int totalCols = grid2[0].Length;
-            DSUArray uf = new DSUArray(totalRows * totalCols);
-            // Traverse each land cell of 'grid2'.
-            for (int x = 0; x < totalRows; ++x)
-            {
-                for (int y = 0; y < totalCols; ++y)
-                {
-                    if (IsCellLand(x, y, grid2))
-                    {
-                        // Union adjacent land cells with the current land cell.
-                        foreach (int[] direction in directions)
-                        {
-                            int nextX = x + direction[0];
-                            int nextY = y + direction[1];
-                            if (
-                                nextX >= 0 &&
-                                nextY >= 0 &&
-                                nextX < totalRows &&
-                                nextY < totalCols &&
-                                IsCellLand(nextX, nextY, grid2)
-                            )
-                            {
-                                uf.Union(
-                                    ConvertToIndex(x, y, totalCols),
-                                    ConvertToIndex(nextX, nextY, totalCols)
-                                );
-                            }
-                        }
-                    }
-                }
-            }
-            // Traverse 'grid2' land cells and mark that cell's root as not a sub-island
-            // if the land cell is not present at the respective position in 'grid1'.
-            bool[] isSubIsland = new bool[totalRows * totalCols];
-            for (int i = 0; i < isSubIsland.Length; i++)
-            {
-                isSubIsland[i] = true;
-            }
-            for (int x = 0; x < totalRows; ++x)
-            {
-                for (int y = 0; y < totalCols; ++y)
-                {
-                    if (IsCellLand(x, y, grid2) && !IsCellLand(x, y, grid1))
-                    {
-                        int root = uf.Find(ConvertToIndex(x, y, totalCols));
-                        isSubIsland[root] = false;
-                    }
-                }
-            }
-            // Count all the sub-islands.
-            int subIslandCounts = 0;
-            for (int x = 0; x < totalRows; ++x)
-            {
-                for (int y = 0; y < totalCols; ++y)
-                {
-                    if (IsCellLand(x, y, grid2))
-                    {
-                        int root = uf.Find(ConvertToIndex(x, y, totalCols));
-                        if (isSubIsland[root])
-                        {
-                            subIslandCounts++;
-                            // One cell can be the root of multiple land cells, so to
-                            // avoid counting the same island multiple times, mark it as false.
-                            isSubIsland[root] = false;
-                        }
-                    }
-                }
-            }
-
-            return subIslandCounts;
-        }
-        private int ConvertToIndex(int x, int y, int totalCols)
-        {
-            return x * totalCols + y;
-        }
-
-        private int CountSubIslandsBFS(int[][] grid1, int[][] grid2)
-        {
-            int totalRows = grid2.Length;
-            int totalCols = grid2[0].Length;
-
-            bool[][] visited = new bool[totalRows][];
-            for (int i = 0; i < totalRows; i++)
-            {
-                visited[i] = new bool[totalCols];
-            }
-            int subIslandCounts = 0;
-
-            // Iterate on each cell in 'grid2'
-            for (int x = 0; x < totalRows; ++x)
-            {
-                for (int y = 0; y < totalCols; ++y)
-                {
-                    // If cell at the position (x, y) in the 'grid2' is not visited,
-                    // is a land cell in 'grid2', and the island
-                    // starting from this cell is a sub-island in 'grid1', then we
-                    // increment the count of sub-islands.
-                    if (
-                        !visited[x][y] &&
-                        IsCellLand(x, y, grid2) &&
-                        IsSubIsland(x, y, grid1, grid2, visited)
-                    )
-                    {
-                        subIslandCounts += 1;
-                    }
-                }
-            }
-            // Return total count of sub-islands.
-            return subIslandCounts;
-        }
-        // Helper method to check if the cell at the position (x, y) in the 'grid'
-        // is a land cell.
-        private bool IsCellLand(int x, int y, int[][] grid)
-        {
-            return grid[x][y] == 1;
-        }
-        // Traverse all cells of island starting at position (x, y) in 'grid2',
-        // and check this island is a sub-island in 'grid1'.
-        private bool IsSubIsland(
-            int x,
-            int y,
-            int[][] grid1,
-            int[][] grid2,
-            bool[][] visited
-        )
-        {
-            int totalRows = grid2.Length;
-            int totalCols = grid2[0].Length;
-
-            bool isSubIsland = true;
-
-            Queue<int[]> pendingCells = new Queue<int[]>();
-            // Push the starting cell in the queue and mark it as visited.
-            pendingCells.Enqueue(new int[] { x, y });
-            visited[x][y] = true;
-
-            // Traverse on all cells using the breadth-first search method.
-            while (pendingCells.Count > 0)
-            {
-                int[] currentCell = pendingCells.Dequeue();
-                int currentX = currentCell[0];
-                int currentY = currentCell[1];
-
-                // If the current position cell is not a land cell in 'grid1',
-                // then the current island can't be a sub-island.
-                if (!IsCellLand(currentX, currentY, grid1))
-                {
-                    isSubIsland = false;
-                }
-
-                foreach (int[] direction in directions)
-                {
-                    int nextX = currentX + direction[0];
-                    int nextY = currentY + direction[1];
-                    // If the next cell is inside 'grid2', is never visited and
-                    // is a land cell, then we traverse to the next cell.
-                    if (
-                        nextX >= 0 &&
-                        nextY >= 0 &&
-                        nextX < totalRows &&
-                        nextY < totalCols &&
-                        !visited[nextX][nextY] &&
-                        IsCellLand(nextX, nextY, grid2)
-                    )
-                    {
-                        // Push the next cell in the queue and mark it as visited.
-                        pendingCells.Enqueue(new int[] { nextX, nextY });
-                        visited[nextX][nextY] = true;
-                    }
-                }
-            }
-
-            return isSubIsland;
-        }
-        /*
-        695. Max Area of Island
-        https://leetcode.com/problems/max-area-of-island/description/	
-
-        */
-        public int MaxAreaOfIsland(int[][] grid)
-        {
-            //1.Depth-First Search (Iterative) 
-            /*
-            Time Complexity: O(R∗C), where R is the number of rows in the given grid, and C is the number of columns. We visit every square once.
-            Space complexity: O(R∗C), the space used by seen to keep track of visited squares and the space used by stack.
-            */
-            int maxAreaOfIsland = MaxAreaOfIslandDFSRec(grid);
-
-            //2.Depth-First Search (Recursive)
-            /*
-            Time Complexity: O(R∗C), where R is the number of rows in the given grid, and C is the number of columns. We visit every square once.
-            Space complexity: O(R∗C), the space used by seen to keep track of visited squares and the space used by the call stack during our recursion.
-
-            */
-
-            maxAreaOfIsland = CountSubIslandsDFSIterative(grid);
-
-
-            return maxAreaOfIsland;
-
-
-        }
-
-        private int CountSubIslandsDFSIterative(int[][] grid)
-        {
-            bool[][] seen = new bool[grid.Length][];
-            for (int i = 0; i < grid.Length; i++)
-            {
-                seen[i] = new bool[grid[i].Length];
-            }
-            int[] rowDirections = new int[] { 1, -1, 0, 0 };
-            int[] columnDirections = new int[] { 0, 0, 1, -1 };
-
-            int maxArea = 0;
-            for (int row = 0; row < grid.Length; row++)
-            {
-                for (int column = 0; column < grid[0].Length; column++)
-                {
-                    if (grid[row][column] == 1 && !seen[row][column])
-                    {
-                        int currentArea = 0;
-                        Stack<int[]> stack = new Stack<int[]>();
-                        stack.Push(new int[] { row, column });
-                        seen[row][column] = true;
-                        while (stack.Count > 0)
-                        {
-                            int[] node = stack.Pop();
-                            int currentRow = node[0], currentColumn = node[1];
-                            currentArea++;
-                            for (int direction = 0; direction < 4; direction++)
-                            {
-                                int newRow = currentRow + rowDirections[direction];
-                                int newColumn = currentColumn + columnDirections[direction];
-                                if (0 <= newRow && newRow < grid.Length &&
-                                        0 <= newColumn && newColumn < grid[0].Length &&
-                                        grid[newRow][newColumn] == 1 && !seen[newRow][newColumn])
-                                {
-                                    stack.Push(new int[] { newRow, newColumn });
-                                    seen[newRow][newColumn] = true;
-                                }
-                            }
-                        }
-                        maxArea = Math.Max(maxArea, currentArea);
-                    }
-                }
-            }
-            return maxArea;
-        }
-        private int MaxAreaOfIslandDFSRec(int[][] grid)
-        {
-            this.grid = grid;
-            bool[][] seen = new bool[grid.Length][];
-            int maxAreaOfIsland = 0;
-            for (int r = 0; r < grid.Length; r++)
-            {
-                for (int c = 0; c < grid[0].Length; c++)
-                {
-                    maxAreaOfIsland = Math.Max(maxAreaOfIsland, MaxAreaOfIslandDFSRec(r, c, seen));
-                }
-            }
-            return maxAreaOfIsland;
-        }
-
-        private int MaxAreaOfIslandDFSRec(int r, int c, bool[][] seen)
-        {
-            if (r < 0 || r >= grid.Length || c < 0 || c >= grid[0].Length ||
-                    seen[r][c] || grid[r][c] == 0)
-                return 0;
-            seen[r][c] = true;
-            return (1 + MaxAreaOfIslandDFSRec(r + 1, c, seen) + MaxAreaOfIslandDFSRec(r - 1, c, seen)
-                      + MaxAreaOfIslandDFSRec(r, c - 1, seen) + MaxAreaOfIslandDFSRec(r, c + 1, seen));
-        }
-
-        /*
-        463. Island Perimeter
-        https://leetcode.com/problems/island-perimeter/description/
-
-        */
-        public class IslandPerimeterSol
-        {
-            /*
-            Approach 1: Simple Counting
-            Complexity Analysis
-•	Time complexity : O(mn) where m is the number of rows of the grid and n is
-the number of columns of the grid. Since two for loops go through all
-the cells on the grid, for a two-dimensional grid of size m×n, the algorithm
-would have to check mn cells.
-•	Space complexity : O(1). Only the result variable is updated and there is
-no other space requirement.
-
-            */
-            public int SimpleCouting(int[][] grid)
-            {
-
-                int rows = grid.Length;
-                int cols = grid[0].Length;
-
-                int up, down, left, right;
-                int result = 0;
-
-                for (int r = 0; r < rows; r++)
-                {
-                    for (int c = 0; c < cols; c++)
-                    {
-                        if (grid[r][c] == 1)
-                        {
-                            if (r == 0) { up = 0; }
-                            else { up = grid[r - 1][c]; }
-
-                            if (c == 0) { left = 0; }
-                            else { left = grid[r][c - 1]; }
-
-                            if (r == rows - 1) { down = 0; }
-                            else { down = grid[r + 1][c]; }
-
-                            if (c == cols - 1) { right = 0; }
-                            else { right = grid[r][c + 1]; }
-
-                            result += 4 - (up + left + right + down);
-                        }
-                    }
-                }
-
-                return result;
-            }
-            /*
-Approach 2: Better Counting
-
-            Complexity Analysis
-•	Time complexity : O(mn) where m is the number of rows of the grid and n is
-the number of columns of the grid. Since two for loops go through all
-the cells on the grid, for a two-dimensional grid of size m×n, the algorithm
-would have to check mn cells.
-•	Space complexity : O(1). Only the result variable is updated and there is
-no other space requirement.
-            
-            */
-            public int islandPerimeter(int[][] grid)
-            {
-                int rows = grid.Length;
-                int cols = grid[0].Length;
-
-                int result = 0;
-                for (int r = 0; r < rows; r++)
-                {
-                    for (int c = 0; c < cols; c++)
-                    {
-                        if (grid[r][c] == 1)
-                        {
-                            result += 4;
-
-                            if (r > 0 && grid[r - 1][c] == 1)
-                            {
-                                result -= 2;
-                            }
-
-                            if (c > 0 && grid[r][c - 1] == 1)
-                            {
-                                result -= 2;
-                            }
-                        }
-                    }
-                }
-
-                return result;
-            }
-        }
-
-        /*
-        827. Making A Large Island
-        https://leetcode.com/problems/making-a-large-island/description/
-        */
-        public class LargestIslandSol
-        {
-            int[] directionRows = new int[] { -1, 0, 1, 0 };
-            int[] directionColumns = new int[] { 0, -1, 0, 1 };
-
-            /*
-            Approach 1: Naive Depth First Search
-           Complexity Analysis
-•	Time Complexity: O(N^4), where N is the length and width of the grid.
-•	Space Complexity: O(N^2), the additional space used in the depth first search by stack and seen.
- 
-            */
-            public int NaiveDFS(int[][] grid)
-            {
-                int size = grid.Length;
-
-                int maximumArea = 0;
-                bool hasZero = false;
-                for (int row = 0; row < size; ++row)
-                    for (int column = 0; column < size; ++column)
-                        if (grid[row][column] == 0)
-                        {
-                            hasZero = true;
-                            grid[row][column] = 1;
-                            maximumArea = Math.Max(maximumArea, Check(grid, row, column));
-                            grid[row][column] = 0;
-                        }
-
-                return hasZero ? maximumArea : size * size;
-            }
-
-            private int Check(int[][] grid, int initialRow, int initialColumn)
-            {
-                int size = grid.Length;
-                Stack<int> positionStack = new Stack<int>();
-                HashSet<int> visitedPositions = new HashSet<int>();
-                positionStack.Push(initialRow * size + initialColumn);
-                visitedPositions.Add(initialRow * size + initialColumn);
-
-                while (positionStack.Count > 0)
-                {
-                    int code = positionStack.Pop();
-                    int row = code / size, column = code % size;
-                    for (int direction = 0; direction < 4; ++direction)
-                    {
-                        int newRow = row + directionRows[direction], newColumn = column + directionColumns[direction];
-                        if (!visitedPositions.Contains(newRow * size + newColumn) &&
-                            0 <= newRow && newRow < size &&
-                            0 <= newColumn && newColumn < size && grid[newRow][newColumn] == 1)
-                        {
-                            positionStack.Push(newRow * size + newColumn);
-                            visitedPositions.Add(newRow * size + newColumn);
-                        }
-                    }
-                }
-
-                return visitedPositions.Count;
-            }
-            /*
-            Approach #2: Component Sizes
-            Complexity Analysis
-•	Time Complexity: O(N^2), where N is the length and width of the grid.
-•	Space Complexity: O(N^2), the additional space used in the depth first search by area.
-
-            */
-            private int[,] grid;
-            private int gridSize;
-
-            public int UsingComponentSizes(int[,] grid)
-            {
-                this.grid = grid;
-                gridSize = grid.GetLength(0);
-
-                int index = 2;
-                int[] area = new int[gridSize * gridSize + 2];
-                for (int row = 0; row < gridSize; ++row)
-                    for (int column = 0; column < gridSize; ++column)
-                        if (grid[row, column] == 1)
-                            area[index] = Dfs(row, column, index++);
-
-                int maxArea = 0;
-                foreach (int x in area) maxArea = Math.Max(maxArea, x);
-                for (int row = 0; row < gridSize; ++row)
-                    for (int column = 0; column < gridSize; ++column)
-                        if (grid[row, column] == 0)
-                        {
-                            HashSet<int> seen = new HashSet<int>();
-                            foreach (int move in GetNeighbors(row, column))
-                                if (grid[move / gridSize, move % gridSize] > 1)
-                                    seen.Add(grid[move / gridSize, move % gridSize]);
-
-                            int bonus = 1;
-                            foreach (int i in seen) bonus += area[i];
-                            maxArea = Math.Max(maxArea, bonus);
-                        }
-
-                return maxArea;
-            }
-
-            private int Dfs(int row, int column, int index)
-            {
-                int areaCount = 1;
-                grid[row, column] = index;
-                foreach (int move in GetNeighbors(row, column))
-                {
-                    if (grid[move / gridSize, move % gridSize] == 1)
-                    {
-                        grid[move / gridSize, move % gridSize] = index;
-                        areaCount += Dfs(move / gridSize, move % gridSize, index);
-                    }
-                }
-
-                return areaCount;
-            }
-
-            private List<int> GetNeighbors(int row, int column)
-            {
-                List<int> neighbors = new List<int>();
-                for (int k = 0; k < 4; ++k)
-                {
-                    int newRow = row + directionRows[k];
-                    int newColumn = column + directionColumns[k];
-                    if (0 <= newRow && newRow < gridSize && 0 <= newColumn && newColumn < gridSize)
-                        neighbors.Add(newRow * gridSize + newColumn);
-                }
-
-                return neighbors;
-            }
-
-        }
-
-        /* 1254. Number of Closed Islands
-        https://leetcode.com/problems/number-of-closed-islands/description/
-         */
-        public class ClosedIslandSol
-        {
-            /*
-            Approach 1: Breadth First Search
-Complexity Analysis
-Here, m and n are the number of rows and columns in the given grid.
-•	Time complexity: O(m⋅n)
-o	Initializing the visit array takes O(m⋅n) time.
-o	We iterate over all the cells and find unvisited land cells to perform BFS traversal from those. This takes O(m⋅n) time.
-o	Each queue operation in the BFS algorithm takes O(1) time, and a single node can be pushed once, leading to O(m⋅n) operations for m⋅n nodes. We iterate over all the neighbors of each node that is popped out of the queue. So for every node, we would iterate four times to iterate over the neighbors, resulting in O(4⋅m⋅n)=O(m⋅n) operations total for all the nodes.
-•	Space complexity: O(m⋅n)
-o	The visit array takes O(m⋅n) space.
-o	The BFS queue takes O(m⋅n) space in the worst-case because each node is added once.
-
-            */
-            public int BFS(int[][] grid)
-            {
-                int rows = grid.Length;
-                int columns = grid[0].Length;
-                bool[][] visited = new bool[rows][];
-                for (int i = 0; i < rows; i++)
-                {
-                    visited[i] = new bool[columns];
-                }
-                int count = 0;
-                for (int row = 0; row < rows; row++)
-                {
-                    for (int column = 0; column < columns; column++)
-                    {
-                        if (grid[row][column] == 0 && !visited[row][column] && Bfs(row, column, rows, columns, grid, visited))
-                        {
-                            count++;
-                        }
-                    }
-                }
-                return count;
-            }
-
-            private bool Bfs(int x, int y, int rows, int columns, int[][] grid, bool[][] visited)
-            {
-                Queue<int[]> queue = new Queue<int[]>();
-                queue.Enqueue(new int[] { x, y });
-                visited[x][y] = true;
-                bool isClosed = true;
-
-                int[] directionX = { 0, 1, 0, -1 };
-                int[] directionY = { -1, 0, 1, 0 };
-
-                while (queue.Count > 0)
-                {
-                    int[] temp = queue.Dequeue();
-                    x = temp[0];
-                    y = temp[1];
-
-                    for (int i = 0; i < 4; i++)
-                    {
-                        int newRow = x + directionX[i];
-                        int newColumn = y + directionY[i];
-                        if (newRow < 0 || newRow >= rows || newColumn < 0 || newColumn >= columns)
-                        {
-                            // (x, y) is a boundary cell.
-                            isClosed = false;
-                        }
-                        else if (grid[newRow][newColumn] == 0 && !visited[newRow][newColumn])
-                        {
-                            queue.Enqueue(new int[] { newRow, newColumn });
-                            visited[newRow][newColumn] = true;
-                        }
-                    }
-                }
-
-                return isClosed;
-            }
-
-            /*
-            Approach 2: Depth First Search
-           Complexity Analysis
-Here, m and n are the number of rows and columns in the given grid.
-•	Time complexity: O(m⋅n)
-o	Initializing the visit array takes O(m⋅n) time.
-o	We iterate over all the cells and find unvisited land cells to perform DFS traversal from those. This takes O(m⋅n) time.
-o	The dfs function visits each node once, leading to O(m⋅n) operations for m⋅n nodes. We iterate over all the neighbors of each node that is popped out of the queue. So for every node, we would iterate four times to iterate over the neighbors, resulting in O(4⋅m⋅n)=O(m⋅n) operations total for all the nodes.
-•	Space complexity: O(m⋅n)
-o	The visit array takes O(m⋅n) space.
-o	The recursion stack used by dfs can have no more than O(m⋅n) elements in the worst-case scenario. It would take up O(m⋅n) space in that case.
- 
-            */
-            public int DFS(int[][] grid)
-            {
-                int rowCount = grid.Length;
-                int columnCount = grid[0].Length;
-                bool[][] visited = new bool[rowCount][];
-                for (int i = 0; i < rowCount; i++)
-                {
-                    visited[i] = new bool[columnCount];
-                }
-                int closedIslandCount = 0;
-                for (int i = 0; i < rowCount; i++)
-                {
-                    for (int j = 0; j < columnCount; j++)
-                    {
-                        if (grid[i][j] == 0 && !visited[i][j] && Dfs(i, j, rowCount, columnCount, grid, visited))
-                        {
-                            closedIslandCount++;
-                        }
-                    }
-                }
-                return closedIslandCount;
-            }
-
-            public bool Dfs(int x, int y, int rowCount, int columnCount, int[][] grid, bool[][] visited)
-            {
-                if (x < 0 || x >= grid.Length || y < 0 || y >= grid[0].Length)
-                {
-                    return false;
-                }
-                if (grid[x][y] == 1 || visited[x][y])
-                {
-                    return true;
-                }
-
-                visited[x][y] = true;
-                bool isClosed = true;
-                int[] directionX = { 0, 1, 0, -1 };
-                int[] directionY = { -1, 0, 1, 0 };
-
-                for (int i = 0; i < 4; i++)
-                {
-                    int newRow = x + directionX[i];
-                    int newColumn = y + directionY[i];
-                    if (!Dfs(newRow, newColumn, rowCount, columnCount, grid, visited))
-                    {
-                        isClosed = false;
-                    }
-                }
-
-                return isClosed;
-            }
-        }
         /*
         79. Word Search	
         https://leetcode.com/problems/word-search/description/
@@ -4328,6 +2498,7 @@ Approach 5: Binary Search Using DFS
             }
             return false;
         }
+        private readonly int[][] directions = new int[][] { new int[] { 0, 1 }, new int[] { 0, -1 }, new int[] { 1, 0 }, new int[] { -1, 0 } };
         /*
         778. Swim in Rising Water
         https://leetcode.com/problems/swim-in-rising-water/
@@ -4539,6 +2710,7 @@ Approach 5: Binary Search Using DFS
 
             return this.path_count;
         }
+        private int[][] grid; // Input grid
         int path_count;
         protected void Backtrack(int row, int col, int remain)
         {
@@ -4701,6 +2873,523 @@ Approach 5: Binary Search Using DFS
             }
 
             return grid[0][0];
+        }
+
+        /* 931. Minimum Falling Path Sum
+        https://leetcode.com/problems/minimum-falling-path-sum/description/
+         */
+        class MinFallingPathSumSol
+        {
+            /*
+            Approach 1: Brute Force Using Depth First Search
+Complexity Analysis
+Let N be the length of matrix.
+•	Time Complexity: O(N⋅3^N) The solution takes the form of a 3-ary recursion tree where there are 3 possibilities for every node in the tree. The time complexity can be derived as follows,
+•	The maximum depth of the recursion tree is equal to the number of rows in the matrix i.e N.
+•	Each level (level) of the recursion tree will contain approximately 3level nodes. For example, at level 0 there are 3^0 nodes, for level 1, 3^1 nodes, and so on. Thus, the maximum number of nodes at level N would be approximately 3^N.
+•	Thus the time complexity is roughly, O(N⋅3^N).
+The time complexity is exponential, hence this approach is exhaustive and results in Time Limit Exceeded (TLE).
+•	Space Complexity: O(N) This space will be used to store the recursion stack. As the maximum depth of the tree is N, we will not have more than N recursive calls on the call stack at any time.
+
+            */
+            public int DFSNaive(int[][] matrix)
+            {
+
+                int minFallingSum = int.MaxValue;
+                for (int startCol = 0; startCol < matrix.Length; startCol++)
+                {
+                    minFallingSum = Math.Min(minFallingSum, FindMinFallingPathSum(matrix, 0, startCol));
+                }
+                return minFallingSum;
+            }
+
+            private int FindMinFallingPathSum(int[][] matrix, int row, int col)
+            {
+                // check if we are out of the left or right boundary of the matrix
+                if (col < 0 || col == matrix.Length)
+                {
+                    return int.MaxValue;
+                }
+                //check if we have reached the last row
+                if (row == matrix.Length - 1)
+                {
+                    return matrix[row][col];
+                }
+
+                // calculate the minimum falling path sum starting from each possible next step
+                int left = FindMinFallingPathSum(matrix, row + 1, col);
+                int middle = FindMinFallingPathSum(matrix, row + 1, col + 1);
+                int right = FindMinFallingPathSum(matrix, row + 1, col - 1);
+
+                return Math.Min(left, Math.Min(middle, right)) + matrix[row][col];
+            }
+            /*
+            Approach 2: Top Down Dynamic Programming
+Complexity Analysis
+Let N be the length of matrix.
+•	Time Complexity: O(N^2)
+For every cell in the matrix, we will compute the result only once and update the memo. For the subsequent calls, we are using the stored results that take O(1) time. There are N^2 cells in the matrix, and thus N2 dp states. So, the time complexity is O(N^2).
+•	Space Complexity: O(N^2)
+The recursive call stack uses O(N) space. As the maximum depth of the tree is N, we can’t have more than N recursive calls on the call stack at any time. The 2D matrix memo uses O(N^2) space. Thus, the space complexity is O(N)+O(N^2)=O(N^2).
+
+            */
+            public int TopDownDP(int[][] matrix)
+            {
+                int minFallingSum = int.MaxValue;
+                int?[][] memo = new int?[matrix.Length][];
+
+                for (int i = 0; i < matrix.Length; i++)
+                {
+                    memo[i] = new int?[matrix[0].Length];
+                }
+
+                // start a DFS (with memoization) from each cell in the top row
+                for (int startCol = 0; startCol < matrix[0].Length; startCol++)
+                {
+                    minFallingSum = Math.Min(minFallingSum,
+                        FindMinFallingPathSum(matrix, 0, startCol, memo));
+                }
+                return minFallingSum;
+            }
+
+            private int FindMinFallingPathSum(int[][] matrix, int row, int col, int?[][] memo)
+            {
+                //base cases
+                if (col < 0 || col >= matrix[0].Length)
+                {
+                    return int.MaxValue;
+                }
+                //check if we have reached the last row
+                if (row == matrix.Length - 1)
+                {
+                    return matrix[row][col];
+                }
+                //check if the results are calculated before
+                if (memo[row][col].HasValue)
+                {
+                    return memo[row][col].Value;
+                }
+
+                // calculate the minimum falling path sum starting from each possible next step
+                int left = FindMinFallingPathSum(matrix, row + 1, col, memo);
+                int middle = FindMinFallingPathSum(matrix, row + 1, col + 1, memo);
+                int right = FindMinFallingPathSum(matrix, row + 1, col - 1, memo);
+
+                memo[row][col] = Math.Min(left, Math.Min(middle, right)) + matrix[row][col];
+                return memo[row][col].Value;
+            }
+
+            /*
+            Approach 3: Bottom-Up Dynamic Programming (Tabulation)
+Complexity Analysis
+Let N be the length of matrix.
+•	Time Complexity: O(N^2)
+o	The nested for loop takes (N^2) times to fill the dp array.
+o	Then, takes N time to find the minimum falling path.
+o	So, Time Complexity T(n)=O(N^2)+O(N)=O(N^2)
+•	Space Complexity: O(N^2). The additional space is used for dp array of size N^2.
+
+            */
+            public int BottomUpDPTabulation(int[][] matrix)
+            {
+                int[][] dp = new int[matrix.Length + 1][];
+                for (int i = 0; i < dp.Length; i++)
+                {
+                    dp[i] = new int[matrix.Length + 1];
+                }
+
+                for (int row = matrix.Length - 1; row >= 0; row--)
+                {
+                    for (int col = 0; col < matrix.Length; col++)
+                    {
+                        if (col == 0)
+                        {
+                            dp[row][col] =
+                                Math.Min(dp[row + 1][col], dp[row + 1][col + 1]) + matrix[row][col];
+                        }
+                        else if (col == matrix.Length - 1)
+                        {
+                            dp[row][col] =
+                                Math.Min(dp[row + 1][col], dp[row + 1][col - 1]) + matrix[row][col];
+                        }
+                        else
+                        {
+                            dp[row][col] = Math.Min(dp[row + 1][col],
+                                Math.Min(dp[row + 1][col + 1], dp[row + 1][col - 1])) + matrix[row][col];
+                        }
+                    }
+                }
+
+                int minFallingSum = int.MaxValue;
+                for (int startCol = 0; startCol < matrix.Length; startCol++)
+                {
+                    minFallingSum = Math.Min(minFallingSum, dp[0][startCol]);
+                }
+                return minFallingSum;
+            }
+            /*
+            Approach 4: Space Optimized, Bottom-Up Dynamic Programming
+            Complexity Analysis
+        Let N be the length of matrix.
+        •	Time Complexity: O(N^2)
+        o	The nested for loop takes (N^2) time.
+        o	Then, it takes Ntime to find the minimum falling path.
+        o	So, Time Complexity T(n)=O(N^2)+O(N)=O(N^2)
+        •	Space Complexity: O(N).
+        o	We are using two 1-dimensional arrays dp and currentRow of size N.
+
+            */
+            public int BottomUpDPTabulationSpaceOptimal(int[][] matrix)
+            {
+                int[] dynamicProgrammingArray = new int[matrix.Length + 1];
+                for (int currentRow = matrix.Length - 1; currentRow >= 0; currentRow--)
+                {
+                    int[] currentRowArray = new int[matrix.Length + 1];
+                    for (int currentColumn = 0; currentColumn < matrix.Length; currentColumn++)
+                    {
+                        if (currentColumn == 0)
+                        {
+                            currentRowArray[currentColumn] =
+                                Math.Min(dynamicProgrammingArray[currentColumn], dynamicProgrammingArray[currentColumn + 1]) + matrix[currentRow][currentColumn];
+                        }
+                        else if (currentColumn == matrix.Length - 1)
+                        {
+                            currentRowArray[currentColumn] =
+                                Math.Min(dynamicProgrammingArray[currentColumn], dynamicProgrammingArray[currentColumn - 1]) + matrix[currentRow][currentColumn];
+                        }
+                        else
+                        {
+                            currentRowArray[currentColumn] = Math.Min(dynamicProgrammingArray[currentColumn],
+                                Math.Min(dynamicProgrammingArray[currentColumn + 1], dynamicProgrammingArray[currentColumn - 1])) + matrix[currentRow][currentColumn];
+                        }
+                    }
+                    dynamicProgrammingArray = currentRowArray;
+                }
+                int minimumFallingSum = int.MaxValue;
+                for (int startingColumn = 0; startingColumn < matrix.Length; startingColumn++)
+                {
+                    minimumFallingSum = Math.Min(minimumFallingSum, dynamicProgrammingArray[startingColumn]);
+                }
+                return minimumFallingSum;
+            }
+
+        }
+
+        /* 1289. Minimum Falling Path Sum II
+        https://leetcode.com/problems/minimum-falling-path-sum-ii/description/
+         */
+        public class MinFallingPathSumIISol
+        {
+            // Initialize a dictionary to cache the result of each sub-problem
+            private Dictionary<Tuple<int, int>, int> memo = new Dictionary<Tuple<int, int>, int>();
+
+            /*
+            Approach 1: Top-Down Dynamic Programming
+            Complexity Analysis
+            Let N be the number of rows of the square grid. Every row has N columns.
+            •	Time complexity: O(N^3)
+            In the main function, we are calling optimal from every element of the first row. Let's analyze every element separately.
+            o	Calling optimal(0, 0). Readers can appreciate that due to the recursive nature of the function, all yellow-highlighted sub-problems will be called, and their results will be saved in memo after the first call.
+
+            This is because every cell calls optimal for every column of the next row, except for one in the same column.
+            Thus, 1+((N−1)⋅N)−1 sub-problems will be called, which is O(N^2).
+            In each sub-problem call, we are traversing linearly in the next row. Thus, the time complexity of each sub-problem call is O(N).
+            Hence, the time complexity of optimal(0, 0) is O(N^2⋅N), which is O(N^3).
+            o	Calling optimal(0, 1). It will directly call all the cells having red dots on them. 
+            o	The value of the yellow-highlighted cell will be fetched from memo. Thus, there will be no recursive call from that cell. There are N−2 such cells, and they will have constant time complexity.
+            o	The value of the cell that is not yellow-highlighted will be calculated by calling optimal for N−1 columns of the third row.
+            There is 1 such cell, and it will have linear time complexity.
+            Hence, time complexity of optimal(0, 1) is O((N−2)⋅1+1⋅N), which is O(N).
+            After the end of this call, the optimal value of all yellow-highlighted cells will be cached in memo. 
+            o	We have N−2 cells remaining in first row. They will pick the minimum result of N−1 valid cells from the second row.
+            Thus, for remaining cells, time complexity will be O((N−2)⋅(N−1)), which is O(N^2).
+            Hence, the time complexity of the main function is O(N3+N+N2), which is O(N^3).
+            •	Space complexity: O(N^2)
+            o	The space complexity of a recursive function depends on the maximum number of recursive calls on the stack.
+            At any point in time, there will be at most N recursive calls on the stack, as each recursive call is made from a different row. In each recursive call, we have constant space complexity independent of input size. Therefore, space complexity because of the recursive call stack will be O(N).
+            o	We are using a hash map memo to cache the result of each sub-problem. There are N2 such sub-problems. Therefore, space complexity because of caching will be O(N^2).
+            o	All other variables use constant space independent of input size.
+            Hence, the overall space complexity will be O(N+N^2+1), which is O(N^2).
+
+            */
+            public int TopDownDP(int[][] grid)
+            {
+                // We can select any element from the first row. We will select
+                // the element which leads to minimum sum.
+                int minimumPathSum = int.MaxValue;
+                for (int column = 0; column < grid.Length; column++)
+                {
+                    minimumPathSum = Math.Min(minimumPathSum, Optimal(0, column, grid));
+                }
+
+                // Return the minimum sum
+                return minimumPathSum;
+            }
+
+            // The Optimal(row, col) function returns the minimum sum of a
+            // falling path with non-zero shifts, starting from grid[row][col]
+            private int Optimal(int row, int column, int[][] grid)
+            {
+                // If the last row, then return the value of the cell itself
+                if (row == grid.Length - 1)
+                {
+                    return grid[row][column];
+                }
+
+                // If the result of this sub-problem is already cached
+                if (memo.ContainsKey(Tuple.Create(row, column)))
+                {
+                    return memo[Tuple.Create(row, column)];
+                }
+
+                // Select grid[row][col], and move on to next row. For next
+                // row, choose the cell that leads to the minimum sum
+                int nextMinimum = int.MaxValue;
+                for (int nextRowColumn = 0; nextRowColumn < grid.Length; nextRowColumn++)
+                {
+                    if (nextRowColumn != column)
+                    {
+                        nextMinimum = Math.Min(nextMinimum, Optimal(row + 1, nextRowColumn, grid));
+                    }
+                }
+
+                // Minimum cost from this cell
+                memo[Tuple.Create(row, column)] = grid[row][column] + nextMinimum;
+                return memo[Tuple.Create(row, column)];
+            }
+            /*
+            Approach 2: Bottom-Up Dynamic Programming
+Complexity Analysis
+Let N be the number of rows of the square grid. Every row has N columns.
+•	Time complexity: O(N^3)
+We are traversing in every cell of the memo array once.
+o	For the last row, we do a constant time operation of assigning grid[row][col] to memo[row][col]. There are N such cells, and each cell will take constant time. Thus, the time complexity will be O(N).
+o	For the remaining rows, we find a minimum from valid elements of the next row. There are (N−1)⋅N such cells, and each cell will take linear time. Thus, the time complexity will be O((N−1)⋅N⋅N), which is O(N^3).
+At the end, we find the minimum from the first row. It will take O(N) time.
+Thus, overall time complexity will be O(N+N3+N), which is O(N^3).
+•	Space complexity: O(N^2)
+We used a two-dimensional array memo of size N×N. Thus, space complexity will be O(N^2). All other variables use constant space independent of input size.
+
+            */
+            public int BottomUpDP(int[][] grid)
+            {
+                // Initialize a two-dimensional array to cache the result of each sub-problem
+                int[][] memo = new int[grid.Length][];
+                for (int i = 0; i < grid.Length; i++)
+                {
+                    memo[i] = new int[grid.Length];
+                }
+
+                // Fill the base case
+                for (int column = 0; column < grid.Length; column++)
+                {
+                    memo[grid.Length - 1][column] = grid[grid.Length - 1][column];
+                }
+
+                // Fill the recursive cases
+                for (int row = grid.Length - 2; row >= 0; row--)
+                {
+                    for (int column = 0; column < grid.Length; column++)
+                    {
+                        // Select minimum from valid cells of next row
+                        int nextMinimum = int.MaxValue;
+                        for (int nextRowColumn = 0; nextRowColumn < grid.Length; nextRowColumn++)
+                        {
+                            if (nextRowColumn != column)
+                            {
+                                nextMinimum = Math.Min(nextMinimum, memo[row + 1][nextRowColumn]);
+                            }
+                        }
+
+                        // Minimum cost from this cell
+                        memo[row][column] = grid[row][column] + nextMinimum;
+                    }
+                }
+
+                // Find the minimum from the first row
+                int answer = int.MaxValue;
+                for (int column = 0; column < grid.Length; column++)
+                {
+                    answer = Math.Min(answer, memo[0][column]);
+                }
+
+                // Return the answer
+                return answer;
+            }
+            /*
+            
+Approach 3: Bottom-Up Dynamic Programming. Save Minimum and Second Minimum
+Complexity Analysis
+Let N be the number of rows of the square grid. Every row has N columns.
+•	Time complexity: O(N^2)
+We are traversing in every cell of the memo array once.
+For all the cells, we do two main operations
+o	Computing memo[row][col]. In the base case, and even in recursive cases, the operation is constant time.
+o	Ensuring loop invariant of next_min1_c and next_min2_c.
+Both of these are constant time operations.
+Thus, N2 cells take O(1) time. Hence, the overall time complexity will be O(N^2).
+•	Space complexity: O(N^2)
+We are using a two-dimensional array memo of size N⋅N. Thus, space complexity will be O(N^2). All other variables use constant space independent of input size.
+
+            */
+            public int BottomUpDPSaveMinAndSecondMin(int[][] grid)
+            {
+                // Initialize a two-dimensional array to cache the result of each sub-problem
+                int[][] memo = new int[grid.Length][];
+                for (int i = 0; i < grid.Length; i++)
+                {
+                    memo[i] = new int[grid.Length];
+                }
+
+                // Minimum and Second Minimum Column Index
+                int nextMin1C = -1;
+                int nextMin2C = -1;
+
+                // Base Case. Fill and save the minimum and second minimum column index
+                for (int col = 0; col < grid.Length; col++)
+                {
+                    memo[grid.Length - 1][col] = grid[grid.Length - 1][col];
+                    if (nextMin1C == -1 || memo[grid.Length - 1][col] <= memo[grid.Length - 1][nextMin1C])
+                    {
+                        nextMin2C = nextMin1C;
+                        nextMin1C = col;
+                    }
+                    else if (nextMin2C == -1 || memo[grid.Length - 1][col] <= memo[grid.Length - 1][nextMin2C])
+                    {
+                        nextMin2C = col;
+                    }
+                }
+
+                // Fill the recursive cases
+                for (int row = grid.Length - 2; row >= 0; row--)
+                {
+                    // Minimum and Second Minimum Column Index of the current row
+                    int min1C = -1;
+                    int min2C = -1;
+
+                    for (int col = 0; col < grid.Length; col++)
+                    {
+                        // Select minimum from valid cells of the next row
+                        if (col != nextMin1C)
+                        {
+                            memo[row][col] = grid[row][col] + memo[row + 1][nextMin1C];
+                        }
+                        else
+                        {
+                            memo[row][col] = grid[row][col] + memo[row + 1][nextMin2C];
+                        }
+
+                        // Save minimum and second minimum column index
+                        if (min1C == -1 || memo[row][col] <= memo[row][min1C])
+                        {
+                            min2C = min1C;
+                            min1C = col;
+                        }
+                        else if (min2C == -1 || memo[row][col] <= memo[row][min2C])
+                        {
+                            min2C = col;
+                        }
+                    }
+
+                    // Change of row. Update nextMin1C and nextMin2C
+                    nextMin1C = min1C;
+                    nextMin2C = min2C;
+                }
+
+                // Return the minimum from the first row
+                return memo[0][nextMin1C];
+            }
+            /*
+Approach 4: Space-Optimized Bottom-Up Dynamic Programming
+Complexity Analysis
+Let N be the number of rows of the square grid. Every row has N columns.
+•	Time complexity: O(N^2)
+We are traversing in every cell of the grid array once.
+For all the cells, we are doing two main operations
+o	Computing value. It will take constant time.
+o	Ensuring loop invariant of next_min1_c, next_min2_c, next_min1, and next_min2.
+All these operations are constant time operations.
+Thus, N2 cells take O(1) time. Hence, the overall time complexity will be O(N^2).
+•	Space complexity: O(1)
+We are using only a handful of variables, which are independent of input size. Thus, space complexity will be O(1).
+            */
+            public int BottomUpDPSpaceOptimal(int[][] grid)
+            {
+                // Minimum and Second Minimum Column Index
+                int nextMin1C = -1;
+                int nextMin2C = -1;
+
+                // Minimum and Second Minimum Value
+                int nextMin1 = -1;
+                int nextMin2 = -1;
+
+                // Find the minimum and second minimum from the last row
+                for (int col = 0; col < grid.Length; col++)
+                {
+                    if (nextMin1 == -1 || grid[grid.Length - 1][col] <= nextMin1)
+                    {
+                        nextMin2 = nextMin1;
+                        nextMin2C = nextMin1C;
+                        nextMin1 = grid[grid.Length - 1][col];
+                        nextMin1C = col;
+                    }
+                    else if (nextMin2 == -1 || grid[grid.Length - 1][col] <= nextMin2)
+                    {
+                        nextMin2 = grid[grid.Length - 1][col];
+                        nextMin2C = col;
+                    }
+                }
+
+                // Fill the recursive cases
+                for (int row = grid.Length - 2; row >= 0; row--)
+                {
+                    // Minimum and Second Minimum Column Index of the current row
+                    int min1C = -1;
+                    int min2C = -1;
+
+                    // Minimum and Second Minimum Value of current row
+                    int min1 = -1;
+                    int min2 = -1;
+
+                    for (int col = 0; col < grid.Length; col++)
+                    {
+                        // Select minimum from valid cells of the next row
+                        int value;
+                        if (col != nextMin1C)
+                        {
+                            value = grid[row][col] + nextMin1;
+                        }
+                        else
+                        {
+                            value = grid[row][col] + nextMin2;
+                        }
+
+                        // Save minimum and second minimum
+                        if (min1 == -1 || value <= min1)
+                        {
+                            min2 = min1;
+                            min2C = min1C;
+                            min1 = value;
+                            min1C = col;
+                        }
+                        else if (min2 == -1 || value <= min2)
+                        {
+                            min2 = value;
+                            min2C = col;
+                        }
+                    }
+
+                    // Change of row. Update nextMin1C, nextMin2C, nextMin1, nextMin2
+                    nextMin1C = min1C;
+                    nextMin2C = min2C;
+                    nextMin1 = min1;
+                    nextMin2 = min2;
+                }
+
+                // Return the minimum from the first row
+                return nextMin1;
+            }
+
         }
 
         /*
@@ -7148,24 +5837,892 @@ Note: this problem can also be solved using DFS or BFS, but Dijkstra's is the mo
                     Path = path;
                 }
             }
+        }
+        /*         2392. Build a Matrix With Conditions
+        https://leetcode.com/problems/build-a-matrix-with-conditions/description/
+         */
+        class BuildMatrixWithConditionsSol
+        {
+            /*
+            Approach 1: Depth-First Search + TopoLogical Sort
+            Complexity Analysis
+            Let n be the size of the rowConditions and colConditions array.
+            •	Time complexity: O(max(k⋅k,n))
+            Since the total edges in the graph are n and all the nodes are visited exactly once, the time complexity of the depth-first search operation is O(n).
+            The time complexity of creating and filling the values of a k⋅k sized matrix is O(k⋅k). Both these operations are performed independently.
+            Therefore, the time complexity is given by O(max(k⋅k,n)).
+            •	Space complexity: O(max(k⋅k,n))
+            Since the total edges in the graph are n, the space complexity of the depth-first search operation is O(n). The space complexity of creating a k⋅k sized matrix is O(k⋅k). Both these operations are performed independently.
+            Therefore, the space complexity is given by O(max(k⋅k,n)).
 
 
+            */
+            public int[][] DFSTopologicalSort(
+                int k,
+                int[][] rowConditions,
+                int[][] colConditions
+            )
+            {
+                // Store the topologically sorted sequences.
+                List<int> orderRows = TopologicalSort(rowConditions, k);
+                List<int> orderColumns = TopologicalSort(colConditions, k);
 
+                // If no topological sort exists, return empty array.
+                if (orderRows.Count == 0 || orderColumns.Count == 0) return new int[0][];
 
+                int[][] matrix = new int[k][];
+                for (int i = 0; i < k; i++)
+                {
+                    for (int j = 0; j < k; j++)
+                    {
+                        if (orderRows[i].Equals(orderColumns[j]))
+                        {
+                            matrix[i][j] = orderRows[i];
+                        }
+                    }
+                }
+                return matrix;
+            }
 
+            private List<int> TopologicalSort(int[][] edges, int n)
+            {
+                // Build adjacency list
+                List<List<int>> adj = new();
+                for (int i = 0; i <= n; i++)
+                {
+                    adj.Add(new List<int>());
+                }
+                foreach (int[] edge in edges)
+                {
+                    adj[edge[0]].Add(edge[1]);
+                }
 
+                List<int> order = new List<int>();
+                // 0: not visited, 1: visiting, 2: visited
+                int[] visited = new int[n + 1];
+                bool[] hasCycle = { false };
 
+                // Perform DFS for each node
+                for (int i = 1; i <= n; i++)
+                {
+                    if (visited[i] == 0)
+                    {
+                        dfs(i, adj, visited, order, hasCycle);
+                        // Return empty if cycle detected
+                        if (hasCycle[0]) return new List<int>();
+                    }
+                }
 
+                // Reverse to get the correct order
+                order.Reverse();
+                return order;
+            }
 
+            private void dfs(
+                int node,
+                List<List<int>> adj,
+                int[] visited,
+                List<int> order,
+                bool[] hasCycle
+            )
+            {
+                visited[node] = 1; // Mark node as visiting
+                foreach (int neighbor in adj[node])
+                {
+                    if (visited[neighbor] == 0)
+                    {
+                        dfs(neighbor, adj, visited, order, hasCycle);
+                        // Early exit if a cycle is detected
+                        if (hasCycle[0]) return;
+                    }
+                    else if (visited[neighbor] == 1)
+                    {
+                        // Cycle detected
+                        hasCycle[0] = true;
+                        return;
+                    }
+                }
+                // Mark node as visited
+                visited[node] = 2;
+                // Add node to the order
+                order.Add(node);
+            }
 
+            /*
+            Approach 2: Kahn's Algorithm
+Complexity Analysis
+Let n be the size of the rowConditions and colConditions array.
+•	Time complexity: O(max(k⋅k,n))
+Since the total edges in the graph are n and all the nodes are visited exactly once, the time complexity of the breadth-first search operation is O(n).
+The time complexity of creating and filling the values of a k⋅k sized matrix is O(k⋅k). Both these operations are performed independently.
+Therefore, the time complexity is given by O(max(k⋅k,n)).
+•	Space complexity: O(max(k⋅k,n))
+Since the total edges in the graph are n, the space complexity of the breadth-first search operation is O(n).
+The space complexity of creating a k⋅k sized matrix is O(k⋅k). Both these operations are performed independently.
+Therefore, the space complexity is given by O(max(k⋅k,n)).
 
+            */
 
+            public int[][] KahnsAlgo(
+                int k,
+                int[][] rowConditions,
+                int[][] colConditions
+            )
+            {
+                int[] orderRows = TopologicalSort(rowConditions, k);
+                int[] orderColumns = TopologicalSort(colConditions, k);
+                if (
+                    orderRows.Length == 0 || orderColumns.Length == 0
+                ) return new int[0][];
+                int[][] matrix = new int[k][];
+                for (int i = 0; i < k; i++)
+                {
+                    for (int j = 0; j < k; j++)
+                    {
+                        if (orderRows[i] == orderColumns[j])
+                        {
+                            matrix[i][j] = orderRows[i];
+                        }
+                    }
+                }
+                return matrix;
 
+                int[] TopologicalSort(int[][] edges, int n)
+                {
+                    List<int>[] adj = new List<int>[n + 1];
+                    for (int i = 0; i <= n; i++)
+                    {
+                        adj[i] = new List<int>();
+                    }
+                    int[] deg = new int[n + 1], order = new int[n];
+                    int idx = 0;
+                    foreach (int[] x in edges)
+                    {
+                        adj[x[0]].Add(x[1]);
+                        deg[x[1]]++;
+                    }
+                    Queue<int> q = new Queue<int>();
+                    for (int i = 1; i <= n; i++)
+                    {
+                        if (deg[i] == 0) q.Enqueue(i);
+                    }
+                    while (q.Count > 0)
+                    {
+                        int f = q.Dequeue();
+                        order[idx++] = f;
+                        n--;
+                        foreach (int v in adj[f])
+                        {
+                            if (--deg[v] == 0) q.Enqueue(v);
+                        }
+                    }
+                    if (n != 0) return new int[0];
+                    return order;
+
+                }
+            }
 
 
         }
 
 
+        /* 995. Minimum Number of K Consecutive Bit Flips
+        https://leetcode.com/problems/minimum-number-of-k-consecutive-bit-flips/description/
+         */
+        class MinNumberKConsecutiveBitFlipsSol
+        {
+            /*
+            Approach 1: Using an Auxiliary Array
+            Complexity Analysis
+            Let n be the size of the input array.
+            •	Time Complexity: O(n)
+            The time complexity is O(n) because we iterate through the input array once, performing constant-time operations inside the loop.
+            •	Space Complexity: O(n)
+            The space complexity is O(n) because it creates a flipped array of size n to track element states.	
+
+            */
+            public int UsingAuxiliaryArray(int[] nums, int k)
+            {
+                // Keeps track of flipped states
+                bool[] flipped = new bool[nums.Length];
+                // Tracks valid flips within the past window
+                int validFlipsFromPastWindow = 0;
+                // Counts total flips needed
+                int flipCount = 0;
+
+                for (int i = 0; i < nums.Length; i++)
+                {
+                    if (i >= k)
+                    {
+                        // Decrease count of valid flips from the past window if needed
+                        if (flipped[i - k])
+                        {
+                            validFlipsFromPastWindow--;
+                        }
+                    }
+
+                    // Check if current bit needs to be flipped
+                    if (validFlipsFromPastWindow % 2 == nums[i])
+                    {
+                        // If flipping the window extends beyond the array length, return -1
+                        if (i + k > nums.Length)
+                        {
+                            return -1;
+                        }
+                        // Increment the count of valid flips and mark current as flipped
+                        validFlipsFromPastWindow++;
+                        flipped[i] = true;
+                        flipCount++;
+                    }
+                }
+
+                return flipCount;
+            }
+            /*
+            Approach 2: Using a Deque
+Complexity Analysis
+Let n be the size of the input array.
+•	Time complexity: O(n)
+The time complexity is O(n) because we make a single linear pass through the input array, performing constant-time operations inside the loop.
+•	Space complexity: O(k)
+The space complexity is O(k) because it uses a deque flipQueue to track flips within the window size k, resulting in maximum size k.
+
+            */
+            public int UsingDeque(int[] nums, int k)
+            {
+                int n = nums.Length; // Length of the input 
+                //Replace below Queue with actual Deque
+                Queue<int> flipQueue = new Queue<int>(); // Queue to keep track of flips
+                int flipped = 0; // Current flip state
+                int result = 0; // Total number of flips
+
+                for (int i = 0; i < n; i++)
+                {
+                    // Remove the effect of the oldest flip if it's out of the current window
+                    if (i >= k)
+                    {
+                        flipped ^= flipQueue.Dequeue();
+                    }
+
+                    // If the current bit is 0 (i.e., it needs to be flipped)
+                    if (flipped == nums[i])
+                    {
+                        // If we cannot flip a subarray starting at index i
+                        if (i + k > n)
+                        {
+                            return -1;
+                        }
+                        // Add a flip at this position
+                        flipQueue.Enqueue(1);
+                        flipped ^= 1; // Toggle the flipped state
+                        result += 1; // Increment the flip count
+                    }
+                    else
+                    {
+                        flipQueue.Enqueue(0);
+                    }
+                }
+
+                return result;
+            }
+            /*
+            Approach 3: In Constant Space
+Complexity Analysis
+Let n be the size of input array.
+•	Time complexity: O(n)
+The algorithm iterates through the input array once with constant time operations inside the loop (comparisons, increments/decrements, and array access). This results in a linear time complexity.
+•	Space complexity: O(1)
+The algorithm uses constant additional space for variables like currentFlips and totalFlips. It doesn't create any data structures that scale with the input size (n or k). Therefore, the space complexity is constant.
+
+            */
+            public int WithConstantSpace(int[] nums, int k)
+            {
+                int currentFlips = 0; // Tracks the current number of flips
+                int totalFlips = 0; // Tracks the total number of flips
+
+                for (int i = 0; i < nums.Length; ++i)
+                {
+                    // If the window slides out of the range and the leftmost element is
+                    // marked as flipped (2), decrement currentFlips
+                    if (i >= k && nums[i - k] == 2)
+                    {
+                        currentFlips--;
+                    }
+
+                    // Check if the current bit needs to be flipped
+                    if ((currentFlips % 2) == nums[i])
+                    {
+                        // If flipping would exceed array bounds, return -1
+                        if (i + k > nums.Length)
+                        {
+                            return -1;
+                        }
+                        // Mark the current bit as flipped
+                        nums[i] = 2;
+                        currentFlips++;
+                        totalFlips++;
+                    }
+                }
+
+                return totalFlips;
+            }
+
+        }
+
+        /* 2167. Minimum Time to Remove All Cars Containing Illegal Goods
+        https://leetcode.com/problems/minimum-time-to-remove-all-cars-containing-illegal-goods/description/
+         */
+        public class MinimumTimeToRemoveAllCarsContainIllegalGoodsSol
+        {
+            /*
+            Complexity
+Time O(n)
+Space O(1)
+            */
+            public int MinimumTime(string s)
+            {
+                // "left" is the minimum cost to move all the illegal cars from s[0] to s[i] (i + 1 cars in total), this can be done by 
+                // either removing all of the cars in this range consecutively starting from the left OR 
+                // removing some of them from the left and some of them in the middle. 
+                // "res" stands for the minimum cost of moving all the illegal cars, and it is important to understand that it has an upper bound of n, 
+                // which equals to the total cost if we remove all the cars consecutively from one end. 
+                // The reason we initialize it with n is that we seek to minimize it with other possible ways of removing cars. 
+                int n = s.Length, left = 0, res = n;
+                for (int i = 0; i < n; ++i)
+                {
+                    // As explained in the original post, each time when s[i] is illegal, we have the option to either 
+                    // remove it in a consecutive fashion starting from the left OR to remove it as if it is picked from the middle. 
+                    left = Math.Min(left + (s[i] - '0') * 2, i + 1);
+
+                    // Here is the key part. "left + n - 1 - i" means the total cost with the cars from s[i + 1] to s[n - 1] to be removed 
+                    // starting from the right consecutively, and we compare it with the current minimum res. 
+                    // An alternative way to look at it is: imagine if we have maintained a dp array,
+                    // where dp[i] := cost of removing illegal cars from s[0] to s[i] in the optimal fasion + 
+                    // cost of removing illegal cars from s[i + 1] to s[n - 1] consecutively from the right.
+                    // As the dp array is filled from 0 to n - 1 using the rules defined above, it covers all possible min cost at each index, 
+                    // while avoids optimizing the costs associated with the right portion of the input array. 
+                    // And then we find the minimum cost in the dp array, which is the answer we are looking for. 
+                    res = Math.Min(res, left + n - 1 - i);
+                }
+                return res;
+
+            }
+        }
+
+
+        /* 1381. Design a Stack With Increment Operation
+        https://leetcode.com/problems/design-a-stack-with-increment-operation/description
+         */
+        public class StackWithIncrementOperationSol
+        {
+
+            /*            Approach 1: Array
+            Implementation
+           Complexity Analysis
+           •	Time complexity: O(1) for push and pop, O(k) for increment
+           The push and pop methods both perform a single comparison and at most one array operation, all of which are constant time operations.
+           The increment method iterates over k elements in the worst case, thus having a O(k) time complexity.
+           •	Space complexity: O(maxSize)
+           The overall space complexity is O(maxSize), due to the stackArray which can store at most maxSize elements.
+
+            */
+            class CustomStacUsingArray
+            {
+
+                // Array to store stack elements
+                private int[] stackArray;
+                // Index of the top element in the stack
+                private int topIndex;
+
+                public CustomStacUsingArray(int maxSize)
+                {
+                    stackArray = new int[maxSize];
+                    topIndex = -1;
+                }
+
+                public void Push(int x)
+                {
+                    if (topIndex < stackArray.Length - 1)
+                    {
+                        stackArray[++topIndex] = x;
+                    }
+                }
+
+                public int Pop()
+                {
+                    if (topIndex >= 0)
+                    {
+                        return stackArray[topIndex--];
+                    }
+                    return -1; // Return -1 if the stack is empty
+                }
+
+                public void Increment(int k, int val)
+                {
+                    int limit = Math.Min(k, topIndex + 1);
+                    for (int i = 0; i < limit; i++)
+                    {
+                        stackArray[i] += val;
+                    }
+                }
+            }
+            /*
+            Approach 2: Linked List
+Complexity Analysis
+•	Time complexity: O(1) for push and pop, O(k) for increment
+The push and pop operations modify the last node in the list, both taking constant time.
+In the worst case, the increment method updates k elements, taking O(k) time.
+•	Space complexity: O(maxSize)
+The stack can store maxSize elements in the worst case.
+
+            */
+            class CustomStackUsingLinkedList
+            {
+
+                private LinkedList<int> stack;
+                private int maxSize;
+
+                public CustomStackUsingLinkedList(int maxSize)
+                {
+                    // Initialize the stack as a LinkedList for efficient add/remove operations
+                    stack = new LinkedList<int>();
+                    this.maxSize = maxSize;
+                }
+
+                public void Push(int x)
+                {
+                    // Add the element to the top of the stack if it hasn't reached maxSize
+                    if (stack.Count < maxSize)
+                    {
+                        stack.AddLast(x);
+                    }
+                }
+
+                public int Pop()
+                {
+                    // Return -1 if the stack is empty, otherwise remove and return the top element
+                    if (stack.Count == 0) return -1;
+
+                    var lastElem = stack.Last();
+                    stack.RemoveLast();
+                    return lastElem;
+                }
+
+                public void Increment(int k, int val)
+                {
+                    // Increment the bottom k elements (or all elements if k > stack size)
+                    var iterator = stack.First;
+
+                    while (iterator != null && k > 0)
+                    {
+                        iterator.Value += val;
+                        iterator = iterator.Next;
+                        k--;
+                    }
+                }
+            }
+            /*
+            Approach 3: Array using Lazy Propagation
+Complexity Analysis
+•	Time complexity: O(1) for all operations
+The push, pop, and increment methods perform only constant time operations (comparisons and array operations).
+•	Space complexity: O(maxSize)
+The stackArray and the incrementArray arrays both have a size of maxSize. Thus, the overall space complexity of the algorithm is O(2⋅maxSize)=O(maxSize)	
+
+            */
+            class CustomStackUsingArrayWithLazyPropogation
+            {
+
+                // Array to store stack elements
+                private int[] stackArray;
+
+                // Array to store increments for lazy propagation
+                private int[] incrementArray;
+
+                // Current top index of the stack
+                private int topIndex;
+
+                public CustomStackUsingArrayWithLazyPropogation(int maxSize)
+                {
+                    stackArray = new int[maxSize];
+                    incrementArray = new int[maxSize];
+                    topIndex = -1;
+                }
+
+                public void Push(int x)
+                {
+                    if (topIndex < stackArray.Length - 1)
+                    {
+                        stackArray[++topIndex] = x;
+                    }
+                }
+
+                public int Pop()
+                {
+                    if (topIndex < 0)
+                    {
+                        return -1;
+                    }
+
+                    // Calculate the actual value with increment
+                    int result = stackArray[topIndex] + incrementArray[topIndex];
+
+                    // Propagate the increment to the element below
+                    if (topIndex > 0)
+                    {
+                        incrementArray[topIndex - 1] += incrementArray[topIndex];
+                    }
+
+                    // Reset the increment for this position
+                    incrementArray[topIndex] = 0;
+
+                    topIndex--;
+                    return result;
+                }
+
+                public void Increment(int k, int val)
+                {
+                    if (topIndex >= 0)
+                    {
+                        // Apply increment to the topmost element of the range
+                        int incrementIndex = Math.Min(topIndex, k - 1);
+                        incrementArray[incrementIndex] += val;
+                    }
+                }
+            }
+
+        }
+
+        /* 2334. Subarray With Elements Greater Than Varying Threshold
+        https://leetcode.com/problems/subarray-with-elements-greater-than-varying-threshold/description/
+         */
+        class ValidSubarraySizeSol
+        {
+            /*
+Approach: Monotonic Stack
+            */
+            public int UsingMonotonicStack(int[] numbers, int threshold)
+            {
+                //the thing is. The next_smaller and the prev_smaller is helping us to find hoow long we can expand our element .
+                //Expanding element is in both side how long we have the element that have eigther smae as our value or greater than our value;
+
+                int length = numbers.Length;
+                int[] nextSmall = new int[length];
+                int[] prevSmall = new int[length];
+                Stack<int> stack = new Stack<int>();
+                stack.Push(0);
+                Array.Fill(nextSmall, length);
+                Array.Fill(prevSmall, -1);
+
+                for (int i = 1; i < length; i++)
+                {
+                    while (stack.Count > 0 && numbers[stack.Peek()] >= numbers[i])
+                    {
+                        stack.Pop();
+                    }
+                    if (stack.Count != 0)
+                    {
+                        prevSmall[i] = stack.Peek();
+                    }
+                    stack.Push(i);
+                }
+
+                stack = new Stack<int>();
+                stack.Push(length - 1);
+
+                for (int i = length - 2; i >= 0; i--)
+                {
+                    while (stack.Count > 0 && numbers[stack.Peek()] >= numbers[i])
+                    {
+                        stack.Pop();
+                    }
+                    if (stack.Count != 0)
+                    {
+                        nextSmall[i] = stack.Peek();
+                    }
+                    stack.Push(i);
+                }
+
+                for (int i = 0; i < length; i++)
+                {
+                    int subarrayLength = nextSmall[i] - prevSmall[i] - 1; // representing the lenth of our sope. in 
+                                                                          // representing the lenth of our sope. in 
+                                                                          // test case 1 lets talk about 3 it prev smaller index=0 and next smaller index =4;
+                                                                          // so it can be expandex 4-0-1=3 --> and those 3 element are 3 4 3.
+                    if (threshold / (double)subarrayLength < numbers[i])
+                    {
+                        // here if we have 3 element in our array and our threshold is 6 then, all the elemet 
+                        //must have 6/3 =2  greater than 2 as value;
+                        // now testcase:1 ,we have seen that the max expanding length for 3 ie(nums[1] or nums[3]) is 3 and that reprsent 
+                        //that 3 element have 3 or more than 3 value. so they are definitly grater than 2.
+                        // 6/3 <3 --> thats a valid case. 
+
+                        return subarrayLength;
+                    }
+                }
+                return -1;
+            }
+        }
+
+        /* 514. Freedom Trail
+        https://leetcode.com/problems/freedom-trail/description/
+         */
+        class FindRotateStepsSol
+        {
+            private const int MAX = int.MaxValue;
+
+            /*
+            Approach 0: Top-Down Dynamic Programming - TLE
+
+            */
+            public int TopDownDPNaive(String ring, String key)
+            {
+                return TryLock(0, 0, ring, key, MAX);
+            }
+
+            // Find the minimum steps between two indexes of ring
+            private int CountSteps(int curr, int next, int ringLength)
+            {
+                int stepsBetween = Math.Abs(curr - next);
+                int stepsAround = ringLength - stepsBetween;
+                return Math.Min(stepsBetween, stepsAround);
+            }
+
+            // Find the minimum number of steps to spell the keyword
+            public int TryLock(int ringIndex, int keyIndex, String ring, String key, int minSteps)
+            {
+                // If we reach the end of the key, it has been spelled
+                if (keyIndex == key.Length)
+                {
+                    return 0;
+                }
+                // For each occurrence of the character at key_index of key in ring
+                // Calculate the minimum steps to that character from the ringIndex of ring
+                for (int i = 0; i < ring.Length; i++)
+                {
+                    if (ring[i] == key[keyIndex])
+                    {
+                        int totalSteps = CountSteps(ringIndex, i, ring.Length) + 1 +
+                                                    TryLock(i, keyIndex + 1, ring, key, MAX);
+                        minSteps = Math.Min(minSteps, totalSteps);
+                    }
+                }
+                return minSteps;
+            }
+
+            /*
+     Approach 1: Top-Down Dynamic Programming - Optimized
+Complexity Analysis
+Let R be the length of ring and K be the length of key.
+•	Time Complexity: O(K⋅R^2).
+When every character in ring is unique, K recursive calls are made, one for each letter in the keyword.
+At worst, when every character of ring is the same, we initially call trylock R times. For each of these R recursive calls, tryLock is called for each occurrence of the character in ring for each character in the keyword. This means the trylock function is called a total of R⋅K⋅R times.
+Therefore, the overall time complexity is O(K⋅R^2).
+•	Space Complexity: O(K⋅R)
+O(K⋅R) space is used for the map. The call stack can grow as deep as K since a recursive call is made for each character in key. This makes the overall space complexity O(K⋅R).
+
+     */
+            public int TopDownDPOptimal(string ring, string key)
+            {
+                Dictionary<(int, int), int> bestSteps = new Dictionary<(int, int), int>();
+                return TryLock(0, 0, ring, key, MAX, bestSteps);
+            }
+            public int TryLock(int ringIndex, int keyIndex, string ring, string key, int minSteps,
+                Dictionary<(int, int), int> bestSteps)
+            {
+                // If we have already calculated this sub-problem, return the result
+                if (bestSteps.ContainsKey((ringIndex, keyIndex)))
+                {
+                    return bestSteps[(ringIndex, keyIndex)];
+                }
+                // If we reach the end of the key, it has been spelled
+                if (keyIndex == key.Length)
+                {
+                    return 0;
+                }
+                // For each occurrence of the character at keyIndex of key in ring
+                // Calculate and save the minimum steps to that character from the ringIndex of ring
+                for (int charIndex = 0; charIndex < ring.Length; charIndex++)
+                {
+                    if (ring[charIndex] == key[keyIndex])
+                    {
+                        int totalSteps = CountSteps(ringIndex, charIndex, ring.Length) + 1
+                                                + TryLock(charIndex, keyIndex + 1, ring, key, MAX, bestSteps);
+                        minSteps = Math.Min(minSteps, totalSteps);
+                        bestSteps[(ringIndex, keyIndex)] = minSteps;
+                    }
+                }
+                return minSteps;
+            }
+
+            /*
+            Approach 2: Bottom-Up Dynamic Programming
+            Complexity Analysis
+Let R be the length of ring and K be the length of key.
+•	Time Complexity: O(K⋅R^2)
+We use nested loops iterating K times through key and R times through ring for all R characters in ring. This gives an overall time complexity of O(K⋅R^2).
+•	Space Complexity: O(KR)
+We use a 2D array with the dimensions K+1 and R.
+
+            */
+            public int BottomUpDP(String ring, String key)
+            {
+                int ringLen = ring.Length;
+                int keyLen = key.Length;
+                int[][] bestSteps = new int[ringLen][];
+                // Initialize values of best_steps to largest integer
+                foreach (int[] row in bestSteps)
+                {
+                    Array.Fill(row, int.MaxValue);
+                }
+                // Initialize last column to zero to represent the word has been spelled 
+                for (int i = 0; i < ring.Length; i++)
+                {
+                    bestSteps[i][keyLen] = 0;
+                }
+                // For each occurrence of the character at keyIndex of key in ring
+                // Stores minimum steps to the character from ringIndex of ring
+                for (int keyIndex = keyLen - 1; keyIndex >= 0; keyIndex--)
+                {
+                    for (int ringIndex = 0; ringIndex < ringLen; ringIndex++)
+                    {
+                        for (int charIndex = 0; charIndex < ringLen; charIndex++)
+                        {
+                            if (ring[charIndex] == key[keyIndex])
+                            {
+                                bestSteps[ringIndex][keyIndex] = Math.Min(bestSteps[ringIndex][keyIndex],
+                                        1 + CountSteps(ringIndex, charIndex, ringLen)
+                                        + bestSteps[charIndex][keyIndex + 1]);
+                            }
+                        }
+                    }
+                }
+                return bestSteps[0][0];
+            }
+            /*
+            Approach 3: Space-Optimized Bottom-Up Dynamic Programming
+            Complexity Analysis
+Let R be the length of ring and K be the length of key.
+•	Time Complexity: O(K⋅R^2)
+We use nested loops iterating K times through key and R times through ring for all R characters in ring. This gives an overall time complexity of O(K⋅R^2).
+•	Space Complexity: O(R).
+We used two arrays of length R to store the minimum steps between the characters. This gives an overall space complexity of O(R).
+
+            */
+            public int BottomUpDPSpaceOptimal(String ring, String key)
+            {
+                int ringLen = ring.Length;
+                int keyLen = key.Length;
+                int[] curr = new int[ringLen];
+                int[] prev = new int[ringLen];
+                Array.Fill(prev, 0);
+                // For each occurrence of the character at key_index of key in ring
+                // Stores minimum steps to the character from ringIndex of ring
+                for (int keyIndex = keyLen - 1; keyIndex >= 0; keyIndex--)
+                {
+                    Array.Fill(curr, int.MaxValue);
+                    for (int ringIndex = 0; ringIndex < ringLen; ringIndex++)
+                    {
+                        for (int charIndex = 0; charIndex < ringLen; charIndex++)
+                        {
+                            if (ring[charIndex] == key[keyIndex])
+                            {
+                                curr[ringIndex] = Math.Min(curr[ringIndex],
+                                        1 + CountSteps(ringIndex, charIndex, ringLen) + prev[charIndex]);
+                            }
+                        }
+                    }
+                    prev = (int[])curr.Clone();
+                }
+                return prev[0];
+            }
+            /*
+            Approach 4: Shortest Path
+            Complexity Analysis
+Let R be the length of ring and K be the length of key.
+•	Time complexity: O(RK⋅log(RK))
+Building the characterIndices hashmap takes O(R) time as we add an entry for each character in ring.
+The main loop will run once for each pair that we visit. We use the seen set, so we never visit the same (keyIndex, ringIndex) pair more than once. The maximum number of pairs we visit is the number of unique possible pairs, which is R⋅K.
+Looking up a pair in seen takes O(1) time in the average case.
+It takes the priority queue O(RK⋅log(RK)) time to push or pop R⋅K elements from the queue.
+Therefore, the overall time complexity is O(RK⋅log(RK)).
+•	Space complexity: O(R⋅K)
+The characterIndices hashmap is size R because it stores a total of R (character, index) mappings.
+The main space used is by the priority queue, which can store up to R⋅K pairs.
+We also use the seen hash set, which can grow up to size R⋅K.	
+
+            */
+            public int UsingShortestPath(string ring, string key)
+            {
+                int ringLength = ring.Length;
+                int keyLength = key.Length;
+
+                // Dictionary to store the indices of occurrences of each character in the ring
+                Dictionary<char, List<int>> characterIndices = new Dictionary<char, List<int>>();
+                for (int i = 0; i < ring.Length; i++)
+                {
+                    char character = ring[i];
+                    if (!characterIndices.ContainsKey(character))
+                    {
+                        characterIndices[character] = new List<int>();
+                    }
+                    characterIndices[character].Add(i);
+                }
+
+                // Initialize the min heap (priority queue) with the starting point
+                // Each element of the heap is an array of integers representing:
+                // totalSteps, ringIndex, keyIndex
+                PriorityQueue<int[], int[]> heap = new PriorityQueue<int[], int[]>(Comparer<int[]>.Create((a, b) => a[0].CompareTo(b[0])));
+
+                heap.Enqueue(new int[] { 0, 0, 0 }, new int[] { 0, 0, 0 });
+
+                // HashSet to keep track of visited states
+                HashSet<(int, int)> seen = new HashSet<(int, int)>();
+
+                // Spell the keyword using the metal dial
+                int totalSteps = 0;
+                while (heap.Count > 0)
+                {
+                    // Pop the element with the smallest total steps from the heap
+                    int[] state = heap.Dequeue();
+                    totalSteps = state[0];
+                    int ringIndex = state[1];
+                    int keyIndex = state[2];
+
+                    // We have spelled the keyword
+                    if (keyIndex == keyLength)
+                    {
+                        break;
+                    }
+
+                    // Continue if we have visited this character from this position in ring before
+                    var currentState = (ringIndex, keyIndex);
+                    if (seen.Contains(currentState))
+                    {
+                        continue;
+                    }
+
+                    // Otherwise, add this pair to the visited list
+                    seen.Add(currentState);
+
+                    // Add the rest of the occurrences of this character in ring to the heap
+                    foreach (int nextIndex in characterIndices[key[keyIndex]])
+                    {
+                        var newVal = new int[] {
+                totalSteps + CountSteps(ringIndex, nextIndex, ringLength),
+                nextIndex,
+                keyIndex + 1
+            };
+                        heap.Enqueue(newVal, newVal);
+                    }
+                }
+
+                // Return the total steps and add keyLength to account for 
+                // pressing the center button for each character in the keyword
+                return totalSteps + keyLength;
+            }
+
+        }
 
 
 
