@@ -868,25 +868,365 @@ the space complexity is identical to that of the brute force solution.
 
 
 
+        /* 3165. Maximum Sum of Subsequence With Non-adjacent Elements
+        https://leetcode.com/problems/maximum-sum-of-subsequence-with-non-adjacent-elements/description/
+         */
+
+        public class MaximumSumSubsequenceWithNonAdjcentElemSol
+        {
+            private const long inf = 1L << 60;
+            private const long mod = 1_000_000_007;
+
+            /* 1. Segment Tree 
+            Complexity
+            •	Time complexity: O(n+qlogn)
+            •	Space complexity: O(n+q)
+
+            */
+            public int UsingSegmentTree(List<int> nums, List<List<int>> queries)
+            {
+                SegmentTree segmentTree = new SegmentTree(nums, 0, (uint)nums.Count - 1);
+
+                long res = 0;
+                foreach (var query in queries)
+                {
+                    segmentTree.Update(query[0], query[1]);
+                    res += Math.Max(segmentTree.selected[0, 0], Math.Max(segmentTree.selected[0, 1], Math.Max(segmentTree.selected[1, 0], segmentTree.selected[1, 1])));
+                    res %= mod;
+                }
+                return (int)res;
+            }
+            private class SegmentTree
+            {
+                public SegmentTree? l, r;
+                public uint lo, hi;
+                public long[,] selected = new long[2, 2];
+
+                public SegmentTree(List<int> nums, uint lo, uint hi)
+                {
+                    this.lo = lo;
+                    this.hi = hi;
+                    if (lo < hi)
+                    {
+                        uint mid = (lo + hi) / 2;
+                        l = new SegmentTree(nums, lo, mid);
+                        r = new SegmentTree(nums, (uint)mid + 1, hi);
+                        Combine();
+                    }
+                    else
+                    {
+                        selected[0, 0] = 0;
+                        selected[0, 1] = -inf;
+                        selected[1, 0] = -inf;
+                        selected[1, 1] = nums[(int)lo];
+                    }
+                }
+
+                private void Combine()
+                {
+                    selected[0, 0] = Math.Max(l!.selected[0, 0] + r!.selected[0, 0], Math.Max(l.selected[0, 1] + r.selected[0, 0], l.selected[0, 0] + r.selected[1, 0]));
+                    selected[0, 1] = Math.Max(l.selected[0, 0] + r.selected[0, 1], Math.Max(l.selected[0, 1] + r.selected[0, 1], l.selected[0, 0] + r.selected[1, 1]));
+                    selected[1, 0] = Math.Max(l.selected[1, 0] + r.selected[0, 0], Math.Max(l.selected[1, 1] + r.selected[0, 0], l.selected[1, 0] + r.selected[1, 0]));
+                    selected[1, 1] = Math.Max(l.selected[1, 0] + r.selected[0, 1], Math.Max(l.selected[1, 1] + r.selected[0, 1], l.selected[1, 0] + r.selected[1, 1]));
+                }
+
+                public void Update(int i, long x)
+                {
+                    if (i < (int)lo || (int)hi < i)
+                    {
+                        return;
+                    }
+
+                    if (lo == hi)
+                    {
+                        selected[0, 0] = 0;
+                        selected[1, 1] = x;
+                        return;
+                    }
+
+                    l!.Update(i, x);
+                    r!.Update(i, x);
+
+                    Combine();
+                }
+            }
 
 
 
+        }
 
 
+        /* 3177. Find the Maximum Length of a Good Subsequence II
+        https://leetcode.com/problems/find-the-maximum-length-of-a-good-subsequence-ii/description/
+         */
+        public class MaximumLengthSol
+        {
+            /*      Complexity
+Time O(nk)
+Space O(nk) */
+            public int MaximumLength(int[] nums, int k)
+            {
+
+                Dictionary<int, int>[] dynamicProgrammingArray = new Dictionary<int, int>[k + 1];
+                for (int index = 0; index <= k; index++)
+                {
+                    dynamicProgrammingArray[index] = new Dictionary<int, int>();
+                }
+                int[] resultArray = new int[k + 1];
+                foreach (int element in nums)
+                {
+                    for (int index = k; index >= 0; --index)
+                    {
+                        int value = dynamicProgrammingArray[index].GetValueOrDefault(element, 0);
+                        value = Math.Max(value + 1, (index > 0 ? resultArray[index - 1] + 1 : 0));
+                        dynamicProgrammingArray[index][element] = value;
+                        resultArray[index] = Math.Max(resultArray[index], value);
+                    }
+                }
+                return resultArray[k];
+            }
+        }
 
 
+        /* 940. Distinct Subsequences II
+        https://leetcode.com/problems/distinct-subsequences-ii/description/
+         */
+        class DistinctSubseqIISol
+        {
+
+            /* Approach 1: Dynamic Programming
+            Complexity Analysis
+            •	Time Complexity: O(N), where N is the length of S.
+            •	Space Complexity: O(N). It is possible to adapt this solution to take O(1) space.
+
+             */
+            public int DP(String S)
+            {
+                int MOD = 1_000_000_007;
+                int N = S.Length;
+                int[] dp = new int[N + 1];
+                dp[0] = 1;
+
+                int[] last = new int[26];
+                Array.Fill(last, -1);
+
+                for (int i = 0; i < N; ++i)
+                {
+                    int x = S[i] - 'a';
+                    dp[i + 1] = dp[i] * 2 % MOD;
+                    if (last[x] >= 0)
+                        dp[i + 1] -= dp[last[x]];
+                    dp[i + 1] %= MOD;
+                    last[x] = i;
+                }
+
+                dp[N]--;
+                if (dp[N] < 0) dp[N] += MOD;
+                return dp[N];
+            }
+        }
+
+        /* 446. Arithmetic Slices II - Subsequence
+        https://leetcode.com/problems/arithmetic-slices-ii-subsequence/description/
+         */
+
+        class NumberOfArithmeticSlicesSol
+        {
+            private int length;
+            private int result;
+            /* Approach #1 Brute Force [Time Limit Exceeded]
+            Complexity Analysis
+•	Time complexity : O(2^n). For each element in the array, it can be in or outside the subsequence. So the time complexity is O(2^n).
+•	Space complexity : O(n). We only need the space to store the array.
+
+             */
+            public int Naive(int[] array)
+            {
+                length = array.Length;
+                result = 0;
+                List<long> current = new List<long>();
+                DepthFirstSearch(0, array, current);
+                return (int)result;
+            }
+            private void DepthFirstSearch(int depth, int[] array, List<long> current)
+            {
+                if (depth == length)
+                {
+                    if (current.Count < 3)
+                    {
+                        return;
+                    }
+                    long difference = current[1] - current[0];
+                    for (int i = 1; i < current.Count; i++)
+                    {
+                        if (current[i] - current[i - 1] != difference)
+                        {
+                            return;
+                        }
+                    }
+                    result++;
+                    return;
+                }
+                DepthFirstSearch(depth + 1, array, current);
+                current.Add((long)array[depth]);
+                DepthFirstSearch(depth + 1, array, current);
+                current.Remove((long)array[depth]);
+            }
+            /* Approach #2 Dynamic Programming [Accepted]
+            Complexity Analysis
+            •	Time complexity : O(n^2). We can use double loop to enumerate all possible states.
+            •	Space complexity : O(n^2). For each i, we need to store at most n distinct common differences, so the total space complexity is O(n^2).
+
+             */
+            public int DP(int[] A)
+            {
+                int n = A.Length;
+                long ans = 0;
+                Dictionary<int, int>[] cnt = new Dictionary<int, int>[n];
+                for (int i = 0; i < n; i++)
+                {
+                    cnt[i] = new Dictionary<int, int>(i);
+                    for (int j = 0; j < i; j++)
+                    {
+                        long delta = (long)A[i] - (long)A[j];
+                        if (delta < int.MinValue || delta > int.MaxValue)
+                        {
+                            continue;
+                        }
+                        int diff = (int)delta;
+                        int sum = cnt[j].GetValueOrDefault(diff, 0);
+                        int origin = cnt[i].GetValueOrDefault(diff, 0);
+                        cnt[i][diff] = origin + sum + 1;
+                        ans += sum;
+                    }
+                }
+                return (int)ans;
+            }
+
+        }
 
 
+        /* 1425. Constrained Subsequence Sum
+        https://leetcode.com/problems/constrained-subsequence-sum/description/
+         */
+        public class ConstrainedSubsetSumSol
+        {
+            /* Approach 1: Heap/Priority Queue
+Complexity Analysis
+Given n as the length of nums,
+•	Time complexity: O(n⋅logn)
+We iterate over each index of nums once. At each iteration, we have a while loop and some heap operations. The while loop runs in O(1) amortized - because an element can only be popped from the heap once, the while loop cannot run more than O(n) times in total across all iterations.
+The heap operations depend on the size of the heap. In an array of only positive integers, we will never pop from the heap. Thus, the size of the heap will grow to O(n) and the heap operations will cost O(logn).
+•	Space complexity: O(n)
+As mentioned above, heap could grow to a size of n.	
 
+             */
+            public int MaxHeapPQ(int[] nums, int k)
+            {
+                //MaxHeap
+                PriorityQueue<int[], int[]> heap = new PriorityQueue<int[], int[]>(
+                    Comparer<int[]>.Create((a, b) => b[0] - a[0]));
 
+                heap.Enqueue(new int[] { nums[0], 0 }, new int[] { nums[0], 0 });
+                int ans = nums[0];
 
+                for (int i = 1; i < nums.Length; i++)
+                {
+                    while (i - heap.Peek()[1] > k)
+                    {
+                        heap.Dequeue();
+                    }
 
+                    int curr = Math.Max(0, heap.Peek()[0]) + nums[i];
+                    ans = Math.Max(ans, curr);
+                    heap.Enqueue(new int[] { curr, i }, new int[] { curr, i });
+                }
 
+                return ans;
+            }
 
+            /* Approach 2: TreeMap-Like Data Structure /SortedDirectionary in C#
+Complexity Analysis
+Given n as the length of nums,
+•	Time complexity: O(n⋅logk)
+We iterate over each index of nums once. At each iteration, we have some operations with window. The cost of these operations is a function of the size of window. As window will never exceed a size of k, these operations cost O(logk).
+•	Space complexity: O(n)
+window will not exceed a size of k, but dp requires O(n) space.
 
+             */
+            public int UsingSortedDict(int[] numbers, int k)
+            {
+                SortedDictionary<int, int> slidingWindow = new SortedDictionary<int, int>();
+                slidingWindow[0] = 0;
 
+                int[] dynamicProgrammingArray = new int[numbers.Length];
 
+                for (int index = 0; index < numbers.Length; index++)
+                {
+                    dynamicProgrammingArray[index] = numbers[index] + slidingWindow.Last().Key;
+                    slidingWindow[dynamicProgrammingArray[index]] = slidingWindow.GetValueOrDefault(dynamicProgrammingArray[index], 0) + 1;
 
+                    if (index >= k)
+                    {
+                        slidingWindow[dynamicProgrammingArray[index - k]]--;
+                        if (slidingWindow[dynamicProgrammingArray[index - k]] == 0)
+                        {
+                            slidingWindow.Remove(dynamicProgrammingArray[index - k]);
+                        }
+                    }
+                }
+
+                int result = int.MinValue;
+                foreach (int value in dynamicProgrammingArray)
+                {
+                    result = Math.Max(result, value);
+                }
+
+                return result;
+            }
+            /* Approach 3: Monotonic Deque
+Complexity Analysis
+Given n as the length of nums,
+•	Time complexity: O(n)
+We iterate over each index once. At each iteration, we have a while loop. This while loop runs in O(1) amortized. Each element in nums can only be pushed and popped from queue at most once. Thus, this while loop will not run more than n times across all n iterations. Everything else in each iteration runs in O(1). Thus, each iteration costs O(1) amortized.
+•	Space complexity: O(n)
+dp requires O(n) space.
+Since we always remove out-of-range elements from queue, so it contains at most k elements and requires O(k) space.
+
+             */
+            public int UsingMonotonicDeque(int[] nums, int k)
+            {
+                LinkedList<int> queue = new LinkedList<int>();
+                int[] dp = new int[nums.Length];
+
+                for (int index = 0; index < nums.Length; index++)
+                {
+                    if (queue.Count > 0 && index - queue.First() > k)
+                    {
+                        queue.RemoveFirst();
+                    }
+
+                    dp[index] = (queue.Count > 0 ? dp[queue.First()] : 0) + nums[index];
+                    while (queue.Count > 0 && dp[queue.Last.Value] < dp[index])
+                    {
+                        queue.RemoveLast();
+                    }
+
+                    if (dp[index] > 0)
+                    {
+                        queue.AddLast(index);
+                    }
+                }
+
+                int answer = int.MinValue;
+                foreach (var num in dp)
+                {
+                    answer = Math.Max(answer, num);
+                }
+
+                return answer;
+            }
+        }
 
 
 

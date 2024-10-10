@@ -581,5 +581,210 @@ Complexity analysis
             this.Recurse(inputString, 0, 0, 0, left, right, new StringBuilder());
             return new List<string>(this.validExpressions);
         }
+
+        /* 1249. Minimum Remove to Make Valid Parentheses
+        https://leetcode.com/problems/minimum-remove-to-make-valid-parentheses/description/
+         */
+        public class MinRemoveToMakeValidParenSol
+        {
+
+            /* Approach 1: Using a Stack and String Builder
+            Complexity Analysis
+            •	Time complexity : O(n), where n is the length of the input string.
+            There are 3 loops we need to analyze. We also need to check carefully for any library functions that are not constant time.
+            The first loop iterates over the string, and for each character, either does nothing, pushes to a stack or adds to a set. Pushing to a stack and adding to a set are both O(1). Because we are processing each character with an O(1) operation, this overall loop is O(n).
+            The second loop (hidden in library function calls for the Python code) pops each item from the stack and adds it to the set. Again, popping items from a stack is O(1), and there are at most n characters on the stack, and so it too is O(n).
+            The third loop iterates over the string again, and puts characters into a StringBuilder/ list. Checking if an item is in a set and appending to the end of a String Builder or list is O(1). Again, this is O(n) overall.
+            The StringBuilder.toString() method is O(n), and so is the "".join(...). So again, this operation is O(n).
+            So this gives us O(4n), and we drop the 4 because it is a constant.
+            •	Space complexity : O(n), where n is the length of the input string.
+            We are using a stack, set, and string builder, each of which could have up to n characters in them, and so require up to O(n) space.
+
+             */
+            public string UsingStackAndStringBuilder(string inputString)
+            {
+                HashSet<int> indexesToRemove = new HashSet<int>();
+                Stack<int> indexStack = new Stack<int>();
+
+                for (int index = 0; index < inputString.Length; index++)
+                {
+                    if (inputString[index] == '(')
+                    {
+                        indexStack.Push(index);
+                    }
+                    if (inputString[index] == ')')
+                    {
+                        if (indexStack.Count == 0)
+                        {
+                            indexesToRemove.Add(index);
+                        }
+                        else
+                        {
+                            indexStack.Pop();
+                        }
+                    }
+                }
+
+                // Put any indexes remaining on stack into the set.
+                while (indexStack.Count > 0) indexesToRemove.Add(indexStack.Pop());
+
+                StringBuilder stringBuilder = new StringBuilder();
+                for (int index = 0; index < inputString.Length; index++)
+                {
+                    if (!indexesToRemove.Contains(index))
+                    {
+                        stringBuilder.Append(inputString[index]);
+                    }
+                }
+
+                return stringBuilder.ToString();
+            }
+
+            /* Approach 2: Two Pass String Builder
+            Complexity Analysis
+•	Time complexity : O(n), where n is the length of the input string.
+We need to analyze the removeInvalidClosing function and then the outside code.
+removeInvalidClosing processes each character once and optionally modifies balance and adds the character to a string builder. Adding to the end of a string builder is O(1). As there are at most n characters to process, the overall cost is O(n).
+The other code makes 2 calls to removeInvalidClosing, 2 string reversals, and 1 conversion from string builder to string. These operations are O(n), and the 3 is treated as a constant so is dropped. Again, this gives us an overall cost of O(n).
+Because all parts of the code are O(n), the overall time complexity is O(n).
+•	Space complexity : O(n), where n is the length of the input string.
+The string building still requires O(n) space. However, the constants are smaller than the previous approach, as we no longer have the set or stack.
+It is impossible to do better, because the input is an immutable string, and the output must be an immutable string. Therefore, manipulating the string cannot be done in-place, and requires O(n) space to modify.
+
+             */
+            public string TwoPassStringBuilder(string inputString)
+            {
+                StringBuilder result = RemoveInvalidClosing(inputString, '(', ')');
+                result = RemoveInvalidClosing(result.ToString().Reverse().ToString(), ')', '(');
+                return result.ToString().Reverse().ToString();
+            }
+            private StringBuilder RemoveInvalidClosing(string inputString, char openingBracket, char closingBracket)
+            {
+                StringBuilder stringBuilder = new StringBuilder();
+                int balance = 0;
+                for (int i = 0; i < inputString.Length; i++)
+                {
+                    char currentChar = inputString[i];
+                    if (currentChar == openingBracket)
+                    {
+                        balance++;
+                    }
+                    if (currentChar == closingBracket)
+                    {
+                        if (balance == 0) continue;
+                        balance--;
+                    }
+                    stringBuilder.Append(currentChar);
+                }
+                return stringBuilder;
+            }
+            /* Approach 3: Shortened Two Pass String Builder
+Complexity Analysis
+•	Time complexity : O(n), where n is the length of the input string.
+Same as the above approaches. We have 2 loops that are looping through up to n characters, doing an O(1) operation on each. We also have some O(n) library function calls outside of the loops.
+•	Space complexity : O(n), where n is the length of the input string.
+Like the previous approach, the string building requires O(n) space.
+
+             */
+            public String ShortenedTwoPassStringBuilder(String s)
+            {
+
+                // Pass 1: Remove all invalid ")"
+                StringBuilder sb = new StringBuilder();
+                int openSeen = 0;
+                int balance = 0;
+                for (int i = 0; i < s.Length; i++)
+                {
+                    char c = s[i];
+                    if (c == '(')
+                    {
+                        openSeen++;
+                        balance++;
+                    }
+                    if (c == ')')
+                    {
+                        if (balance == 0) continue;
+                        balance--;
+                    }
+                    sb.Append(c);
+                }
+
+                // Pass 2: Remove the rightmost "("
+                StringBuilder result = new StringBuilder();
+                int openToKeep = openSeen - balance;
+                for (int i = 0; i < sb.Length; i++)
+                {
+                    char c = sb[i];
+                    if (c == '(')
+                    {
+                        openToKeep--;
+                        if (openToKeep < 0) continue;
+                    }
+                    result.Append(c);
+                }
+
+                return result.ToString();
+            }
+        }
+
+        /* 921. Minimum Add to Make Parentheses Valid
+        https://leetcode.com/problems/minimum-add-to-make-parentheses-valid/description/?envType=company&envId=facebook&favoriteSlug=facebook-all&difficulty=MEDIUM
+         */
+        class MinAddToMakeValidParenSol
+        {
+
+/* Approach: Open Bracket Counter
+Complexity Analysis
+Here, N is the number of characters in the string s.
+•	Time complexity: O(N)
+We iterate over each character in the string s once. For each character, we either increment, decrement, or compare a counter. These operations take constant time. Therefore, the overall time complexity is linear, O(N).
+•	Space complexity: O(1)
+We use only two variables, openBrackets and minAddsRequired, to count unmatched brackets. These variables require constant space, and we do not use any extra data structures that depend on the input size. Thus, the space complexity is constant.
+
+ */
+            public int OpenBracketCounter(String s)
+            {
+                int openBrackets = 0;
+                int minAddsRequired = 0;
+
+                foreach (char c in s)
+                {
+                    if (c == '(')
+                    {
+                        openBrackets++;
+                    }
+                    else
+                    {
+                        // If an open bracket exists, match it with the closing one
+                        // If not, we need to add an open bracket.
+                        if (openBrackets > 0)
+                        {
+                            openBrackets--;
+                        }
+                        else
+                        {
+                            minAddsRequired++;
+                        }
+                    }
+                }
+
+                // Add the remaining open brackets as closing brackets would be required.
+                return minAddsRequired + openBrackets;
+            }
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     }
 }

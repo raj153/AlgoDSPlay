@@ -879,12 +879,509 @@ The recursion stack requires O(logN) space because the tree is height-balanced. 
         }
 
 
+        /* 272. Closest Binary Search Tree Value II
+        https://leetcode.com/problems/closest-binary-search-tree-value-ii/description/
+         */
+        public class ClosestKValuesSol
+        {
+
+            /* 
+            Approach 1: Sort With Custom Comparator 
+            Complexity Analysis
+            Given n as the number of nodes in the tree,
+            •	Time complexity: O(n⋅logn)
+            We traverse the tree and collect all values in O(n). Then, we sort the values which costs O(n⋅logn).
+            •	Space complexity: O(n)
+            Both arr and the recursion call stack use O(n) space. Depending on the language, some space is also used for sorting, but not more than O(n).
+
+            */
+            public IList<int> SortWithCustomCompare(TreeNode root, double target, int k)
+            {
+                List<int> valuesList = new List<int>();
+                Dfs(root, valuesList);
+
+                valuesList.Sort((value1, value2) => Math.Abs(value1 - target) <= Math.Abs(value2 - target) ? -1 : 1);
+
+                return valuesList.GetRange(0, k);
+            }
+
+            private void Dfs(TreeNode node, List<int> valuesList)
+            {
+                if (node == null)
+                {
+                    return;
+                }
+
+                valuesList.Add(node.Val);
+                Dfs(node.Left, valuesList);
+                Dfs(node.Right, valuesList);
+            }
+
+            /* 
+                        Approach 2: Traverse With Heap 
+Complexity Analysis
+Given n as the number of nodes in the tree,
+•	Time complexity: O(n⋅logk)
+A heap operation's cost is a function of the size of the heap. We are limiting the size of our heap to k, so heap operations will cost O(logk).
+We visit each node once. At each node, we perform up to two heap operations. Therefore, we perform a maximum of 2n heap operations, giving us a time complexity of O(n⋅logk).
+•	Space complexity: O(n+k)
+We need O(n) space for the recursion call stack, and O(k) space for the heap.
+
+                        */
+
+            public List<int> TraverseWithHeap(TreeNode root, double target, int k)
+            {
+                //TODO: Test below heap comparator 
+                PriorityQueue<int, int> heap = new PriorityQueue<int, int>(Comparer<int>.Create((a, b) => Math.Abs(a - target) > Math.Abs(b - target) ? -1 : 1));
+                Dfs(root, heap, k);
+                List<int> results = new List<int>();
+                while (heap.Count > 0)
+                    results.Add(heap.Dequeue());
+                return results;
+            }
+
+            private void Dfs(TreeNode node, PriorityQueue<int, int> heap, int k)
+            {
+                if (node == null)
+                {
+                    return;
+                }
+
+                heap.Enqueue(node.Val, node.Val);
+                if (heap.Count > k)
+                {
+                    heap.Dequeue();
+                }
+
+                Dfs(node.Left, heap, k);
+                Dfs(node.Right, heap, k);
+            }
+
+            /* 
+            Approach 3: Inorder Traversal + Sliding Window 
+            Complexity Analysis
+Given n as the number of nodes in the tree,
+•	Time complexity: O(n+k)
+First, we perform a DFS on the tree to build arr which costs O(n).
+Next, we perform either a binary search or linear scan on arr which costs O(logn) or O(n). Neither will change the complexity.
+Finally, we perform a sliding window process that costs O(k) since we add an element to the window at each iteration and stop when the window has a size of k.
+•	Space complexity: O(n)
+Both arr and the recursion call stack use O(n) space.
+
+            */
+            public IList<int> InorderTraverseWithSlidingWindow(TreeNode root, double target, int k)
+            {
+                List<int> valuesList = new List<int>();
+                DepthFirstSearch(root, valuesList);
+
+                int startIndex = 0;
+                double minimumDifference = double.MaxValue;
+
+                for (int i = 0; i < valuesList.Count; i++)
+                {
+                    if (Math.Abs(valuesList[i] - target) < minimumDifference)
+                    {
+                        minimumDifference = Math.Abs(valuesList[i] - target);
+                        startIndex = i;
+                    }
+                }
+
+                int leftIndex = startIndex;
+                int rightIndex = startIndex + 1;
+
+                while (rightIndex - leftIndex - 1 < k)
+                {
+                    // Be careful to not go out of bounds
+                    if (leftIndex < 0)
+                    {
+                        rightIndex += 1;
+                        continue;
+                    }
+
+                    if (rightIndex == valuesList.Count || Math.Abs(valuesList[leftIndex] - target) <= Math.Abs(valuesList[rightIndex] - target))
+                    {
+                        leftIndex -= 1;
+                    }
+                    else
+                    {
+                        rightIndex += 1;
+                    }
+                }
+
+                return valuesList.GetRange(leftIndex + 1, rightIndex - (leftIndex + 1));
+            }
+
+            private void DepthFirstSearch(TreeNode node, List<int> valuesList)
+            {
+                if (node == null)
+                {
+                    return;
+                }
+
+                DepthFirstSearch(node.Left, valuesList);
+                valuesList.Add(node.Val);
+                DepthFirstSearch(node.Right, valuesList);
+            }
+
+            /* 
+                        Approach 4: Binary Search The Left Bound 
+                        Complexity Analysis
+            Given n as the number of nodes in the tree,
+            •	Time complexity: O(n) in Java, O(n+k) in Python
+            First, we perform a DFS on the tree to build arr which costs O(n).
+            Next, we perform a binary search on arr which costs O(log(n−k)).
+            Finally, we return the answer. In Java, arr.subList() is an O(1) operation. In Python, we spend O(k) to create the answer.
+            Note that an interviewer may find it reasonable to ignore the O(k) to build the answer, thus giving this algorithm a time complexity of O(n).
+            •	Space complexity: O(n)
+            Both arr and the recursion call stack use O(n) space.
+
+                        */
+            public List<int> BinarySearchTheLeftBound(TreeNode root, double target, int k)
+            {
+                List<int> valuesList = new List<int>();
+                DepthFirstSearch(root, valuesList);
+
+                int leftIndex = 0;
+                int rightIndex = valuesList.Count - k;
+
+                while (leftIndex < rightIndex)
+                {
+                    int middleIndex = (leftIndex + rightIndex) / 2;
+                    if (Math.Abs(target - valuesList[middleIndex + k]) < Math.Abs(target - valuesList[middleIndex]))
+                    {
+                        leftIndex = middleIndex + 1;
+                    }
+                    else
+                    {
+                        rightIndex = middleIndex;
+                    }
+                }
+
+                return valuesList.GetRange(leftIndex, k);
+            }
+
+            /* 
+            Approach 5: Build The Window With Deque 
+            Complexity Analysis
+Given n as the number of nodes in the tree,
+•	Time complexity: O(n)
+We visit each node at most once during the traversal. With an efficient deque implementation, the work done at each node is O(1).
+•	Space complexity: O(n+k)
+We use O(n) space for the recursion call stack and O(k) space for queue.
+
+            */
+            public IList<int> WindowWithDeque(TreeNode root, double target, int k)
+            {
+                Deque<int> queue = new Deque<int>();
+                Dfs(root, queue, k, target);
+                return new List<int>(queue);
+            }
+
+            public void Dfs(TreeNode node, Deque<int> queue, int k, double target)
+            {
+                if (node == null)
+                {
+                    return;
+                }
+
+                Dfs(node.Left, queue, k, target);
+                queue.Add(node.Val);
+                if (queue.Count > k)
+                {
+                    if (Math.Abs(target - queue.PeekFirst()) <= Math.Abs(target - queue.PeekLast()))
+                    {
+                        queue.RemoveLast();
+                        return;
+                    }
+                    else
+                    {
+                        queue.RemoveFirst();
+                    }
+                }
+
+                Dfs(node.Right, queue, k, target);
+            }
+
+
+            public class Deque<T> : LinkedList<T>
+            {
+                public void Add(T value)
+                {
+                    this.AddLast(value);
+                }
+
+                public T PeekFirst()
+                {
+                    return this.First.Value;
+                }
+
+                public T PeekLast()
+                {
+                    return this.Last.Value;
+                }
+
+                public void RemoveFirst()
+                {
+                    this.RemoveFirst();
+                }
+
+                public void RemoveLast()
+                {
+                    this.RemoveLast();
+                }
+            }
+
+        }
+
+        /* 1569. Number of Ways to Reorder Array to Get Same BST
+        https://leetcode.com/problems/number-of-ways-to-reorder-array-to-get-same-bst/description/
+         */
+        public class NumOfWaysToReorderArrayToGetSameBSTSol
+        {
+            private long mod = (long)1e9 + 7;
+            private long[,] table;
+            /* Approach: Recursion 
+            Complexity Analysis
+            Let m be the size of nums.
+            •	Time complexity: O(m^2)
+            o	In Java or C++, a table of Pascal's triangle of size m×m is built, which takes O(m^2) time.
+            o	dfs(nums) recursively calls itself to process the left and right subtrees of the current node nums[0]. Since the total size of the subtrees decreases by 1 at each level of the recursion, the maximum height of the recursion tree is m. Thus the total time complexity of the recursive solution is O(m1^2) because in each call we are doing O(m) work creating the subsequences.
+            •	Space complexity: O(m^2) or O(m)
+            o	In Java or C++, a table of Pascal's triangle of size m×m is built.
+            o	The recursive solution uses the call stack to keep track of the current subtree being processed. The maximum depth of the call stack is equal to the height of the BST constructed from the input array. In the worst case, nums may form a degenerate BST (e.g., a sorted array), which has a height of m−1, and the stack can hold up to m−1 calls, resulting in a space complexity of O(m).
+
+            */
+            public int DFSRecur(int[] nums)
+            {
+                int length = nums.Length;
+
+                // Table of Pascal's triangle
+                table = new long[length, length];
+                for (int i = 0; i < length; ++i)
+                {
+                    table[i, 0] = table[i, i] = 1;
+                }
+                for (int i = 2; i < length; i++)
+                {
+                    for (int j = 1; j < i; j++)
+                    {
+                        table[i, j] = (table[i - 1, j - 1] + table[i - 1, j]) % mod;
+                    }
+                }
+                List<int> arrList = nums.ToList();
+                return (int)((Dfs(arrList) - 1) % mod);
+            }
+
+            private long Dfs(List<int> nums)
+            {
+                int length = nums.Count;
+                if (length < 3)
+                {
+                    return 1;
+                }
+
+                List<int> leftNodes = new List<int>();
+                List<int> rightNodes = new List<int>();
+                for (int i = 1; i < length; ++i)
+                {
+                    if (nums[i] < nums[0])
+                    {
+                        leftNodes.Add(nums[i]);
+                    }
+                    else
+                    {
+                        rightNodes.Add(nums[i]);
+                    }
+                }
+                long leftWays = Dfs(leftNodes) % mod;
+                long rightWays = Dfs(rightNodes) % mod;
+
+                return (((leftWays * rightWays) % mod) * table[length - 1, leftNodes.Count]) % mod;
+            }
+        }
 
 
 
+        /* 426. Convert Binary Search Tree to Sorted Doubly Linked List
+        https://leetcode.com/problems/convert-binary-search-tree-to-sorted-doubly-linked-list/description/?envType=company&envId=facebook&favoriteSlug=facebook-all&difficulty=MEDIUM
+
+         */
+        class BSTToDoublyListSol
+        {
+            // the smallest (first) and the largest (last) nodes
+            TreeNode first = null;
+            TreeNode last = null;
+            /* 
+            Approach 1: Recursion
+            Complexity Analysis
+            •	Time complexity : O(N) since each node is processed exactly once.
+            •	Space complexity : O(N). We have to keep a recursion stack of the size of the tree height, which is O(logN) for the best case of a completely balanced tree and O(N) for the worst case of a completely unbalanced tree.
+
+             */
+            public TreeNode TreeToDoublyList(TreeNode root)
+            {
+                if (root == null) return null;
+
+                Helper(root);
+
+                // close DLL
+                last.Right = first;
+                first.Left = last;
+                return first;
+            }
+            public void Helper(TreeNode node)
+            {
+                if (node != null)
+                {
+                    // left
+                    Helper(node.Left);
+
+                    // node 
+                    if (last != null)
+                    {
+                        // link the previous node (last)
+                        // with the current one (node)
+                        last.Right = node;
+                        node.Left = last;
+                    }
+                    else
+                    {
+                        // keep the smallest node
+                        // to close DLL later on
+                        first = node;
+                    }
+                    last = node;
+
+                    // right
+                    Helper(node.Right);
+                }
+            }
 
 
+        }
 
+
+        /* 173. Binary Search Tree Iterator
+        https://leetcode.com/problems/binary-search-tree-iterator/description/?envType=company&envId=facebook&favoriteSlug=facebook-all&difficulty=MEDIUM
+         */
+        public class BSTIteratorSol
+        {
+
+            /* Approach 1: Flattening the BST
+            Complexity analysis
+            •	Time complexity : O(N) is the time taken by the constructor for the iterator. The problem statement only asks us to analyze the complexity of the two functions, however, when implementing a class, it's important to also note the time it takes to initialize a new object of the class and in this case it would be linear in terms of the number of nodes in the BST. In addition to the space occupied by the new array we initialized, the recursion stack for the inorder traversal also occupies space but that is limited to O(h) where h is the height of the tree.
+            o	next() would take O(1)
+            o	hasNext() would take O(1)
+            •	Space complexity : O(N) since we create a new array to contain all the nodes of the BST. This doesn't comply with the requirement specified in the problem statement that the maximum space complexity of either of the functions should be O(h) where h is the height of the tree and for a well balanced BST, the height is usually logN. So, we get great time complexities but we had to compromise on the space. Note that the new array is used for both the function calls and hence the space complexity for both the calls is O(N).
+
+             */
+            class FlatBSTSol
+            {
+                List<int> nodesSorted;
+                int index;
+
+                public FlatBSTSol(TreeNode root)
+                {
+                    // Array containing all the nodes in the sorted order
+                    this.nodesSorted = new();
+
+                    // Pointer to the next smallest element in the BST
+                    this.index = -1;
+
+                    // Call to flatten the input binary search tree
+                    this._inorder(root);
+                }
+
+                private void _inorder(TreeNode root)
+                {
+                    if (root == null)
+                    {
+                        return;
+                    }
+
+                    this._inorder(root.Left);
+                    this.nodesSorted.Add(root.Val);
+                    this._inorder(root.Right);
+                }
+
+                /**
+                 * @return the next smallest number
+                 */
+                public int Next()
+                {
+                    return this.nodesSorted[++this.index];
+                }
+
+                /**
+                 * @return whether we have a next smallest number
+                 */
+                public bool HasNext()
+                {
+                    return this.index + 1 < this.nodesSorted.Count;
+                }
+            }
+            /*             Approach 2: Controlled Recursion
+Complexity analysis
+•	Time complexity : The time complexity for this approach is very interesting to analyze. Let's look at the complexities for both the functions in the class:
+o	hasNext is the easier of the lot since all we do in this is to return true if there are any elements left in the stack. Otherwise, we return false. So clearly, this is an O(1) operation every time. Let's look at the more complicated function now to see if we satisfy all the requirements in the problem statement
+o	next involves two major operations. One is where we pop an element from the stack which becomes the next smallest element to return. This is a O(1) operation. However, we then make a call to our helper function _inorder_left which iterates over a bunch of nodes. This is clearly a linear time operation i.e. O(N) in the worst case. This is true.
+However, the important thing to note here is that we only make such a call for nodes which have a right child. Otherwise, we simply return. Also, even if we end up calling the helper function, it won't always process N nodes. They will be much lesser. Only if we have a skewed tree would there be N nodes for the root. But that is the only node for which we would call the helper function.
+Thus, the amortized (average) time complexity for this function would still be O(1) which is what the question asks for. We don't need to have a solution which gives constant time operations for every call. We need that complexity on average and that is what we get.
+•	Space complexity: The space complexity is O(N) (N is the number of nodes in the tree), which is occupied by our custom stack for simulating the inorder traversal. Again, we satisfy the space requirements as well as specified in the problem statement.
+
+             */
+            class ControlledRecursionSol
+            {
+                Stack<TreeNode> stack;
+
+                public ControlledRecursionSol(TreeNode root)
+                {
+                    // Stack for the recursion simulation
+                    this.stack = new Stack<TreeNode>();
+
+                    // Remember that the algorithm starts with a call to the helper function
+                    // with the root node as the input
+                    this.LeftmostInorder(root);
+                }
+
+                private void LeftmostInorder(TreeNode root)
+                {
+                    // For a given node, add all the elements in the leftmost branch of the tree
+                    // under it to the stack.
+                    while (root != null)
+                    {
+                        this.stack.Push(root);
+                        root = root.Left;
+                    }
+                }
+
+                /**
+                 * @return the next smallest number
+                 */
+                public int Next()
+                {
+                    // Node at the top of the stack is the next smallest element
+                    TreeNode topmostNode = this.stack.Pop();
+
+                    // Need to maintain the invariant. If the node has a right child, call the
+                    // helper function for the right child
+                    if (topmostNode.Right != null)
+                    {
+                        this.LeftmostInorder(topmostNode.Right);
+                    }
+
+                    return topmostNode.Val;
+                }
+
+                /**
+                 * @return whether we have a next smallest number
+                 */
+                public bool HasNext()
+                {
+                    return this.stack.Count > 0;
+                }
+            }
+        }
 
 
 

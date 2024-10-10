@@ -47,7 +47,9 @@ Hence, the overall space complexity will be O(N).
                 Dictionary<string, int> finalMap = ParseFormula(formula);
 
                 // Sort the final map
-                SortedDictionary<string, int> sortedMap = new SortedDictionary<string, int>(finalMap);
+                SortedDictionary<string, int> sortedMap = new SortedDictionary<string, int>(
+                    finalMap
+                );
 
                 // Generate the answer string
                 StringBuilder answerStringBuilder = new StringBuilder();
@@ -79,7 +81,8 @@ Hence, the overall space complexity will be O(N).
                         Dictionary<string, int> nestedMap = ParseFormula(formula);
                         foreach (string atom in nestedMap.Keys)
                         {
-                            currentMap[atom] = currentMap.GetValueOrDefault(atom, 0) + nestedMap[atom];
+                            currentMap[atom] =
+                                currentMap.GetValueOrDefault(atom, 0) + nestedMap[atom];
                         }
                     }
                     // Otherwise, it should be UPPERCASE LETTER
@@ -104,12 +107,15 @@ Hence, the overall space complexity will be O(N).
 
                         if (currentCountStringBuilder.Length == 0)
                         {
-                            currentMap[currentAtomStringBuilder.ToString()] = currentMap.GetValueOrDefault(currentAtomStringBuilder.ToString(), 0) + 1;
+                            currentMap[currentAtomStringBuilder.ToString()] =
+                                currentMap.GetValueOrDefault(currentAtomStringBuilder.ToString(), 0)
+                                + 1;
                         }
                         else
                         {
-                            currentMap[currentAtomStringBuilder.ToString()] = currentMap.GetValueOrDefault(currentAtomStringBuilder.ToString(), 0) +
-                                int.Parse(currentCountStringBuilder.ToString());
+                            currentMap[currentAtomStringBuilder.ToString()] =
+                                currentMap.GetValueOrDefault(currentAtomStringBuilder.ToString(), 0)
+                                + int.Parse(currentCountStringBuilder.ToString());
                         }
                     }
                 }
@@ -192,7 +198,8 @@ Hence, the overall space complexity will be O(N).
 
                         foreach (string atom in currentMap.Keys)
                         {
-                            stack.Peek()[atom] = stack.Peek().GetValueOrDefault(atom, 0) + currentMap[atom];
+                            stack.Peek()[atom] =
+                                stack.Peek().GetValueOrDefault(atom, 0) + currentMap[atom];
                         }
                     }
                     // Otherwise, it must be an UPPERCASE LETTER. Extract the complete
@@ -215,13 +222,17 @@ Hence, the overall space complexity will be O(N).
                             index++;
                         }
 
-                        int count = currentCount.Length > 0 ? int.Parse(currentCount.ToString()) : 1;
-                        stack.Peek()[currentAtom.ToString()] = stack.Peek().GetValueOrDefault(currentAtom.ToString(), 0) + count;
+                        int count =
+                            currentCount.Length > 0 ? int.Parse(currentCount.ToString()) : 1;
+                        stack.Peek()[currentAtom.ToString()] =
+                            stack.Peek().GetValueOrDefault(currentAtom.ToString(), 0) + count;
                     }
                 }
 
                 // Sort the final map
-                SortedDictionary<string, int> finalMap = new SortedDictionary<string, int>(stack.Peek());
+                SortedDictionary<string, int> finalMap = new SortedDictionary<string, int>(
+                    stack.Peek()
+                );
 
                 // Generate the answer string
                 StringBuilder answer = new StringBuilder();
@@ -279,8 +290,9 @@ Hence, the overall space complexity will be O(N).
                     // If atom, add it to the top dictionary
                     if (!string.IsNullOrEmpty(atom))
                     {
-                        atomStack.Peek()[atom] = atomStack.Peek().GetValueOrDefault(atom, 0) +
-                            (string.IsNullOrEmpty(count) ? 1 : int.Parse(count));
+                        atomStack.Peek()[atom] =
+                            atomStack.Peek().GetValueOrDefault(atom, 0)
+                            + (string.IsNullOrEmpty(count) ? 1 : int.Parse(count));
                     }
                     // If left parenthesis, insert a new dictionary to the stack
                     else if (!string.IsNullOrEmpty(left))
@@ -304,14 +316,17 @@ Hence, the overall space complexity will be O(N).
 
                         foreach (var atomName in currentMap.Keys)
                         {
-                            atomStack.Peek()[atomName] = atomStack.Peek().GetValueOrDefault(atomName, 0) +
-                                currentMap[atomName];
+                            atomStack.Peek()[atomName] =
+                                atomStack.Peek().GetValueOrDefault(atomName, 0)
+                                + currentMap[atomName];
                         }
                     }
                 }
 
                 // Sort the final dictionary
-                SortedDictionary<string, int> finalMap = new SortedDictionary<string, int>(atomStack.Peek());
+                SortedDictionary<string, int> finalMap = new SortedDictionary<string, int>(
+                    atomStack.Peek()
+                );
 
                 // Generate the answer string
                 StringBuilder answerStringBuilder = new StringBuilder();
@@ -328,7 +343,7 @@ Hence, the overall space complexity will be O(N).
             }
 
             /*
-            Approach 4: Reverse Scanning	
+            Approach 4: Reverse Scanning
             Complexity Analysis
 Let N be the length of the formula.
 •	Time complexity: O(N^2)
@@ -387,9 +402,8 @@ Hence, the overall space complexity will be O(N).
                     else if (char.IsUpper(formula[index]))
                     {
                         currentAtom.Insert(0, formula[index]);
-                        int count = currentCount.Length > 0
-                            ? int.Parse(currentCount.ToString())
-                            : 1;
+                        int count =
+                            currentCount.Length > 0 ? int.Parse(currentCount.ToString()) : 1;
                         if (atomCountMap.ContainsKey(currentAtom.ToString()))
                         {
                             atomCountMap[currentAtom.ToString()] += count * runningMultiplier;
@@ -406,9 +420,8 @@ Hence, the overall space complexity will be O(N).
                     // will be considered as multiplier
                     else if (formula[index] == ')')
                     {
-                        int currentMultiplier = currentCount.Length > 0
-                            ? int.Parse(currentCount.ToString())
-                            : 1;
+                        int currentMultiplier =
+                            currentCount.Length > 0 ? int.Parse(currentCount.ToString()) : 1;
                         multiplierStack.Push(currentMultiplier);
                         runningMultiplier *= currentMultiplier;
                         currentCount = new StringBuilder();
@@ -423,7 +436,10 @@ Hence, the overall space complexity will be O(N).
                 }
 
                 // Sort the final map
-                SortedDictionary<string, int> sortedAtomCountMap = new SortedDictionary<string, int>(atomCountMap);
+                SortedDictionary<string, int> sortedAtomCountMap = new SortedDictionary<
+                    string,
+                    int
+                >(atomCountMap);
 
                 // Generate the answer string
                 StringBuilder answer = new StringBuilder();
@@ -438,7 +454,8 @@ Hence, the overall space complexity will be O(N).
 
                 return answer.ToString();
             }
-            /*            
+
+            /*
 Approach 5: Preprocessing
 Complexity Analysis
 Let N be the length of the formula.
@@ -492,9 +509,8 @@ Hence, the overall space complexity will be O(N).
                     // scanned number was multiplier. Store it.
                     else if (formula[index] == ')')
                     {
-                        int currentMultiplierValue = currentNumber.Length > 0
-                            ? int.Parse(currentNumber.ToString())
-                            : 1;
+                        int currentMultiplierValue =
+                            currentNumber.Length > 0 ? int.Parse(currentNumber.ToString()) : 1;
                         currentMultiplier *= currentMultiplierValue;
                         stack.Push(currentMultiplierValue);
                         currentNumber = new StringBuilder();
@@ -540,9 +556,8 @@ Hence, the overall space complexity will be O(N).
                         }
 
                         // Update the final map
-                        int count = currentCount.Length > 0
-                            ? int.Parse(currentCount.ToString())
-                            : 1;
+                        int count =
+                            currentCount.Length > 0 ? int.Parse(currentCount.ToString()) : 1;
                         if (finalMap.ContainsKey(currentAtom.ToString()))
                         {
                             finalMap[currentAtom.ToString()] += count * multipliers[index - 1];
@@ -559,7 +574,9 @@ Hence, the overall space complexity will be O(N).
                 }
 
                 // Sort the final map
-                SortedDictionary<string, int> sortedMap = new SortedDictionary<string, int>(finalMap);
+                SortedDictionary<string, int> sortedMap = new SortedDictionary<string, int>(
+                    finalMap
+                );
 
                 // Generate the answer string
                 StringBuilder answer = new StringBuilder();
@@ -574,6 +591,7 @@ Hence, the overall space complexity will be O(N).
 
                 return answer.ToString();
             }
+
             /*
             Approach 6: Reverse Scanning with Regex
             Complexity Analysis
@@ -593,24 +611,29 @@ o	The space used by the quintuples will be O(N).
 o	The space used by the final_map will be O(N). Moreover, we are sorting the final_map. In sorting, some extra space is used. The space complexity depends on the implementation of the sorting algorithm in the programming language. However, it will be O(N).
 o	The space used by the answer string ans will be O(N).
 o	The space used by the stack will be O(N).
-Hence, the overall space complexity will be O(N).	
+Hence, the overall space complexity will be O(N).
 
             */
             public string UsingReverseScanningWithRegex(string formula)
             {
                 // Every element of matcher will be a quintuple
-                MatchCollection matches = Regex.Matches(formula, @"([A-Z][a-z]*)(\d*)|(\()|(\))(\d*)");
+                MatchCollection matches = Regex.Matches(
+                    formula,
+                    @"([A-Z][a-z]*)(\d*)|(\()|(\))(\d*)"
+                );
                 List<string[]> matchList = new List<string[]>();
                 foreach (Match match in matches)
                 {
-                    matchList.Add(new string[]
-                    {
-                match.Groups[1].Value,
-                match.Groups[2].Value,
-                match.Groups[3].Value,
-                match.Groups[4].Value,
-                match.Groups[5].Value,
-                    });
+                    matchList.Add(
+                        new string[]
+                        {
+                            match.Groups[1].Value,
+                            match.Groups[2].Value,
+                            match.Groups[3].Value,
+                            match.Groups[4].Value,
+                            match.Groups[5].Value,
+                        }
+                    );
                 }
                 matchList.Reverse();
 
@@ -661,7 +684,9 @@ Hence, the overall space complexity will be O(N).
                 }
 
                 // Sort the final map
-                SortedDictionary<string, int> sortedMap = new SortedDictionary<string, int>(finalMap);
+                SortedDictionary<string, int> sortedMap = new SortedDictionary<string, int>(
+                    finalMap
+                );
 
                 // Generate the answer string
                 StringBuilder answerBuilder = new StringBuilder();
@@ -696,13 +721,18 @@ o	The overall time required is O((n+k)⋅m).
 o	We are using wordToSimilarWords to store all the similar words for a given word. There are k pairs of similar words, so there could be O(k) words that are inserted into wordToSimilarWords. Because the average length of each word is m, the required space is O(k⋅m).
 
             */
-            public bool UsingHashMapAndHashSet(string[] firstSentence, string[] secondSentence, List<List<string>> similarWordPairs)
+            public bool UsingHashMapAndHashSet(
+                string[] firstSentence,
+                string[] secondSentence,
+                List<List<string>> similarWordPairs
+            )
             {
                 if (firstSentence.Length != secondSentence.Length)
                 {
                     return false;
                 }
-                Dictionary<string, HashSet<string>> wordToSimilarWords = new Dictionary<string, HashSet<string>>();
+                Dictionary<string, HashSet<string>> wordToSimilarWords =
+                    new Dictionary<string, HashSet<string>>();
                 foreach (List<string> pair in similarWordPairs)
                 {
                     if (!wordToSimilarWords.ContainsKey(pair[0]))
@@ -726,8 +756,10 @@ o	We are using wordToSimilarWords to store all the similar words for a given wor
                         continue;
                     }
                     // If the words form a similar pair, continue.
-                    if (wordToSimilarWords.ContainsKey(firstSentence[index]) &&
-                        wordToSimilarWords[firstSentence[index]].Contains(secondSentence[index]))
+                    if (
+                        wordToSimilarWords.ContainsKey(firstSentence[index])
+                        && wordToSimilarWords[firstSentence[index]].Contains(secondSentence[index])
+                    )
                     {
                         continue;
                     }
@@ -759,7 +791,7 @@ o	The recursion call stack used by dfs can have no more than O(k) elements. It w
 o	We also use a set visit, which requires O(k⋅m) space because it could contain O(k) words in the worst case.
 
             */
-            // Returns true if there is a path from node to dest.        
+            // Returns true if there is a path from node to dest.
             public bool DFS(string[] sentence1, string[] sentence2, List<List<string>> similarPairs)
             {
                 if (sentence1.Length != sentence2.Length)
@@ -767,7 +799,8 @@ o	We also use a set visit, which requires O(k⋅m) space because it could contai
                     return false;
                 }
                 // Create the graph using each pair in similarPairs.
-                Dictionary<string, HashSet<string>> adjacencyList = new Dictionary<string, HashSet<string>>();
+                Dictionary<string, HashSet<string>> adjacencyList =
+                    new Dictionary<string, HashSet<string>>();
                 foreach (List<string> pair in similarPairs)
                 {
                     if (!adjacencyList.ContainsKey(pair[0]))
@@ -790,8 +823,11 @@ o	We also use a set visit, which requires O(k⋅m) space because it could contai
                         continue;
                     }
                     HashSet<string> visitedNodes = new HashSet<string>();
-                    if (adjacencyList.ContainsKey(sentence1[i]) && adjacencyList.ContainsKey(sentence2[i]) &&
-                            DepthFirstSearch(sentence1[i], adjacencyList, visitedNodes, sentence2[i]))
+                    if (
+                        adjacencyList.ContainsKey(sentence1[i])
+                        && adjacencyList.ContainsKey(sentence2[i])
+                        && DepthFirstSearch(sentence1[i], adjacencyList, visitedNodes, sentence2[i])
+                    )
                     {
                         continue;
                     }
@@ -799,7 +835,13 @@ o	We also use a set visit, which requires O(k⋅m) space because it could contai
                 }
                 return true;
             }
-            private bool DepthFirstSearch(string node, Dictionary<string, HashSet<string>> adjacencyList, HashSet<string> visitedNodes, string destination)
+
+            private bool DepthFirstSearch(
+                string node,
+                Dictionary<string, HashSet<string>> adjacencyList,
+                HashSet<string> visitedNodes,
+                string destination
+            )
             {
                 visitedNodes.Add(node);
                 if (node.Equals(destination))
@@ -812,13 +854,17 @@ o	We also use a set visit, which requires O(k⋅m) space because it could contai
                 }
                 foreach (string neighbor in adjacencyList[node])
                 {
-                    if (!visitedNodes.Contains(neighbor) && DepthFirstSearch(neighbor, adjacencyList, visitedNodes, destination))
+                    if (
+                        !visitedNodes.Contains(neighbor)
+                        && DepthFirstSearch(neighbor, adjacencyList, visitedNodes, destination)
+                    )
                     {
                         return true;
                     }
                 }
                 return false;
             }
+
             /*
             Approach 2: Breadth First Search
             Complexity Analysis
@@ -834,7 +880,11 @@ o	We also use a set visit, which requires O(k⋅m) space because it could contai
 
             */
             // Returns true if there is a path from node to dest.
-            private bool BreadthFirstSearch(string source, Dictionary<string, HashSet<string>> adjacencyList, string destination)
+            private bool BreadthFirstSearch(
+                string source,
+                Dictionary<string, HashSet<string>> adjacencyList,
+                string destination
+            )
             {
                 HashSet<string> visitedNodes = new HashSet<string>();
                 Queue<string> queue = new Queue<string>();
@@ -865,14 +915,19 @@ o	We also use a set visit, which requires O(k⋅m) space because it could contai
                 return false;
             }
 
-            public bool BFS(string[] firstSentence, string[] secondSentence, List<List<string>> similarPairs)
+            public bool BFS(
+                string[] firstSentence,
+                string[] secondSentence,
+                List<List<string>> similarPairs
+            )
             {
                 if (firstSentence.Length != secondSentence.Length)
                 {
                     return false;
                 }
                 // Create the graph using each pair in similarPairs.
-                Dictionary<string, HashSet<string>> adjacencyList = new Dictionary<string, HashSet<string>>();
+                Dictionary<string, HashSet<string>> adjacencyList =
+                    new Dictionary<string, HashSet<string>>();
                 foreach (List<string> pair in similarPairs)
                 {
                     if (!adjacencyList.ContainsKey(pair[0]))
@@ -894,8 +949,15 @@ o	We also use a set visit, which requires O(k⋅m) space because it could contai
                     {
                         continue;
                     }
-                    if (adjacencyList.ContainsKey(firstSentence[index]) && adjacencyList.ContainsKey(secondSentence[index]) &&
-                            BreadthFirstSearch(firstSentence[index], adjacencyList, secondSentence[index]))
+                    if (
+                        adjacencyList.ContainsKey(firstSentence[index])
+                        && adjacencyList.ContainsKey(secondSentence[index])
+                        && BreadthFirstSearch(
+                            firstSentence[index],
+                            adjacencyList,
+                            secondSentence[index]
+                        )
+                    )
                     {
                         continue;
                     }
@@ -917,7 +979,11 @@ o	As a result, the total time would be O((n+k)⋅m+k⋅m)=O((n+k)⋅m).
 o	Because there can be k similar pairs, there are O(k) words that are inserted in dsu. Since each word has average length m, parent and rank maps would take up O(k⋅m) space.
 
             */
-            public bool WithUnionFind(string[] sentence1, string[] sentence2, List<List<string>> similarPairs)
+            public bool WithUnionFind(
+                string[] sentence1,
+                string[] sentence2,
+                List<List<string>> similarPairs
+            )
             {
                 if (sentence1.Length != sentence2.Length)
                 {
@@ -939,8 +1005,11 @@ o	Because there can be k similar pairs, there are O(k) words that are inserted i
                     {
                         continue;
                     }
-                    if (unionFind.IsWordPresent(sentence1[i]) && unionFind.IsWordPresent(sentence2[i]) &&
-                        unionFind.Find(sentence1[i]) == unionFind.Find(sentence2[i]))
+                    if (
+                        unionFind.IsWordPresent(sentence1[i])
+                        && unionFind.IsWordPresent(sentence2[i])
+                        && unionFind.Find(sentence1[i]) == unionFind.Find(sentence2[i])
+                    )
                     {
                         continue;
                     }
@@ -948,6 +1017,7 @@ o	Because there can be k similar pairs, there are O(k) words that are inserted i
                 }
                 return true;
             }
+
             class UnionFind
             {
                 private Dictionary<string, string> parent = new Dictionary<string, string>();
@@ -999,11 +1069,10 @@ o	Because there can be k similar pairs, there are O(k) words that are inserted i
                     }
                 }
             }
-
         }
 
         /*
-        739. Daily Temperatures	
+        739. Daily Temperatures
         https://leetcode.com/problems/daily-temperatures/description/
         */
 
@@ -1018,7 +1087,7 @@ At first glance, it may look like the time complexity of this algorithm should b
 An easier way to think about this is that in the worst case, every element will be pushed and popped once. This gives a time complexity of O(2⋅N)=O(N).
 •	Space complexity: O(N)
 If the input was non-increasing, then no element would ever be popped from the stack, and the stack would grow to a size of N elements at the end.
-Note: answer does not count towards the space complexity because space used for the output format does not count.	
+Note: answer does not count towards the space complexity because space used for the output format does not count.
 
             */
             public int[] UsingMonotonicStack(int[] temperatures)
@@ -1042,6 +1111,7 @@ Note: answer does not count towards the space complexity because space used for 
 
                 return result;
             }
+
             /*
             Approach 2: Array, Optimized Space
             Complexity Analysis
@@ -1080,12 +1150,11 @@ As stated above, while answer does use O(N) space, the space used for the output
 
                 return answer;
             }
-
         }
 
         /*
-        740. Delete and Earn	
-        https://leetcode.com/problems/delete-and-earn/description/	
+        740. Delete and Earn
+        https://leetcode.com/problems/delete-and-earn/description/
         */
         class DeleteAndEarnSol
         {
@@ -1102,6 +1171,7 @@ The size of points is equal to the number of unique elements in nums. In the wor
             */
             private Dictionary<int, int> points = new Dictionary<int, int>();
             private Dictionary<int, int> cache = new Dictionary<int, int>();
+
             public int TopDownDP(int[] nums)
             {
                 int maxNumber = 0;
@@ -1122,6 +1192,7 @@ The size of points is equal to the number of unique elements in nums. In the wor
 
                 return MaxPoints(maxNumber);
             }
+
             private int MaxPoints(int number)
             {
                 // Check for base cases
@@ -1228,12 +1299,16 @@ Unlike in approach 2, we no longer need an array maxPoints which would be of siz
                 for (int number = 2; number <= maximumNumber; number++)
                 {
                     int temporary = pointsOneBack;
-                    pointsOneBack = Math.Max(pointsOneBack, pointsTwoBack + (points.ContainsKey(number) ? points[number] : 0));
+                    pointsOneBack = Math.Max(
+                        pointsOneBack,
+                        pointsTwoBack + (points.ContainsKey(number) ? points[number] : 0)
+                    );
                     pointsTwoBack = temporary;
                 }
 
                 return pointsOneBack;
             }
+
             /*
             Approach 4: Iterate Over Elements
 Complexity Analysis
@@ -1291,6 +1366,7 @@ The extra space we use is the hash table points and elements. These have the sam
 
                 return oneBack;
             }
+
             /*
             Approach5: The Best of Both Worlds :-)
 Complexity Analysis
@@ -1300,7 +1376,7 @@ To populate points, we need to iterate through nums once, which costs O(N) time.
 Approach 3's algorithm costs O(k) time. Approach 4's algorithm costs O(N⋅log(N)) time. We choose the faster one, so the final time complexity will be O(N+min(k,N⋅log(N))).
 •	Space complexity: O(N)
 The extra space we use is the hash table points, and maybe elements if we are to use approach 4's algorithm. However, points has the same length as elements, so it doesn't matter either way in terms of space complexity.
-In the worst-case scenario when all elements in nums are unique, points will grow to a size of N.	
+In the worst-case scenario when all elements in nums are unique, points will grow to a size of N.
 
             */
             public int BestOfBoth3And4Approaches(int[] numbers)
@@ -1331,7 +1407,10 @@ In the worst-case scenario when all elements in nums are unique, points will gro
                     for (int number = 2; number <= maxNumber; number++)
                     {
                         int temp = oneBack;
-                        oneBack = Math.Max(oneBack, twoBack + (points.ContainsKey(number) ? points[number] : 0));
+                        oneBack = Math.Max(
+                            oneBack,
+                            twoBack + (points.ContainsKey(number) ? points[number] : 0)
+                        );
                         twoBack = temp;
                     }
                 }
@@ -1360,8 +1439,6 @@ In the worst-case scenario when all elements in nums are unique, points will gro
 
                 return oneBack;
             }
-
-
         }
 
         /*
@@ -1370,7 +1447,6 @@ In the worst-case scenario when all elements in nums are unique, points will gro
         */
         class NetworkDelayTimeSol
         {
-
             /*
 Approach 1: Depth-First Search (DFS)
 Complexity Analysis
@@ -1420,7 +1496,8 @@ Building the adjacency list will take O(E) space and the run-time stack for DFS 
             }
 
             // Adjacency list
-            private Dictionary<int, List<KeyValuePair<int, int>>> adjacencyList = new Dictionary<int, List<KeyValuePair<int, int>>>();
+            private Dictionary<int, List<KeyValuePair<int, int>>> adjacencyList =
+                new Dictionary<int, List<KeyValuePair<int, int>>>();
 
             private void DepthFirstSearch(int[] signalReceivedAt, int currentNode, int currentTime)
             {
@@ -1449,6 +1526,7 @@ Building the adjacency list will take O(E) space and the run-time stack for DFS 
                     DepthFirstSearch(signalReceivedAt, neighborNode, currentTime + travelTime);
                 }
             }
+
             /*
             Approach 2: Breadth-First Search (BFS)
             Complexity Analysis
@@ -1456,7 +1534,7 @@ Building the adjacency list will take O(E) space and the run-time stack for DFS 
             •	Time complexity: O(N⋅E)
             Each of the N nodes can be added to the queue for all the edges connected to it, hence in a complete graph, the total number of operations would be O(NE). Also, finding the minimum time required in signalReceivedAt takes O(N).
             •	Space complexity: O(N⋅E)
-            Building the adjacency list will take O(E) space and the queue for BFS will use O(N⋅E) space as there can be this much number of nodes in the queue.	
+            Building the adjacency list will take O(E) space and the queue for BFS will use O(N⋅E) space as there can be this much number of nodes in the queue.
 
             */
             public int BFS(int[][] times, int n, int k)
@@ -1489,6 +1567,7 @@ Building the adjacency list will take O(E) space and the run-time stack for DFS 
                 // INT_MAX signifies at least one node is unreachable
                 return answer == int.MaxValue ? -1 : answer;
             }
+
             private void BFS(int[] signalReceivedAt, int sourceNode)
             {
                 Queue<int> queue = new Queue<int>();
@@ -1513,7 +1592,7 @@ Building the adjacency list will take O(E) space and the run-time stack for DFS 
                         int neighborNode = edge.Value;
 
                         // Fastest signal time for neighborNode so far
-                        // signalReceivedAt[currentNode] + time : 
+                        // signalReceivedAt[currentNode] + time :
                         // time when signal reaches neighborNode
                         int arrivalTime = signalReceivedAt[currentNode] + time;
                         if (signalReceivedAt[neighborNode] > arrivalTime)
@@ -1524,6 +1603,7 @@ Building the adjacency list will take O(E) space and the run-time stack for DFS 
                     }
                 }
             }
+
             /*
             Approach 3: Dijkstra's Algorithm
            Complexity Analysis
@@ -1567,9 +1647,13 @@ Building the adjacency list will take O(E) space. Dijkstra's algorithm takes O(E
                 // INT_MAX signifies at least one node is unreachable
                 return answer == int.MaxValue ? -1 : answer;
             }
+
             private void DijkstraAlgo(int[] signalReceivedAt, int source, int n)
             {
-                PriorityQueue<(int, int), (int, int)> priorityQueue = new PriorityQueue<(int, int), (int, int)>(
+                PriorityQueue<(int, int), (int, int)> priorityQueue = new PriorityQueue<
+                    (int, int),
+                    (int, int)
+                >(
                     Comparer<(int, int)>.Create((a, b) => a.Item1.CompareTo(b.Item1)) //Compare Keys
                 );
                 priorityQueue.Enqueue((0, source), (0, source));
@@ -1598,18 +1682,19 @@ Building the adjacency list will take O(E) space. Dijkstra's algorithm takes O(E
                         int neighborNode = edge.Value;
 
                         // Fastest signal time for neighborNode so far
-                        // signalReceivedAt[currentNode] + time : 
+                        // signalReceivedAt[currentNode] + time :
                         // time when signal reaches neighborNode
                         if (signalReceivedAt[neighborNode] > currentNodeTime + time)
                         {
                             signalReceivedAt[neighborNode] = currentNodeTime + time;
-                            priorityQueue.Enqueue((signalReceivedAt[neighborNode], neighborNode), (signalReceivedAt[neighborNode], neighborNode));
+                            priorityQueue.Enqueue(
+                                (signalReceivedAt[neighborNode], neighborNode),
+                                (signalReceivedAt[neighborNode], neighborNode)
+                            );
                         }
                     }
                 }
             }
-
-
         }
 
         /*
@@ -1623,7 +1708,7 @@ Building the adjacency list will take O(E) space. Dijkstra's algorithm takes O(E
 Complexity
 •	Time complexity: O(n + m)
 •	Space complexity:	O(n + m)
-	
+    
 
             */
             private void BfsAlgo(List<int>[] graph, int start, int[] shortest)
@@ -1645,7 +1730,8 @@ Complexity
                         int v = q.Dequeue();
                         foreach (var u in graph[v])
                         {
-                            if (visited[u]) continue;
+                            if (visited[u])
+                                continue;
 
                             visited[u] = true;
                             q.Enqueue(u);
@@ -1686,9 +1772,9 @@ Complexity
                     //# shutOffTime-1 == Last second the server can send a re-request.
                     int lastSecond = shutOffTime - 1;
 
-                    //Calculate the last time a packet is actually resent.        
+                    //Calculate the last time a packet is actually resent.
                     /*
-                    (lastSecond//resendInterval) tells us how MANY TIMES a message will be resent during the time it takes 
+                    (lastSecond//resendInterval) tells us how MANY TIMES a message will be resent during the time it takes
                     for the first message to complete its journey. We must multiply this number by the number of resendIntervals to know when the last of the many resent messages is finally sent out!
                     */
                     int lastResentTime = (lastSecond % resendInterval) * resendInterval;
@@ -1703,7 +1789,6 @@ Complexity
                 return result + 1;
             }
         }
-
 
         /*
         2045. Second Minimum Time to Reach Destination
@@ -1723,13 +1808,18 @@ o	Building the adjacency list takes O(N+E) space. For the Dijkstra algorithm, ea
 
             */
 
-            public int ModifiedDijkstra(int numberOfNodes, int[][] edges, int travelTime, int trafficLightChange)
+            public int ModifiedDijkstra(
+                int numberOfNodes,
+                int[][] edges,
+                int travelTime,
+                int trafficLightChange
+            )
             {
-
                 Dictionary<int, List<int>> adjacencyList = new Dictionary<int, List<int>>();
                 foreach (int[] edge in edges)
                 {
-                    int nodeA = edge[0], nodeB = edge[1];
+                    int nodeA = edge[0],
+                        nodeB = edge[1];
                     if (!adjacencyList.ContainsKey(nodeA))
                     {
                         adjacencyList[nodeA] = new List<int>();
@@ -1755,7 +1845,9 @@ o	Building the adjacency list takes O(N+E) space. For the Dijkstra algorithm, ea
                     visitFrequency[i] = 0;
                 }
 
-                PriorityQueue<int[], int[]> priorityQueue = new PriorityQueue<int[], int[]>(Comparer<int[]>.Create((a, b) => (a[1] - b[1])));
+                PriorityQueue<int[], int[]> priorityQueue = new PriorityQueue<int[], int[]>(
+                    Comparer<int[]>.Create((a, b) => (a[1] - b[1]))
+                );
                 priorityQueue.Enqueue(new int[] { 1, 0 }, new int[] { 1, 0 });
                 minimumTime[1] = 0;
 
@@ -1768,22 +1860,26 @@ o	Building the adjacency list takes O(N+E) space. For the Dijkstra algorithm, ea
                     visitFrequency[currentNode]++;
 
                     // If the node is being visited for the second time and is 'n', return the answer.
-                    if (visitFrequency[currentNode] == 2 && currentNode == numberOfNodes) return timeTaken;
+                    if (visitFrequency[currentNode] == 2 && currentNode == numberOfNodes)
+                        return timeTaken;
                     // If the current light is red, wait till the path turns green.
                     if ((timeTaken / trafficLightChange) % 2 == 1)
                     {
-                        timeTaken = trafficLightChange * (timeTaken / trafficLightChange + 1) + travelTime;
+                        timeTaken =
+                            trafficLightChange * (timeTaken / trafficLightChange + 1) + travelTime;
                     }
                     else
                     {
                         timeTaken += travelTime;
                     }
 
-                    if (!adjacencyList.ContainsKey(currentNode)) continue;
+                    if (!adjacencyList.ContainsKey(currentNode))
+                        continue;
                     foreach (int neighbor in adjacencyList[currentNode])
                     {
                         // Ignore nodes that have already popped out twice, we are not interested in visiting them again.
-                        if (visitFrequency[neighbor] == 2) continue;
+                        if (visitFrequency[neighbor] == 2)
+                            continue;
 
                         // Update minimumTime if it's more than the current timeTaken and store its value in
                         // secondMinimumTime since that becomes the second minimum value now.
@@ -1791,17 +1887,27 @@ o	Building the adjacency list takes O(N+E) space. For the Dijkstra algorithm, ea
                         {
                             secondMinimumTime[neighbor] = minimumTime[neighbor];
                             minimumTime[neighbor] = timeTaken;
-                            priorityQueue.Enqueue(new int[] { neighbor, timeTaken }, new int[] { neighbor, timeTaken });
+                            priorityQueue.Enqueue(
+                                new int[] { neighbor, timeTaken },
+                                new int[] { neighbor, timeTaken }
+                            );
                         }
-                        else if (secondMinimumTime[neighbor] > timeTaken && minimumTime[neighbor] != timeTaken)
+                        else if (
+                            secondMinimumTime[neighbor] > timeTaken
+                            && minimumTime[neighbor] != timeTaken
+                        )
                         {
                             secondMinimumTime[neighbor] = timeTaken;
-                            priorityQueue.Enqueue(new int[] { neighbor, timeTaken }, new int[] { neighbor, timeTaken });
+                            priorityQueue.Enqueue(
+                                new int[] { neighbor, timeTaken },
+                                new int[] { neighbor, timeTaken }
+                            );
                         }
                     }
                 }
                 return 0;
             }
+
             /*
             Approach 2: Breadth First Search
 Complexity Analysis
@@ -1818,10 +1924,13 @@ o	Building the adjacency list takes O(E) space. The BFS queue takes O(N) because
                 Dictionary<int, List<int>> adjacencyList = new Dictionary<int, List<int>>();
                 foreach (int[] edge in edges)
                 {
-                    int nodeA = edge[0], nodeB = edge[1];
-                    if (!adjacencyList.ContainsKey(nodeA)) adjacencyList[nodeA] = new List<int>();
+                    int nodeA = edge[0],
+                        nodeB = edge[1];
+                    if (!adjacencyList.ContainsKey(nodeA))
+                        adjacencyList[nodeA] = new List<int>();
                     adjacencyList[nodeA].Add(nodeB);
-                    if (!adjacencyList.ContainsKey(nodeB)) adjacencyList[nodeB] = new List<int>();
+                    if (!adjacencyList.ContainsKey(nodeB))
+                        adjacencyList[nodeB] = new List<int>();
                     adjacencyList[nodeB].Add(nodeA);
                 }
 
@@ -1843,11 +1952,15 @@ o	Building the adjacency list takes O(E) space. The BFS queue takes O(N) because
                     int currentNode = current[0];
                     int currentFrequency = current[1];
 
-                    int timeTaken = currentFrequency == 1 ? firstDistance[currentNode] : secondDistance[currentNode];
+                    int timeTaken =
+                        currentFrequency == 1
+                            ? firstDistance[currentNode]
+                            : secondDistance[currentNode];
                     // If the time_taken falls under the red bracket, wait till the path turns green.
                     if ((timeTaken / signalChangeTime) % 2 == 1)
                     {
-                        timeTaken = signalChangeTime * (timeTaken / signalChangeTime + 1) + travelTime;
+                        timeTaken =
+                            signalChangeTime * (timeTaken / signalChangeTime + 1) + travelTime;
                     }
                     else
                     {
@@ -1861,9 +1974,13 @@ o	Building the adjacency list takes O(E) space. The BFS queue takes O(N) because
                             firstDistance[neighbor] = timeTaken;
                             queue.Enqueue(new int[] { neighbor, 1 });
                         }
-                        else if (secondDistance[neighbor] == -1 && firstDistance[neighbor] != timeTaken)
+                        else if (
+                            secondDistance[neighbor] == -1
+                            && firstDistance[neighbor] != timeTaken
+                        )
                         {
-                            if (neighbor == numberOfNodes) return timeTaken;
+                            if (neighbor == numberOfNodes)
+                                return timeTaken;
                             secondDistance[neighbor] = timeTaken;
                             queue.Enqueue(new int[] { neighbor, 2 });
                         }
@@ -1871,7 +1988,6 @@ o	Building the adjacency list takes O(E) space. The BFS queue takes O(N) because
                 }
                 return 0;
             }
-
         }
 
         /*
@@ -1931,12 +2047,17 @@ o	Building the adjacency list takes O(E) space. The BFS queue takes O(N) because
             }
 
             // Dijkstra's algorithm to find shortest paths from a source city
-            void DijkstraAlgo(int numberOfCities, List<int[]>[] adjacencyList, int[] shortestPathDistances, int source)
+            void DijkstraAlgo(
+                int numberOfCities,
+                List<int[]>[] adjacencyList,
+                int[] shortestPathDistances,
+                int source
+            )
             {
                 // Priority queue to process nodes with the smallest distance first
-                PriorityQueue<int[], int[]> priorityQueue = new PriorityQueue<int[], int[]>(Comparer<int[]>.Create((a, b) =>
-                    (a[1] - b[1])
-                ));
+                PriorityQueue<int[], int[]> priorityQueue = new PriorityQueue<int[], int[]>(
+                    Comparer<int[]>.Create((a, b) => (a[1] - b[1]))
+                );
                 priorityQueue.Enqueue(new int[] { source, 0 }, new int[] { source, 0 });
                 Array.Fill(shortestPathDistances, int.MaxValue); // Set all distances to infinity
                 shortestPathDistances[source] = 0; // Distance to source itself is zero
@@ -1961,14 +2082,8 @@ o	Building the adjacency list takes O(E) space. The BFS queue takes O(N) because
                         {
                             shortestPathDistances[neighborCity] = currentDistance + edgeWeight;
                             priorityQueue.Enqueue(
-                                new int[] {
-                            neighborCity,
-                            shortestPathDistances[neighborCity],
-                                },
-                                new int[] {
-                            neighborCity,
-                            shortestPathDistances[neighborCity],
-                                }
+                                new int[] { neighborCity, shortestPathDistances[neighborCity] },
+                                new int[] { neighborCity, shortestPathDistances[neighborCity] }
                             );
                         }
                     }
@@ -1976,7 +2091,11 @@ o	Building the adjacency list takes O(E) space. The BFS queue takes O(N) because
             }
 
             // Determine the city with the fewest number of reachable cities within the distance threshold
-            int GetCityWithFewestReachable(int cityCount, int[][] shortestPathMatrix, int distanceThreshold)
+            int GetCityWithFewestReachable(
+                int cityCount,
+                int[][] shortestPathMatrix,
+                int distanceThreshold
+            )
             {
                 int cityWithFewestReachableCities = -1;
                 int fewestReachableCityCount = cityCount;
@@ -2005,8 +2124,9 @@ o	Building the adjacency list takes O(E) space. The BFS queue takes O(N) because
                 }
                 return cityWithFewestReachableCities;
             }
+
             /*
-            Approach 2: Bellman-Ford Algorithm	
+            Approach 2: Bellman-Ford Algorithm
         Complexity Analysis
         Let n refer to the number of cities, where the constraints are 2<=n<=100, and m refer to the number of edges, with 1<=edges.length<=(n⋅(n−1))/2. This means that m can be at most n⋅(n−1)/2/2/2, representing the maximum number of edges in an undirected graph where every city is connected to every other city with a unique edge.
         •	Time complexity: O(n^4)
@@ -2058,26 +2178,23 @@ o	Building the adjacency list takes O(E) space. The BFS queue takes O(N) because
                         int weight = edge[2];
                         // Update shortest path distances if a shorter path is found
                         if (
-                            shortestPathDistances[start] != int.MaxValue &&
-                            shortestPathDistances[start] + weight <
-                            shortestPathDistances[end]
+                            shortestPathDistances[start] != int.MaxValue
+                            && shortestPathDistances[start] + weight < shortestPathDistances[end]
                         )
                         {
-                            shortestPathDistances[end] = shortestPathDistances[start] +
-                            weight;
+                            shortestPathDistances[end] = shortestPathDistances[start] + weight;
                         }
                         if (
-                            shortestPathDistances[end] != int.MaxValue &&
-                            shortestPathDistances[end] + weight <
-                            shortestPathDistances[start]
+                            shortestPathDistances[end] != int.MaxValue
+                            && shortestPathDistances[end] + weight < shortestPathDistances[start]
                         )
                         {
-                            shortestPathDistances[start] = shortestPathDistances[end] +
-                            weight;
+                            shortestPathDistances[start] = shortestPathDistances[end] + weight;
                         }
                     }
                 }
             }
+
             /*
             Approach 3: Shortest Path First Algorithm (SPFA)
 Complexity Analysis
@@ -2126,7 +2243,12 @@ The space complexity is O(n^2) for the shortestPathMatrix and O(m+n) for the adj
             }
 
             // SPFA algorithm to find shortest paths from a source city
-            private void SPFA(int cityCount, List<int[]>[] adjacencyList, int[] shortestPathDistances, int sourceCity)
+            private void SPFA(
+                int cityCount,
+                List<int[]>[] adjacencyList,
+                int[] shortestPathDistances,
+                int sourceCity
+            )
             {
                 // Queue to process nodes with updated shortest path distances
                 Queue<int> queue = new Queue<int>();
@@ -2146,9 +2268,13 @@ The space complexity is O(n^2) for the shortestPathMatrix and O(m+n) for the adj
                         int edgeWeight = neighbor[1];
 
                         // Update shortest path distance if a shorter path is found
-                        if (shortestPathDistances[neighborCity] > shortestPathDistances[currentCity] + edgeWeight)
+                        if (
+                            shortestPathDistances[neighborCity]
+                            > shortestPathDistances[currentCity] + edgeWeight
+                        )
                         {
-                            shortestPathDistances[neighborCity] = shortestPathDistances[currentCity] + edgeWeight;
+                            shortestPathDistances[neighborCity] =
+                                shortestPathDistances[currentCity] + edgeWeight;
                             updateCount[neighborCity]++;
                             queue.Enqueue(neighborCity);
 
@@ -2161,6 +2287,7 @@ The space complexity is O(n^2) for the shortestPathMatrix and O(m+n) for the adj
                     }
                 }
             }
+
             /*
 Approach 4: Floyd-Warshall Algorithm
 Complexity Analysis
@@ -2201,7 +2328,11 @@ The space complexity is dominated by the distanceMatrix, which requires O(n^2) s
                 ApplyFloydWarshall(cityCount, distanceMatrix);
 
                 // Find the city with the fewest number of reachable cities within the distance threshold
-                return GetCityWithFewestReachableCities(cityCount, distanceMatrix, distanceThreshold);
+                return GetCityWithFewestReachableCities(
+                    cityCount,
+                    distanceMatrix,
+                    distanceThreshold
+                );
             }
 
             // Floyd-Warshall algorithm to compute shortest paths between all pairs of cities
@@ -2217,14 +2348,20 @@ The space complexity is dominated by the distanceMatrix, which requires O(n^2) s
                             // Update shortest path from startCity to endCity through intermediateCity
                             distanceMatrix[startCity][endCity] = Math.Min(
                                 distanceMatrix[startCity][endCity],
-                                distanceMatrix[startCity][intermediateCity] + distanceMatrix[intermediateCity][endCity]
+                                distanceMatrix[startCity][intermediateCity]
+                                    + distanceMatrix[intermediateCity][endCity]
                             );
                         }
                     }
                 }
             }
+
             // Determine the city with the fewest number of reachable cities within the distance threshold
-            int GetCityWithFewestReachableCities(int cityCount, int[][] distanceMatrix, int distanceThreshold)
+            int GetCityWithFewestReachableCities(
+                int cityCount,
+                int[][] distanceMatrix,
+                int distanceThreshold
+            )
             {
                 int cityWithFewestReachableCities = -1;
                 int fewestReachableCityCount = cityCount;
@@ -2253,8 +2390,8 @@ The space complexity is dominated by the distanceMatrix, which requires O(n^2) s
                 }
                 return cityWithFewestReachableCities;
             }
-
         }
+
         /*
         746. Min Cost Climbing Stairs
 https://leetcode.com/problems/min-cost-climbing-stairs/description/
@@ -2269,7 +2406,7 @@ Given N as the length of cost,
 •	Time complexity: O(N).
 We iterate N - 1 times, and at each iteration we apply an equation that requires O(1) time.
 •	Space complexity: O(N).
-The array minimumCost is always 1 element longer than the array cost.	
+The array minimumCost is always 1 element longer than the array cost.
 
             */
             public int BottomUpDPTabulation(int[] cost)
@@ -2290,6 +2427,7 @@ The array minimumCost is always 1 element longer than the array cost.
                 // The final element in minimumCost refers to the top floor
                 return minimumCost[minimumCost.Length - 1];
             }
+
             /*
             Approach 2: Top-Down Dynamic Programming (Recursion + Memoization)
 Complexity Analysis
@@ -2323,11 +2461,14 @@ The extra space used by this algorithm is the recursion call stack. For example,
                 }
 
                 // If not, cache the result in our dictionary and return it
-                int costFromPreviousStep = cost[stepIndex - 1] + CalculateMinimumCost(stepIndex - 1, cost);
-                int costFromTwoStepsBack = cost[stepIndex - 2] + CalculateMinimumCost(stepIndex - 2, cost);
+                int costFromPreviousStep =
+                    cost[stepIndex - 1] + CalculateMinimumCost(stepIndex - 1, cost);
+                int costFromTwoStepsBack =
+                    cost[stepIndex - 2] + CalculateMinimumCost(stepIndex - 2, cost);
                 memo[stepIndex] = Math.Min(costFromPreviousStep, costFromTwoStepsBack);
                 return memo[stepIndex];
             }
+
             /*
             Approach 3: Bottom-Up, Constant Space
            Complexity Analysis
@@ -2351,9 +2492,7 @@ The only extra space we use is 2 variables, which are independent of input size.
 
                 return downOne;
             }
-
         }
-
 
         /*
         750. Number Of Corner Rectangles
@@ -2396,6 +2535,7 @@ Complexity Analysis
 
                 return totalRectangles;
             }
+
             /*
             Approach #2: Heavy and Light Rows [Accepted]
 Complexity Analysis
@@ -2455,7 +2595,10 @@ Complexity Analysis
                             for (int index2 = index1 + 1; index2 < rows[row].Count; ++index2)
                             {
                                 int column2 = rows[row][index2];
-                                int countValue = countMap.GetValueOrDefault(200 * column1 + column2, 0);
+                                int countValue = countMap.GetValueOrDefault(
+                                    200 * column1 + column2,
+                                    0
+                                );
                                 answer += countValue;
                                 countMap[200 * column1 + column2] = countValue + 1;
                             }
@@ -2490,33 +2633,33 @@ o	So, this approach will take O(n+(d+n^w)⋅w)=O(4(d+10^4)) space.
             {
                 // Map the next slot digit for each current slot digit.
                 Dictionary<char, char> nextSlot = new Dictionary<char, char>
-        {
-            { '0', '1' },
-            { '1', '2' },
-            { '2', '3' },
-            { '3', '4' },
-            { '4', '5' },
-            { '5', '6' },
-            { '6', '7' },
-            { '7', '8' },
-            { '8', '9' },
-            { '9', '0' }
-        };
+                {
+                    { '0', '1' },
+                    { '1', '2' },
+                    { '2', '3' },
+                    { '3', '4' },
+                    { '4', '5' },
+                    { '5', '6' },
+                    { '6', '7' },
+                    { '7', '8' },
+                    { '8', '9' },
+                    { '9', '0' },
+                };
 
                 // Map the previous slot digit for each current slot digit.
                 Dictionary<char, char> prevSlot = new Dictionary<char, char>
-        {
-            { '0', '9' },
-            { '1', '0' },
-            { '2', '1' },
-            { '3', '2' },
-            { '4', '3' },
-            { '5', '4' },
-            { '6', '5' },
-            { '7', '6' },
-            { '8', '7' },
-            { '9', '8' }
-        };
+                {
+                    { '0', '9' },
+                    { '1', '0' },
+                    { '2', '1' },
+                    { '3', '2' },
+                    { '4', '3' },
+                    { '5', '4' },
+                    { '6', '5' },
+                    { '7', '6' },
+                    { '8', '7' },
+                    { '9', '8' },
+                };
 
                 // Set to store visited and dead-end combinations.
                 HashSet<string> visitedCombinations = new HashSet<string>(deadends);
@@ -2587,7 +2730,6 @@ o	So, this approach will take O(n+(d+n^w)⋅w)=O(4(d+10^4)) space.
             }
         }
 
-
         /*
         799. Champagne Tower
         https://leetcode.com/problems/champagne-tower/description/
@@ -2597,7 +2739,7 @@ o	So, this approach will take O(n+(d+n^w)⋅w)=O(4(d+10^4)) space.
         class ChampagneTowerSol
         {
             /*
-            Approach #1: Simulation [Accepted]	
+            Approach #1: Simulation [Accepted]
 Complexity Analysis
 •	Time Complexity: O(R^2), where R is the number of rows. As this is fixed, we can consider this complexity to be O(1).
 •	Space Complexity: O(R^2), or O(1) by the reasoning above.
@@ -2626,7 +2768,7 @@ Complexity Analysis
 
         /*
         789. Escape The Ghosts
-        https://leetcode.com/problems/escape-the-ghosts/description/	
+        https://leetcode.com/problems/escape-the-ghosts/description/
 
         */
         class EscapeGhostsSol
@@ -2638,7 +2780,10 @@ Complexity Analysis
             {
                 int[] source = new int[] { 0, 0 };
                 foreach (int[] ghost in ghosts)
-                    if (CalculateManhattanDistance(ghost, target) <= CalculateManhattanDistance(source, target))
+                    if (
+                        CalculateManhattanDistance(ghost, target)
+                        <= CalculateManhattanDistance(source, target)
+                    )
                         return false;
                 return true;
             }
@@ -2665,7 +2810,9 @@ Complexity Analysis
             public int PercolateFromResolvedStates(int[][] graph)
             {
                 int numberOfNodes = graph.Length;
-                const int DRAW = 0, MOUSE = 1, CAT = 2;
+                const int DRAW = 0,
+                    MOUSE = 1,
+                    CAT = 2;
 
                 int[,,] color = new int[50, 50, 3];
                 int[,,] degree = new int[50, 50, 3];
@@ -2676,7 +2823,8 @@ Complexity Analysis
                     {
                         degree[mouse, cat, 1] = graph[mouse].Length;
                         degree[mouse, cat, 2] = graph[cat].Length;
-                        foreach (int x in graph[cat]) if (x == 0)
+                        foreach (int x in graph[cat])
+                            if (x == 0)
                             {
                                 degree[mouse, cat, 2]--;
                                 break;
@@ -2702,11 +2850,16 @@ Complexity Analysis
                 {
                     // for nodes that are colored :
                     int[] node = queue.Dequeue();
-                    int mousePos = node[0], catPos = node[1], turn = node[2], currentColor = node[3];
+                    int mousePos = node[0],
+                        catPos = node[1],
+                        turn = node[2],
+                        currentColor = node[3];
                     // for every parent of this node mousePos, catPos, turn :
                     foreach (int[] parent in Parents(graph, mousePos, catPos, turn))
                     {
-                        int mousePos2 = parent[0], catPos2 = parent[1], turn2 = parent[2];
+                        int mousePos2 = parent[0],
+                            catPos2 = parent[1],
+                            turn2 = parent[2];
                         // if this parent is not colored :
                         if (color[mousePos2, catPos2, turn2] == DRAW)
                         {
@@ -2714,7 +2867,9 @@ Complexity Analysis
                             if (turn2 == currentColor)
                             {
                                 color[mousePos2, catPos2, turn2] = currentColor;
-                                queue.Enqueue(new int[] { mousePos2, catPos2, turn2, currentColor });
+                                queue.Enqueue(
+                                    new int[] { mousePos2, catPos2, turn2, currentColor }
+                                );
                             }
                             else
                             {
@@ -2724,7 +2879,9 @@ Complexity Analysis
                                 if (degree[mousePos2, catPos2, turn2] == 0)
                                 {
                                     color[mousePos2, catPos2, turn2] = 3 - turn2;
-                                    queue.Enqueue(new int[] { mousePos2, catPos2, turn2, 3 - turn2 });
+                                    queue.Enqueue(
+                                        new int[] { mousePos2, catPos2, turn2, 3 - turn2 }
+                                    );
                                 }
                             }
                         }
@@ -2746,13 +2903,13 @@ Complexity Analysis
                 }
                 else
                 {
-                    foreach (int catPos2 in graph[catPos]) if (catPos2 > 0)
+                    foreach (int catPos2 in graph[catPos])
+                        if (catPos2 > 0)
                             result.Add(new int[] { mousePos, catPos2, 3 - turn });
                 }
                 return result;
             }
         }
-
 
         /*
         1728. Cat and Mouse II
@@ -2767,23 +2924,37 @@ Complexity Analysis
             */
             public bool BFS(string[] grid, int catJump, int mouseJump)
             {
-                if (grid.Equals(new string[] { "........", "F...#C.M", "........" }) && catJump == 1) return true;
-                // This is the only test case can not pass, so I hardcode it 
+                if (
+                    grid.Equals(new string[] { "........", "F...#C.M", "........" })
+                    && catJump == 1
+                )
+                    return true;
+                // This is the only test case can not pass, so I hardcode it
                 // (but correspondingly this solution can't be defined as a "solution", I know)
 
                 HashSet<int[]> catPositions = new HashSet<int[]>();
                 HashSet<int[]> mousePositions = new HashSet<int[]>();
                 int[] foodPosition = null;
-                int[][] directions = { new int[] { -1, 0 }, new int[] { 1, 0 }, new int[] { 0, -1 }, new int[] { 0, 1 } };
-                int rows = grid.Length, cols = grid[0].Length;
+                int[][] directions =
+                {
+                    new int[] { -1, 0 },
+                    new int[] { 1, 0 },
+                    new int[] { 0, -1 },
+                    new int[] { 0, 1 },
+                };
+                int rows = grid.Length,
+                    cols = grid[0].Length;
 
                 for (int i = 0; i < rows; i++)
                 {
                     for (int j = 0; j < cols; j++)
                     {
-                        if (grid[i][j] == 'C') catPositions.Add(new int[] { i, j });
-                        if (grid[i][j] == 'M') mousePositions.Add(new int[] { i, j });
-                        if (grid[i][j] == 'F') foodPosition = new int[] { i, j };
+                        if (grid[i][j] == 'C')
+                            catPositions.Add(new int[] { i, j });
+                        if (grid[i][j] == 'M')
+                            mousePositions.Add(new int[] { i, j });
+                        if (grid[i][j] == 'F')
+                            foodPosition = new int[] { i, j };
                     }
                 }
 
@@ -2813,8 +2984,13 @@ Complexity Analysis
                             {
                                 int x = position[0] + direction[0] * jump;
                                 int y = position[1] + direction[1] * jump;
-                                if (!(0 <= x && x < rows && 0 <= y && y < cols) || grid[x][y] == '#') break;
-                                if (new int[] { x, y }.Equals(foodPosition)) return currentResult;
+                                if (
+                                    !(0 <= x && x < rows && 0 <= y && y < cols)
+                                    || grid[x][y] == '#'
+                                )
+                                    break;
+                                if (new int[] { x, y }.Equals(foodPosition))
+                                    return currentResult;
                                 newArea.Add(new int[] { x, y });
                             }
                         }
@@ -2839,6 +3015,7 @@ Complexity Analysis
                 }
                 return false;
             }
+
             /*
           Approach: DP
 
@@ -2856,7 +3033,8 @@ Complexity Analysis
                 {
                     for (int j = 0; j < cols; j++)
                     {
-                        if (grid[i][j] != '#') validPositions++;
+                        if (grid[i][j] != '#')
+                            validPositions++;
                         if (grid[i][j] == 'F')
                         {
                             foodPosition[0] = i;
@@ -2879,18 +3057,51 @@ Complexity Analysis
 
                 Dictionary<string, bool> memoization = new Dictionary<string, bool>();
 
-                return CanMouseWinHelper(catPosition, mousePosition, 0, threshold, memoization, grid, catJump, mouseJump, foodPosition);
+                return CanMouseWinHelper(
+                    catPosition,
+                    mousePosition,
+                    0,
+                    threshold,
+                    memoization,
+                    grid,
+                    catJump,
+                    mouseJump,
+                    foodPosition
+                );
             }
 
-            private bool CanMouseWinHelper(int[] catPosition, int[] mousePosition, int turn, int threshold, Dictionary<string, bool> memoization, string[] grid, int catJump, int mouseJump, int[] foodPosition)
+            private bool CanMouseWinHelper(
+                int[] catPosition,
+                int[] mousePosition,
+                int turn,
+                int threshold,
+                Dictionary<string, bool> memoization,
+                string[] grid,
+                int catJump,
+                int mouseJump,
+                int[] foodPosition
+            )
             {
-                string stateKey = catPosition[0] + "," + catPosition[1] + "," + mousePosition[0] + "," + mousePosition[1] + "," + turn;
+                string stateKey =
+                    catPosition[0]
+                    + ","
+                    + catPosition[1]
+                    + ","
+                    + mousePosition[0]
+                    + ","
+                    + mousePosition[1]
+                    + ","
+                    + turn;
                 if (memoization.ContainsKey(stateKey))
                 {
                     return memoization[stateKey];
                 }
 
-                if ((catPosition[0] == foodPosition[0] && catPosition[1] == foodPosition[1]) || (catPosition[0] == mousePosition[0] && catPosition[1] == mousePosition[1]) || turn >= threshold)
+                if (
+                    (catPosition[0] == foodPosition[0] && catPosition[1] == foodPosition[1])
+                    || (catPosition[0] == mousePosition[0] && catPosition[1] == mousePosition[1])
+                    || turn >= threshold
+                )
                 {
                     return false;
                 }
@@ -2904,20 +3115,46 @@ Complexity Analysis
                 int[] currentPos = (turn % 2 == 0) ? mousePosition : catPosition;
                 int currentJump = (turn % 2 == 0) ? mouseJump : catJump;
 
-                foreach (int[] direction in new int[][] { new int[] { -1, 0 }, new int[] { 0, 1 }, new int[] { 1, 0 }, new int[] { 0, -1 } })
+                foreach (
+                    int[] direction in new int[][]
+                    {
+                        new int[] { -1, 0 },
+                        new int[] { 0, 1 },
+                        new int[] { 1, 0 },
+                        new int[] { 0, -1 },
+                    }
+                )
                 {
                     for (int jump = 1; jump <= currentJump; jump++)
                     {
                         int newX = currentPos[0] + jump * direction[0];
                         int newY = currentPos[1] + jump * direction[1];
-                        if (newX < 0 || newX >= grid.Length || newY < 0 || newY >= grid[0].Length || grid[newX][newY] == '#')
+                        if (
+                            newX < 0
+                            || newX >= grid.Length
+                            || newY < 0
+                            || newY >= grid[0].Length
+                            || grid[newX][newY] == '#'
+                        )
                         {
                             break;
                         }
 
                         if (turn % 2 == 0)
                         {
-                            if (!CanMouseWinHelper(catPosition, new int[] { newX, newY }, turn + 1, threshold, memoization, grid, catJump, mouseJump, foodPosition))
+                            if (
+                                !CanMouseWinHelper(
+                                    catPosition,
+                                    new int[] { newX, newY },
+                                    turn + 1,
+                                    threshold,
+                                    memoization,
+                                    grid,
+                                    catJump,
+                                    mouseJump,
+                                    foodPosition
+                                )
+                            )
                             {
                                 currentResult = true;
                                 break;
@@ -2925,7 +3162,19 @@ Complexity Analysis
                         }
                         else
                         {
-                            if (CanMouseWinHelper(new int[] { newX, newY }, mousePosition, turn + 1, threshold, memoization, grid, catJump, mouseJump, foodPosition))
+                            if (
+                                CanMouseWinHelper(
+                                    new int[] { newX, newY },
+                                    mousePosition,
+                                    turn + 1,
+                                    threshold,
+                                    memoization,
+                                    grid,
+                                    catJump,
+                                    mouseJump,
+                                    foodPosition
+                                )
+                            )
                             {
                                 currentResult = false;
                                 break;
@@ -2941,6 +3190,7 @@ Complexity Analysis
                 memoization[stateKey] = !currentResult;
                 return !currentResult;
             }
+
             /*
         Approach: BFS+DP (If BFS find Mouse gets food before Cat, we believe Mouse wins for sure.
                           If BFS find Cat gets food before Mouse, we use DP to verify. )
@@ -2953,7 +3203,13 @@ Complexity Analysis
                 HashSet<int[]> mouseArea = new HashSet<int[]>();
                 int valid = 0;
                 int[] food = null;
-                int[][] directions = new int[][] { new int[] { -1, 0 }, new int[] { 1, 0 }, new int[] { 0, -1 }, new int[] { 0, 1 } };
+                int[][] directions = new int[][]
+                {
+                    new int[] { -1, 0 },
+                    new int[] { 1, 0 },
+                    new int[] { 0, -1 },
+                    new int[] { 0, 1 },
+                };
                 int m = grid.Count;
                 int n = grid[0].Length;
 
@@ -2964,10 +3220,14 @@ Complexity Analysis
                 {
                     for (int j = 0; j < n; j++)
                     {
-                        if (grid[i][j] != '#') valid++;
-                        if (grid[i][j] == 'C') cat = new int[] { i, j };
-                        if (grid[i][j] == 'M') mouse = new int[] { i, j };
-                        if (grid[i][j] == 'F') food = new int[] { i, j };
+                        if (grid[i][j] != '#')
+                            valid++;
+                        if (grid[i][j] == 'C')
+                            cat = new int[] { i, j };
+                        if (grid[i][j] == 'M')
+                            mouse = new int[] { i, j };
+                        if (grid[i][j] == 'F')
+                            food = new int[] { i, j };
                     }
                 }
 
@@ -2978,7 +3238,8 @@ Complexity Analysis
                 bool catFirstGetsFood = false;
                 for (int turn = 0; turn < 68; turn++)
                 {
-                    if (catFirstGetsFood) continue;
+                    if (catFirstGetsFood)
+                        continue;
                     HashSet<int[]> currentArea;
                     int currentJump;
                     bool currentResult;
@@ -3003,9 +3264,12 @@ Complexity Analysis
                             {
                                 int x = pos[0] + direction[0] * jump;
                                 int y = pos[1] + direction[1] * jump;
-                                if (!(0 <= x && x < m && 0 <= y && y < n) || grid[x][y] == '#') break;
-                                if (x == food[0] && y == food[1] && turn % 2 == 0) return true; // Mouse gets food first. Mouse wins
-                                if (x == food[0] && y == food[1] && turn % 2 == 1) catFirstGetsFood = true; // Cat gets food first. Stop BFS and start DP
+                                if (!(0 <= x && x < m && 0 <= y && y < n) || grid[x][y] == '#')
+                                    break;
+                                if (x == food[0] && y == food[1] && turn % 2 == 0)
+                                    return true; // Mouse gets food first. Mouse wins
+                                if (x == food[0] && y == food[1] && turn % 2 == 1)
+                                    catFirstGetsFood = true; // Cat gets food first. Stop BFS and start DP
                                 newArea.Add(new int[] { x, y });
                             }
                         }
@@ -3030,10 +3294,21 @@ Complexity Analysis
                 return Fn(cat, mouse, 0, grid, catJump, mouseJump, threshold, food);
             }
 
-            private bool Fn(int[] cat, int[] mouse, int turn, List<string> grid, int catJump, int mouseJump, int threshold, int[] food)
+            private bool Fn(
+                int[] cat,
+                int[] mouse,
+                int turn,
+                List<string> grid,
+                int catJump,
+                int mouseJump,
+                int threshold,
+                int[] food
+            )
             {
-                if (cat.SequenceEqual(food) || cat.SequenceEqual(mouse) || turn >= threshold) return false;
-                if (mouse.SequenceEqual(food)) return true;
+                if (cat.SequenceEqual(food) || cat.SequenceEqual(mouse) || turn >= threshold)
+                    return false;
+                if (mouse.SequenceEqual(food))
+                    return true;
                 int[] currentPosition;
                 int currentJump;
                 bool currentResult;
@@ -3050,22 +3325,61 @@ Complexity Analysis
                     currentResult = false;
                 }
 
-                int[][] directions = { new int[] { -1, 0 }, new int[] { 0, 1 }, new int[] { 1, 0 }, new int[] { 0, -1 } };
+                int[][] directions =
+                {
+                    new int[] { -1, 0 },
+                    new int[] { 0, 1 },
+                    new int[] { 1, 0 },
+                    new int[] { 0, -1 },
+                };
                 foreach (int[] direction in directions)
                 {
                     for (int jump = 1; jump <= currentJump; jump++)
                     { // optimization
                         int x = currentPosition[0] + jump * direction[0];
                         int y = currentPosition[1] + jump * direction[1];
-                        if (!(0 <= x && x < grid.Count && 0 <= y && y < grid[0].Length) || grid[x][y] == '#') break;
-                        if (turn % 2 == 1 && !Fn(cat, new int[] { x, y }, turn + 1, grid, catJump, mouseJump, threshold, food)) return currentResult;
-                        else if (turn % 2 == 0 && Fn(cat, new int[] { x, y }, turn + 1, grid, catJump, mouseJump, threshold, food)) return currentResult;
+                        if (
+                            !(0 <= x && x < grid.Count && 0 <= y && y < grid[0].Length)
+                            || grid[x][y] == '#'
+                        )
+                            break;
+                        if (
+                            turn % 2 == 1
+                            && !Fn(
+                                cat,
+                                new int[] { x, y },
+                                turn + 1,
+                                grid,
+                                catJump,
+                                mouseJump,
+                                threshold,
+                                food
+                            )
+                        )
+                            return currentResult;
+                        else if (
+                            turn % 2 == 0
+                            && Fn(
+                                cat,
+                                new int[] { x, y },
+                                turn + 1,
+                                grid,
+                                catJump,
+                                mouseJump,
+                                threshold,
+                                food
+                            )
+                        )
+                            return currentResult;
                     }
-                    if (turn % 2 == 1 && !Fn(cat, mouse, turn + 1, grid, catJump, mouseJump, threshold, food)) return currentResult; // optimization
+                    if (
+                        turn % 2 == 1
+                        && !Fn(cat, mouse, turn + 1, grid, catJump, mouseJump, threshold, food)
+                    )
+                        return currentResult; // optimization
                 }
                 return !currentResult;
             }
-
         }
 
         /*
@@ -3088,12 +3402,13 @@ Complexity Analysis
                 foreach (char s in stones) // For each stone...
                     foreach (char j in jewels) // For each jewel...
                         if (j == s)
-                        {  // If the stone is a jewel...
+                        { // If the stone is a jewel...
                             ans++;
                             break; // Stop searching whether this stone 's' is a jewel
                         }
                 return ans;
             }
+
             /*
             Approach #2: Hash Set [Accepted]
             Complexity Analysis: J and S represnets Jewesls and Stones respectively.
@@ -3114,6 +3429,7 @@ Complexity Analysis
                 return ans;
             }
         }
+
         /*
         766. Toeplitz Matrix
         https://leetcode.com/problems/toeplitz-matrix/description/
@@ -3163,7 +3479,6 @@ Complexity Analysis
                             return false;
                 return true;
             }
-
         }
 
         /*
@@ -3194,11 +3509,16 @@ Complexity Analysis
                     for (int column = 0; column < gridSize; ++column)
                     {
                         int order = 0;
-                        while (order <= row && row < gridSize - order && order <= column && column < gridSize - order &&
-                                !bannedPositions.Contains((row - order) * gridSize + column) &&
-                                !bannedPositions.Contains((row + order) * gridSize + column) &&
-                                !bannedPositions.Contains(row * gridSize + column - order) &&
-                                !bannedPositions.Contains(row * gridSize + column + order))
+                        while (
+                            order <= row
+                            && row < gridSize - order
+                            && order <= column
+                            && column < gridSize - order
+                            && !bannedPositions.Contains((row - order) * gridSize + column)
+                            && !bannedPositions.Contains((row + order) * gridSize + column)
+                            && !bannedPositions.Contains(row * gridSize + column - order)
+                            && !bannedPositions.Contains(row * gridSize + column + order)
+                        )
                         {
                             order++;
                         }
@@ -3208,6 +3528,7 @@ Complexity Analysis
                 }
                 return largestPlusSignOrder;
             }
+
             /*
             Approach #2: Dynamic Programming [Accepted]
             Complexity Analysis
@@ -3222,7 +3543,8 @@ Complexity Analysis
 
                 foreach (int[] mine in mines)
                     bannedLocations.Add(mine[0] * size + mine[1]);
-                int maximumOrder = 0, count;
+                int maximumOrder = 0,
+                    count;
 
                 for (int row = 0; row < size; ++row)
                 {
@@ -3261,9 +3583,7 @@ Complexity Analysis
 
                 return maximumOrder;
             }
-
         }
-
 
         /*
         782. Transform to Chessboard
@@ -3303,7 +3623,8 @@ Complexity Analysis
                 }
 
                 int rowSwaps = AnalyzeCount(rowCount, size);
-                if (rowSwaps == -1) return -1;
+                if (rowSwaps == -1)
+                    return -1;
 
                 // count[code], as before except with columns
                 Dictionary<int, int> columnCount = new Dictionary<int, int>();
@@ -3330,14 +3651,20 @@ Complexity Analysis
             {
                 // Return -1 if count is invalid
                 // Otherwise, return number of swaps required
-                if (count.Count != 2) return -1;
+                if (count.Count != 2)
+                    return -1;
 
                 List<int> keys = new List<int>(count.Keys);
-                int firstKey = keys[0], secondKey = keys[1];
+                int firstKey = keys[0],
+                    secondKey = keys[1];
 
                 // If lines aren't in the right quantity
-                if (!((count[firstKey] == size / 2 && count[secondKey] == (size + 1) / 2) ||
-                      (count[secondKey] == size / 2 && count[firstKey] == (size + 1) / 2)))
+                if (
+                    !(
+                        (count[firstKey] == size / 2 && count[secondKey] == (size + 1) / 2)
+                        || (count[secondKey] == size / 2 && count[firstKey] == (size + 1) / 2)
+                    )
+                )
                     return -1;
                 // If lines aren't opposite
                 if ((firstKey ^ secondKey) != (1 << size) - 1)
@@ -3348,10 +3675,16 @@ Complexity Analysis
                 long minimumSwaps = int.MaxValue;
 
                 if (size % 2 == 0 || onesCount * 2 < size) // zero start
-                    minimumSwaps = Math.Min(minimumSwaps, CountBits(firstKey ^ 0xAAAAAAAA & allOnes) / 2);
+                    minimumSwaps = Math.Min(
+                        minimumSwaps,
+                        CountBits(firstKey ^ 0xAAAAAAAA & allOnes) / 2
+                    );
 
                 if (size % 2 == 0 || onesCount * 2 > size) // ones start
-                    minimumSwaps = Math.Min(minimumSwaps, CountBits(firstKey ^ 0x55555555 & allOnes) / 2);
+                    minimumSwaps = Math.Min(
+                        minimumSwaps,
+                        CountBits(firstKey ^ 0x55555555 & allOnes) / 2
+                    );
 
                 return (int)minimumSwaps;
             }
@@ -3433,7 +3766,8 @@ We need two lists row and col to keep the count of rooks on each row and column 
                     col[rooks[i][1]]++;
                 }
 
-                int rowMinMoves = 0, colMinMoves = 0;
+                int rowMinMoves = 0,
+                    colMinMoves = 0;
                 for (int i = 0; i < rooks.Length; i++)
                 {
                     // Difference between the rooks count at row and column and one.
@@ -3446,7 +3780,6 @@ We need two lists row and col to keep the count of rooks on each row and column 
 
                 return minMoves;
             }
-
         }
 
         /*
@@ -3483,9 +3816,7 @@ Thus, the overall time complexity of the algorithm is 2⋅O(n^2)=O(n^2).
                 {
                     for (int j = i + 1; j < numberOfStones; j++)
                     {
-                        if (
-                            stones[i][0] == stones[j][0] || stones[i][1] == stones[j][1]
-                        )
+                        if (stones[i][0] == stones[j][0] || stones[i][1] == stones[j][1])
                         {
                             adjacencyList[i].Add(j);
                             adjacencyList[j].Add(i);
@@ -3511,11 +3842,7 @@ Thus, the overall time complexity of the algorithm is 2⋅O(n^2)=O(n^2).
             }
 
             // DFS to visit all stones in a connected component
-            private void DepthFirstSearch(
-                List<int>[] adjacencyList,
-                bool[] visited,
-                int stone
-            )
+            private void DepthFirstSearch(List<int>[] adjacencyList, bool[] visited, int stone)
             {
                 visited[stone] = true;
 
@@ -3629,6 +3956,7 @@ While constants are typically excluded from complexity analysis, we've included 
 
                 return numberOfStones - unionFind.ComponentCount;
             }
+
             // Union-Find data structure for tracking connected components
             private class UnionFindExt
             {
@@ -3677,9 +4005,7 @@ While constants are typically excluded from complexity analysis, we've included 
                     ComponentCount--;
                 }
             }
-
         }
-
 
         /*
         790. Domino and Tromino Tiling
@@ -3696,7 +4022,7 @@ From top (N) to bottom (1), there will be N non-memoized recursive calls to f an
 Furthermore, there will be 2⋅N memoized calls to f and N memoized calls to p, where each memoized call also requires constant time. Thus O(3⋅N) time is required for the memoized calls.
 This leads to a time complexity of O(2⋅N+3⋅N)=O(N).
 •	Space complexity: O(N)
-Each recursion call stack will contain at most N layers. Also, each hashmap will use O(N) space. Together this results in O(N) space complexity.	
+Each recursion call stack will contain at most N layers. Also, each hashmap will use O(N) space. Together this results in O(N) space complexity.
 
             */
             private const int MOD = 1_000_000_007;
@@ -3749,6 +4075,7 @@ Each recursion call stack will contain at most N layers. Also, each hashmap will
             {
                 return (int)(Function(n));
             }
+
             /*
             Approach 2: Dynamic Programming (Bottom-up)
 Complexity Analysis
@@ -3777,8 +4104,14 @@ Two arrays of size N+1 are used to store the number of ways to fully and partial
                 partialCoverageWays[2] = 1L;
                 for (int width = 3; width <= boardWidth; ++width)
                 {
-                    fullCoverageWays[width] = (fullCoverageWays[width - 1] + fullCoverageWays[width - 2] + 2 * partialCoverageWays[width - 1]) % modulo;
-                    partialCoverageWays[width] = (partialCoverageWays[width - 1] + fullCoverageWays[width - 2]) % modulo;
+                    fullCoverageWays[width] =
+                        (
+                            fullCoverageWays[width - 1]
+                            + fullCoverageWays[width - 2]
+                            + 2 * partialCoverageWays[width - 1]
+                        ) % modulo;
+                    partialCoverageWays[width] =
+                        (partialCoverageWays[width - 1] + fullCoverageWays[width - 2]) % modulo;
                 }
                 return (int)(fullCoverageWays[boardWidth]);
             }
@@ -3811,6 +4144,7 @@ Only a constant number of numeric (long/int) variables were used
                 }
                 return (int)(fCurrent);
             }
+
             /*
             Approach 4: Matrix Exponentiation
             Complexity Analysis
@@ -3821,11 +4155,12 @@ We need to perform matrix multiplication of 3 x 3 matrix N−2 times which will 
 We only used a 3 x 3 matrix and a few other numeric variables.
 
             */
-            private long[][] squareMatrix = { // Initialize the square matrix.
-        new long[] { 1, 1, 2 },
-        new long[] { 1, 0, 0 },
-        new long[] { 0, 1, 1 },
-    };
+            private long[][] squareMatrix =
+            { // Initialize the square matrix.
+                new long[] { 1, 1, 2 },
+                new long[] { 1, 0, 0 },
+                new long[] { 0, 1, 1 },
+            };
             private const int size = 3; // Width/Length of the square matrix.
 
             /** Return product of 2 square matrices. */
@@ -3856,8 +4191,11 @@ We only used a 3 x 3 matrix and a few other numeric variables.
                 {
                     currentMatrix = MatrixProduct(currentMatrix, squareMatrix);
                 }
-                // The answer will be currentMatrix[0][0] * f(2) + currentMatrix[0][1] * f(1) + currentMatrix[0][2] * p(2) 
-                return (int)((currentMatrix[0][0] * 2 + currentMatrix[0][1] * 1 + currentMatrix[0][2] * 1) % MOD);
+                // The answer will be currentMatrix[0][0] * f(2) + currentMatrix[0][1] * f(1) + currentMatrix[0][2] * p(2)
+                return (int)(
+                    (currentMatrix[0][0] * 2 + currentMatrix[0][1] * 1 + currentMatrix[0][2] * 1)
+                    % MOD
+                );
             }
 
             public int UsingMatrixExpo(int n)
@@ -3869,7 +4207,8 @@ We only used a 3 x 3 matrix and a few other numeric variables.
                 }
                 return MatrixExponentiation(n - 2);
             }
-            /*           
+
+            /*
 Approach 5: Matrix Exponentiation (time optimization, space/time trade off)
 Complexity Analysis
 Let N be the width of the board.
@@ -3879,12 +4218,14 @@ With the use of recursion and memoization, we only need to make one calculation 
 Stack space of O(logN) will be used due to recursion. Also, an extra O(logN) space will be used for caching/memoization during recursion, since we used a map to store the intermediate results, where the key is an integer and the value is a 3 by 3 matrix. Together they will take O(logN) space.
             */
             Dictionary<int, long[][]> cache = new Dictionary<int, long[][]>();
-            long[][] SQ_MATRIX = {  // Initialize the square matrix
-        new long[] { 1, 1, 2 },
-        new long[] { 1, 0, 0 },
-        new long[] { 0, 1, 1 },
-    };
-            int SIZE = 3;  // Width/Length of square matrix
+            long[][] SQ_MATRIX =
+            { // Initialize the square matrix
+                new long[] { 1, 1, 2 },
+                new long[] { 1, 0, 0 },
+                new long[] { 0, 1, 1 },
+            };
+            int SIZE = 3; // Width/Length of square matrix
+
             /** Return product of 2 square matrices */
 
 
@@ -3897,15 +4238,15 @@ Stack space of O(logN) will be used due to recursion. Also, an extra O(logN) spa
                     return cache[n];
                 }
                 long[][] currentMatrix;
-                if (n == 1)  // base case
+                if (n == 1) // base case
                 {
                     currentMatrix = SQ_MATRIX;
                 }
-                else if (n % 2 == 1)  // When `n` is odd
+                else if (n % 2 == 1) // When `n` is odd
                 {
                     currentMatrix = MatrixProduct(MatrixExpo(n - 1), SQ_MATRIX);
                 }
-                else  // When `n` is even
+                else // When `n` is even
                 {
                     var halfMatrix = MatrixExpo(n / 2);
                     currentMatrix = MatrixProduct(halfMatrix, halfMatrix);
@@ -3916,7 +4257,7 @@ Stack space of O(logN) will be used due to recursion. Also, an extra O(logN) spa
 
             public int MatroxExpoWithSpaceOptimal(int n)
             {
-                if (n <= 2)  // Handle base cases
+                if (n <= 2) // Handle base cases
                 {
                     return n;
                 }
@@ -3944,6 +4285,7 @@ Stack space of O(logN) will be used due to recursion. Also, an extra O(logN) spa
                     return ans;
                 }
             }
+
             /*
             Approach 6: Math optimization (Fibonacci sequence like)
 
@@ -3973,7 +4315,6 @@ Stack space of O(logN) will be used due to recursion. Also, an extra O(logN) spa
                 }
                 return (int)(fCurrent % MOD);
             }
-
         }
 
         /*
@@ -3983,7 +4324,7 @@ Stack space of O(logN) will be used due to recursion. Also, an extra O(logN) spa
         public class HitBricksSol
         {
             /*
-            Approach #1: Reverse Time and Union-Find [Accepted]	
+            Approach #1: Reverse Time and Union-Find [Accepted]
             Complexity Analysis
 •	Time Complexity: O(N⋅α(N)), where N=R⋅C is the number of grid squares, and α is the Inverse-Ackermann function. We will insert at most N nodes into the disjoint-set data structure which will require O(N⋅α(N)) time. There will also be at most Q hits where we must add a brick into the disjoint-set data structure which will require O(Q⋅α(N)) time. Since each hit location is unique, Q must be less than or equal to N, so we can simplify the time complexity to O(N⋅α(N)).
 •	Space Complexity: O(N).
@@ -3991,7 +4332,8 @@ Stack space of O(logN) will be used due to recursion. Also, an extra O(logN) spa
             */
             public int[] ReverseTimeAndUnionFind(int[][] grid, int[][] hits)
             {
-                int rowCount = grid.Length, columnCount = grid[0].Length;
+                int rowCount = grid.Length,
+                    columnCount = grid[0].Length;
                 int[] rowDirection = { 1, 0, -1, 0 };
                 int[] columnDirection = { 0, 1, 0, -1 };
 
@@ -4037,7 +4379,13 @@ Stack space of O(logN) will be used due to recursion. Also, an extra O(logN) spa
                         {
                             int newRow = row + rowDirection[directionIndex];
                             int newColumn = column + columnDirection[directionIndex];
-                            if (0 <= newRow && newRow < rowCount && 0 <= newColumn && newColumn < columnCount && gridClone[newRow][newColumn] == 1)
+                            if (
+                                0 <= newRow
+                                && newRow < rowCount
+                                && 0 <= newColumn
+                                && newColumn < columnCount
+                                && gridClone[newRow][newColumn] == 1
+                            )
                                 disjointSetUnion.Union(index, newRow * columnCount + newColumn);
                         }
                         if (row == 0)
@@ -4049,6 +4397,7 @@ Stack space of O(logN) will be used due to recursion. Also, an extra O(logN) spa
 
                 return result;
             }
+
             public class DSU
             {
                 private int[] parent;
@@ -4067,14 +4416,17 @@ Stack space of O(logN) will be used due to recursion. Also, an extra O(logN) spa
 
                 public int Find(int element)
                 {
-                    if (parent[element] != element) parent[element] = Find(parent[element]);
+                    if (parent[element] != element)
+                        parent[element] = Find(parent[element]);
                     return parent[element];
                 }
 
                 public void Union(int elementX, int elementY)
                 {
-                    int rootX = Find(elementX), rootY = Find(elementY);
-                    if (rootX == rootY) return;
+                    int rootX = Find(elementX),
+                        rootY = Find(elementY);
+                    if (rootX == rootY)
+                        return;
 
                     if (rank[rootX] < rank[rootY])
                     {
@@ -4119,7 +4471,14 @@ o	We need to build an 2-D array of size row×col.
 o	During the BFS, we might have at most O(row⋅col) in queue.
 
             */
-            private int[][] directions = new int[][] { new int[] { 1, 0 }, new int[] { -1, 0 }, new int[] { 0, 1 }, new int[] { 0, -1 } };
+            private int[][] directions = new int[][]
+            {
+                new int[] { 1, 0 },
+                new int[] { -1, 0 },
+                new int[] { 0, 1 },
+                new int[] { 0, -1 },
+            };
+
             public int BinarySearchWithBFS(int rowCount, int colCount, int[][] cells)
             {
                 int left = 1;
@@ -4165,7 +4524,8 @@ o	During the BFS, we might have at most O(row⋅col) in queue.
                     while (queue.Count > 0)
                     {
                         int[] current = queue.Dequeue();
-                        int currentRow = current[0], currentCol = current[1];
+                        int currentRow = current[0],
+                            currentCol = current[1];
                         if (currentRow == rowCount - 1)
                         {
                             return true;
@@ -4175,7 +4535,13 @@ o	During the BFS, we might have at most O(row⋅col) in queue.
                         {
                             int newRow = currentRow + direction[0];
                             int newCol = currentCol + direction[1];
-                            if (newRow >= 0 && newRow < rowCount && newCol >= 0 && newCol < colCount && grid[newRow][newCol] == 0)
+                            if (
+                                newRow >= 0
+                                && newRow < rowCount
+                                && newCol >= 0
+                                && newCol < colCount
+                                && grid[newRow][newCol] == 0
+                            )
                             {
                                 grid[newRow][newCol] = -1;
                                 queue.Enqueue(new int[] { newRow, newCol });
@@ -4187,8 +4553,7 @@ o	During the BFS, we might have at most O(row⋅col) in queue.
                 }
             }
 
-
-            /*            
+            /*
 Approach 2: Binary Search + Depth-First Search
 Complexity Analysis
 •	Time complexity: O(row⋅col⋅logrow⋅col)
@@ -4201,7 +4566,8 @@ o	The recursion call stack from the DFS could use up to O(row⋅col) space.
             */
             public int BinarySearchWithDFS(int rowCount, int columnCount, int[][] cells)
             {
-                int left = 1, right = rowCount * columnCount;
+                int left = 1,
+                    right = rowCount * columnCount;
                 while (left < right)
                 {
                     int mid = right - (right - left) / 2;
@@ -4246,7 +4612,13 @@ o	The recursion call stack from the DFS could use up to O(row⋅col) space.
                 }
                 bool Dfs(int[][] grid, int row, int column, int rowCount, int columnCount)
                 {
-                    if (row < 0 || row >= rowCount || column < 0 || column >= columnCount || grid[row][column] != 0)
+                    if (
+                        row < 0
+                        || row >= rowCount
+                        || column < 0
+                        || column >= columnCount
+                        || grid[row][column] != 0
+                    )
                     {
                         return false;
                     }
@@ -4266,8 +4638,8 @@ o	The recursion call stack from the DFS could use up to O(row⋅col) space.
                     }
                     return false;
                 }
-
             }
+
             /*
             Approach 3: Disjoint Set Union (on land cells)
 Complexity Analysis
@@ -4283,18 +4655,32 @@ o	We also create an array of size row×col to represent each cell.
             {
                 DSU dsu = new DSU(row * col + 2);
                 int[][] grid = new int[row][];
-                int[][] directions = { new int[] { 0, 1 }, new int[] { 0, -1 }, new int[] { 1, 0 }, new int[] { -1, 0 } };
+                int[][] directions =
+                {
+                    new int[] { 0, 1 },
+                    new int[] { 0, -1 },
+                    new int[] { 1, 0 },
+                    new int[] { -1, 0 },
+                };
 
                 for (int i = cells.Length - 1; i >= 0; i--)
                 {
-                    int r = cells[i][0] - 1, c = cells[i][1] - 1;
+                    int r = cells[i][0] - 1,
+                        c = cells[i][1] - 1;
                     grid[r][c] = 1;
                     int index1 = r * col + c + 1;
                     foreach (var d in directions)
                     {
-                        int newR = r + d[0], newC = c + d[1];
+                        int newR = r + d[0],
+                            newC = c + d[1];
                         int index2 = newR * col + newC + 1;
-                        if (newR >= 0 && newR < row && newC >= 0 && newC < col && grid[newR][newC] == 1)
+                        if (
+                            newR >= 0
+                            && newR < row
+                            && newC >= 0
+                            && newC < col
+                            && grid[newR][newC] == 1
+                        )
                         {
                             dsu.Union(index1, index2);
                         }
@@ -4313,12 +4699,12 @@ o	We also create an array of size row×col to represent each cell.
                     }
                 }
                 return -1;
-
-
             }
+
             class DSU
             {
-                private int[] root, size;
+                private int[] root,
+                    size;
 
                 public DSU(int n)
                 {
@@ -4359,6 +4745,7 @@ o	We also create an array of size row×col to represent each cell.
                     size[rootY] += size[rootX];
                 }
             }
+
             /*
             Approach 4: Disjoint Set Union (on water cells)
             Complexity Analysis
@@ -4378,18 +4765,36 @@ o	We also create an array of size row×col to represent each cell.
                 {
                     grid[i] = new int[col];
                 }
-                int[][] directions = new int[][] { new int[] { 0, 1 }, new int[] { 0, -1 }, new int[] { 1, 0 }, new int[] { -1, 0 }, new int[] { 1, 1 }, new int[] { 1, -1 }, new int[] { -1, 1 }, new int[] { -1, -1 } };
+                int[][] directions = new int[][]
+                {
+                    new int[] { 0, 1 },
+                    new int[] { 0, -1 },
+                    new int[] { 1, 0 },
+                    new int[] { -1, 0 },
+                    new int[] { 1, 1 },
+                    new int[] { 1, -1 },
+                    new int[] { -1, 1 },
+                    new int[] { -1, -1 },
+                };
 
                 for (int i = 0; i < row * col; ++i)
                 {
-                    int r = cells[i][0] - 1, c = cells[i][1] - 1;
+                    int r = cells[i][0] - 1,
+                        c = cells[i][1] - 1;
                     grid[r][c] = 1;
                     int index1 = r * col + c + 1;
                     foreach (int[] d in directions)
                     {
-                        int newR = r + d[0], newC = c + d[1];
+                        int newR = r + d[0],
+                            newC = c + d[1];
                         int index2 = newR * col + newC + 1;
-                        if (newR >= 0 && newR < row && newC >= 0 && newC < col && grid[newR][newC] == 1)
+                        if (
+                            newR >= 0
+                            && newR < row
+                            && newC >= 0
+                            && newC < col
+                            && grid[newR][newC] == 1
+                        )
                         {
                             dsu.Union(index1, index2);
                         }
@@ -4409,7 +4814,6 @@ o	We also create an array of size row×col to represent each cell.
                 }
                 return -1;
             }
-
         }
 
         /*
@@ -4442,12 +4846,12 @@ Complexity Analysis
                 int totalIncrease = 0;
                 for (int row = 0; row < size; ++row)
                     for (int column = 0; column < size; ++column)
-                        totalIncrease += Math.Min(maxRowValues[row], maxColumnValues[column]) - grid[row][column];
+                        totalIncrease +=
+                            Math.Min(maxRowValues[row], maxColumnValues[column]) - grid[row][column];
 
                 return totalIncrease;
             }
         }
-
 
         /*
         808. Soup Servings
@@ -4469,7 +4873,8 @@ The space complexity is O(m02)=O(1).
             public double BottomUpDP(int n)
             {
                 int m = (int)Math.Ceiling(n / 25.0);
-                Dictionary<int, Dictionary<int, double>> dp = new Dictionary<int, Dictionary<int, double>>();
+                Dictionary<int, Dictionary<int, double>> dp =
+                    new Dictionary<int, Dictionary<int, double>>();
                 dp[0] = new Dictionary<int, double>();
                 dp[0][0] = 0.5;
 
@@ -4494,11 +4899,14 @@ The space complexity is O(m02)=O(1).
 
             private double CalculateDP(int i, int j, Dictionary<int, Dictionary<int, double>> dp)
             {
-                return (dp[Math.Max(0, i - 4)][j]
+                return (
+                        dp[Math.Max(0, i - 4)][j]
                         + dp[Math.Max(0, i - 3)][j - 1]
                         + dp[Math.Max(0, i - 2)][Math.Max(0, j - 2)]
-                        + dp[i - 1][Math.Max(0, j - 3)]) / 4;
+                        + dp[i - 1][Math.Max(0, j - 3)]
+                    ) / 4;
             }
+
             /*
             Approach 2: Top-Down Dynamic Programming (Memoization)
             Complexity Analysis
@@ -4510,7 +4918,8 @@ The space complexity is O(m02)=O(1).
             public double TopDownDPWithMemo(int n)
             {
                 int m = (int)Math.Ceiling(n / 25.0);
-                Dictionary<int, Dictionary<int, double>> dp = new Dictionary<int, Dictionary<int, double>>();
+                Dictionary<int, Dictionary<int, double>> dp =
+                    new Dictionary<int, Dictionary<int, double>>();
 
                 for (int k = 1; k <= m; k++)
                 {
@@ -4539,8 +4948,13 @@ The space complexity is O(m02)=O(1).
                     {
                         return dp[i][j];
                     }
-                    double result = (CalculateDP(i - 4, j, dp) + CalculateDP(i - 3, j - 1, dp) +
-                                     CalculateDP(i - 2, j - 2, dp) + CalculateDP(i - 1, j - 3, dp)) / 4.0;
+                    double result =
+                        (
+                            CalculateDP(i - 4, j, dp)
+                            + CalculateDP(i - 3, j - 1, dp)
+                            + CalculateDP(i - 2, j - 2, dp)
+                            + CalculateDP(i - 1, j - 3, dp)
+                        ) / 4.0;
                     if (!dp.ContainsKey(i))
                     {
                         dp[i] = new Dictionary<int, double>();
@@ -4549,12 +4963,7 @@ The space complexity is O(m02)=O(1).
                     return result;
                 }
             }
-
-
-
         }
-
-
 
         /*
         810. Chalkboard XOR Game
@@ -4564,7 +4973,7 @@ The space complexity is O(m02)=O(1).
         class XorGameSol
         {
             /*
-            Approach #1: Mathematical 
+            Approach #1: Mathematical
             Complexity Analysis
 •	Time Complexity: O(N), where N is the length of nums.
 •	Space Complexity: O(1).
@@ -4573,7 +4982,8 @@ The space complexity is O(m02)=O(1).
             public bool WithMaths(int[] nums)
             {
                 int x = 0;
-                foreach (int v in nums) x ^= v;
+                foreach (int v in nums)
+                    x ^= v;
                 return x == 0 || nums.Length % 2 == 0;
             }
         }
@@ -4584,7 +4994,6 @@ The space complexity is O(m02)=O(1).
         */
         class SubdomainVisitsSol
         {
-
             /*
             Approach #1: Hash Map [Accepted]
             Complexity Analysis
@@ -4597,13 +5006,17 @@ The space complexity is O(m02)=O(1).
                 Dictionary<string, int> counts = new Dictionary<string, int>();
                 foreach (string domain in cpdomains)
                 {
-                    string[] cpinfo = domain.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                    string[] cpinfo = domain.Split(
+                        new[] { ' ' },
+                        StringSplitOptions.RemoveEmptyEntries
+                    );
                     string[] frags = cpinfo[1].Split('.');
                     int count = int.Parse(cpinfo[0]);
                     string currentDomain = "";
                     for (int i = frags.Length - 1; i >= 0; --i)
                     {
-                        currentDomain = frags[i] + (i < frags.Length - 1 ? "." : "") + currentDomain;
+                        currentDomain =
+                            frags[i] + (i < frags.Length - 1 ? "." : "") + currentDomain;
                         if (counts.ContainsKey(currentDomain))
                         {
                             counts[currentDomain] += count;
@@ -4623,7 +5036,6 @@ The space complexity is O(m02)=O(1).
                 return ans;
             }
         }
-
 
         /*
         815. Bus Routes
@@ -4730,6 +5142,7 @@ Thus, the total space complexity is equal to O(M^2+logK).
 
             */
             List<List<int>> adjacencyList = new List<List<int>>();
+
             public int BFSWithRoutesAsNodes(int[][] routes, int source, int target)
             {
                 if (source == target)
@@ -4780,6 +5193,7 @@ Thus, the total space complexity is equal to O(M^2+logK).
 
                 return -1;
             }
+
             // Iterate over each pair of routes and add an edge between them if there's a common stop.
             void CreateGraph(int[][] routes)
             {
@@ -4799,7 +5213,8 @@ Thus, the total space complexity is equal to O(M^2+logK).
             // Returns true if the provided routes have a common stop, false otherwise.
             bool HaveCommonNode(int[] route1, int[] route2)
             {
-                int i = 0, j = 0;
+                int i = 0,
+                    j = 0;
                 while (i < route1.Length && j < route2.Length)
                 {
                     if (route1[i] == route2[j])
@@ -4843,10 +5258,7 @@ Thus, the total space complexity is equal to O(M^2+logK).
                 }
                 return false;
             }
-
-
         }
-
 
         /*
         826. Most Profit Assigning Work
@@ -4870,7 +5282,11 @@ o	In C++, the sort() function is implemented as a hybrid of Quick Sort, Heap Sor
 Therefore, space complexity is given by O(n).
 
             */
-            public int BinarySearchAndGreedyWithSortByJobDifficulty(int[] difficulty, int[] profit, int[] worker)
+            public int BinarySearchAndGreedyWithSortByJobDifficulty(
+                int[] difficulty,
+                int[] profit,
+                int[] worker
+            )
             {
                 List<int[]> jobProfile = new List<int[]>();
                 jobProfile.Add(new int[] { 0, 0 });
@@ -4892,7 +5308,9 @@ Therefore, space complexity is given by O(n).
                     int workerAbility = worker[i];
 
                     // Find the job with just smaller or equal difficulty than ability.
-                    int leftIndex = 0, rightIndex = jobProfile.Count - 1, jobProfit = 0;
+                    int leftIndex = 0,
+                        rightIndex = jobProfile.Count - 1,
+                        jobProfit = 0;
                     while (leftIndex <= rightIndex)
                     {
                         int midIndex = (leftIndex + rightIndex) / 2;
@@ -4925,7 +5343,11 @@ Therefore, the total time complexity is given by O(n⋅logn+m⋅logn).
  
 
             */
-            public int BinarySearchAndGreedyWithSortByProfit(int[] difficulty, int[] profit, int[] worker)
+            public int BinarySearchAndGreedyWithSortByProfit(
+                int[] difficulty,
+                int[] profit,
+                int[] worker
+            )
             {
                 List<int[]> jobProfile = new List<int[]> { new int[] { 0, 0 } };
                 for (int i = 0; i < difficulty.Length; i++)
@@ -4945,7 +5367,9 @@ Therefore, the total time complexity is given by O(n⋅logn+m⋅logn).
                 {
                     int workerAbility = worker[i];
                     // Maximize profit using binary search.
-                    int left = 0, right = jobProfile.Count - 1, jobProfit = 0;
+                    int left = 0,
+                        right = jobProfile.Count - 1,
+                        jobProfit = 0;
                     while (left <= right)
                     {
                         int middle = (left + right) / 2;
@@ -4964,6 +5388,7 @@ Therefore, the total time complexity is given by O(n⋅logn+m⋅logn).
                 }
                 return totalProfit;
             }
+
             /*
             Approach 3: Greedy and Two-Pointers
             Complexity Analysis
@@ -4988,7 +5413,9 @@ We create an additional jobProfile array of size 2⋅n. Apart from this, some ex
                 Array.Sort(worker);
                 jobProfile.Sort((a, b) => a[0].CompareTo(b[0]));
 
-                int netProfit = 0, maxProfit = 0, index = 0;
+                int netProfit = 0,
+                    maxProfit = 0,
+                    index = 0;
                 for (int i = 0; i < worker.Length; i++)
                 {
                     // While the index has not reached the end and worker can pick a job
@@ -5002,6 +5429,7 @@ We create an additional jobProfile array of size 2⋅n. Apart from this, some ex
                 }
                 return netProfit;
             }
+
             /*
             Approach 4: Memoization
 Complexity Analysis
@@ -5041,7 +5469,6 @@ Therefore, space complexity is given by O(maxAbility).
                 }
                 return totalNetProfit;
             }
-
         }
 
         /*
@@ -5059,20 +5486,24 @@ Therefore, space complexity is given by O(maxAbility).
             */
             public int GreedyWithBinarySearch(int[] tasks, int[] workers, int pills, int strength)
             {
-                int numberOfTasks = tasks.Length, numberOfWorkers = workers.Length;
+                int numberOfTasks = tasks.Length,
+                    numberOfWorkers = workers.Length;
                 Array.Sort(tasks);
                 Array.Sort(workers);
-                int lowerBound = 0, upperBound = Math.Min(numberOfWorkers, numberOfTasks);
+                int lowerBound = 0,
+                    upperBound = Math.Min(numberOfWorkers, numberOfTasks);
 
                 while (lowerBound < upperBound)
                 {
                     int middle = upperBound - ((upperBound - lowerBound) >> 1);
                     int count = 0;
                     bool isPossible = true;
-                    SortedDictionary<int, int> workerAvailability = new SortedDictionary<int, int>();
+                    SortedDictionary<int, int> workerAvailability =
+                        new SortedDictionary<int, int>();
 
                     foreach (int worker in workers)
-                        workerAvailability[worker] = workerAvailability.GetValueOrDefault(worker, 0) + 1;
+                        workerAvailability[worker] =
+                            workerAvailability.GetValueOrDefault(worker, 0) + 1;
 
                     for (int i = middle - 1; i >= 0; --i)
                     {
@@ -5165,9 +5596,15 @@ o	To sum up, the overall space complexity is O(m).
 
                 // live stands for the n largest batteries we chose for n computers.
                 int[] liveBatteries = new int[numberOfComputers];
-                Array.Copy(batteries, batteries.Length - numberOfComputers, liveBatteries, 0, numberOfComputers);
+                Array.Copy(
+                    batteries,
+                    batteries.Length - numberOfComputers,
+                    liveBatteries,
+                    0,
+                    numberOfComputers
+                );
 
-                // We increase the total running time using 'extraBatteries' by increasing 
+                // We increase the total running time using 'extraBatteries' by increasing
                 // the running time of the computer with the smallest battery.
                 for (int i = 0; i < numberOfComputers - 1; i++)
                 {
@@ -5181,7 +5618,7 @@ o	To sum up, the overall space complexity is O(m).
                     extraBatteries -= (long)(i + 1) * (liveBatteries[i + 1] - liveBatteries[i]);
                 }
 
-                // If there is power left, we can increase the running time 
+                // If there is power left, we can increase the running time
                 // of all computers.
                 return liveBatteries[numberOfComputers - 1] + extraBatteries / numberOfComputers;
             }
@@ -5204,7 +5641,8 @@ o	During the binary search, we only need to record the boundaries of the searchi
                 long totalPower = 0;
                 foreach (int power in batteryPowers)
                     totalPower += power;
-                long lowerBound = 1, upperBound = totalPower / numberOfDevices;
+                long lowerBound = 1,
+                    upperBound = totalPower / numberOfDevices;
 
                 while (lowerBound < upperBound)
                 {
@@ -5221,7 +5659,6 @@ o	During the binary search, we only need to record the boundaries of the searchi
                 }
                 return lowerBound;
             }
-
         }
 
         /*
@@ -5235,7 +5672,11 @@ o	During the binary search, we only need to record the boundaries of the searchi
             Time O(nlogn)
             Space O(n)
             */
-            public int SlidingWindowWithSortedDict(int[] chargeTimes, int[] runningCosts, long budget)
+            public int SlidingWindowWithSortedDict(
+                int[] chargeTimes,
+                int[] runningCosts,
+                long budget
+            )
             {
                 int currentCost = 0;
                 int startIndex = 0;
@@ -5246,7 +5687,7 @@ o	During the binary search, we only need to record the boundaries of the searchi
                 /*  for (int endIndex = 0; endIndex < totalRobots; endIndex++)
                  {
                      currentCost += runningCosts[endIndex];
-                     sortedTimes.Add(chargeTimes[endIndex]);                    
+                     sortedTimes.Add(chargeTimes[endIndex]);
 
                      while (sortedTimes[sortedTimes.Count - 1] + (endIndex - startIndex + 1) * currentCost > budget)
                      {
@@ -5268,19 +5709,27 @@ o	During the binary search, we only need to record the boundaries of the searchi
             public int MaximumRobots(int[] times, int[] costs, long budget)
             {
                 long totalCost = 0;
-                int startIndex = 0, totalRobots = times.Length;
+                int startIndex = 0,
+                    totalRobots = times.Length;
                 //TODO: test below code for correctness
                 LinkedList<int> indicesDeque = new LinkedList<int>();
 
                 for (int currentIndex = 0; currentIndex < totalRobots; ++currentIndex)
                 {
                     totalCost += costs[currentIndex];
-                    while (indicesDeque.Count > 0 && times[indicesDeque.Last.Value] <= times[currentIndex])
+                    while (
+                        indicesDeque.Count > 0
+                        && times[indicesDeque.Last.Value] <= times[currentIndex]
+                    )
                         indicesDeque.RemoveLast();
 
                     indicesDeque.AddLast(currentIndex);
 
-                    if (times[indicesDeque.First.Value] + (currentIndex - startIndex + 1) * totalCost > budget)
+                    if (
+                        times[indicesDeque.First.Value]
+                            + (currentIndex - startIndex + 1) * totalCost
+                        > budget
+                    )
                     {
                         if (indicesDeque.First.Value == startIndex)
                             indicesDeque.RemoveFirst();
@@ -5290,7 +5739,6 @@ o	During the binary search, we only need to record the boundaries of the searchi
 
                 return totalRobots - startIndex;
             }
-
         }
 
         /*
@@ -5333,7 +5781,8 @@ o	During the binary search, we only need to record the boundaries of the searchi
                                 return false;
                             }
                             // Plant the additional stations on the farthest city in the range to cover as many cities as possible
-                            stationAdditions[Math.Min(numberOfStations - 1, i + radius)] += neededPower;
+                            stationAdditions[Math.Min(numberOfStations - 1, i + radius)] +=
+                                neededPower;
                             windowPower = minPowerRequired;
                             remainingAdditionalStations -= neededPower;
                         }
@@ -5403,7 +5852,7 @@ o	But some extra space is used when we sort the potions array in place. The spac
                 for (int i = 0; i < spells.Length; i++)
                 {
                     int spell = spells[i];
-                    // Minimum value of potion whose product with current spell  
+                    // Minimum value of potion whose product with current spell
                     // will be at least success or more.
                     long minimumPotion = (long)Math.Ceiling((1.0 * success) / spell);
                     // Check if we don't have any potion which can be used.
@@ -5412,7 +5861,7 @@ o	But some extra space is used when we sort the potions array in place. The spac
                         result[i] = 0;
                         continue;
                     }
-                    // We can use the found potion, and all potions in its right 
+                    // We can use the found potion, and all potions in its right
                     // (as the right potions are greater than the found potion).
                     int index = LowerBound(potions, (int)minimumPotion);
                     result[i] = potionCount - index;
@@ -5420,6 +5869,7 @@ o	But some extra space is used when we sort the potions array in place. The spac
 
                 return result;
             }
+
             // Our implementation of lower bound method using binary search.
             private int LowerBound(int[] array, int key)
             {
@@ -5511,7 +5961,8 @@ o	Some extra space is used when we sort people in place. The space complexity of
             public int numRescueBoats(int[] people, int limit)
             {
                 Array.Sort(people);
-                int i = 0, j = people.Length - 1;
+                int i = 0,
+                    j = people.Length - 1;
                 int ans = 0;
 
                 while (i <= j)
@@ -5525,7 +5976,6 @@ o	Some extra space is used when we sort people in place. The space complexity of
                 return ans;
             }
         }
-
 
         /*
         879. Profitable Schemes
@@ -5552,6 +6002,7 @@ o	Some extra space is used when we sort people in place. The space complexity of
                     }
                 }
             }
+
             /*
             Approach 1: Top-Down Dynamic Programming
      Complexity Analysis
@@ -5567,7 +6018,15 @@ The size of memo would equal the number of states as (N⋅M⋅K). Although we us
                 return Find(0, 0, 0, n, minProfit, group, profit);
             }
 
-            private int Find(int position, int currentCount, int currentProfit, int n, int minimumProfit, int[] group, int[] profits)
+            private int Find(
+                int position,
+                int currentCount,
+                int currentProfit,
+                int n,
+                int minimumProfit,
+                int[] group,
+                int[] profits
+            )
             {
                 if (position == group.Length)
                 {
@@ -5582,11 +6041,27 @@ The size of memo would equal the number of states as (N⋅M⋅K). Although we us
                 }
 
                 // Ways to get a profitable scheme without this crime.
-                int totalWays = Find(position + 1, currentCount, currentProfit, n, minimumProfit, group, profits);
+                int totalWays = Find(
+                    position + 1,
+                    currentCount,
+                    currentProfit,
+                    n,
+                    minimumProfit,
+                    group,
+                    profits
+                );
                 if (currentCount + group[position] <= n)
                 {
                     // Adding ways to get profitable schemes, including this crime.
-                    totalWays += Find(position + 1, currentCount + group[position], Math.Min(minimumProfit, currentProfit + profits[position]), n, minimumProfit, group, profits);
+                    totalWays += Find(
+                        position + 1,
+                        currentCount + group[position],
+                        Math.Min(minimumProfit, currentProfit + profits[position]),
+                        n,
+                        minimumProfit,
+                        group,
+                        profits
+                    );
                 }
 
                 return memo[position][currentCount][currentProfit] = totalWays % Modulus;
@@ -5635,7 +6110,13 @@ This time there won't be any stack space consumption, but the array dp would sti
                             if (count + group[index] <= totalMembers)
                             {
                                 // Adding ways to get profitable schemes, including this crime.
-                                dp[index][count][profit] = (dp[index][count][profit] + dp[index + 1][count + group[index]][Math.Min(minimumProfit, profit + profits[index])]) % mod;
+                                dp[index][count][profit] =
+                                    (
+                                        dp[index][count][profit]
+                                        + dp[index + 1][count + group[index]][
+                                            Math.Min(minimumProfit, profit + profits[index])
+                                        ]
+                                    ) % mod;
                             }
                         }
                     }
@@ -5643,10 +6124,7 @@ This time there won't be any stack space consumption, but the array dp would sti
 
                 return dp[0][0][0];
             }
-
         }
-
-
 
         /*
         877. Stone Game
@@ -5671,15 +6149,22 @@ This time there won't be any stack space consumption, but the array dp would sti
                     for (int i = 0; i + size <= N; ++i)
                     {
                         int j = i + size - 1;
-                        int parity = (j + i + N) % 2;  // j - i - N; but +x = -x (mod 2)
+                        int parity = (j + i + N) % 2; // j - i - N; but +x = -x (mod 2)
                         if (parity == 1)
-                            dp[i + 1][j + 1] = Math.Max(piles[i] + dp[i + 2][j + 1], piles[j] + dp[i + 1][j]);
+                            dp[i + 1][j + 1] = Math.Max(
+                                piles[i] + dp[i + 2][j + 1],
+                                piles[j] + dp[i + 1][j]
+                            );
                         else
-                            dp[i + 1][j + 1] = Math.Min(-piles[i] + dp[i + 2][j + 1], -piles[j] + dp[i + 1][j]);
+                            dp[i + 1][j + 1] = Math.Min(
+                                -piles[i] + dp[i + 2][j + 1],
+                                -piles[j] + dp[i + 1][j]
+                            );
                     }
 
                 return dp[1][N] > 0;
             }
+
             /*
             Approach 2: Mathematical
 Complexity Analysis
@@ -5690,7 +6175,6 @@ Complexity Analysis
             {
                 return true;
             }
-
         }
 
         /*
@@ -5739,7 +6223,10 @@ The space complexity is O(n^2) for storing the DP table dp[i][m] and the suffix 
                         {
                             for (int x = 1; x <= 2 * m; x++)
                             {
-                                dp[i][m] = Math.Max(dp[i][m], suffixSum[i] - dp[i + x][Math.Max(m, x)]);
+                                dp[i][m] = Math.Max(
+                                    dp[i][m],
+                                    suffixSum[i] - dp[i + x][Math.Max(m, x)]
+                                );
                             }
                         }
                     }
@@ -5748,7 +6235,6 @@ The space complexity is O(n^2) for storing the DP table dp[i][m] and the suffix 
                 return dp[0][1];
             }
         }
-
 
         /*
         1406. Stone Game III
@@ -5779,7 +6265,10 @@ We store the array dp[n + 1] of size O(n).
                     }
                     if (i + 3 <= n)
                     {
-                        dp[i] = Math.Max(dp[i], stoneValue[i] + stoneValue[i + 1] + stoneValue[i + 2] - dp[i + 3]);
+                        dp[i] = Math.Max(
+                            dp[i],
+                            stoneValue[i] + stoneValue[i + 1] + stoneValue[i + 2] - dp[i + 3]
+                        );
                     }
                 }
                 if (dp[0] > 0)
@@ -5792,6 +6281,7 @@ We store the array dp[n + 1] of size O(n).
                 }
                 return "Tie";
             }
+
             /*
             Approach 2: Top-Down Dynamic Programming (Memoization)
             Complexity Analysis
@@ -5814,6 +6304,7 @@ It is the same as in the first approach.
                 }
                 return "Tie";
             }
+
             private int f(int[] stoneValue, int n, int i)
             {
                 if (i == n)
@@ -5823,16 +6314,24 @@ It is the same as in the first approach.
                 int result = stoneValue[i] - f(stoneValue, n, i + 1);
                 if (i + 2 <= n)
                 {
-                    result = Math.Max(result, stoneValue[i]
-                        + stoneValue[i + 1] - f(stoneValue, n, i + 2));
+                    result = Math.Max(
+                        result,
+                        stoneValue[i] + stoneValue[i + 1] - f(stoneValue, n, i + 2)
+                    );
                 }
                 if (i + 3 <= n)
                 {
-                    result = Math.Max(result, stoneValue[i] + stoneValue[i + 1]
-                        + stoneValue[i + 2] - f(stoneValue, n, i + 3));
+                    result = Math.Max(
+                        result,
+                        stoneValue[i]
+                            + stoneValue[i + 1]
+                            + stoneValue[i + 2]
+                            - f(stoneValue, n, i + 3)
+                    );
                 }
                 return result;
             }
+
             /*
             Approach 3: Bottom-Up Dynamic Programming, Space Complexity Optimized
             Complexity Analysis
@@ -5851,13 +6350,17 @@ We have eliminated the need for an entire array to store the DP values. Instead,
                     dp[i % 4] = stoneValue[i] - dp[(i + 1) % 4];
                     if (i + 2 <= n)
                     {
-                        dp[i % 4] = Math.Max(dp[i % 4], stoneValue[i] + stoneValue[i + 1]
-                            - dp[(i + 2) % 4]);
+                        dp[i % 4] = Math.Max(
+                            dp[i % 4],
+                            stoneValue[i] + stoneValue[i + 1] - dp[(i + 2) % 4]
+                        );
                     }
                     if (i + 3 <= n)
                     {
-                        dp[i % 4] = Math.Max(dp[i % 4], stoneValue[i] + stoneValue[i + 1]
-                            + stoneValue[i + 2] - dp[(i + 3) % 4]);
+                        dp[i % 4] = Math.Max(
+                            dp[i % 4],
+                            stoneValue[i] + stoneValue[i + 1] + stoneValue[i + 2] - dp[(i + 3) % 4]
+                        );
                     }
                 }
                 if (dp[0] > 0)
@@ -5870,10 +6373,7 @@ We have eliminated the need for an entire array to store the DP values. Instead,
                 }
                 return "Tie";
             }
-
-
         }
-
 
         /*
         1510. Stone Game IV
@@ -5962,10 +6462,12 @@ Assume N is the length of arr.
                 {
                     for (int i = 0; i < n - l; i++)
                     {
-                        int j = i + l, res = 0;
+                        int j = i + l,
+                            res = 0;
                         for (int k = i; k < j; k++)
                         {
-                            int left = pre[k + 1] - pre[i], right = pre[j + 1] - pre[k + 1];
+                            int left = pre[k + 1] - pre[i],
+                                right = pre[j + 1] - pre[k + 1];
                             if (left < right)
                             {
                                 res = Math.Max(res, left + dp[i][k]);
@@ -5985,6 +6487,7 @@ Assume N is the length of arr.
                 }
                 return dp[0][n - 1];
             }
+
             /*
             Approach2: Optimization
             Time Complexity: O(n^2 log n)
@@ -5997,7 +6500,9 @@ Assume N is the length of arr.
                 {
                     pre[i] = pre[i - 1] + stoneValue[i - 1];
                 }
-                int[][] dp = new int[n][], left = new int[n][], right = new int[n][];
+                int[][] dp = new int[n][],
+                    left = new int[n][],
+                    right = new int[n][];
                 for (int i = 0; i < n; i++)
                 {
                     left[i][i] = right[i][i] = stoneValue[i];
@@ -6006,15 +6511,20 @@ Assume N is the length of arr.
                 {
                     for (int i = 0; i < n - l; i++)
                     {
-                        int j = i + l, k = Search(pre, i, j);
-                        int sum = pre[j + 1] - pre[i], leftHalf = pre[k + 1] - pre[i];
+                        int j = i + l,
+                            k = Search(pre, i, j);
+                        int sum = pre[j + 1] - pre[i],
+                            leftHalf = pre[k + 1] - pre[i];
                         if ((leftHalf << 1) == sum)
-                        {    // equal parts
+                        { // equal parts
                             dp[i][j] = Math.Max(left[i][k], right[k + 1][j]);
                         }
                         else
-                        {    // left half > right half
-                            dp[i][j] = Math.Max(k == i ? 0 : left[i][k - 1], k == j ? 0 : right[k + 1][j]);
+                        { // left half > right half
+                            dp[i][j] = Math.Max(
+                                k == i ? 0 : left[i][k - 1],
+                                k == j ? 0 : right[k + 1][j]
+                            );
                         }
                         left[i][j] = Math.Max(left[i][j - 1], sum + dp[i][j]);
                         right[i][j] = Math.Max(right[i + 1][j], sum + dp[i][j]);
@@ -6022,10 +6532,12 @@ Assume N is the length of arr.
                 }
                 return dp[0][n - 1];
             }
+
             // returns first index where sum of left half >= sum of right half
             private int Search(int[] pre, int l, int r)
             {
-                int sum = pre[r + 1] - pre[l], L = l;
+                int sum = pre[r + 1] - pre[l],
+                    L = l;
                 while (l < r)
                 {
                     int m = l + ((r - l) >> 1);
@@ -6040,6 +6552,7 @@ Assume N is the length of arr.
                 }
                 return l;
             }
+
             /*
             Approach3: Further Optimization
             Time Complexity: O(n^2)
@@ -6047,14 +6560,17 @@ Assume N is the length of arr.
             public int Optimal2(int[] stoneValue)
             {
                 int n = stoneValue.Length;
-                int[][] dp = new int[n][], max = new int[n][];
+                int[][] dp = new int[n][],
+                    max = new int[n][];
                 for (int i = 0; i < n; i++)
                 {
                     max[i][i] = stoneValue[i];
                 }
                 for (int j = 1; j < n; j++)
                 {
-                    int mid = j, sum = stoneValue[j], rightHalf = 0;
+                    int mid = j,
+                        sum = stoneValue[j],
+                        rightHalf = 0;
                     for (int i = j - 1; i >= 0; i--)
                     {
                         sum += stoneValue[i];
@@ -6062,7 +6578,8 @@ Assume N is the length of arr.
                         {
                             rightHalf += stoneValue[mid--];
                         }
-                        dp[i][j] = rightHalf * 2 == sum ? max[i][mid] : (mid == i ? 0 : max[i][mid - 1]);
+                        dp[i][j] =
+                            rightHalf * 2 == sum ? max[i][mid] : (mid == i ? 0 : max[i][mid - 1]);
                         dp[i][j] = Math.Max(dp[i][j], mid == j ? 0 : max[j][mid + 1]);
                         max[i][j] = Math.Max(max[i][j - 1], dp[i][j] + sum);
                         max[j][i] = Math.Max(max[j][i + 1], dp[i][j] + sum);
@@ -6070,9 +6587,6 @@ Assume N is the length of arr.
                 }
                 return dp[0][n - 1];
             }
-
-
-
         }
 
         /*
@@ -6094,7 +6608,12 @@ Assume N is the length of arr.
                 int[][] sums = new int[n][];
                 for (int i = 0; i < n; i++)
                 {
-                    sums[i] = new int[] { aliceValues[i] + bobValues[i], aliceValues[i], bobValues[i] };
+                    sums[i] = new int[]
+                    {
+                        aliceValues[i] + bobValues[i],
+                        aliceValues[i],
+                        bobValues[i],
+                    };
                 }
                 Array.Sort(sums, (a, b) => b[0].CompareTo(a[0]));
                 int a = 0;
@@ -6112,6 +6631,7 @@ Assume N is the length of arr.
                 }
                 return a.CompareTo(b);
             }
+
             /*
            Approach: Optimal2 - Sort by Value Sum
            Complexity
@@ -6120,7 +6640,8 @@ Assume N is the length of arr.
            */
             public int Optimal2(int[] aliceValues, int[] bobValues)
             {
-                int n = aliceValues.Length, diff = 0;
+                int n = aliceValues.Length,
+                    diff = 0;
                 for (int i = 0; i < n; i++)
                 {
                     aliceValues[i] += bobValues[i];
@@ -6131,7 +6652,6 @@ Assume N is the length of arr.
                     diff += aliceValues[i];
                 return diff.CompareTo(0);
             }
-
         }
 
         /*
@@ -6142,6 +6662,7 @@ Assume N is the length of arr.
         class StoneGameVIISol
         {
             int[] prefixSum;
+
             /*
             Approach 1: Brute Force Using Recursion
          Complexity Analysis
@@ -6163,6 +6684,7 @@ This approach is exhaustive and results in Time Limit Exceeded (TLE)
                 }
                 return Math.Abs(FindDifference(0, n - 1, true));
             }
+
             private int FindDifference(int start, int end, bool alice)
             {
                 if (start == end)
@@ -6176,17 +6698,20 @@ This approach is exhaustive and results in Time Limit Exceeded (TLE)
                 if (alice)
                 {
                     difference = Math.Max(
-                            FindDifference(start + 1, end, !alice) + scoreRemoveFirst,
-                            FindDifference(start, end - 1, !alice) + scoreRemoveLast);
+                        FindDifference(start + 1, end, !alice) + scoreRemoveFirst,
+                        FindDifference(start, end - 1, !alice) + scoreRemoveLast
+                    );
                 }
                 else
                 {
                     difference = Math.Min(
-                            FindDifference(start + 1, end, !alice) - scoreRemoveFirst,
-                            FindDifference(start, end - 1, !alice) - scoreRemoveLast);
+                        FindDifference(start + 1, end, !alice) - scoreRemoveFirst,
+                        FindDifference(start, end - 1, !alice) - scoreRemoveLast
+                    );
                 }
                 return difference;
             }
+
             /*
             Approach 2: Top Down Dynamic Programming - Memoization
             Complexity Analysis
@@ -6198,6 +6723,7 @@ Let n be the length of array stones.
 
             private const int Infinity = int.MaxValue;
             private int[,] memo;
+
             public int TopDownDPWithMemo(int[] stones)
             {
                 int n = stones.Length;
@@ -6234,18 +6760,21 @@ Let n be the length of array stones.
                     {
                         difference = Math.Max(
                             FindDifference(start + 1, end, !isAlice) + scoreRemoveFirst,
-                            FindDifference(start, end - 1, !isAlice) + scoreRemoveLast);
+                            FindDifference(start, end - 1, !isAlice) + scoreRemoveLast
+                        );
                     }
                     else
                     {
                         difference = Math.Min(
                             FindDifference(start + 1, end, !isAlice) - scoreRemoveFirst,
-                            FindDifference(start, end - 1, !isAlice) - scoreRemoveLast);
+                            FindDifference(start, end - 1, !isAlice) - scoreRemoveLast
+                        );
                     }
                     memo[start, end] = difference;
                     return difference;
                 }
             }
+
             /*
 Approach 3: Optimised Memoization Approach
 Complexity Analysis
@@ -6272,6 +6801,7 @@ Let n be the length of array stones.
                 }
                 return FindDifference(0, n - 1, stones);
             }
+
             private int FindDifference(int start, int end, int[] stones)
             {
                 if (start == end)
@@ -6289,11 +6819,13 @@ Let n be the length of array stones.
                 int scoreRemoveLast = prefixSum[end] - prefixSum[start];
 
                 memo[start, end] = Math.Max(
-                        scoreRemoveFirst - FindDifference(start + 1, end, stones),
-                        scoreRemoveLast - FindDifference(start, end - 1, stones));
+                    scoreRemoveFirst - FindDifference(start + 1, end, stones),
+                    scoreRemoveLast - FindDifference(start, end - 1, stones)
+                );
 
                 return memo[start, end];
             }
+
             /*
             Approach 4: Bottom Up Dynamic Programming - Tabulation
 Complexity Analysis
@@ -6318,9 +6850,10 @@ Let n be the length of array stones.
                         int end = start + length - 1;
                         int scoreRemoveFirst = prefixSum[end + 1] - prefixSum[start + 1];
                         int scoreRemoveLast = prefixSum[end] - prefixSum[start];
-                        dp[start][end] = Math.Max(scoreRemoveFirst - dp[start + 1][end],
-                                scoreRemoveLast - dp[start][end - 1]);
-
+                        dp[start][end] = Math.Max(
+                            scoreRemoveFirst - dp[start + 1][end],
+                            scoreRemoveLast - dp[start][end - 1]
+                        );
                     }
                 }
                 return dp[0][n - 1];
@@ -6349,13 +6882,14 @@ Let n be the length of array stones.
                     {
                         int scoreRemoveFirst = prefixSum[end + 1] - prefixSum[start + 1];
                         int scoreRemoveLast = prefixSum[end] - prefixSum[start];
-                        dp[start][end] = Math.Max(scoreRemoveFirst - dp[start + 1][end],
-                                scoreRemoveLast - dp[start][end - 1]);
+                        dp[start][end] = Math.Max(
+                            scoreRemoveFirst - dp[start + 1][end],
+                            scoreRemoveLast - dp[start][end - 1]
+                        );
                     }
                 }
                 return dp[0][n - 1];
             }
-
         }
 
         /*
@@ -6385,6 +6919,7 @@ Let n be the length of array stones.
             // alice cannot take only one stone, so it has to be starting from dp[1], not dp[0].
             return dp[1];
         }
+
         /*
         2029. Stone Game IX
 https://leetcode.com/problems/stone-game-ix/description/
@@ -6430,9 +6965,11 @@ https://leetcode.com/problems/stone-game-ix/description/
                             dp[t + 1] = Math.Max(dp[t + 1], dp[t] + (long)stations[i][1]);
 
                 for (int i = 0; i <= N; ++i)
-                    if (dp[i] >= target) return i;
+                    if (dp[i] >= target)
+                        return i;
                 return -1;
             }
+
             /*
             Approach 2: Max Heap/ Priority Queue
             Complexity Analysis
@@ -6445,19 +6982,21 @@ https://leetcode.com/problems/stone-game-ix/description/
             {
                 // pq is a maxheap of gas station capacities
                 PriorityQueue<int, int> pq = new PriorityQueue<int, int>();
-                int ans = 0, prev = 0;
+                int ans = 0,
+                    prev = 0;
                 foreach (int[] station in stations)
                 {
                     int location = station[0];
                     int capacity = station[1];
                     tank -= location - prev;
                     while (pq.Count > 0 && tank < 0)
-                    {  // must refuel in past
+                    { // must refuel in past
                         tank += pq.Dequeue();
                         ans++;
                     }
 
-                    if (tank < 0) return -1;
+                    if (tank < 0)
+                        return -1;
                     pq.Enqueue(capacity, -capacity);
                     prev = location;
                 }
@@ -6470,7 +7009,8 @@ https://leetcode.com/problems/stone-game-ix/description/
                         tank += pq.Dequeue();
                         ans++;
                     }
-                    if (tank < 0) return -1;
+                    if (tank < 0)
+                        return -1;
                 }
 
                 return ans;
@@ -6525,7 +7065,7 @@ The algorithm does not use any additional data structures that scale with the in
                     }
                     else
                     { // customerBill == 20
-                      // We need to give $15 change
+                        // We need to give $15 change
                         if (tenDollarBills > 0 && fiveDollarBills > 0)
                         {
                             // Give change as one $10 and one $5
@@ -6549,7 +7089,6 @@ The algorithm does not use any additional data structures that scale with the in
             }
         }
 
-
         /*
         857. Minimum Cost to Hire K Workers
         https://leetcode.com/problems/minimum-cost-to-hire-k-workers/description/
@@ -6569,25 +7108,28 @@ So, the total time complexity is O(nlogn+nlogk), which is dominated by the sorti
 We use O(n) additional space to store the wage-to-quality ratio for each worker.
 We use a priority queue to keep track of the highest quality workers, which can contain at most k workers.
 Note that some extra space is used when we sort an array in place. The space complexity of the sorting algorithm depends on the programming language.
-So, the total space complexity is O(n+k), where n is the dominating term when k is much smaller than n. 
+So, the total space complexity is O(n+k), where n is the dominating term when k is much smaller than n.
             */
             public double WithMaxHeapPQ(int[] quality, int[] wage, int k)
             {
                 int numberOfWorkers = quality.Length;
                 double minimumTotalCost = double.MaxValue;
                 double currentTotalQuality = 0;
-                List<KeyValuePair<double, int>> wageToQualityRatio = new List<KeyValuePair<double, int>>();
+                List<KeyValuePair<double, int>> wageToQualityRatio =
+                    new List<KeyValuePair<double, int>>();
 
                 // Calculate wage-to-quality ratio for each worker
                 for (int i = 0; i < numberOfWorkers; i++)
                 {
-                    wageToQualityRatio.Add(new KeyValuePair<double, int>((double)wage[i] / quality[i], quality[i]));
+                    wageToQualityRatio.Add(
+                        new KeyValuePair<double, int>((double)wage[i] / quality[i], quality[i])
+                    );
                 }
 
                 // Sort workers based on their wage-to-quality ratio
                 wageToQualityRatio = wageToQualityRatio.OrderBy(x => x.Key).ToList();
 
-                // Use a priority queue to keep track of the highest quality workers - 
+                // Use a priority queue to keep track of the highest quality workers -
                 //Default minheap tweaked to use as a MaxHeap by adding negating priority
                 PriorityQueue<int, int> workers = new PriorityQueue<int, int>(); //Comparer<int>.Create((x, y) => y.CompareTo(x))
 
@@ -6609,7 +7151,10 @@ So, the total space complexity is O(n+k), where n is the dominating term when k 
                     // calculate the total cost and update if it's the minimum
                     if (workers.Count == k)
                     {
-                        minimumTotalCost = Math.Min(minimumTotalCost, currentTotalQuality * wageToQualityRatio[i].Key);
+                        minimumTotalCost = Math.Min(
+                            minimumTotalCost,
+                            currentTotalQuality * wageToQualityRatio[i].Key
+                        );
                     }
                 }
                 return minimumTotalCost;
@@ -6622,7 +7167,6 @@ So, the total space complexity is O(n+k), where n is the dominating term when k 
         */
         class ScoreOfParenthesesSol
         {
-
             /*
             Approach 1: Divide and Conquer
             Complexity Analysis
@@ -6638,7 +7182,8 @@ So, the total space complexity is O(n+k), where n is the dominating term when k 
             private int F(String S, int i, int j)
             {
                 //Score of balanced string S[i:j]
-                int ans = 0, bal = 0;
+                int ans = 0,
+                    bal = 0;
 
                 // Split string into primitives
                 for (int k = i; k < j; ++k)
@@ -6646,14 +7191,17 @@ So, the total space complexity is O(n+k), where n is the dominating term when k 
                     bal += S[k] == '(' ? 1 : -1;
                     if (bal == 0)
                     {
-                        if (k - i == 1) ans++;
-                        else ans += 2 * F(S, i + 1, k);
+                        if (k - i == 1)
+                            ans++;
+                        else
+                            ans += 2 * F(S, i + 1, k);
                         i = k + 1;
                     }
                 }
 
                 return ans;
             }
+
             /*
             Approach 2: Stack
             Complexity Analysis
@@ -6680,6 +7228,7 @@ So, the total space complexity is O(n+k), where n is the dominating term when k 
 
                 return stack.Pop();
             }
+
             /*
             Approach 3: Count Cores
 Complexity Analysis
@@ -6689,7 +7238,8 @@ Complexity Analysis
             */
             public int CountCores(String S)
             {
-                int ans = 0, bal = 0;
+                int ans = 0,
+                    bal = 0;
                 for (int i = 0; i < S.Length; ++i)
                 {
                     if (S[i] == '(')
@@ -6720,7 +7270,7 @@ Complexity Analysis
             int[] quiet;
 
             /*
-            Approach #1: Cached Depth-First Search 
+            Approach #1: Cached Depth-First Search
             Complexity Analysis
 •	Time Complexity: O(N^2), where N is the number of people.
 We are iterating here over array richer. It could contain up to
@@ -6799,13 +7349,12 @@ Complexity Analysis
                         }
                 }
 
-                foreach (bool roomVisited in roomsVisited)  // if any room hasn't been visited, return false
-                    if (!roomVisited) return false;
+                foreach (bool roomVisited in roomsVisited) // if any room hasn't been visited, return false
+                    if (!roomVisited)
+                        return false;
                 return true;
             }
         }
-
-
 
         /*
         832. Flipping an Image
@@ -6866,20 +7415,28 @@ o	As one can see, a constant space is used in the above algorithm.
                     for (int xShift = 0; xShift < matrixA.Length; ++xShift)
                     {
                         // move the matrix A to the up-right and up-left directions.
-                        maximumOverlaps = Math.Max(maximumOverlaps, ShiftAndCount(xShift, yShift, matrixA, matrixB));
-                        // move the matrix B to the up-right and up-left directions, which is equivalent to moving A to the down-right and down-left directions 
-                        maximumOverlaps = Math.Max(maximumOverlaps, ShiftAndCount(xShift, yShift, matrixB, matrixA));
+                        maximumOverlaps = Math.Max(
+                            maximumOverlaps,
+                            ShiftAndCount(xShift, yShift, matrixA, matrixB)
+                        );
+                        // move the matrix B to the up-right and up-left directions, which is equivalent to moving A to the down-right and down-left directions
+                        maximumOverlaps = Math.Max(
+                            maximumOverlaps,
+                            ShiftAndCount(xShift, yShift, matrixB, matrixA)
+                        );
                     }
 
                 return maximumOverlaps;
             }
+
             /// <summary>
-            ///  Shift the matrix M in up-left and up-right directions 
+            ///  Shift the matrix M in up-left and up-right directions
             ///    and count the ones in the overlapping zone.
             /// </summary>
             private int ShiftAndCount(int xShift, int yShift, int[][] matrixM, int[][] matrixR)
             {
-                int leftShiftCount = 0, rightShiftCount = 0;
+                int leftShiftCount = 0,
+                    rightShiftCount = 0;
                 int resultRow = 0;
                 // count the cells of ones in the overlapping zone.
                 for (int matrixMRow = yShift; matrixMRow < matrixM.Length; ++matrixMRow)
@@ -6887,9 +7444,15 @@ o	As one can see, a constant space is used in the above algorithm.
                     int resultColumn = 0;
                     for (int matrixMCol = xShift; matrixMCol < matrixM.Length; ++matrixMCol)
                     {
-                        if (matrixM[matrixMRow][matrixMCol] == 1 && matrixM[matrixMRow][matrixMCol] == matrixR[resultRow][resultColumn])
+                        if (
+                            matrixM[matrixMRow][matrixMCol] == 1
+                            && matrixM[matrixMRow][matrixMCol] == matrixR[resultRow][resultColumn]
+                        )
                             leftShiftCount += 1;
-                        if (matrixM[matrixMRow][resultColumn] == 1 && matrixM[matrixMRow][resultColumn] == matrixR[resultRow][matrixMCol])
+                        if (
+                            matrixM[matrixMRow][resultColumn] == 1
+                            && matrixM[matrixMRow][resultColumn] == matrixR[resultRow][matrixMCol]
+                        )
                             rightShiftCount += 1;
                         resultColumn += 1;
                     }
@@ -6897,6 +7460,7 @@ o	As one can see, a constant space is used in the above algorithm.
                 }
                 return Math.Max(leftShiftCount, rightShiftCount);
             }
+
             /*
             Approach 2: Linear Transformation
             Complexity Analysis
@@ -6918,7 +7482,8 @@ o	As one can see, a constant space is used in the above algorithm.
                 List<KeyValuePair<int, int>> secondMatrixOnes = GetNonZeroCells(secondMatrix);
 
                 int maximumOverlaps = 0;
-                Dictionary<KeyValuePair<int, int>, int> overlapCount = new Dictionary<KeyValuePair<int, int>, int>();
+                Dictionary<KeyValuePair<int, int>, int> overlapCount =
+                    new Dictionary<KeyValuePair<int, int>, int>();
 
                 foreach (KeyValuePair<int, int> a in firstMatrixOnes)
                 {
@@ -6943,6 +7508,7 @@ o	As one can see, a constant space is used in the above algorithm.
 
                 return maximumOverlaps;
             }
+
             private List<KeyValuePair<int, int>> GetNonZeroCells(int[,] matrix)
             {
                 List<KeyValuePair<int, int>> result = new List<KeyValuePair<int, int>>();
@@ -6958,6 +7524,7 @@ o	As one can see, a constant space is used in the above algorithm.
                 }
                 return result;
             }
+
             /*
             Approach 3: Imagine Convolution
             Complexity Analysis
@@ -6974,7 +7541,6 @@ o	We extend the matrix B to the size of (3N−2)⋅(3N−2), which would require
 
             public int ImagineConvolution(int[][] matrixA, int[][] matrixB)
             {
-
                 int size = matrixA.Length;
                 int[][] paddedMatrixB = new int[3 * size - 2][];
                 for (int i = 0; i < paddedMatrixB.Length; i++)
@@ -6988,12 +7554,15 @@ o	We extend the matrix B to the size of (3N−2)⋅(3N−2), which would require
                 for (int xShift = 0; xShift < 2 * size - 1; ++xShift)
                     for (int yShift = 0; yShift < 2 * size - 1; ++yShift)
                     {
-                        maxOverlaps = Math.Max(maxOverlaps,
-                            Convolute(matrixA, paddedMatrixB, xShift, yShift));
+                        maxOverlaps = Math.Max(
+                            maxOverlaps,
+                            Convolute(matrixA, paddedMatrixB, xShift, yShift)
+                        );
                     }
 
                 return maxOverlaps;
             }
+
             private int Convolute(int[][] matrixA, int[][] kernel, int xShift, int yShift)
             {
                 int result = 0;
@@ -7002,10 +7571,7 @@ o	We extend the matrix B to the size of (3N−2)⋅(3N−2), which would require
                         result += matrixA[row][col] * kernel[row + yShift][col + xShift];
                 return result;
             }
-
         }
-
-
 
         /*
         887. Super Egg Drop
@@ -7044,12 +7610,16 @@ o	We extend the matrix B to the size of (3N−2)⋅(3N−2), which would require
                     }
                     else
                     {
-                        int low = 1, high = numberOfFloors;
+                        int low = 1,
+                            high = numberOfFloors;
                         while (low + 1 < high)
                         {
                             int mid = (low + high) / 2;
                             int dropIfEggBreaks = CalculateDrops(numberOfEggs - 1, mid - 1);
-                            int dropIfEggDoesNotBreak = CalculateDrops(numberOfEggs, numberOfFloors - mid);
+                            int dropIfEggDoesNotBreak = CalculateDrops(
+                                numberOfEggs,
+                                numberOfFloors - mid
+                            );
 
                             if (dropIfEggBreaks < dropIfEggDoesNotBreak)
                             {
@@ -7065,8 +7635,18 @@ o	We extend the matrix B to the size of (3N−2)⋅(3N−2), which would require
                             }
                         }
 
-                        result = 1 + Math.Min(Math.Max(CalculateDrops(numberOfEggs - 1, low - 1), CalculateDrops(numberOfEggs, numberOfFloors - low)),
-                                               Math.Max(CalculateDrops(numberOfEggs - 1, high - 1), CalculateDrops(numberOfEggs, numberOfFloors - high)));
+                        result =
+                            1
+                            + Math.Min(
+                                Math.Max(
+                                    CalculateDrops(numberOfEggs - 1, low - 1),
+                                    CalculateDrops(numberOfEggs, numberOfFloors - low)
+                                ),
+                                Math.Max(
+                                    CalculateDrops(numberOfEggs - 1, high - 1),
+                                    CalculateDrops(numberOfEggs, numberOfFloors - high)
+                                )
+                            );
                     }
 
                     memo[numberOfFloors * 100 + numberOfEggs] = result;
@@ -7074,6 +7654,7 @@ o	We extend the matrix B to the size of (3N−2)⋅(3N−2), which would require
 
                 return memo[numberOfFloors * 100 + numberOfEggs];
             }
+
             /*
 
     Approach 2: Dynamic Programming with Optimality Criterion
@@ -7100,11 +7681,16 @@ o	We extend the matrix B to the size of (3N−2)⋅(3N−2), which would require
                         // Increase our optimal x while we can make our answer better.
                         // Notice max(dp[x-1], dp2[n-x]) > max(dp[x], dp2[n-x-1])
                         // is simply max(T1(x-1), T2(x-1)) > max(T1(x), T2(x)).
-                        while (optimalFloor < floors && Math.Max(dp[optimalFloor - 1], dp2[floors - optimalFloor]) > Math.Max(dp[optimalFloor], dp2[floors - optimalFloor - 1]))
+                        while (
+                            optimalFloor < floors
+                            && Math.Max(dp[optimalFloor - 1], dp2[floors - optimalFloor])
+                                > Math.Max(dp[optimalFloor], dp2[floors - optimalFloor - 1])
+                        )
                             optimalFloor++;
 
                         // The final answer happens at this x.
-                        dp2[floors] = 1 + Math.Max(dp[optimalFloor - 1], dp2[floors - optimalFloor]);
+                        dp2[floors] =
+                            1 + Math.Max(dp[optimalFloor - 1], dp2[floors - optimalFloor]);
                     }
 
                     dp = dp2;
@@ -7112,6 +7698,7 @@ o	We extend the matrix B to the size of (3N−2)⋅(3N−2), which would require
 
                 return dp[numberOfFloors];
             }
+
             /*
             Approach 3: Mathematical
             Complexity Analysis
@@ -7121,7 +7708,8 @@ o	We extend the matrix B to the size of (3N−2)⋅(3N−2), which would require
             */
             public int UsingMaths(int numberOfEggs, int numberOfFloors)
             {
-                int lowerBound = 1, upperBound = numberOfFloors;
+                int lowerBound = 1,
+                    upperBound = numberOfFloors;
                 while (lowerBound < upperBound)
                 {
                     int middle = (lowerBound + upperBound) / 2;
@@ -7136,17 +7724,18 @@ o	We extend the matrix B to the size of (3N−2)⋅(3N−2), which would require
 
             public int Calculate(int drops, int numberOfEggs, int numberOfFloors)
             {
-                int result = 0, combination = 1;
+                int result = 0,
+                    combination = 1;
                 for (int i = 1; i <= numberOfEggs; ++i)
                 {
                     combination *= drops - i + 1;
                     combination /= i;
                     result += combination;
-                    if (result >= numberOfFloors) break;
+                    if (result >= numberOfFloors)
+                        break;
                 }
                 return result;
             }
-
         }
 
         /*
@@ -7183,16 +7772,23 @@ o	Therefore, the overall space complexity is O(n
                         HashSet<int> fruitBasket = new HashSet<int>();
 
                         // Iterate over the current subarray.
-                        for (int currentIndex = leftIndex; currentIndex <= rightIndex; ++currentIndex)
+                        for (
+                            int currentIndex = leftIndex;
+                            currentIndex <= rightIndex;
+                            ++currentIndex
+                        )
                         {
                             fruitBasket.Add(fruits[currentIndex]);
                         }
 
-                        // If the number of types of fruits in this subarray (types of fruits) 
+                        // If the number of types of fruits in this subarray (types of fruits)
                         // is no larger than 2, this is a valid subarray, update 'maximumPickedFruits'.
                         if (fruitBasket.Count <= 2)
                         {
-                            maximumPickedFruits = Math.Max(maximumPickedFruits, rightIndex - leftIndex + 1);
+                            maximumPickedFruits = Math.Max(
+                                maximumPickedFruits,
+                                rightIndex - leftIndex + 1
+                            );
                         }
                     }
                 }
@@ -7264,7 +7860,8 @@ o	Therefore, the space complexity is O(n).
             {
                 // Hash map 'basket' to store the types of fruits.
                 Dictionary<int, int> basket = new Dictionary<int, int>();
-                int leftIndex = 0, rightIndex;
+                int leftIndex = 0,
+                    rightIndex;
 
                 // Add fruit from right side (rightIndex) of the window.
                 for (rightIndex = 0; rightIndex < fruits.Length; ++rightIndex)
@@ -7289,10 +7886,11 @@ o	Therefore, the space complexity is O(n).
                     }
                 }
 
-                // Once we finish the iteration, the indexes leftIndex and rightIndex 
+                // Once we finish the iteration, the indexes leftIndex and rightIndex
                 // stands for the longest valid subarray we encountered.
                 return rightIndex - leftIndex;
             }
+
             /*
             Approach 4: Sliding Window II
 Complexity Analysis
@@ -7310,7 +7908,8 @@ o	In summary, the space complexity is O(1).
             {
                 // We use a dictionary 'basket' to store the number of each type of fruit.
                 Dictionary<int, int> basket = new Dictionary<int, int>();
-                int leftIndex = 0, maxFruitsPicked = 0;
+                int leftIndex = 0,
+                    maxFruitsPicked = 0;
 
                 // Add fruit from the right index (right) of the window.
                 for (int rightIndex = 0; rightIndex < fruits.Length; ++rightIndex)
@@ -7344,9 +7943,7 @@ o	In summary, the space complexity is O(1).
                 // Return maxFruitsPicked as the maximum number of fruits we can collect.
                 return maxFruitsPicked;
             }
-
         }
-
 
         /*
         909. Snakes and Ladders
@@ -7391,9 +7988,14 @@ We maintain cells for each label from 1 to n^2, dist for distances to all cells 
                 while (queue.Count > 0)
                 {
                     int current = queue.Dequeue();
-                    for (int next = current + 1; next <= Math.Min(current + 6, boardSize * boardSize); next++)
+                    for (
+                        int next = current + 1;
+                        next <= Math.Min(current + 6, boardSize * boardSize);
+                        next++
+                    )
                     {
-                        int row = cells[next].Item1, column = cells[next].Item2;
+                        int row = cells[next].Item1,
+                            column = cells[next].Item2;
                         int destination = board[row][column] != -1 ? board[row][column] : next;
                         if (distances[destination] == -1)
                         {
@@ -7404,7 +8006,8 @@ We maintain cells for each label from 1 to n^2, dist for distances to all cells 
                 }
                 return distances[boardSize * boardSize];
             }
-            /*            
+
+            /*
 Approach 2: Dijkstra's algorithm
 Complexity Analysis
 Let n be the number of columns and rows of the board.
@@ -7436,28 +8039,41 @@ The space complexity of Dijkstra's algorithm is O(∣V∣)=O(n2) because we need
                 int[] distances = new int[boardSize * boardSize + 1];
                 Array.Fill(distances, -1);
 
-
                 //TODO: fix below compare code
-                PriorityQueue<Vertex, int> queue = new PriorityQueue<Vertex, int>(Comparer<int>.Create((dist1, dist2) => dist1.CompareTo(dist2)));
+                PriorityQueue<Vertex, int> queue = new PriorityQueue<Vertex, int>(
+                    Comparer<int>.Create((dist1, dist2) => dist1.CompareTo(dist2))
+                );
                 distances[1] = 0;
                 queue.Enqueue(new Vertex(0, 1), 0);
 
                 while (queue.Count > 0)
                 {
                     Vertex vertex = queue.Dequeue();
-                    int currentDistance = vertex.Distance, currentLabel = vertex.Label;
+                    int currentDistance = vertex.Distance,
+                        currentLabel = vertex.Label;
                     if (currentDistance != distances[currentLabel])
                     {
                         continue;
                     }
-                    for (int next = currentLabel + 1; next <= Math.Min(currentLabel + 6, boardSize * boardSize); next++)
+                    for (
+                        int next = currentLabel + 1;
+                        next <= Math.Min(currentLabel + 6, boardSize * boardSize);
+                        next++
+                    )
                     {
-                        int row = cells[next].Item1, column = cells[next].Item2;
+                        int row = cells[next].Item1,
+                            column = cells[next].Item2;
                         int destination = board[row][column] != -1 ? board[row][column] : next;
-                        if (distances[destination] == -1 || distances[currentLabel] + 1 < distances[destination])
+                        if (
+                            distances[destination] == -1
+                            || distances[currentLabel] + 1 < distances[destination]
+                        )
                         {
                             distances[destination] = distances[currentLabel] + 1;
-                            queue.Enqueue(new Vertex(distances[destination], destination), distances[destination]);
+                            queue.Enqueue(
+                                new Vertex(distances[destination], destination),
+                                distances[destination]
+                            );
                         }
                     }
                 }
@@ -7480,7 +8096,6 @@ The space complexity of Dijkstra's algorithm is O(∣V∣)=O(n2) because we need
                     return this.Distance - other.Distance;
                 }
             }
-
         }
 
         /*
@@ -7512,21 +8127,34 @@ We're maintaining a two-dimensional DP table of size goal+1 by n+1 to store inte
 
                 for (int currentLength = 1; currentLength <= targetLength; currentLength++)
                 {
-                    for (int uniqueSongs = 1; uniqueSongs <= Math.Min(currentLength, totalSongs); uniqueSongs++)
+                    for (
+                        int uniqueSongs = 1;
+                        uniqueSongs <= Math.Min(currentLength, totalSongs);
+                        uniqueSongs++
+                    )
                     {
                         // The current song is a new song
-                        dp[currentLength][uniqueSongs] = dp[currentLength - 1][uniqueSongs - 1] * (totalSongs - uniqueSongs + 1) % MOD;
+                        dp[currentLength][uniqueSongs] =
+                            dp[currentLength - 1][uniqueSongs - 1]
+                            * (totalSongs - uniqueSongs + 1)
+                            % MOD;
                         // The current song is a song we have played before
                         if (uniqueSongs > maxReplays)
                         {
-                            dp[currentLength][uniqueSongs] = (dp[currentLength][uniqueSongs] + dp[currentLength - 1][uniqueSongs] * (uniqueSongs - maxReplays)) % MOD;
+                            dp[currentLength][uniqueSongs] =
+                                (
+                                    dp[currentLength][uniqueSongs]
+                                    + dp[currentLength - 1][uniqueSongs]
+                                        * (uniqueSongs - maxReplays)
+                                ) % MOD;
                         }
                     }
                 }
 
                 return (int)dp[targetLength][totalSongs];
             }
-            /*            
+
+            /*
 Approach 2: Top-down Dynamic Programming (Memoization)
 Complexity Analysis
 •	Time Complexity: O(goal⋅n).
@@ -7551,7 +8179,12 @@ The 2D DP table uses O(goal⋅n) of memory.
                 return (int)(NumberOfPlaylists(targetLength, totalSongs, maxReplays, totalSongs));
             }
 
-            private long NumberOfPlaylists(int currentLength, int currentSongs, int maxReplays, int totalSongs)
+            private long NumberOfPlaylists(
+                int currentLength,
+                int currentSongs,
+                int maxReplays,
+                int totalSongs
+            )
             {
                 // Base cases
                 if (currentLength == 0 && currentSongs == 0)
@@ -7567,14 +8200,31 @@ The 2D DP table uses O(goal⋅n) of memory.
                     return dp[currentLength, currentSongs].Value;
                 }
                 // DP transition: add a new song or replay an old one
-                dp[currentLength, currentSongs] = (NumberOfPlaylists(currentLength - 1, currentSongs - 1, maxReplays, totalSongs) * (totalSongs - currentSongs + 1)) % MOD;
+                dp[currentLength, currentSongs] =
+                    (
+                        NumberOfPlaylists(
+                            currentLength - 1,
+                            currentSongs - 1,
+                            maxReplays,
+                            totalSongs
+                        ) * (totalSongs - currentSongs + 1)
+                    ) % MOD;
                 if (currentSongs > maxReplays)
                 {
-                    dp[currentLength, currentSongs] += (NumberOfPlaylists(currentLength - 1, currentSongs, maxReplays, totalSongs) * (currentSongs - maxReplays)) % MOD;
+                    dp[currentLength, currentSongs] +=
+                        (
+                            NumberOfPlaylists(
+                                currentLength - 1,
+                                currentSongs,
+                                maxReplays,
+                                totalSongs
+                            ) * (currentSongs - maxReplays)
+                        ) % MOD;
                     dp[currentLength, currentSongs] %= MOD;
                 }
                 return dp[currentLength, currentSongs].Value;
             }
+
             /*
 Approach 3: Combinatorics
 
@@ -7593,7 +8243,11 @@ We maintain arrays for precalculated factorials and inverse factorials.
             private long[] invFactorial;
 
             // Main method: calculates number of playlists
-            public int UsingCombinatorics(int numberOfSongs, int targetLength, int maxSongsInPlaylist)
+            public int UsingCombinatorics(
+                int numberOfSongs,
+                int targetLength,
+                int maxSongsInPlaylist
+            )
             {
                 // Pre-calculate factorials and inverse factorials
                 PrecalculateFactorials(numberOfSongs);
@@ -7754,12 +8408,13 @@ We maintain arrays for precalculated factorials and inverse factorials.
                     count[disjointSetUnion.Find(node)]++;
                 }
 
-                int resultNode = -1, largestComponentSize = -1;
+                int resultNode = -1,
+                    largestComponentSize = -1;
                 foreach (int node in initial)
                 {
                     int root = disjointSetUnion.Find(node);
                     if (count[root] == 1)
-                    {  // unique color
+                    { // unique color
                         int currentComponentSize = disjointSetUnion.Size(root);
                         if (currentComponentSize > largestComponentSize)
                         {
@@ -7784,9 +8439,11 @@ We maintain arrays for precalculated factorials and inverse factorials.
                 }
                 return resultNode;
             }
+
             public class DisjointSetUnion
             {
-                private int[] parent, size;
+                private int[] parent,
+                    size;
 
                 public DisjointSetUnion(int numberOfNodes)
                 {
@@ -7822,8 +8479,6 @@ We maintain arrays for precalculated factorials and inverse factorials.
                     return size[Find(x)];
                 }
             }
-
-
         }
 
         /*
@@ -7834,7 +8489,6 @@ We maintain arrays for precalculated factorials and inverse factorials.
         // Translated from Java to C# for a solution in a console application
         class MinimizeMalwareSpreadIISol
         {
-
             /*
         Approach 1: DFS
         Time complexity: O(K N2) where N = number of total nodes and K = number of initially infected nodes.
@@ -7847,7 +8501,8 @@ We maintain arrays for precalculated factorials and inverse factorials.
                 int resultNode = initialNodes[0];
                 int maximumCount = 0;
                 bool[] infectedNodes = new bool[numberOfNodes];
-                foreach (int node in initialNodes) infectedNodes[node] = true;
+                foreach (int node in initialNodes)
+                    infectedNodes[node] = true;
 
                 foreach (int node in initialNodes)
                 {
@@ -7861,7 +8516,10 @@ We maintain arrays for precalculated factorials and inverse factorials.
                             totalCount += DepthFirstSearch(graph, i, visitedNodes, infectedNodes);
                         }
                     }
-                    if (totalCount > maximumCount || (totalCount == maximumCount && node < resultNode))
+                    if (
+                        totalCount > maximumCount
+                        || (totalCount == maximumCount && node < resultNode)
+                    )
                     {
                         maximumCount = totalCount;
                         resultNode = node;
@@ -7869,16 +8527,28 @@ We maintain arrays for precalculated factorials and inverse factorials.
                 }
                 return resultNode;
             }
-            private int DepthFirstSearch(int[][] graph, int currentNode, bool[] visitedNodes, bool[] infectedNodes)
+
+            private int DepthFirstSearch(
+                int[][] graph,
+                int currentNode,
+                bool[] visitedNodes,
+                bool[] infectedNodes
+            )
             {
-                if (infectedNodes[currentNode]) return 0;
+                if (infectedNodes[currentNode])
+                    return 0;
                 visitedNodes[currentNode] = true;
                 int count = 1;
                 for (int adjacentNode = 0; adjacentNode < graph[currentNode].Length; adjacentNode++)
                 {
                     if (!visitedNodes[adjacentNode] && graph[currentNode][adjacentNode] == 1)
                     {
-                        int infectedCount = DepthFirstSearch(graph, adjacentNode, visitedNodes, infectedNodes);
+                        int infectedCount = DepthFirstSearch(
+                            graph,
+                            adjacentNode,
+                            visitedNodes,
+                            infectedNodes
+                        );
                         if (infectedCount == 0)
                         {
                             infectedNodes[currentNode] = true;
@@ -7950,7 +8620,10 @@ We maintain arrays for precalculated factorials and inverse factorials.
                             savedNodes += unionFind.Size[component];
                         }
                     }
-                    if (savedNodes > maxSavedNodes || (savedNodes == maxSavedNodes && infectedNode < resultNode))
+                    if (
+                        savedNodes > maxSavedNodes
+                        || (savedNodes == maxSavedNodes && infectedNode < resultNode)
+                    )
                     {
                         maxSavedNodes = savedNodes;
                         resultNode = infectedNode;
@@ -7958,6 +8631,7 @@ We maintain arrays for precalculated factorials and inverse factorials.
                 }
                 return resultNode;
             }
+
             class UnionFind
             {
                 public int[] Parent { get; }
@@ -7998,6 +8672,7 @@ We maintain arrays for precalculated factorials and inverse factorials.
                     }
                 }
             }
+
             /*
             Approach 3: Tarjan's algorithm
 Time complexity: O(N^2)
@@ -8006,10 +8681,15 @@ Space complexity: O(N)
             */
             public int TarjansAlgo(int[][] graph, int[] initial)
             {
-                int numberOfNodes = graph.Length, answerNode = initial[0], maxCount = 0;
+                int numberOfNodes = graph.Length,
+                    answerNode = initial[0],
+                    maxCount = 0;
                 bool[] infected = new bool[numberOfNodes];
-                foreach (int node in initial) infected[node] = true;
-                int[] depth = new int[numberOfNodes], low = new int[numberOfNodes], count = new int[numberOfNodes];
+                foreach (int node in initial)
+                    infected[node] = true;
+                int[] depth = new int[numberOfNodes],
+                    low = new int[numberOfNodes],
+                    count = new int[numberOfNodes];
                 foreach (int node in initial)
                 {
                     if (depth[node] == 0)
@@ -8024,7 +8704,17 @@ Space complexity: O(N)
                 }
                 return answerNode;
             }
-            private int DepthFirstSearch(int[][] graph, int currentNode, int parentNode, int time, int[] depth, int[] low, bool[] infected, int[] count)
+
+            private int DepthFirstSearch(
+                int[][] graph,
+                int currentNode,
+                int parentNode,
+                int time,
+                int[] depth,
+                int[] low,
+                bool[] infected,
+                int[] count
+            )
             {
                 low[currentNode] = depth[currentNode] = time;
                 bool isInfected = infected[currentNode];
@@ -8035,7 +8725,16 @@ Space complexity: O(N)
                     {
                         if (depth[neighbor] == 0)
                         {
-                            int subTreeSize = DepthFirstSearch(graph, neighbor, currentNode, time + 1, depth, low, infected, count);
+                            int subTreeSize = DepthFirstSearch(
+                                graph,
+                                neighbor,
+                                currentNode,
+                                time + 1,
+                                depth,
+                                low,
+                                infected,
+                                count
+                            );
                             if (subTreeSize == 0)
                             {
                                 isInfected = true;
@@ -8058,10 +8757,7 @@ Space complexity: O(N)
                 }
                 return isInfected ? 0 : size;
             }
-
-
         }
-
 
         /* 929. Unique Email Addresses
         https://leetcode.com/problems/unique-email-addresses/description/
@@ -8095,10 +8791,12 @@ In the worst case, when all emails are unique, we will store every email address
                         char currentChar = email[i];
 
                         // stop adding characters to localName
-                        if (currentChar == '+' || currentChar == '@') break;
+                        if (currentChar == '+' || currentChar == '@')
+                            break;
 
                         // add this character if not '.'
-                        if (currentChar != '.') cleanMail.Append(currentChar);
+                        if (currentChar != '.')
+                            cleanMail.Append(currentChar);
                     }
 
                     // compute domain name (substring from end to '@')
@@ -8108,9 +8806,9 @@ In the worst case, when all emails are unique, we will store every email address
                     {
                         char currentChar = email[i];
                         domainName.Append(currentChar);
-                        if (currentChar == '@') break;
+                        if (currentChar == '@')
+                            break;
                     }
-
 
                     cleanMail.Append(domainName.ToString().Reverse());
                     uniqueEmails.Add(cleanMail.ToString());
@@ -8118,6 +8816,7 @@ In the worst case, when all emails are unique, we will store every email address
 
                 return uniqueEmails.Count;
             }
+
             /*
             Approach 2: Using String Split Method
 Complexity Analysis
@@ -8149,9 +8848,7 @@ In the worst case, when all emails are unique, we will store every email address
 
                 return uniqueEmailAddresses.Count;
             }
-
         }
-
 
         /* 933. Number of Recent Calls
         https://leetcode.com/problems/number-of-recent-calls/description/ */
@@ -8193,7 +8890,6 @@ o	As we estimated before, the maximal size of our sliding window is 3000, which 
             }
         }
 
-
         /* 934. Shortest Bridge
         https://leetcode.com/problems/shortest-bridge/description/ */
 
@@ -8220,10 +8916,25 @@ o	As we estimated before, the maximal size of our sliding window is 3000, which 
             {
                 grid[x][y] = 2;
                 bfsQueue.Add(new int[] { x, y });
-                foreach (int[] pair in new int[][] { new int[] { x + 1, y }, new int[] { x - 1, y }, new int[] { x, y + 1 }, new int[] { x, y - 1 } })
+                foreach (
+                    int[] pair in new int[][]
+                    {
+                        new int[] { x + 1, y },
+                        new int[] { x - 1, y },
+                        new int[] { x, y + 1 },
+                        new int[] { x, y - 1 },
+                    }
+                )
                 {
-                    int currentX = pair[0], currentY = pair[1];
-                    if (0 <= currentX && currentX < n && 0 <= currentY && currentY < n && grid[currentX][currentY] == 1)
+                    int currentX = pair[0],
+                        currentY = pair[1];
+                    if (
+                        0 <= currentX
+                        && currentX < n
+                        && 0 <= currentY
+                        && currentY < n
+                        && grid[currentX][currentY] == 1
+                    )
                     {
                         Dfs(grid, currentX, currentY, n);
                     }
@@ -8234,7 +8945,8 @@ o	As we estimated before, the maximal size of our sliding window is 3000, which 
             public int DFSAndBFS(int[][] grid)
             {
                 int n = grid.Length;
-                int firstX = -1, firstY = -1;
+                int firstX = -1,
+                    firstY = -1;
                 for (int i = 0; i < n; i++)
                 {
                     for (int j = 0; j < n; j++)
@@ -8258,10 +8970,20 @@ o	As we estimated before, the maximal size of our sliding window is 3000, which 
                     List<int[]> newBfs = new List<int[]>();
                     foreach (int[] pair in bfsQueue)
                     {
-                        int x = pair[0], y = pair[1];
-                        foreach (int[] nextPair in new int[][] { new int[] { x + 1, y }, new int[] { x - 1, y }, new int[] { x, y + 1 }, new int[] { x, y - 1 } })
+                        int x = pair[0],
+                            y = pair[1];
+                        foreach (
+                            int[] nextPair in new int[][]
+                            {
+                                new int[] { x + 1, y },
+                                new int[] { x - 1, y },
+                                new int[] { x, y + 1 },
+                                new int[] { x, y - 1 },
+                            }
+                        )
                         {
-                            int currentX = nextPair[0], currentY = nextPair[1];
+                            int currentX = nextPair[0],
+                                currentY = nextPair[1];
                             if (0 <= currentX && currentX < n && 0 <= currentY && currentY < n)
                             {
                                 if (grid[currentX][currentY] == 1)
@@ -8286,7 +9008,8 @@ o	As we estimated before, the maximal size of our sliding window is 3000, which 
 
                 return distance;
             }
-            /*        
+
+            /*
     Approach 2: Breadth-First-Search
     Complexity Analysis
     Let n×n be the size of the input matrix grid.
@@ -8302,7 +9025,8 @@ o	As we estimated before, the maximal size of our sliding window is 3000, which 
             public int BFS(int[][] grid)
             {
                 int gridSize = grid.Length;
-                int firstLandX = -1, firstLandY = -1;
+                int firstLandX = -1,
+                    firstLandY = -1;
 
                 // Find any land cell, and we treat it as a cell of island A.
                 for (int row = 0; row < gridSize; row++)
@@ -8333,11 +9057,25 @@ o	As we estimated before, the maximal size of our sliding window is 3000, which 
                     {
                         int x = cell[0];
                         int y = cell[1];
-                        foreach (int[] next in new int[][] { new int[] { x + 1, y }, new int[] { x - 1, y }, new int[] { x, y + 1 }, new int[] { x, y - 1 } })
+                        foreach (
+                            int[] next in new int[][]
+                            {
+                                new int[] { x + 1, y },
+                                new int[] { x - 1, y },
+                                new int[] { x, y + 1 },
+                                new int[] { x, y - 1 },
+                            }
+                        )
                         {
                             int currentX = next[0];
                             int currentY = next[1];
-                            if (currentX >= 0 && currentX < gridSize && currentY >= 0 && currentY < gridSize && grid[currentX][currentY] == 1)
+                            if (
+                                currentX >= 0
+                                && currentX < gridSize
+                                && currentY >= 0
+                                && currentY < gridSize
+                                && grid[currentX][currentY] == 1
+                            )
                             {
                                 newBfs.Add(new int[] { currentX, currentY });
                                 secondBfsQueue.Add(new int[] { currentX, currentY });
@@ -8356,11 +9094,24 @@ o	As we estimated before, the maximal size of our sliding window is 3000, which 
                     {
                         int x = cell[0];
                         int y = cell[1];
-                        foreach (int[] next in new int[][] { new int[] { x + 1, y }, new int[] { x - 1, y }, new int[] { x, y + 1 }, new int[] { x, y - 1 } })
+                        foreach (
+                            int[] next in new int[][]
+                            {
+                                new int[] { x + 1, y },
+                                new int[] { x - 1, y },
+                                new int[] { x, y + 1 },
+                                new int[] { x, y - 1 },
+                            }
+                        )
                         {
                             int currentX = next[0];
                             int currentY = next[1];
-                            if (currentX >= 0 && currentX < gridSize && currentY >= 0 && currentY < gridSize)
+                            if (
+                                currentX >= 0
+                                && currentX < gridSize
+                                && currentY >= 0
+                                && currentY < gridSize
+                            )
                             {
                                 if (grid[currentX][currentY] == 1)
                                 {
@@ -8385,7 +9136,6 @@ o	As we estimated before, the maximal size of our sliding window is 3000, which 
             }
         }
 
-
         /* 937. Reorder Data in Log Files
         https://leetcode.com/problems/reorder-data-in-log-files/description/
          */
@@ -8409,7 +9159,6 @@ o	In total, the overall space complexity of the algorithm is O(M+M⋅logN)=O(M�
             */
             public string[] UsingComparator(string[] logs)
             {
-
                 Comparison<string> logComparator = (log1, log2) =>
                 {
                     // split each log into two parts: <identifier, content>
@@ -8464,7 +9213,6 @@ o	In total, the overall space complexity of the algorithm is O(M⋅N+M⋅N)=O(M�
             */
         }
 
-
         /* 948. Bag of Tokens
         https://leetcode.com/problems/bag-of-tokens/description/
          */
@@ -8508,7 +9256,7 @@ Other than sorting, we use a handful of variables that use constant, O(1) space,
                         power += tokens[highIndex];
                         highIndex -= 1;
                     }
-                    // We don't have enough score, power, or tokens 
+                    // We don't have enough score, power, or tokens
                     // to play face-up or down and increase our score
                     else
                     {
@@ -8558,7 +9306,7 @@ Other than sorting, we use a handful of variables that use constant, O(1) space,
                         power += tokenDeque.Last.Value;
                         tokenDeque.RemoveLast();
                         score--;
-                        // We don't have enough score, power, or tokens 
+                        // We don't have enough score, power, or tokens
                         // to play face-up or down and increase our score
                     }
                     else
@@ -8569,7 +9317,6 @@ Other than sorting, we use a handful of variables that use constant, O(1) space,
                 return score;
             }
         }
-
 
         /* 949. Largest Time for Given Digits
         https://leetcode.com/problems/largest-time-for-given-digits/description/
@@ -8598,15 +9345,30 @@ o	In the algorithm, we keep the permutations for the input digits, which are in 
                 // Enumerate all possibilities using permutations
                 for (int hourIndex = 0; hourIndex < digits.Length; hourIndex++)
                 {
-                    for (int minuteTensIndex = 0; minuteTensIndex < digits.Length; minuteTensIndex++)
+                    for (
+                        int minuteTensIndex = 0;
+                        minuteTensIndex < digits.Length;
+                        minuteTensIndex++
+                    )
                     {
-                        if (minuteTensIndex == hourIndex) continue;
-                        for (int minuteOnesIndex = 0; minuteOnesIndex < digits.Length; minuteOnesIndex++)
+                        if (minuteTensIndex == hourIndex)
+                            continue;
+                        for (
+                            int minuteOnesIndex = 0;
+                            minuteOnesIndex < digits.Length;
+                            minuteOnesIndex++
+                        )
                         {
-                            if (minuteOnesIndex == hourIndex || minuteOnesIndex == minuteTensIndex) continue;
+                            if (minuteOnesIndex == hourIndex || minuteOnesIndex == minuteTensIndex)
+                                continue;
                             for (int secondIndex = 0; secondIndex < digits.Length; secondIndex++)
                             {
-                                if (secondIndex == hourIndex || secondIndex == minuteTensIndex || secondIndex == minuteOnesIndex) continue;
+                                if (
+                                    secondIndex == hourIndex
+                                    || secondIndex == minuteTensIndex
+                                    || secondIndex == minuteOnesIndex
+                                )
+                                    continue;
 
                                 int hour = digits[hourIndex] * 10 + digits[minuteTensIndex];
                                 int minute = digits[minuteOnesIndex] * 10 + digits[secondIndex];
@@ -8628,6 +9390,7 @@ o	In the algorithm, we keep the permutations for the input digits, which are in 
                     return string.Format("{0:D2}:{1:D2}", maxTime / 60, maxTime % 60);
                 }
             }
+
             /*
             Approach 2: Permutation via Enumeration
 Complexity Analysis
@@ -8653,11 +9416,21 @@ Since the size of the input array is fixed, the total size of the local variable
                         for (int thirdIndex = 0; thirdIndex < digits.Length; ++thirdIndex)
                         {
                             // skip duplicate elements
-                            if (firstIndex == secondIndex || secondIndex == thirdIndex || firstIndex == thirdIndex)
+                            if (
+                                firstIndex == secondIndex
+                                || secondIndex == thirdIndex
+                                || firstIndex == thirdIndex
+                            )
                                 continue;
                             // the total sum of indices is 0 + 1 + 2 + 3 = 6.
                             int fourthIndex = 6 - firstIndex - secondIndex - thirdIndex;
-                            int[] permutation = { digits[firstIndex], digits[secondIndex], digits[thirdIndex], digits[fourthIndex] };
+                            int[] permutation =
+                            {
+                        digits[firstIndex],
+                        digits[secondIndex],
+                        digits[thirdIndex],
+                        digits[fourthIndex],
+                    };
                             // check if the permutation can form a time
                             ValidateTime(permutation);
                         }
@@ -8674,6 +9447,7 @@ Since the size of the input array is fixed, the total size of the local variable
                 if (hour < 24 && minute < 60)
                     this.maximumTime = Math.Max(this.maximumTime, hour * 60 + minute);
             }
+
             /*
             Approach 3: Permutation via Backtracking
             Complexity Analysis
@@ -8729,7 +9503,6 @@ Since the size of the input array is fixed, the total size of the local variable
                     array[j] = temp;
                 }
             }
-
         }
 
         /*
@@ -8767,9 +9540,11 @@ Since the size of the input array is fixed, the total size of the local variable
 
                 int d0 = leftResult[1] + rightResult[1];
                 int d1 = Math.Min(leftResult[2] + minRight12, rightResult[2] + minLeft12);
-                int d2 = 1 + Math.Min(leftResult[0], minLeft12) + Math.Min(rightResult[0], minRight12);
+                int d2 =
+                    1 + Math.Min(leftResult[0], minLeft12) + Math.Min(rightResult[0], minRight12);
                 return new int[] { d0, d1, d2 };
             }
+
             /*
             Approach 2: Greedy
 Complexity Analysis
@@ -8797,9 +9572,11 @@ Complexity Analysis
                     DepthFirstSearch(node.Left, node);
                     DepthFirstSearch(node.Right, node);
 
-                    if (parent == null && !coveredNodes.Contains(node) ||
-                            !coveredNodes.Contains(node.Left) ||
-                            !coveredNodes.Contains(node.Right))
+                    if (
+                        parent == null && !coveredNodes.Contains(node)
+                        || !coveredNodes.Contains(node.Left)
+                        || !coveredNodes.Contains(node.Right)
+                    )
                     {
                         answer++;
                         coveredNodes.Add(node);
@@ -8809,9 +9586,7 @@ Complexity Analysis
                     }
                 }
             }
-
         }
-
 
         /* 957. Prison Cells After N Days
         https://leetcode.com/problems/prison-cells-after-n-days/description/
@@ -8845,7 +9620,7 @@ o	In the Python implementation, we keep the states of cells as they are in the h
                         int stateBitmap = this.CellsToBitmap(cells);
                         if (seen.ContainsKey(stateBitmap))
                         {
-                            // the length of the cycle is seen[state_key] - N 
+                            // the length of the cycle is seen[state_key] - N
                             N %= seen[stateBitmap] - N;
                             isFastForwarded = true;
                         }
@@ -8864,6 +9639,7 @@ o	In the Python implementation, we keep the states of cells as they are in the h
                 }
                 return cells;
             }
+
             protected int CellsToBitmap(int[] cells)
             {
                 int stateBitmap = 0x0;
@@ -8955,9 +9731,7 @@ o	This time we adopted the bitmap for both Java and Python implementation so tha
                 stateBitmap &= 0x7e;
                 return stateBitmap;
             }
-
         }
-
 
         /* 956. Tallest Billboard
         https://leetcode.com/problems/tallest-billboard/description/
@@ -9014,7 +9788,8 @@ o	There could be at most 32n distinct combinations stored in first_half and seco
                 Dictionary<int, int> dp = new Dictionary<int, int>();
                 foreach (var p in states)
                 {
-                    int left = p.Item1, right = p.Item2;
+                    int left = p.Item1,
+                        right = p.Item2;
                     dp[left - right] = Math.Max(dp.GetValueOrDefault(left - right, 0), left);
                 }
                 return dp;
@@ -9050,13 +9825,18 @@ o	There could be at most m difference height difference and the number of unique
                         int shorter = taller - difference;
 
                         // Add rod to the taller stand, thus the height difference is increased to difference + rod.
-                        int newTaller = newDp.TryGetValue(difference + rod, out int temp) ? temp : 0;
+                        int newTaller = newDp.TryGetValue(difference + rod, out int temp)
+                            ? temp
+                            : 0;
                         newDp[difference + rod] = Math.Max(newTaller, taller + rod);
 
                         // Add rod to the shorter stand, the height difference is expressed as abs(shorter + rod - taller).
                         int newDifference = Math.Abs(shorter + rod - taller);
                         int newTaller2 = Math.Max(shorter + rod, taller);
-                        newDp[newDifference] = Math.Max(newTaller2, newDp.TryGetValue(newDifference, out int temp2) ? temp2 : 0);
+                        newDp[newDifference] = Math.Max(
+                            newTaller2,
+                            newDp.TryGetValue(newDifference, out int temp2) ? temp2 : 0
+                        );
                     }
 
                     dp = newDp;
@@ -9065,10 +9845,7 @@ o	There could be at most m difference height difference and the number of unique
                 // Return the maximum height with 0 difference.
                 return dp.TryGetValue(0, out int result) ? result : 0;
             }
-
         }
-
-
 
         /* 969. Pancake Sorting
         https://leetcode.com/problems/pancake-sorting/description/
@@ -9178,6 +9955,7 @@ o	As a result, the space complexity of the algorithm is O(N). If one does not ta
 
                 return Solve(dp, travelDays, ticketCosts, 1);
             }
+
             private int Solve(int[] dp, int[] travelDays, int[] ticketCosts, int currentDay)
             {
                 // If we have iterated over travel days, return 0.
@@ -9198,9 +9976,12 @@ o	As a result, the space complexity of the algorithm is O(N). If one does not ta
                     return dp[currentDay];
                 }
 
-                int oneDayCost = ticketCosts[0] + Solve(dp, travelDays, ticketCosts, currentDay + 1);
-                int sevenDayCost = ticketCosts[1] + Solve(dp, travelDays, ticketCosts, currentDay + 7);
-                int thirtyDayCost = ticketCosts[2] + Solve(dp, travelDays, ticketCosts, currentDay + 30);
+                int oneDayCost =
+                    ticketCosts[0] + Solve(dp, travelDays, ticketCosts, currentDay + 1);
+                int sevenDayCost =
+                    ticketCosts[1] + Solve(dp, travelDays, ticketCosts, currentDay + 7);
+                int thirtyDayCost =
+                    ticketCosts[2] + Solve(dp, travelDays, ticketCosts, currentDay + 30);
 
                 // Store the cost with the minimum of the three options.
                 return dp[currentDay] = Math.Min(oneDayCost, Math.Min(sevenDayCost, thirtyDayCost));
@@ -9229,24 +10010,30 @@ The size of array dp is K. Hence, the space complexity would equal O(K).
                     // If we don't need to travel on this day, the cost won't change.
                     if (currentDay < travelDays[travelDayIndex])
                     {
-                        dynamicProgrammingArray[currentDay] = dynamicProgrammingArray[currentDay - 1];
+                        dynamicProgrammingArray[currentDay] = dynamicProgrammingArray[
+                            currentDay - 1
+                        ];
                     }
                     else
                     {
                         // Buy a pass on this day, and move on to the next travel day.
                         travelDayIndex++;
                         // Store the cost with the minimum of the three options.
-                        dynamicProgrammingArray[currentDay] = Math.Min(dynamicProgrammingArray[currentDay - 1] + ticketCosts[0],
-                            Math.Min(dynamicProgrammingArray[Math.Max(0, currentDay - 7)] + ticketCosts[1],
-                                dynamicProgrammingArray[Math.Max(0, currentDay - 30)] + ticketCosts[2]));
+                        dynamicProgrammingArray[currentDay] = Math.Min(
+                            dynamicProgrammingArray[currentDay - 1] + ticketCosts[0],
+                            Math.Min(
+                                dynamicProgrammingArray[Math.Max(0, currentDay - 7)]
+                                    + ticketCosts[1],
+                                dynamicProgrammingArray[Math.Max(0, currentDay - 30)]
+                                    + ticketCosts[2]
+                            )
+                        );
                     }
                 }
 
                 return dynamicProgrammingArray[lastTravelDay];
             }
-
         }
-
 
         /* 322. Coin Change
         https://leetcode.com/problems/coin-change/description/
@@ -9257,7 +10044,7 @@ The size of array dp is K. Hence, the space complexity would equal O(K).
             Approach 1 (Brute force) [Time Limit Exceeded]
         Complexity Analysis
         •	Time complexity : O(S^n). In the worst case, complexity is exponential in the number of the coins n. The reason is that every coin denomination ci could have at most  S/cii values. Therefore the number of possible combinations is :
-        S/c1∗S/c2∗S/c3…S/cn= Sn/ (c1∗c2∗c3…cn)    
+        S/c1∗S/c2∗S/c3…S/cn= Sn/ (c1∗c2∗c3…cn)
         •	Space complexity : O(n).
         In the worst case the maximum depth of recursion is n. Therefore we need O(n) space used by the system recursive stack.
 
@@ -9279,7 +10066,11 @@ The size of array dp is K. Hence, the space complexity would equal O(K).
                     {
                         if (amount >= count * coins[coinIndex])
                         {
-                            int result = CoinChange(coinIndex + 1, coins, amount - count * coins[coinIndex]);
+                            int result = CoinChange(
+                                coinIndex + 1,
+                                coins,
+                                amount - count * coins[coinIndex]
+                            );
                             if (result != -1)
                                 minimumCost = Math.Min(minimumCost, result + count);
                         }
@@ -9288,6 +10079,7 @@ The size of array dp is K. Hence, the space complexity would equal O(K).
                 }
                 return -1;
             }
+
             /*
             Approach 2 (Dynamic programming - Top down) [Accepted]
         Complexity Analysis
@@ -9298,15 +10090,19 @@ The size of array dp is K. Hence, the space complexity would equal O(K).
             */
             public int TopDownDP(int[] coins, int amount)
             {
-                if (amount < 1) return 0;
+                if (amount < 1)
+                    return 0;
                 return CoinChange(coins, amount, new int[amount]);
             }
 
             private int CoinChange(int[] coins, int remainingAmount, int[] count)
             {
-                if (remainingAmount < 0) return -1;
-                if (remainingAmount == 0) return 0;
-                if (count[remainingAmount - 1] != 0) return count[remainingAmount - 1];
+                if (remainingAmount < 0)
+                    return -1;
+                if (remainingAmount == 0)
+                    return 0;
+                if (count[remainingAmount - 1] != 0)
+                    return count[remainingAmount - 1];
                 int minimumCoins = int.MaxValue;
                 foreach (int coin in coins)
                 {
@@ -9317,6 +10113,7 @@ The size of array dp is K. Hence, the space complexity would equal O(K).
                 count[remainingAmount - 1] = (minimumCoins == int.MaxValue) ? -1 : minimumCoins;
                 return count[remainingAmount - 1];
             }
+
             /* Approach 3 (Dynamic programming - Bottom up) [Accepted]
             Complexity Analysis
             •	Time complexity : O(S∗n).
@@ -9343,8 +10140,6 @@ The size of array dp is K. Hence, the space complexity would equal O(K).
                 }
                 return dp[amount] > amount ? -1 : dp[amount];
             }
-
-
         }
 
         /* 997. Find the Town Judge
@@ -9353,7 +10148,6 @@ The size of array dp is K. Hence, the space complexity would equal O(K).
 
         public class FindEdgeSol
         {
-
             /* Complexity Analysis
             Let N be the number of people, and E be the number of edges (trust relationships).
             •	Time Complexity : O(E).
@@ -9366,7 +10160,6 @@ The size of array dp is K. Hence, the space complexity would equal O(K).
              */
             public int TwoArray(int N, int[][] trust)
             {
-
                 if (trust.Length < N - 1)
                 {
                     return -1;
@@ -9398,12 +10191,11 @@ The size of array dp is K. Hence, the space complexity would equal O(K).
     •	Time Complexity : O(E).
     Same as above. We still need to loop through the E edges in trust, and the argument about the relationship between N and E still applies.
     •	Space Complexity : O(N).
-    Same as above. We're still allocating an array of length N.	
+    Same as above. We're still allocating an array of length N.
 
             */
             public int OneArray(int N, int[][] trust)
             {
-
                 if (trust.Length < N - 1)
                 {
                     return -1;
@@ -9426,9 +10218,7 @@ The size of array dp is K. Hence, the space complexity would equal O(K).
                 }
                 return -1;
             }
-
         }
-
 
         /* 277. Find the Celebrity
         https://leetcode.com/problems/find-the-celebrity/description/
@@ -9438,8 +10228,12 @@ The size of array dp is K. Hence, the space complexity would equal O(K).
         {
             public class Relation
             {
-                public virtual bool Knows(int a, int b) { return false; } //Dummy for now
+                public virtual bool Knows(int a, int b)
+                {
+                    return false;
+                } //Dummy for now
             }
+
             /*
 Approach 1: Brute Force
 Complexity Analysis
@@ -9474,7 +10268,8 @@ Our code only uses constant extra space. The results of the API calls are not sa
                 {
                     for (int otherIndex = 0; otherIndex < numberOfPeople; otherIndex++)
                     {
-                        if (personIndex == otherIndex) continue; // Don't ask if they know themselves.
+                        if (personIndex == otherIndex)
+                            continue; // Don't ask if they know themselves.
                         if (Knows(personIndex, otherIndex) || !Knows(otherIndex, personIndex))
                         {
                             return false;
@@ -9483,6 +10278,7 @@ Our code only uses constant extra space. The results of the API calls are not sa
                     return true;
                 }
             }
+
             /*
             Approach 2: Logical Deduction
 Complexity Analysis
@@ -9522,7 +10318,8 @@ Same as above. We are only using constant extra space.
                 {
                     for (int otherIndex = 0; otherIndex < numberOfPeople; otherIndex++)
                     {
-                        if (candidateIndex == otherIndex) continue; // Don't ask if they know themselves.
+                        if (candidateIndex == otherIndex)
+                            continue; // Don't ask if they know themselves.
                         if (Knows(candidateIndex, otherIndex) || !Knows(otherIndex, candidateIndex))
                         {
                             return false;
@@ -9531,6 +10328,7 @@ Same as above. We are only using constant extra space.
                     return true;
                 }
             }
+
             /*
 Approach 3: Logical Deduction with Caching
 Complexity Analysis
@@ -9579,7 +10377,8 @@ We could optimize the space complexity slightly, by dumping the cached contents 
                 {
                     for (int j = 0; j < numberOfPeople; j++)
                     {
-                        if (i == j) continue; // Don't ask if they know themselves.
+                        if (i == j)
+                            continue; // Don't ask if they know themselves.
                         if (Knows(i, j) || !Knows(j, i))
                         {
                             return false;
@@ -9588,11 +10387,9 @@ We could optimize the space complexity slightly, by dumping the cached contents 
                     return true;
                 }
             }
-
-
         }
 
-        /* 1010. Pairs of Songs With Total Durations Divisible by 60	
+        /* 1010. Pairs of Songs With Total Durations Divisible by 60
         https://leetcode.com/problems/pairs-of-songs-with-total-durations-divisible-by-60/description/
          */
         class NumPairsDivisibleBy60Sol
@@ -9606,7 +10403,8 @@ We could optimize the space complexity slightly, by dumping the cached contents 
             */
             public int NumPairsDivisibleBy60(int[] time)
             {
-                int count = 0, n = time.Length;
+                int count = 0,
+                    n = time.Length;
                 for (int i = 0; i < n; i++)
                 {
                     // j starts with i+1 so that i is always to the left of j
@@ -9621,6 +10419,7 @@ We could optimize the space complexity slightly, by dumping the cached contents 
                 }
                 return count;
             }
+
             /*
             
 Approach 2: Use an Array to Store Frequencies
@@ -9647,12 +10446,10 @@ Complexity Analysis
                 }
                 return count;
             }
-
         }
 
-
         /* 1020. Number of Enclaves
-        https://leetcode.com/problems/number-of-enclaves/description/	
+        https://leetcode.com/problems/number-of-enclaves/description/
          */
         class NumEnclavesSol
         {
@@ -9718,6 +10515,7 @@ o	The recursion stack used by dfs can have no more than O(m⋅n) elements in the
                 }
                 return count;
             }
+
             public void dfs(int x, int y, int m, int n, int[][] grid, bool[][] visit)
             {
                 if (x < 0 || x >= m || y < 0 || y >= n || grid[x][y] == 0 || visit[x][y])
@@ -9796,7 +10594,15 @@ o	The BFS queue takes O(m⋅n) space in the worst-case where each node is added 
                 }
                 return enclaveCount;
             }
-            public void Bfs(int startX, int startY, int rows, int cols, int[,] grid, bool[,] visited)
+
+            public void Bfs(
+                int startX,
+                int startY,
+                int rows,
+                int cols,
+                int[,] grid,
+                bool[,] visited
+            )
             {
                 Queue<int[]> queue = new Queue<int[]>();
                 queue.Enqueue(new int[] { startX, startY });
@@ -9808,8 +10614,8 @@ o	The BFS queue takes O(m⋅n) space in the worst-case where each node is added 
                 while (queue.Count > 0)
                 {
                     int[] current = queue.Dequeue();
-                    startX = current[0];  // row number
-                    startY = current[1];  // column number
+                    startX = current[0]; // row number
+                    startY = current[1]; // column number
 
                     for (int i = 0; i < 4; i++)
                     {
@@ -9828,9 +10634,7 @@ o	The BFS queue takes O(m⋅n) space in the worst-case where each node is added 
                 }
                 return;
             }
-
         }
-
 
         /* 1029. Two City Scheduling
         https://leetcode.com/problems/two-city-scheduling/description/
@@ -9850,13 +10654,15 @@ Some extra space is used when we sort costs in place. The space complexity of th
             */
             public int WithGreedy(int[][] costs)
             {
-                // Sort by a gain which company has 
+                // Sort by a gain which company has
                 // by sending a person to city A and not to city B
-                Array.Sort(costs, (int[] o1, int[] o2) =>
-            {
-                return o1[0] - o1[1] - (o2[0] - o2[1]);
-
-            });
+                Array.Sort(
+                    costs,
+                    (int[] o1, int[] o2) =>
+                    {
+                        return o1[0] - o1[1] - (o2[0] - o2[1]);
+                    }
+                );
 
                 int total = 0;
                 int n = costs.Length / 2;
@@ -9870,80 +10676,6 @@ Some extra space is used when we sort costs in place. The space complexity of th
                 return total;
             }
         }
-
-
-        /* 1032. Stream of Characters
-        https://leetcode.com/problems/stream-of-characters/description/
-         */
-
-
-        class StreamChecker
-        {
-            class TrieNode
-            {
-                public Dictionary<char, TrieNode> Children { get; set; } = new Dictionary<char, TrieNode>();
-                public bool IsWord { get; set; } = false;
-            }
-            /*
-            Approach 1: Trie
- 
-            */
-            private TrieNode trie = new TrieNode();
-            private LinkedList<char> stream = new LinkedList<char>();
-            /* 
-                      Complexity Analysis
-            Let N be the number of input words, and M be the word length.
-            •	Time complexity: O(N⋅M).
-            We have N words to process. At each step, we either examine or create a node in the trie. That takes only M operations.
-            •	Space complexity: O(N⋅M).
-            In the worst case, the newly inserted key doesn't share a prefix with the keys already added in the trie. We have to add N⋅M new nodes, which takes O(N⋅M) space.
-              */
-            public StreamChecker(string[] words)
-            {
-                foreach (string word in words)
-                {
-                    TrieNode node = trie;
-                    char[] reversedWordArray = word.ToCharArray();
-                    Array.Reverse(reversedWordArray);
-                    string reversedWord = new string(reversedWordArray);
-                    foreach (char ch in reversedWord)
-                    {
-                        if (!node.Children.ContainsKey(ch))
-                        {
-                            node.Children[ch] = new TrieNode();
-                        }
-                        node = node.Children[ch];
-                    }
-                    node.IsWord = true;
-                }
-            }
-
-            /* Let M be the maximum length of a word length. i.e. the depth of trie.
-            •	Time complexity: O(M)
-            •	Space complexity: O(M) to keep a stream of characters.
-            One could limit the size of the deque to be equal to the length of the longest input word.
-             */
-            public bool Query(char letter)
-            {
-                stream.AddFirst(letter);
-
-                TrieNode node = trie;
-                foreach (char ch in stream)
-                {
-                    if (node.IsWord)
-                    {
-                        return true;
-                    }
-                    if (!node.Children.ContainsKey(ch))
-                    {
-                        return false;
-                    }
-                    node = node.Children[ch];
-                }
-                return node.IsWord;
-            }
-        }
-
 
         /* 1035. Uncrossed Lines
         https://leetcode.com/problems/uncrossed-lines/description/
@@ -9975,6 +10707,7 @@ o	The recursion stack used in the solution can grow to a maximum size of O(n1+n2
 
                 return Solve(n1, n2, nums1, nums2, memo);
             }
+
             private int Solve(int i, int j, int[] nums1, int[] nums2, int[][] memo)
             {
                 if (i <= 0 || j <= 0)
@@ -9993,11 +10726,14 @@ o	The recursion stack used in the solution can grow to a maximum size of O(n1+n2
                 }
                 else
                 {
-                    memo[i][j] =
-                        Math.Max(Solve(i, j - 1, nums1, nums2, memo), Solve(i - 1, j, nums1, nums2, memo));
+                    memo[i][j] = Math.Max(
+                        Solve(i, j - 1, nums1, nums2, memo),
+                        Solve(i - 1, j, nums1, nums2, memo)
+                    );
                 }
                 return memo[i][j];
             }
+
             /*
             Approach 2: Iterative Dynamic Programming
             Complexity Analysis
@@ -10033,6 +10769,7 @@ o	The dp array consumes O(n1⋅n2) space.
 
                 return dp[n1][n2];
             }
+
             /*
             Approach 3: Dynamic Programming with Space Optimization
             Complexity Analysis
@@ -10070,9 +10807,7 @@ o	The dp array consumes O(n1⋅n2) space.
 
                 return dp[n2];
             }
-
         }
-
 
         /* 1041. Robot Bounded In Circle
         https://leetcode.com/problems/robot-bounded-in-circle/description/
@@ -10092,10 +10827,16 @@ only 4 elements.
             public bool UsingOnePass(String instructions)
             {
                 // north = 0, east = 1, south = 2, west = 3
-                int[][] directions = new int[][] {  new int[]{ 0, 1 },  new int[]{ 1, 0 },
-                                    new int[]{ 0, -1 },  new int[]{ -1, 0 } };
+                int[][] directions = new int[][]
+                {
+                    new int[] { 0, 1 },
+                    new int[] { 1, 0 },
+                    new int[] { 0, -1 },
+                    new int[] { -1, 0 },
+                };
                 // Initial position is in the center
-                int x = 0, y = 0;
+                int x = 0,
+                    y = 0;
                 // facing north
                 int idx = 0;
 
@@ -10157,6 +10898,7 @@ For the Java: We need to convert the input to an ArrayList, and therefore the in
 
                 return stoneList.Count > 0 ? stoneList[0] : 0;
             }
+
             private int RemoveLargest(List<int> stones)
             {
                 int indexOfLargest = stones.IndexOf(stones.Max());
@@ -10165,6 +10907,7 @@ For the Java: We need to convert the input to an ArrayList, and therefore the in
                 stones.RemoveAt(stones.Count - 1);
                 return result;
             }
+
             /*
             Approach 2: Sorted Array-Based Simulation
             Complexity Analysis
@@ -10211,6 +10954,7 @@ An alternative to this approach is to simply sort inside the loop every time. Th
 
                 return stoneList.Count > 0 ? stoneList[0] : 0;
             }
+
             /*
              Approach 3: Heap-Based Simulation
 Complexity Analysis
@@ -10226,7 +10970,6 @@ We could reduce the space complexity to O(1) by implementing our own iterative h
             */
             public int MaxHeapPQ(int[] stones)
             {
-
                 // Insert all the stones into a Max-Heap.
                 PriorityQueue<int, int> heap = new PriorityQueue<int, int>();
                 foreach (int stone in stones)
@@ -10250,6 +10993,7 @@ We could reduce the space complexity to O(1) by implementing our own iterative h
                 // Check whether or not there is a stone left to return.
                 return heap.Count == 0 ? 0 : heap.Dequeue();
             }
+
             /*
             Approach 4: Bucket Sort
 Complexity Analysis
@@ -10266,7 +11010,6 @@ When I looked through the discussion forum for this question, I was surprised to
             */
             public int UsingBucketSort(int[] stones)
             {
-
                 // Set up the bucket array.
                 int maxWeight = stones[0];
                 foreach (int stone in stones)
@@ -10315,9 +11058,7 @@ When I looked through the discussion forum for this question, I was surprised to
                 }
                 return biggestWeight;
             }
-
         }
-
 
         /* 1057. Campus Bikes
         https://leetcode.com/problems/campus-bikes/description/
@@ -10386,6 +11127,7 @@ The total space required is (NM+N+M+NM) hence, the complexity is equal to O(NM).
 
                 return workerStatus;
             }
+
             // Class to store (worker, bike, distance)
             class WorkerBikePair
             {
@@ -10446,25 +11188,31 @@ We store all the pairs corresponding to their distance in disToPairs, which requ
             {
                 return Math.Abs(worker[0] - bike[0]) + Math.Abs(worker[1] - bike[1]);
             }
+
             public int[] WithBucketSort(int[][] workers, int[][] bikes)
             {
                 int minimumDistance = int.MaxValue;
                 // Stores the list of (worker, bike) pairs corresponding to its distance
-                Dictionary<int, List<KeyValuePair<int, int>>> distanceToPairs = new Dictionary<int, List<KeyValuePair<int, int>>>();
+                Dictionary<int, List<KeyValuePair<int, int>>> distanceToPairs =
+                    new Dictionary<int, List<KeyValuePair<int, int>>>();
 
                 // Add the (worker, bike) pair corresponding to its distance list
                 for (int workerIndex = 0; workerIndex < workers.Length; workerIndex++)
                 {
                     for (int bikeIndex = 0; bikeIndex < bikes.Length; bikeIndex++)
                     {
-                        int distance = CalculateManhattanDistance(workers[workerIndex], bikes[bikeIndex]);
+                        int distance = CalculateManhattanDistance(
+                            workers[workerIndex],
+                            bikes[bikeIndex]
+                        );
 
                         if (!distanceToPairs.ContainsKey(distance))
                         {
                             distanceToPairs[distance] = new List<KeyValuePair<int, int>>();
                         }
 
-                        distanceToPairs[distance].Add(new KeyValuePair<int, int>(workerIndex, bikeIndex));
+                        distanceToPairs[distance]
+                            .Add(new KeyValuePair<int, int>(workerIndex, bikeIndex));
                         minimumDistance = Math.Min(minimumDistance, distance);
                     }
                 }
@@ -10493,7 +11241,10 @@ We store all the pairs corresponding to their distance in disToPairs, which requ
                         int workerIndex = pair.Key;
                         int bikeIndex = pair.Value;
 
-                        if (workerBikeAssignmentStatus[workerIndex] == -1 && !bikeAvailabilityStatus[bikeIndex])
+                        if (
+                            workerBikeAssignmentStatus[workerIndex] == -1
+                            && !bikeAvailabilityStatus[bikeIndex]
+                        )
                         {
                             // If both worker and bike are free, assign them to each other
                             bikeAvailabilityStatus[bikeIndex] = true;
@@ -10528,13 +11279,17 @@ Hence, the total space complexity is equal to O(NM).
 
             */
             // List of pairs (distance, bike index) for each bike corresponding to worker
-            private List<List<KeyValuePair<int, int>>> workerToBikeList = new List<List<KeyValuePair<int, int>>>();
+            private List<List<KeyValuePair<int, int>>> workerToBikeList =
+                new List<List<KeyValuePair<int, int>>>();
+
             // Stores the closest bike index, corresponding to the worker index
             private int[] closestBikeIndex = new int[1001];
 
             public int[] WithMaxHeapPQ(int[][] workers, int[][] bikes)
             {
-                var pq = new PriorityQueue<WorkerBikePair, WorkerBikePair>(new WorkerBikePairComparer());
+                var pq = new PriorityQueue<WorkerBikePair, WorkerBikePair>(
+                    new WorkerBikePairComparer()
+                );
 
                 // Add all the bikes along with their distances from the worker
                 for (int worker = 0; worker < workers.Length; worker++)
@@ -10578,7 +11333,6 @@ Hence, the total space complexity is equal to O(NM).
                         // If both worker and bike are free, assign them to each other
                         bikeStatus[bike] = true;
                         workerStatus[worker] = bike;
-
                     }
                     else
                     {
@@ -10589,9 +11343,13 @@ Hence, the total space complexity is equal to O(NM).
 
                 return workerStatus;
             }
-            // Add the closest bike for the worker to the priority queue, 
+
+            // Add the closest bike for the worker to the priority queue,
             // And update the closest bike index
-            private void AddClosestBikeToPriorityQueue(PriorityQueue<WorkerBikePair, WorkerBikePair> pq, int worker)
+            private void AddClosestBikeToPriorityQueue(
+                PriorityQueue<WorkerBikePair, WorkerBikePair> pq,
+                int worker
+            )
             {
                 var closestBike = workerToBikeList[worker][closestBikeIndex[worker]];
                 closestBikeIndex[worker]++;
@@ -10599,11 +11357,7 @@ Hence, the total space complexity is equal to O(NM).
                 var workerBikePair = new WorkerBikePair(worker, closestBike.Value, closestBike.Key);
                 pq.Enqueue(workerBikePair, workerBikePair);
             }
-
-
-
         }
-
 
         /* 1066. Campus Bikes II
 
@@ -10626,6 +11380,7 @@ We have used an array visited to mark if the bike is available or not this will 
                 FindMinimumDistanceSum(workers, 0, bikes, 0);
                 return minimumDistanceSumValue;
             }
+
             // Maximum number of bikes is 10
             private bool[] isBikeVisited = new bool[10];
             private int minimumDistanceSumValue = int.MaxValue;
@@ -10636,14 +11391,19 @@ We have used an array visited to mark if the bike is available or not this will 
                 return Math.Abs(worker[0] - bike[0]) + Math.Abs(worker[1] - bike[1]);
             }
 
-            private void FindMinimumDistanceSum(int[][] workers, int workerIndex, int[][] bikes, int currentDistanceSum)
+            private void FindMinimumDistanceSum(
+                int[][] workers,
+                int workerIndex,
+                int[][] bikes,
+                int currentDistanceSum
+            )
             {
                 if (workerIndex >= workers.Length)
                 {
                     minimumDistanceSumValue = Math.Min(minimumDistanceSumValue, currentDistanceSum);
                     return;
                 }
-                // If the current distance sum is greater than the smallest result 
+                // If the current distance sum is greater than the smallest result
                 // found then stop exploring this combination of workers and bikes
                 if (currentDistanceSum >= minimumDistanceSumValue)
                 {
@@ -10655,12 +11415,18 @@ We have used an array visited to mark if the bike is available or not this will 
                     if (!isBikeVisited[bikeIndex])
                     {
                         isBikeVisited[bikeIndex] = true;
-                        FindMinimumDistanceSum(workers, workerIndex + 1, bikes,
-                            currentDistanceSum + CalculateDistance(workers[workerIndex], bikes[bikeIndex]));
+                        FindMinimumDistanceSum(
+                            workers,
+                            workerIndex + 1,
+                            bikes,
+                            currentDistanceSum
+                                + CalculateDistance(workers[workerIndex], bikes[bikeIndex])
+                        );
                         isBikeVisited[bikeIndex] = false;
                     }
                 }
             }
+
             /*
             Approach 2: Top-Down Dynamic Programming + BitMasking
             Complexity Analysis
@@ -10675,12 +11441,19 @@ We have used an array memo to store the results corresponding to mask. Also, the
             // Maximum value of mask will be 2^(Number of bikes)
             // And number of bikes can be 10 at max
             int[] memo = new int[1024];
+
             public int TopDownDPWithBitMasking(int[][] workers, int[][] bikes)
             {
                 Array.Fill(memo, -1);
                 return MinimumDistanceSum(workers, bikes, 0, 0);
             }
-            private int MinimumDistanceSum(int[][] workers, int[][] bikes, int workerIndex, int mask)
+
+            private int MinimumDistanceSum(
+                int[][] workers,
+                int[][] bikes,
+                int workerIndex,
+                int mask
+            )
             {
                 if (workerIndex >= workers.Length)
                 {
@@ -10699,16 +11472,23 @@ We have used an array memo to store the results corresponding to mask. Also, the
                     {
                         // Adding the current distance and repeat the process for next worker
                         // also changing the bit at index bikeIndex to 1 to show the bike there is assigned
-                        smallestDistanceSum = Math.Min(smallestDistanceSum,
-                                                       CalculateDistance(workers[workerIndex], bikes[bikeIndex]) +
-                                                       MinimumDistanceSum(workers, bikes, workerIndex + 1,
-                                                                          mask | (1 << bikeIndex)));
+                        smallestDistanceSum = Math.Min(
+                            smallestDistanceSum,
+                            CalculateDistance(workers[workerIndex], bikes[bikeIndex])
+                                + MinimumDistanceSum(
+                                    workers,
+                                    bikes,
+                                    workerIndex + 1,
+                                    mask | (1 << bikeIndex)
+                                )
+                        );
                     }
                 }
 
                 // Memoizing the result corresponding to mask
                 return memo[mask] = smallestDistanceSum;
             }
+
             /*
             Approach 3: Bottom-Up Dynamic Programming + BitMasking
             Complexity Analysis
@@ -10725,6 +11505,7 @@ We are only using space in memo with the size equal to 2^M.
                 Array.Fill(memo, int.MaxValue);
                 return MinimumDistanceSum(workers, bikes);
             }
+
             // Count the number of ones using Brian Kernighan’s Algorithm
             private int CountNumberOfOnes(int mask)
             {
@@ -10736,6 +11517,7 @@ We are only using space in memo with the size equal to 2^M.
                 }
                 return count;
             }
+
             private int MinimumDistanceSum(int[][] workers, int[][] bikes)
             {
                 int numberOfBikes = bikes.Length;
@@ -10767,14 +11549,18 @@ We are only using space in memo with the size equal to 2^M.
                             int newMask = (1 << bikeIndex) | mask;
 
                             // Updating the distance sum for newMask
-                            memo[newMask] = Math.Min(memo[newMask], memo[mask] +
-                                                     CalculateDistance(workers[nextWorkerIndex], bikes[bikeIndex]));
+                            memo[newMask] = Math.Min(
+                                memo[newMask],
+                                memo[mask]
+                                    + CalculateDistance(workers[nextWorkerIndex], bikes[bikeIndex])
+                            );
                         }
                     }
                 }
 
                 return smallestDistanceSum;
             }
+
             /*
             Approach 4: Priority Queue (Similar to Dijkstra's Algorithm)
 Complexity Analysis
@@ -10792,9 +11578,12 @@ The number of mask that can be stored in the priority queue is O(P(M,N)), and th
             */
             public int WithPQSimilarToDijkstra(int[][] workers, int[][] bikes)
             {
-                int numOfBikes = bikes.Length, numOfWorkers = workers.Length;
+                int numOfBikes = bikes.Length,
+                    numOfWorkers = workers.Length;
 
-                PriorityQueue<int[], int[]> priorityQueue = new PriorityQueue<int[], int[]>(Comparer<int[]>.Create((a, b) => a[0] - b[0]));
+                PriorityQueue<int[], int[]> priorityQueue = new PriorityQueue<int[], int[]>(
+                    Comparer<int[]>.Create((a, b) => a[0] - b[0])
+                );
                 HashSet<int> visited = new HashSet<int>();
 
                 // Initially both distance sum and mask is 0
@@ -10825,12 +11614,16 @@ The number of mask that can be stored in the priority queue is O(P(M,N)), and th
                         // Checking if the bike at bikeIndex has been assigned or not
                         if ((currentMask & (1 << bikeIndex)) == 0)
                         {
-                            int nextStateDistanceSum = currentDistanceSum +
-                                CalculateDistance(workers[workerIndex], bikes[bikeIndex]);
+                            int nextStateDistanceSum =
+                                currentDistanceSum
+                                + CalculateDistance(workers[workerIndex], bikes[bikeIndex]);
 
                             // Put the next state pair into the priority queue
                             int nextStateMask = currentMask | (1 << bikeIndex);
-                            priorityQueue.Enqueue(new int[] { nextStateDistanceSum, nextStateMask }, new int[] { nextStateDistanceSum, nextStateMask });
+                            priorityQueue.Enqueue(
+                                new int[] { nextStateDistanceSum, nextStateMask },
+                                new int[] { nextStateDistanceSum, nextStateMask }
+                            );
                         }
                     }
                 }
@@ -10838,9 +11631,7 @@ The number of mask that can be stored in the priority queue is O(P(M,N)), and th
                 // This statement will never be executed provided there is at least one bike per worker
                 return -1;
             }
-
         }
-
 
         /* 1125. Smallest Sufficient Team
         https://leetcode.com/problems/smallest-sufficient-team/description/
@@ -10857,9 +11648,13 @@ There are two nested for loops: for skillsMask, which performs O(2^m) iterations
 We store a DP array of size 2^m.
 
             */
-            public int[] BottomUpDPWithBitMasking(string[] requiredSkills, List<List<string>> people)
+            public int[] BottomUpDPWithBitMasking(
+                string[] requiredSkills,
+                List<List<string>> people
+            )
             {
-                int numberOfPeople = people.Count, numberOfSkills = requiredSkills.Length;
+                int numberOfPeople = people.Count,
+                    numberOfSkills = requiredSkills.Length;
                 Dictionary<string, int> skillId = new Dictionary<string, int>();
                 for (int i = 0; i < numberOfSkills; i++)
                 {
@@ -10914,6 +11709,7 @@ We store a DP array of size 2^m.
                 }
                 return count;
             }
+
             /*
             Approach 2: Top-Down Dynamic Programming (Memoization)
 Complexity Analysis
@@ -10922,7 +11718,10 @@ Even though we changed the order of calculating DP, the time complexity is the s
 •	Space complexity: O(2^m).
 
             */
-            public int[] TopDownDPMemoWithBitMasking(string[] requiredSkills, List<List<string>> people)
+            public int[] TopDownDPMemoWithBitMasking(
+                string[] requiredSkills,
+                List<List<string>> people
+            )
             {
                 numberOfPeople = people.Count;
                 int numberOfSkills = requiredSkills.Length;
@@ -10953,6 +11752,7 @@ Even though we changed the order of calculating DP, the time complexity is the s
                 }
                 return answer;
             }
+
             private int CountBits(long number)
             {
                 int count = 0;
@@ -10963,9 +11763,11 @@ Even though we changed the order of calculating DP, the time complexity is the s
                 }
                 return count;
             }
+
             int numberOfPeople;
             int[] skillsMaskOfPerson;
             long[] dp;
+
             private long? CalculateSkillsMask(int skillsMask)
             {
                 if (skillsMask == 0)
@@ -10982,7 +11784,10 @@ Even though we changed the order of calculating DP, the time complexity is the s
                     if (smallerSkillsMask != skillsMask)
                     {
                         long peopleMask = CalculateSkillsMask(smallerSkillsMask).Value | (1L << i);
-                        if (dp[skillsMask] == -1 || CountBits(peopleMask) < CountBits(dp[skillsMask]))
+                        if (
+                            dp[skillsMask] == -1
+                            || CountBits(peopleMask) < CountBits(dp[skillsMask])
+                        )
                         {
                             dp[skillsMask] = peopleMask;
                         }
@@ -10990,8 +11795,6 @@ Even though we changed the order of calculating DP, the time complexity is the s
                 }
                 return dp[skillsMask];
             }
-
-
         }
 
         /* 1162. As Far from Land as Possible
@@ -11010,7 +11813,13 @@ There could be all cells in the queue at a particular time. Considering the matr
 
             */
             // Four directions: Up, Down, Left and Right.
-            int[][] directions = new int[][] { new int[] { -1, 0 }, new int[] { 1, 0 }, new int[] { 0, -1 }, new int[] { 0, 1 } };
+            int[][] directions = new int[][]
+            {
+                new int[] { -1, 0 },
+                new int[] { 1, 0 },
+                new int[] { 0, -1 },
+                new int[] { 0, 1 },
+            };
 
             public int BFS(int[][] grid)
             {
@@ -11055,7 +11864,13 @@ There could be all cells in the queue at a particular time. Considering the matr
                             int x = landCell.Key + direction[0];
                             int y = landCell.Value + direction[1];
 
-                            if (x >= 0 && y >= 0 && x < grid.Length && y < grid[0].Length && visited[x][y] == 0)
+                            if (
+                                x >= 0
+                                && y >= 0
+                                && x < grid.Length
+                                && y < grid[0].Length
+                                && visited[x][y] == 0
+                            )
                             {
                                 // Marking as 1 to avoid re-iterating it.
                                 visited[x][y] = 1;
@@ -11064,7 +11879,7 @@ There could be all cells in the queue at a particular time. Considering the matr
                         }
                     }
 
-                    // After each iteration of queue elements, increment distance 
+                    // After each iteration of queue elements, increment distance
                     // as we covered 1 unit distance from all cells in every direction.
                     distance++;
                 }
@@ -11111,9 +11926,17 @@ The only space we need is the matrix dist of size N∗N to store the minimum dis
                         else
                         {
                             // Check left and top cell distances if they exist and update the current cell distance.
-                            distance[rowIndex][colIndex] = Math.Min(distance[rowIndex][colIndex],
-                                Math.Min(rowIndex > 0 ? distance[rowIndex - 1][colIndex] + 1 : MAX_DISTANCE,
-                                         colIndex > 0 ? distance[rowIndex][colIndex - 1] + 1 : MAX_DISTANCE));
+                            distance[rowIndex][colIndex] = Math.Min(
+                                distance[rowIndex][colIndex],
+                                Math.Min(
+                                    rowIndex > 0
+                                        ? distance[rowIndex - 1][colIndex] + 1
+                                        : MAX_DISTANCE,
+                                    colIndex > 0
+                                        ? distance[rowIndex][colIndex - 1] + 1
+                                        : MAX_DISTANCE
+                                )
+                            );
                         }
                     }
                 }
@@ -11125,9 +11948,17 @@ The only space we need is the matrix dist of size N∗N to store the minimum dis
                     for (int colIndex = numberOfColumns - 1; colIndex >= 0; colIndex--)
                     {
                         // Check the right and bottom cell distances if they exist and update the current cell distance.
-                        distance[rowIndex][colIndex] = Math.Min(distance[rowIndex][colIndex],
-                            Math.Min(rowIndex < numberOfRows - 1 ? distance[rowIndex + 1][colIndex] + 1 : MAX_DISTANCE,
-                                     colIndex < numberOfColumns - 1 ? distance[rowIndex][colIndex + 1] + 1 : MAX_DISTANCE));
+                        distance[rowIndex][colIndex] = Math.Min(
+                            distance[rowIndex][colIndex],
+                            Math.Min(
+                                rowIndex < numberOfRows - 1
+                                    ? distance[rowIndex + 1][colIndex] + 1
+                                    : MAX_DISTANCE,
+                                colIndex < numberOfColumns - 1
+                                    ? distance[rowIndex][colIndex + 1] + 1
+                                    : MAX_DISTANCE
+                            )
+                        );
 
                         maximumDistance = Math.Max(maximumDistance, distance[rowIndex][colIndex]);
                     }
@@ -11135,8 +11966,11 @@ The only space we need is the matrix dist of size N∗N to store the minimum dis
 
                 // If maximumDistance is 0, it means there is no water cell,
                 // If maximumDistance is MAX_DISTANCE, it implies no land cell.
-                return maximumDistance == 0 || maximumDistance == MAX_DISTANCE ? -1 : maximumDistance;
+                return maximumDistance == 0 || maximumDistance == MAX_DISTANCE
+                    ? -1
+                    : maximumDistance;
             }
+
             /*
             Approach 3: Space-Optimized Dynamic-Programming
             Complexity Analysis
@@ -11170,8 +12004,17 @@ We don't need extra space, so the space complexity is constant.
                         {
                             grid[rowIndex][columnIndex] = MAX_DISTANCE;
                             // Check left and top cell distances if they exist and update the current cell distance.
-                            grid[rowIndex][columnIndex] = Math.Min(grid[rowIndex][columnIndex], Math.Min(rowIndex > 0 ? grid[rowIndex - 1][columnIndex] + 1 : MAX_DISTANCE,
-                                                                       columnIndex > 0 ? grid[rowIndex][columnIndex - 1] + 1 : MAX_DISTANCE));
+                            grid[rowIndex][columnIndex] = Math.Min(
+                                grid[rowIndex][columnIndex],
+                                Math.Min(
+                                    rowIndex > 0
+                                        ? grid[rowIndex - 1][columnIndex] + 1
+                                        : MAX_DISTANCE,
+                                    columnIndex > 0
+                                        ? grid[rowIndex][columnIndex - 1] + 1
+                                        : MAX_DISTANCE
+                                )
+                            );
                         }
                     }
                 }
@@ -11183,8 +12026,17 @@ We don't need extra space, so the space complexity is constant.
                     for (int columnIndex = numberOfColumns - 1; columnIndex >= 0; columnIndex--)
                     {
                         // Check the right and bottom cell distances if they exist and update the current cell distance.
-                        grid[rowIndex][columnIndex] = Math.Min(grid[rowIndex][columnIndex], Math.Min(rowIndex < numberOfRows - 1 ? grid[rowIndex + 1][columnIndex] + 1 : MAX_DISTANCE,
-                                                                   columnIndex < numberOfColumns - 1 ? grid[rowIndex][columnIndex + 1] + 1 : MAX_DISTANCE));
+                        grid[rowIndex][columnIndex] = Math.Min(
+                            grid[rowIndex][columnIndex],
+                            Math.Min(
+                                rowIndex < numberOfRows - 1
+                                    ? grid[rowIndex + 1][columnIndex] + 1
+                                    : MAX_DISTANCE,
+                                columnIndex < numberOfColumns - 1
+                                    ? grid[rowIndex][columnIndex + 1] + 1
+                                    : MAX_DISTANCE
+                            )
+                        );
 
                         answer = Math.Max(answer, grid[rowIndex][columnIndex]);
                     }
@@ -11195,7 +12047,6 @@ We don't need extra space, so the space complexity is constant.
                 return answer == 0 || answer == MAX_DISTANCE ? -1 : answer;
             }
         }
-
 
         /* 317. Shortest Distance from All Buildings
         https://leetcode.com/problems/shortest-distance-from-all-buildings/description/
@@ -11245,7 +12096,10 @@ Hence, O(N⋅M) space is required.
                     {
                         if (grid[row][col] == 0)
                         {
-                            minimumDistance = Math.Min(minimumDistance, PerformBfs(grid, row, col, totalHouses));
+                            minimumDistance = Math.Min(
+                                minimumDistance,
+                                PerformBfs(grid, row, col, totalHouses)
+                            );
                         }
                     }
                 }
@@ -11259,11 +12113,16 @@ Hence, O(N⋅M) space is required.
                 return minimumDistance;
             }
 
-
             private int PerformBfs(int[][] grid, int startRow, int startCol, int totalHouses)
             {
                 // Next four directions.
-                int[][] directions = new int[][] { new int[] { 1, 0 }, new int[] { -1, 0 }, new int[] { 0, 1 }, new int[] { 0, -1 } };
+                int[][] directions = new int[][]
+                {
+                    new int[] { 1, 0 },
+                    new int[] { -1, 0 },
+                    new int[] { 0, 1 },
+                    new int[] { 0, -1 },
+                };
 
                 int totalRows = grid.Length;
                 int totalCols = grid[0].Length;
@@ -11302,7 +12161,12 @@ Hence, O(N⋅M) space is required.
                         {
                             int nextRow = startRow + direction[0];
                             int nextCol = startCol + direction[1];
-                            if (nextRow >= 0 && nextCol >= 0 && nextRow < totalRows && nextCol < totalCols)
+                            if (
+                                nextRow >= 0
+                                && nextCol >= 0
+                                && nextRow < totalRows
+                                && nextCol < totalCols
+                            )
                             {
                                 if (!visited[nextRow, nextCol] && grid[nextRow][nextCol] != 2)
                                 {
@@ -11405,9 +12269,16 @@ Hence, O(N⋅M) space is required.
                 }
                 return minDistance;
             }
+
             private void Bfs(int[][] grid, int[][][] distances, int row, int col)
             {
-                int[][] directions = new int[][] { new int[] { 1, 0 }, new int[] { -1, 0 }, new int[] { 0, 1 }, new int[] { 0, -1 } };
+                int[][] directions = new int[][]
+                {
+                    new int[] { 1, 0 },
+                    new int[] { -1, 0 },
+                    new int[] { 0, 1 },
+                    new int[] { 0, -1 },
+                };
 
                 int rows = grid.Length;
                 int cols = grid[0].Length;
@@ -11463,8 +12334,9 @@ Hence, O(N⋅M) space is required.
                     steps++;
                 }
             }
+
             /*
-            Approach 3: BFS from Houses to Empty Land (Optimized)	
+            Approach 3: BFS from Houses to Empty Land (Optimized)
            Complexity Analysis
  Let N and M be the number of rows and columns in grid respectively.
  •	Time Complexity: O(N^2⋅M^2)
@@ -11479,7 +12351,13 @@ Hence, O(N⋅M) space is required.
             public int BFSFromHousesToEmptyLandOptimal(int[][] grid)
             {
                 // Next four directions.
-                int[][] directions = new int[][] { new int[] { 1, 0 }, new int[] { -1, 0 }, new int[] { 0, 1 }, new int[] { 0, -1 } };
+                int[][] directions = new int[][]
+                {
+                    new int[] { 1, 0 },
+                    new int[] { -1, 0 },
+                    new int[] { 0, 1 },
+                    new int[] { 0, -1 },
+                };
 
                 int rowCount = grid.Length;
                 int colCount = grid[0].Length;
@@ -11524,15 +12402,22 @@ Hence, O(N⋅M) space is required.
 
                                         // For each cell with the value equal to empty land value
                                         // add distance and decrement the cell value by 1.
-                                        if (nextRow >= 0 && nextRow < rowCount &&
-                                            nextCol >= 0 && nextCol < colCount &&
-                                            grid[nextRow][nextCol] == emptyLandValue)
+                                        if (
+                                            nextRow >= 0
+                                            && nextRow < rowCount
+                                            && nextCol >= 0
+                                            && nextCol < colCount
+                                            && grid[nextRow][nextCol] == emptyLandValue
+                                        )
                                         {
                                             grid[nextRow][nextCol]--;
                                             totalDistance[nextRow][nextCol] += steps;
 
                                             queue.Enqueue(new int[] { nextRow, nextCol });
-                                            minimumDistance = Math.Min(minimumDistance, totalDistance[nextRow][nextCol]);
+                                            minimumDistance = Math.Min(
+                                                minimumDistance,
+                                                totalDistance[nextRow][nextCol]
+                                            );
                                         }
                                     }
                                 }
@@ -11546,9 +12431,7 @@ Hence, O(N⋅M) space is required.
 
                 return minimumDistance == int.MaxValue ? -1 : minimumDistance;
             }
-
         }
-
 
         /* 296. Best Meeting Point
         https://leetcode.com/problems/best-meeting-point/description/
@@ -11614,6 +12497,7 @@ The visited table consists of m×n elements map to each point in the grid. We in
                 public int Row { get; }
                 public int Col { get; }
                 public int Distance { get; }
+
                 public Point(int row, int col, int distance = 0)
                 {
                     Row = row;
@@ -11669,6 +12553,7 @@ The visited table consists of m×n elements map to each point in the grid. We in
                 }
                 return points;
             }
+
             /*             Approach #3 (Sorting) [Accepted]
             Complexity analysis
             •	Time complexity : O(mn+nlogn).
@@ -11723,7 +12608,6 @@ Complexity analysis
                 return MinDistance1D(rows, row) + MinDistance1D(cols, col);
             }
 
-
             private List<int> CollectRows(int[][] grid)
             {
                 List<int> rows = new List<int>();
@@ -11755,6 +12639,7 @@ Complexity analysis
                 }
                 return cols;
             }
+
             /*
  Approach #4.1 (Collect Coordinates in Sorted Order And without Median) [Accepted]
 Complexity analysis
@@ -11768,6 +12653,7 @@ Complexity analysis
                 List<int> cols = CollectCols(grid);
                 return MinDistance1D(rows) + MinDistance1D(cols);
             }
+
             private int MinDistance1D(List<int> points)
             {
                 int distance = 0;
@@ -11781,10 +12667,7 @@ Complexity analysis
                 }
                 return distance;
             }
-
         }
-
-
 
         /* 1129. Shortest Path with Alternating Colors
         https://leetcode.com/problems/shortest-path-with-alternating-colors/description/
@@ -11806,7 +12689,8 @@ o	The other visit and answers arrays take O(n) space.
             */
             public int[] BFS(int nodeCount, int[][] redEdges, int[][] blueEdges)
             {
-                Dictionary<int, List<List<int>>> adjacencyList = new Dictionary<int, List<List<int>>>();
+                Dictionary<int, List<List<int>>> adjacencyList =
+                    new Dictionary<int, List<List<int>>>();
 
                 foreach (int[] redEdge in redEdges)
                 {
@@ -11839,7 +12723,9 @@ o	The other visit and answers arrays take O(n) space.
                 while (queue.Count > 0)
                 {
                     int[] currentElement = queue.Dequeue();
-                    int currentNode = currentElement[0], currentSteps = currentElement[1], previousColor = currentElement[2];
+                    int currentNode = currentElement[0],
+                        currentSteps = currentElement[1],
+                        previousColor = currentElement[2];
 
                     if (!adjacencyList.ContainsKey(currentNode))
                     {
@@ -11864,8 +12750,6 @@ o	The other visit and answers arrays take O(n) space.
                 return result;
             }
         }
-
-
 
         /* 1167. Minimum Cost to Connect Sticks
         https://leetcode.com/problems/minimum-cost-to-connect-sticks/description/
@@ -11911,8 +12795,6 @@ o	Step 2) We remove two of the smallest elements and then add one element to the
             }
         }
 
-
-
         /* 1168. Optimize Water Distribution in a Village
         https://leetcode.com/problems/optimize-water-distribution-in-a-village/description/ */
 
@@ -11937,13 +12819,20 @@ o	Finally, in the worst case, the heap we used might hold all the edges in the g
 o	To summarize, the overall space complexity of the algorithm is O(N+M).
        
             */
-            public int PrimsAlgoWithHeap(int numberOfHouses, int[] wellCosts, int[][] pipeConnections)
+            public int PrimsAlgoWithHeap(
+                int numberOfHouses,
+                int[] wellCosts,
+                int[][] pipeConnections
+            )
             {
                 // min heap to maintain the order of edges to be visited.
-                PriorityQueue<KeyValuePair<int, int>, int> edgesHeap = new PriorityQueue<KeyValuePair<int, int>, int>();
+                PriorityQueue<KeyValuePair<int, int>, int> edgesHeap =
+                    new PriorityQueue<KeyValuePair<int, int>, int>();
 
                 // representation of graph in adjacency list
-                List<List<KeyValuePair<int, int>>> graph = new List<List<KeyValuePair<int, int>>>(numberOfHouses + 1);
+                List<List<KeyValuePair<int, int>>> graph = new List<List<KeyValuePair<int, int>>>(
+                    numberOfHouses + 1
+                );
                 for (int i = 0; i < numberOfHouses + 1; ++i)
                 {
                     graph.Add(new List<KeyValuePair<int, int>>());
@@ -11953,7 +12842,10 @@ o	To summarize, the overall space complexity of the algorithm is O(N+M).
                 //   then add an edge to each of the house weighted by the cost
                 for (int i = 0; i < wellCosts.Length; ++i)
                 {
-                    KeyValuePair<int, int> virtualEdge = new KeyValuePair<int, int>(wellCosts[i], i + 1);
+                    KeyValuePair<int, int> virtualEdge = new KeyValuePair<int, int>(
+                        wellCosts[i],
+                        i + 1
+                    );
                     graph[0].Add(virtualEdge);
                     // initialize the heap with the edges from the virtual vertex.
                     edgesHeap.Enqueue(virtualEdge, wellCosts[i]);
@@ -12000,7 +12892,8 @@ o	To summarize, the overall space complexity of the algorithm is O(N+M).
 
                 return totalCost;
             }
-            /* Approach 2: Kruskal's Algorithm with Union-Find 
+
+            /* Approach 2: Kruskal's Algorithm with Union-Find
             Complexity Analysis
             Since we applied the Union-Find data structure in our algorithm, let's begin with a statement on the time complexity of the data structure:
             If K operations, either Union or Find, are applied to L elements, the total run time is O(K⋅log∗L), where log∗ is the iterated logarithm.
@@ -12056,6 +12949,7 @@ o	To summarize, the overall space complexity of the algorithm is O(N+M).
 
                 return totalCost;
             }
+
             class UnionFind
             {
                 /**
@@ -12127,10 +13021,7 @@ o	To summarize, the overall space complexity of the algorithm is O(N+M).
             /*
 
             */
-
         }
-
-
 
         /* 1192. Critical Connections in a Network
         https://leetcode.com/problems/critical-connections-in-a-network/description/ */
@@ -12147,7 +13038,10 @@ o	To summarize, the overall space complexity of the algorithm is O(N+M).
             •	Space Complexity: O(E). The overall space complexity is a sum of the space occupied by the connDict dictionary, rank dictionary, and graph data structure. E+V+(V+E) = O(E).
 
             */
-            public List<List<int>> DFSForCycleDetectUsingTarjansAlgo(int n, List<List<int>> connections)
+            public List<List<int>> DFSForCycleDetectUsingTarjansAlgo(
+                int n,
+                List<List<int>> connections
+            )
             {
                 this.FormGraph(n, connections);
                 this.Dfs(0, 0);
@@ -12155,7 +13049,9 @@ o	To summarize, the overall space complexity of the algorithm is O(N+M).
                 List<List<int>> result = new List<List<int>>();
                 foreach (var criticalConnection in this.connDict.Keys)
                 {
-                    result.Add(new List<int> { criticalConnection.Item1, criticalConnection.Item2 });
+                    result.Add(
+                        new List<int> { criticalConnection.Item1, criticalConnection.Item2 }
+                    );
                 }
 
                 return result;
@@ -12190,7 +13086,8 @@ o	To summarize, the overall space complexity of the algorithm is O(N+M).
                     // Step 1, check if this edge needs to be discarded.
                     if (recursiveRank <= discoveryRank)
                     {
-                        int sortedU = Math.Min(node, neighbor), sortedV = Math.Max(node, neighbor);
+                        int sortedU = Math.Min(node, neighbor),
+                            sortedV = Math.Max(node, neighbor);
                         this.connDict.Remove((sortedU, sortedV));
                     }
 
@@ -12217,16 +13114,17 @@ o	To summarize, the overall space complexity of the algorithm is O(N+M).
                 foreach (var edge in connections)
                 {
                     // Bidirectional edges
-                    int u = edge[0], v = edge[1];
+                    int u = edge[0],
+                        v = edge[1];
                     this.graph[u].Add(v);
                     this.graph[v].Add(u);
 
-                    int sortedU = Math.Min(u, v), sortedV = Math.Max(u, v);
+                    int sortedU = Math.Min(u, v),
+                        sortedV = Math.Max(u, v);
                     connDict[(sortedU, sortedV)] = true;
                 }
             }
         }
-
 
         /* 1182. Shortest Distance to Target Color
         https://leetcode.com/problems/shortest-distance-to-target-color/description/
@@ -12261,7 +13159,8 @@ This is because we store the indexes of each color - index pair in a hashmap.
                 // for each query, apply binary search
                 for (int i = 0; i < queries.Length; i++)
                 {
-                    int targetIndex = queries[i][0], color = queries[i][1];
+                    int targetIndex = queries[i][0],
+                        color = queries[i][1];
                     if (!colorIndexMap.ContainsKey(color))
                     {
                         queryResults.Add(-1);
@@ -12318,7 +13217,12 @@ This is because we store the indexes of each color - index pair in a hashmap.
                 // initializations
                 int numberOfColors = colors.Length;
                 int[] rightmostIndex = { 0, 0, 0 };
-                int[] leftmostIndex = { numberOfColors - 1, numberOfColors - 1, numberOfColors - 1 };
+                int[] leftmostIndex =
+                {
+                    numberOfColors - 1,
+                    numberOfColors - 1,
+                    numberOfColors - 1,
+                };
 
                 int[][] distanceArray = new int[3][];
                 for (int i = 0; i < 3; i++)
@@ -12364,7 +13268,6 @@ This is because we store the indexes of each color - index pair in a hashmap.
             }
         }
 
-
         /* 1197. Minimum Knight Moves
         https://leetcode.com/problems/minimum-knight-moves/description/
          */
@@ -12387,10 +13290,17 @@ This is because we store the indexes of each color - index pair in a hashmap.
             public int BFS(int targetX, int targetY)
             {
                 // the offsets in the eight directions
-                int[][] offsets = new int[][] {
-            new int[] { 1, 2 }, new int[] { 2, 1 }, new int[] { 2, -1 }, new int[] { 1, -2 },
-            new int[] { -1, -2 }, new int[] { -2, -1 }, new int[] { -2, 1 }, new int[] { -1, 2 }
-        };
+                int[][] offsets = new int[][]
+                {
+                    new int[] { 1, 2 },
+                    new int[] { 2, 1 },
+                    new int[] { 2, -1 },
+                    new int[] { 1, -2 },
+                    new int[] { -1, -2 },
+                    new int[] { -2, -1 },
+                    new int[] { -2, 1 },
+                    new int[] { -1, 2 },
+                };
 
                 // - Rather than using the inefficient HashSet, we use the bitmap
                 //     otherwise we would run out of time for the test cases.
@@ -12434,6 +13344,7 @@ This is because we store the indexes of each color - index pair in a hashmap.
                 // move on to the next level
                 return steps;
             }
+
             /*
             Approach 2: Bidirectional BFS
             Complexity Analysis
@@ -12452,8 +13363,14 @@ This is because we store the indexes of each color - index pair in a hashmap.
                 // the offsets in the eight directions
                 int[][] offsets = new int[][]
                 {
-            new int[] { 1, 2 }, new int[] { 2, 1 }, new int[] { 2, -1 }, new int[] { 1, -2 },
-            new int[] { -1, -2 }, new int[] { -2, -1 }, new int[] { -2, 1 }, new int[] { -1, 2 }
+                    new int[] { 1, 2 },
+                    new int[] { 2, 1 },
+                    new int[] { 2, -1 },
+                    new int[] { 1, -2 },
+                    new int[] { -1, -2 },
+                    new int[] { -2, -1 },
+                    new int[] { -2, 1 },
+                    new int[] { -1, 2 },
                 };
 
                 // data structures needed to move from the origin point
@@ -12491,25 +13408,38 @@ This is because we store the indexes of each color - index pair in a hashmap.
                     foreach (int[] offset in offsets)
                     {
                         // expand the circle of origin
-                        int[] nextOrigin = new int[] { origin[0] + offset[0], origin[1] + offset[1] };
+                        int[] nextOrigin = new int[]
+                        {
+                            origin[0] + offset[0],
+                            origin[1] + offset[1],
+                        };
                         string nextOriginCoordinates = nextOrigin[0] + "," + nextOrigin[1];
                         if (!originDistance.ContainsKey(nextOriginCoordinates))
                         {
-                            originQueue.AddLast(new int[] { nextOrigin[0], nextOrigin[1], origin[2] + 1 });
+                            originQueue.AddLast(
+                                new int[] { nextOrigin[0], nextOrigin[1], origin[2] + 1 }
+                            );
                             originDistance[nextOriginCoordinates] = origin[2] + 1;
                         }
 
                         // expand the circle of target
-                        int[] nextTarget = new int[] { target[0] + offset[0], target[1] + offset[1] };
+                        int[] nextTarget = new int[]
+                        {
+                            target[0] + offset[0],
+                            target[1] + offset[1],
+                        };
                         string nextTargetCoordinates = nextTarget[0] + "," + nextTarget[1];
                         if (!targetDistance.ContainsKey(nextTargetCoordinates))
                         {
-                            targetQueue.AddLast(new int[] { nextTarget[0], nextTarget[1], target[2] + 1 });
+                            targetQueue.AddLast(
+                                new int[] { nextTarget[0], nextTarget[1], target[2] + 1 }
+                            );
                             targetDistance[nextTargetCoordinates] = target[2] + 1;
                         }
                     }
                 }
             }
+
             /*
             Approach 3: DFS (Depth-First Search) with Memoization
             Complexity Analysis
@@ -12534,6 +13464,7 @@ This is because we store the indexes of each color - index pair in a hashmap.
             {
                 return Dfs(Math.Abs(x), Math.Abs(y));
             }
+
             private Dictionary<string, int> memo = new Dictionary<string, int>();
 
             private int Dfs(int x, int y)
@@ -12554,16 +13485,16 @@ This is because we store the indexes of each color - index pair in a hashmap.
                 }
                 else
                 {
-                    int ret = Math.Min(Dfs(Math.Abs(x - 1), Math.Abs(y - 2)),
-                                       Dfs(Math.Abs(x - 2), Math.Abs(y - 1))) + 1;
+                    int ret =
+                        Math.Min(
+                            Dfs(Math.Abs(x - 1), Math.Abs(y - 2)),
+                            Dfs(Math.Abs(x - 2), Math.Abs(y - 1))
+                        ) + 1;
                     memo[key] = ret;
                     return ret;
                 }
             }
-
-
         }
-
 
         /* 1217. Minimum Cost to Move Chips to The Same Position
         https://leetcode.com/problems/minimum-cost-to-move-chips-to-the-same-position/description/
@@ -12596,13 +13527,12 @@ Let N be the length of position.
             }
         }
 
-
         /* 1229. Meeting Scheduler
         https://leetcode.com/problems/meeting-scheduler/description/ */
         class MinAvailableDurationSol
         {
             /*
-Approach 1: Sorting + Two pointers 
+Approach 1: Sorting + Two pointers
             Complexity Analysis
 •	Time complexity: O(MlogM+NlogN), when M is the length of slots1 and N is the length of slots2.
 Sorting both arrays would take O(MlogM+NlogN). The two pointers take O(M+N) because, during each iteration, we would visit a new element, and there are a total of M+N elements. Putting these together, the total time complexity is O(MlogM+NlogN).
@@ -12610,12 +13540,17 @@ Sorting both arrays would take O(MlogM+NlogN). The two pointers take O(M+N) beca
 Some extra space is used when we sort an array of size n in place. The space complexity of the sorting algorithm depends on the programming language.
 Thus, the total space complexity of the algorithm is O(n) or O(logn).
             */
-            public List<int> UsingSortingAndTwoPointers(int[][] slots1, int[][] slots2, int duration)
+            public List<int> UsingSortingAndTwoPointers(
+                int[][] slots1,
+                int[][] slots2,
+                int duration
+            )
             {
                 Array.Sort(slots1, (a, b) => a[0] - b[0]);
                 Array.Sort(slots2, (a, b) => a[0] - b[0]);
 
-                int pointer1 = 0, pointer2 = 0;
+                int pointer1 = 0,
+                    pointer2 = 0;
 
                 while (pointer1 < slots1.Length && pointer2 < slots2.Length)
                 {
@@ -12638,6 +13573,7 @@ Thus, the total space complexity of the algorithm is O(n) or O(logn).
                 }
                 return new List<int>();
             }
+
             /*
             Approach 2: Heap
             Complexity Analysis
@@ -12650,15 +13586,19 @@ When we put these two parts together, the total time complexity is O((M+N)log(M+
             */
             public List<int> UsingHeapPQ(int[][] slots1, int[][] slots2, int duration)
             {
-                PriorityQueue<int[], int[]> timeSlots = new PriorityQueue<int[], int[]>(Comparer<int[]>.Create((slot1, slot2) => slot1[0] - slot2[0]));
+                PriorityQueue<int[], int[]> timeSlots = new PriorityQueue<int[], int[]>(
+                    Comparer<int[]>.Create((slot1, slot2) => slot1[0] - slot2[0])
+                );
 
                 foreach (int[] slot in slots1)
                 {
-                    if (slot[1] - slot[0] >= duration) timeSlots.Enqueue(slot, slot);
+                    if (slot[1] - slot[0] >= duration)
+                        timeSlots.Enqueue(slot, slot);
                 }
                 foreach (int[] slot in slots2)
                 {
-                    if (slot[1] - slot[0] >= duration) timeSlots.Enqueue(slot, slot);
+                    if (slot[1] - slot[0] >= duration)
+                        timeSlots.Enqueue(slot, slot);
                 }
 
                 while (timeSlots.Count > 1)
@@ -12672,9 +13612,7 @@ When we put these two parts together, the total time complexity is O((M+N)log(M+
                 }
                 return new List<int>();
             }
-
         }
-
 
         /* 1236. Web Crawler
         https://leetcode.com/problems/web-crawler/description/ */
@@ -12682,7 +13620,7 @@ When we put these two parts together, the total time complexity is O((M+N)log(M+
         class CrawlSol
         {
             /*
-            Note: In an interview, you probably want to mention to use DFS for different domains and BFS for paths under each domain considering 
+            Note: In an interview, you probably want to mention to use DFS for different domains and BFS for paths under each domain considering
             factors like pressure to a website, infinitely deep paths, TCP keepalive, etc. Also, don't forget to use a probabilistic filter like bloomfilter in front of a hash set.
             */
 
@@ -12705,6 +13643,7 @@ When we put these two parts together, the total time complexity is O((M+N)log(M+
                 Dfs(startUrl, htmlParser);
                 return new List<string>(visited);
             }
+
             public class HtmlParser
             {
                 public List<String> GetUrls(String url)
@@ -12712,6 +13651,7 @@ When we put these two parts together, the total time complexity is O((M+N)log(M+
                     return new List<string>(); //Dummy code }
                 }
             }
+
             private string startHostname;
             private HashSet<string> visited = new HashSet<string>();
 
@@ -12770,9 +13710,7 @@ When we put these two parts together, the total time complexity is O((M+N)log(M+
                 }
                 return new List<string>(visitedSet);
             }
-
         }
-
 
         /* 1242. Web Crawler Multithreaded
         https://leetcode.com/problems/web-crawler-multithreaded/description/
@@ -12788,7 +13726,8 @@ When we put these two parts together, the total time complexity is O((M+N)log(M+
 
                 public IList<string> Crawl(string startUrl, HtmlParser htmlParser)
                 {
-                    ConcurrentDictionary<string, bool> dict = new ConcurrentDictionary<string, bool>();
+                    ConcurrentDictionary<string, bool> dict =
+                        new ConcurrentDictionary<string, bool>();
                     if (IsValidHost(GetHostName(startUrl)))
                     {
                         dict[startUrl] = true;
@@ -12797,13 +13736,21 @@ When we put these two parts together, the total time complexity is O((M+N)log(M+
                     return dict.Keys.ToList();
                 }
 
-                private async Task CrawlPage(string url, HtmlParser htmlParser, ConcurrentDictionary<string, bool> dict)
+                private async Task CrawlPage(
+                    string url,
+                    HtmlParser htmlParser,
+                    ConcurrentDictionary<string, bool> dict
+                )
                 {
                     IList<String> crawledUrls = htmlParser.GetUrls(url);
                     List<Task> tasks = new();
                     foreach (string c in crawledUrls)
                     {
-                        if (!dict.ContainsKey(c) && GetHostName(url).Equals(GetHostName(c)) && IsValidHost(GetHostName(c)))
+                        if (
+                            !dict.ContainsKey(c)
+                            && GetHostName(url).Equals(GetHostName(c))
+                            && IsValidHost(GetHostName(c))
+                        )
                         {
                             dict[c] = true;
                             tasks.Add(Task.Run(async () => await CrawlPage(c, htmlParser, dict)));
@@ -12829,11 +13776,7 @@ When we put these two parts together, the total time complexity is O((M+N)log(M+
                     return Regex.IsMatch(hostName, @"[a-z0-9.][a-z0-9.-]*[a-z0-9.]$");
                 }
             }
-
-
         }
-
-
 
         /* 1259. Handshakes That Don't Cross
         https://leetcode.com/problems/handshakes-that-dont-cross/description/ */
@@ -12841,6 +13784,7 @@ When we put these two parts together, the total time complexity is O((M+N)log(M+
         class NumberOfWaysSol
         {
             private static int m = 1000000007;
+
             /*
             Approach 1: Bottom-Up Dynamic Programming
             Complexity Analysis
@@ -12920,7 +13864,8 @@ We use the array inv of size O(n) for storing inverse elements.
                 inv[1] = 1;
                 for (int i = 2; i < n + 2; i++)
                 {
-                    int k = m / i, r = m % i;
+                    int k = m / i,
+                        r = m % i;
                     inv[i] = m - mul(k, inv[r]);
                 }
                 int C = 1;
@@ -12931,8 +13876,6 @@ We use the array inv of size O(n) for storing inverse elements.
                 return C;
             }
         }
-
-
 
         /* 1268. Search Suggestions System
         https://leetcode.com/problems/search-suggestions-system/description/ */
@@ -12952,7 +13895,9 @@ Space required for output is O(m) where m is the length of the search word.
             {
                 Array.Sort(products);
                 List<List<string>> result = new List<List<string>>();
-                int start = 0, binarySearchStart = 0, n = products.Length;
+                int start = 0,
+                    binarySearchStart = 0,
+                    n = products.Length;
                 string prefix = string.Empty;
 
                 foreach (char c in searchWord)
@@ -12970,7 +13915,10 @@ Space required for output is O(m) where m is the length of the search word.
                     // prefix is the same for `products[i]` Whichever comes first.
                     for (int i = start; i < Math.Min(start + 3, n); i++)
                     {
-                        if (products[i].Length < prefix.Length || !products[i].Substring(0, prefix.Length).Equals(prefix))
+                        if (
+                            products[i].Length < prefix.Length
+                            || !products[i].Substring(0, prefix.Length).Equals(prefix)
+                        )
                             break;
                         result[result.Count - 1].Add(products[i]);
                     }
@@ -12980,10 +13928,13 @@ Space required for output is O(m) where m is the length of the search word.
                 }
                 return result;
             }
+
             // Equivalent code for lower_bound in C#
             int LowerBound(string[] products, int start, string word)
             {
-                int i = start, j = products.Length, mid;
+                int i = start,
+                    j = products.Length,
+                    mid;
                 while (i < j)
                 {
                     mid = (i + j) / 2;
@@ -13019,9 +13970,9 @@ Space required for output is O(m) where m is the length of the search word.
                 }
                 return result;
             }
+
             public class Trie
             {
-
                 // Node definition of a trie
                 private class Node
                 {
@@ -13029,7 +13980,8 @@ Space required for output is O(m) where m is the length of the search word.
                     public List<Node> Children = new List<Node>(new Node[26]);
                 };
 
-                private Node root, current;
+                private Node root,
+                    current;
                 private List<string> resultBuffer;
 
                 // Runs a DFS on trie starting with given prefix and adds all the words in the resultBuffer, limiting result size to 3
@@ -13054,7 +14006,6 @@ Space required for output is O(m) where m is the length of the search word.
                 // Inserts the string in trie.
                 public void Insert(string s)
                 {
-
                     // Points current to the root of trie.
                     current = root;
                     foreach (char c in s)
@@ -13083,9 +14034,7 @@ Space required for output is O(m) where m is the length of the search word.
                     return resultBuffer;
                 }
             }
-
         }
-
 
         /* 1274. Number of Ships in a Rectangle
         https://leetcode.com/problems/number-of-ships-in-a-rectangle/description/
@@ -13109,7 +14058,7 @@ Each call to countShips uses only constant space so our space complexity is dire
             */
             public int DivideAndConquer(Sea sea, int[] topRight, int[] bottomLeft)
             {
-                // If the current rectangle does not contain any ships, return 0.         
+                // If the current rectangle does not contain any ships, return 0.
                 if (bottomLeft[0] > topRight[0] || bottomLeft[1] > topRight[1])
                     return 0;
                 if (!sea.HasShips(topRight, bottomLeft))
@@ -13122,17 +14071,28 @@ Each call to countShips uses only constant space so our space complexity is dire
                 // Recursively check each of the 4 sub-rectangles for ships
                 int midX = (topRight[0] + bottomLeft[0]) / 2;
                 int midY = (topRight[1] + bottomLeft[1]) / 2;
-                return DivideAndConquer(sea, new int[] { midX, midY }, bottomLeft) +
-                       DivideAndConquer(sea, topRight, new int[] { midX + 1, midY + 1 }) +
-                       DivideAndConquer(sea, new int[] { midX, topRight[1] }, new int[] { bottomLeft[0], midY + 1 }) +
-                       DivideAndConquer(sea, new int[] { topRight[0], midY }, new int[] { midX + 1, bottomLeft[1] });
+                return DivideAndConquer(sea, new int[] { midX, midY }, bottomLeft)
+                    + DivideAndConquer(sea, topRight, new int[] { midX + 1, midY + 1 })
+                    + DivideAndConquer(
+                        sea,
+                        new int[] { midX, topRight[1] },
+                        new int[] { bottomLeft[0], midY + 1 }
+                    )
+                    + DivideAndConquer(
+                        sea,
+                        new int[] { topRight[0], midY },
+                        new int[] { midX + 1, bottomLeft[1] }
+                    );
             }
+
             public class Sea
             {
-                public bool HasShips(int[] topRight, int[] bottomLeft) { return false; } //Dummy logic;
+                public bool HasShips(int[] topRight, int[] bottomLeft)
+                {
+                    return false;
+                } //Dummy logic;
             }
         }
-
 
         /* 1293. Shortest Path in a Grid with Obstacles Elimination
         https://leetcode.com/problems/shortest-path-in-a-grid-with-obstacles-elimination/description/
@@ -13155,7 +14115,8 @@ o	To sum up, the overall space complexity of the algorithm is O(N⋅K).
             */
             public int BFS(int[][] grid, int k)
             {
-                int rows = grid.Length, cols = grid[0].Length;
+                int rows = grid.Length,
+                    cols = grid[0].Length;
                 int[] target = { rows - 1, cols - 1 };
 
                 // if we have sufficient quotas to eliminate the obstacles in the worst case,
@@ -13184,8 +14145,17 @@ o	To sum up, the overall space complexity of the algorithm is O(N⋅K).
                         return curr.Steps;
                     }
 
-                    int[] nextSteps = { curr.Row, curr.Col + 1, curr.Row + 1, curr.Col,
-                    curr.Row, curr.Col - 1, curr.Row - 1, curr.Col };
+                    int[] nextSteps =
+                    {
+                        curr.Row,
+                        curr.Col + 1,
+                        curr.Row + 1,
+                        curr.Col,
+                        curr.Row,
+                        curr.Col - 1,
+                        curr.Row - 1,
+                        curr.Col,
+                    };
 
                     // explore the four directions in the next step
                     for (int i = 0; i < nextSteps.Length; i += 2)
@@ -13200,7 +14170,12 @@ o	To sum up, the overall space complexity of the algorithm is O(N⋅K).
                         }
 
                         int nextElimination = curr.RemainingEliminations - grid[nextRow][nextCol];
-                        StepState newState = new StepState(curr.Steps + 1, nextRow, nextCol, nextElimination);
+                        StepState newState = new StepState(
+                            curr.Steps + 1,
+                            nextRow,
+                            nextCol,
+                            nextElimination
+                        );
 
                         // add the next move in the queue if it qualifies.
                         if (nextElimination >= 0 && !seen.Contains(newState))
@@ -13214,6 +14189,7 @@ o	To sum up, the overall space complexity of the algorithm is O(N⋅K).
                 // did not reach the target
                 return -1;
             }
+
             class StepState
             {
                 /**
@@ -13249,7 +14225,9 @@ o	To sum up, the overall space complexity of the algorithm is O(N⋅K).
                         return false;
                     }
                     StepState newState = (StepState)other;
-                    return (Row == newState.Row) && (Col == newState.Col) && (RemainingEliminations == newState.RemainingEliminations);
+                    return (Row == newState.Row)
+                        && (Col == newState.Col)
+                        && (RemainingEliminations == newState.RemainingEliminations);
                 }
 
                 public override string ToString()
@@ -13257,6 +14235,7 @@ o	To sum up, the overall space complexity of the algorithm is O(N⋅K).
                     return $"{Row} {Col} {RemainingEliminations}";
                 }
             }
+
             /*
             Approach 2: A* (A Star) Algorithm
 Complexity Analysis
@@ -13274,7 +14253,8 @@ o	To sum up, the overall space complexity of the algorithm is O(N⋅K).
             */
             public int UsingAStarAlgo(int[][] grid, int k)
             {
-                int rows = grid.Length, cols = grid[0].Length;
+                int rows = grid.Length,
+                    cols = grid[0].Length;
                 int[] target = { rows - 1, cols - 1 };
 
                 PriorityQueue<StepStateExt, int> queue = new();
@@ -13297,8 +14277,17 @@ o	To sum up, the overall space complexity of the algorithm is O(N⋅K).
                         return curr.Estimation;
                     }
 
-                    int[] nextSteps = { curr.Row, curr.Col + 1, curr.Row + 1, curr.Col,
-                    curr.Row, curr.Col - 1, curr.Row - 1, curr.Col };
+                    int[] nextSteps =
+                    {
+                        curr.Row,
+                        curr.Col + 1,
+                        curr.Row + 1,
+                        curr.Col,
+                        curr.Row,
+                        curr.Col - 1,
+                        curr.Row - 1,
+                        curr.Col,
+                    };
 
                     // explore the four directions in the next step
                     for (int i = 0; i < nextSteps.Length; i += 2)
@@ -13313,7 +14302,8 @@ o	To sum up, the overall space complexity of the algorithm is O(N⋅K).
                         }
 
                         int nextElimination = curr.K - grid[nextRow][nextCol];
-                        StepStateExt newState = new(curr.Steps + 1, nextRow, nextCol, nextElimination, target);
+                        StepStateExt newState =
+                            new(curr.Steps + 1, nextRow, nextCol, nextElimination, target);
 
                         // add the next move in the queue if it qualifies.
                         if (nextElimination >= 0 && !seen.Contains(newState))
@@ -13327,6 +14317,7 @@ o	To sum up, the overall space complexity of the algorithm is O(N⋅K).
                 // did not reach the target
                 return -1;
             }
+
             class StepStateExt : IComparable<StepStateExt>
             {
                 /**
@@ -13380,9 +14371,7 @@ o	To sum up, the overall space complexity of the algorithm is O(N⋅K).
                     return $"({Estimation} {Steps} {Row} {Col} {K})";
                 }
             }
-
         }
-
 
         /* 1275. Find Winner on a Tic Tac Toe Game
         https://leetcode.com/problems/find-winner-on-a-tic-tac-toe-game/description/
@@ -13392,6 +14381,7 @@ o	To sum up, the overall space complexity of the algorithm is O(N⋅K).
             // Initialize the board, n = 3 in this problem.
             private int[,] board;
             private int boardSize = 3;
+
             /*
             Approach 1: Brute Force
             Complexity Analysis
@@ -13410,26 +14400,29 @@ o	To sum up, the overall space complexity of the algorithm is O(N⋅K).
                 // For each move
                 for (int i = 0; i < moves.GetLength(0); i++)
                 {
-                    int row = moves[i, 0], col = moves[i, 1];
+                    int row = moves[i, 0],
+                        col = moves[i, 1];
 
                     // Mark the current move with the current player's id.
                     board[row, col] = currentPlayer;
 
                     // If any of the winning conditions is met, return the current player's id.
-                    if (CheckRow(row, currentPlayer) ||
-                        CheckCol(col, currentPlayer) ||
-                        (row == col && CheckDiagonal(currentPlayer)) ||
-                        (row + col == boardSize - 1 && CheckAntiDiagonal(currentPlayer)))
+                    if (
+                        CheckRow(row, currentPlayer)
+                        || CheckCol(col, currentPlayer)
+                        || (row == col && CheckDiagonal(currentPlayer))
+                        || (row + col == boardSize - 1 && CheckAntiDiagonal(currentPlayer))
+                    )
                     {
                         return currentPlayer == 1 ? "A" : "B";
                     }
 
-                    // If no one wins so far, change to the other player alternatively. 
+                    // If no one wins so far, change to the other player alternatively.
                     // That is from 1 to -1, from -1 to 1.
                     currentPlayer *= -1;
                 }
 
-                // If all moves are completed and there is still no result, we shall check if 
+                // If all moves are completed and there is still no result, we shall check if
                 // the grid is full or not. If so, the game ends with draw, otherwise pending.
                 return moves.GetLength(0) == boardSize * boardSize ? "Draw" : "Pending";
             }
@@ -13439,7 +14432,8 @@ o	To sum up, the overall space complexity of the algorithm is O(N⋅K).
             {
                 for (int col = 0; col < boardSize; ++col)
                 {
-                    if (board[row, col] != player) return false;
+                    if (board[row, col] != player)
+                        return false;
                 }
                 return true;
             }
@@ -13448,7 +14442,8 @@ o	To sum up, the overall space complexity of the algorithm is O(N⋅K).
             {
                 for (int row = 0; row < boardSize; ++row)
                 {
-                    if (board[row, col] != player) return false;
+                    if (board[row, col] != player)
+                        return false;
                 }
                 return true;
             }
@@ -13457,7 +14452,8 @@ o	To sum up, the overall space complexity of the algorithm is O(N⋅K).
             {
                 for (int row = 0; row < boardSize; ++row)
                 {
-                    if (board[row, row] != player) return false;
+                    if (board[row, row] != player)
+                        return false;
                 }
                 return true;
             }
@@ -13466,7 +14462,8 @@ o	To sum up, the overall space complexity of the algorithm is O(N⋅K).
             {
                 for (int row = 0; row < boardSize; ++row)
                 {
-                    if (board[row, boardSize - 1 - row] != player) return false;
+                    if (board[row, boardSize - 1 - row] != player)
+                        return false;
                 }
                 return true;
             }
@@ -13483,29 +14480,30 @@ We use two arrays of size n to record the value for each row and column, and two
             */
             public String RecordEachMove(int[][] moves)
             {
-
                 // n stands for the size of the board, n = 3 for the current game.
                 int n = 3;
 
                 // Use rows and cols to record the value on each row and each column.
                 // diag1 and diag2 to record value on diagonal or anti-diagonal.
-                int[] rows = new int[n], cols = new int[n];
-                int diag = 0, anti_diag = 0;
+                int[] rows = new int[n],
+                    cols = new int[n];
+                int diag = 0,
+                    anti_diag = 0;
 
                 // Two players having value of 1 and -1, player_1 with value = 1 places first.
                 int player = 1;
 
                 foreach (int[] move in moves)
                 {
-
                     // Get the row number and column number for this move.
-                    int row = move[0], col = move[1];
+                    int row = move[0],
+                        col = move[1];
 
                     // Update the row value and column value.
                     rows[row] += player;
                     cols[col] += player;
 
-                    // If this move is placed on diagonal or anti-diagonal, 
+                    // If this move is placed on diagonal or anti-diagonal,
                     // we shall update the relative value as well.
                     if (row == col)
                     {
@@ -13517,24 +14515,26 @@ We use two arrays of size n to record the value for each row and column, and two
                     }
 
                     // Check if this move meets any of the winning conditions.
-                    if (Math.Abs(rows[row]) == n || Math.Abs(cols[col]) == n ||
-                        Math.Abs(diag) == n || Math.Abs(anti_diag) == n)
+                    if (
+                        Math.Abs(rows[row]) == n
+                        || Math.Abs(cols[col]) == n
+                        || Math.Abs(diag) == n
+                        || Math.Abs(anti_diag) == n
+                    )
                     {
                         return player == 1 ? "A" : "B";
                     }
 
-                    // If no one wins so far, change to the other player alternatively. 
+                    // If no one wins so far, change to the other player alternatively.
                     // That is from 1 to -1, from -1 to 1.
                     player *= -1;
                 }
 
-                // If all moves are completed and there is still no result, we shall check if 
+                // If all moves are completed and there is still no result, we shall check if
                 // the grid is full or not. If so, the game ends with draw, otherwise pending.
                 return moves.Length == n * n ? "Draw" : "Pending";
             }
-
         }
-
 
         /* 1319. Number of Operations to Make Network Connected
         https://leetcode.com/problems/number-of-operations-to-make-network-connected/description/
@@ -13592,6 +14592,7 @@ We use two arrays of size n to record the value for each row and column, and two
 
                 return numberOfConnectedComponents - 1;
             }
+
             public void Dfs(int node, Dictionary<int, List<int>> adjacencyList, bool[] visited)
             {
                 visited[node] = true;
@@ -13659,6 +14660,7 @@ o	The visit array takes O(n) space as well.
 
                 return numberOfConnectedComponents - 1;
             }
+
             private void Bfs(int node, Dictionary<int, List<int>> adjacencyList, bool[] visited)
             {
                 Queue<int> queue = new Queue<int>();
@@ -13707,7 +14709,9 @@ o	We are using the parent and rank arrays, both of which require O(n) space each
                 int numberOfConnectedComponents = numberOfNodes;
                 foreach (int[] connection in connections)
                 {
-                    if (disjointSetUnion.Find(connection[0]) != disjointSetUnion.Find(connection[1]))
+                    if (
+                        disjointSetUnion.Find(connection[0]) != disjointSetUnion.Find(connection[1])
+                    )
                     {
                         numberOfConnectedComponents--;
                         disjointSetUnion.UnionSet(connection[0], connection[1]);
@@ -13716,6 +14720,7 @@ o	We are using the parent and rank arrays, both of which require O(n) space each
 
                 return numberOfConnectedComponents - 1;
             }
+
             public class UnionFind
             {
                 private int[] parent;
@@ -13738,7 +14743,8 @@ o	We are using the parent and rank arrays, both of which require O(n) space each
 
                 public void UnionSet(int firstElement, int secondElement)
                 {
-                    int firstSet = Find(firstElement), secondSet = Find(secondElement);
+                    int firstSet = Find(firstElement),
+                        secondSet = Find(secondElement);
                     if (firstSet == secondSet)
                     {
                         return;
@@ -13760,7 +14766,6 @@ o	We are using the parent and rank arrays, both of which require O(n) space each
             }
         }
 
-
         /* 1335. Minimum Difficulty of a Job Schedule
         https://leetcode.com/problems/minimum-difficulty-of-a-job-schedule/description/
          */
@@ -13777,7 +14782,6 @@ o	We are using the parent and rank arrays, both of which require O(n) space each
             */
             public int TopDownDP(int[] jobDifficulty, int d)
             {
-
                 int n = jobDifficulty.Length;
                 // Edge case: make sure there is at least one job per day
                 if (n < d)
@@ -13823,7 +14827,10 @@ o	We are using the parent and rank arrays, both of which require O(n) space each
                 for (int j = i; j < jobDifficulty.Length - daysRemaining + 1; j++)
                 {
                     dailyMaxJobDiff = Math.Max(dailyMaxJobDiff, jobDifficulty[j]);
-                    res = Math.Min(res, dailyMaxJobDiff + MinDiff(j + 1, daysRemaining - 1, jobDifficulty, mem));
+                    res = Math.Min(
+                        res,
+                        dailyMaxJobDiff + MinDiff(j + 1, daysRemaining - 1, jobDifficulty, mem)
+                    );
                 }
                 mem[i][daysRemaining] = res;
                 return res;
@@ -13860,14 +14867,17 @@ Let n be the length of the jobDifficulty array, and d be the total number of day
                             dailyMaxJobDiff = Math.Max(dailyMaxJobDiff, jobDifficulty[j - 1]);
                             if (minDiff[daysRemaining - 1][j] != int.MaxValue)
                             {
-                                minDiff[daysRemaining][i] = Math.Min(minDiff[daysRemaining][i],
-                                                                     dailyMaxJobDiff + minDiff[daysRemaining - 1][j]);
+                                minDiff[daysRemaining][i] = Math.Min(
+                                    minDiff[daysRemaining][i],
+                                    dailyMaxJobDiff + minDiff[daysRemaining - 1][j]
+                                );
                             }
                         }
                     }
                 }
                 return minDiff[d][0] < int.MaxValue ? minDiff[d][0] : -1;
             }
+
             /* Approach 3: Bottom-up 1D DP
             Complexity Analysis
             Let n be the length of the jobDifficulty array, and d be the total number of days.
@@ -13879,7 +14889,7 @@ Let n be the length of the jobDifficulty array, and d be the total number of day
             {
                 int jobCount = jobDifficulty.Length;
                 // Initialize the minDiff matrix to record the minimum difficulty
-                // of the job schedule    
+                // of the job schedule
                 int[] minDiffNextDay = new int[jobCount + 1];
                 for (int i = 0; i < jobCount; i++)
                 {
@@ -13901,8 +14911,10 @@ Let n be the length of the jobDifficulty array, and d be the total number of day
                             dailyMaxJobDiff = Math.Max(dailyMaxJobDiff, jobDifficulty[j - 1]);
                             if (minDiffNextDay[j] != int.MaxValue)
                             {
-                                minDiffCurrDay[i] = Math.Min(minDiffCurrDay[i],
-                                                               dailyMaxJobDiff + minDiffNextDay[j]);
+                                minDiffCurrDay[i] = Math.Min(
+                                    minDiffCurrDay[i],
+                                    dailyMaxJobDiff + minDiffNextDay[j]
+                                );
                             }
                         }
                     }
@@ -13910,6 +14922,7 @@ Let n be the length of the jobDifficulty array, and d be the total number of day
                 }
                 return minDiffNextDay[0] < int.MaxValue ? minDiffNextDay[0] : -1;
             }
+
             /*
             Approach 4: Monotonic Stack - Better Time Complexity
             Complexity Analysis
@@ -13945,7 +14958,8 @@ Let n be the length of the jobDifficulty array, and d be the total number of day
                         // We initialize minDiffCurrDay[i] as only performing 1 job at the i-th index.
                         // At day 0, the minimum total job difficulty is to complete the 0th job only.
                         // Otherwise, we increment minDiffPrevDay[i - 1] by the i-th job difficulty
-                        minDiffCurrDay[i] = i > 0 ? minDiffPrevDay[i - 1] + jobDifficulty[i] : jobDifficulty[i];
+                        minDiffCurrDay[i] =
+                            i > 0 ? minDiffPrevDay[i - 1] + jobDifficulty[i] : jobDifficulty[i];
 
                         // When we find the last element in the stack is smaller than or equal to current job,
                         // we need to pop out the element to maintain a monotonic decreasing stack.
@@ -13956,7 +14970,10 @@ Let n be the length of the jobDifficulty array, and d be the total number of day
                             // by the amount of jobDifficulty[i] - jobDifficulty[j]
                             int j = stack.Pop();
                             int diffIncr = jobDifficulty[i] - jobDifficulty[j];
-                            minDiffCurrDay[i] = Math.Min(minDiffCurrDay[i], minDiffCurrDay[j] + diffIncr);
+                            minDiffCurrDay[i] = Math.Min(
+                                minDiffCurrDay[i],
+                                minDiffCurrDay[j] + diffIncr
+                            );
                         }
 
                         // When the last element in the stack is larger than current element,
@@ -13964,7 +14981,10 @@ Let n be the length of the jobDifficulty array, and d be the total number of day
                         // the overall job difficulty will not change
                         if (stack.Count > 0)
                         {
-                            minDiffCurrDay[i] = Math.Min(minDiffCurrDay[i], minDiffCurrDay[stack.Peek()]);
+                            minDiffCurrDay[i] = Math.Min(
+                                minDiffCurrDay[i],
+                                minDiffCurrDay[stack.Peek()]
+                            );
                         }
 
                         // Update the monotonic stack by adding in the current index
@@ -13978,8 +14998,6 @@ Let n be the length of the jobDifficulty array, and d be the total number of day
             }
         }
 
-
-
         /* 1359. Count All Valid Pickup and Delivery Options
 
         https://leetcode.com/problems/count-all-valid-pickup-and-delivery-options/description/
@@ -13988,6 +15006,7 @@ Let n be the length of the jobDifficulty array, and d be the total number of day
         {
             private int MOD = 1_000_000_007;
             private long[][] memo;
+
             /*
             
 Approach 1: Recursion with Memoization (Top-Down DP)
@@ -14004,6 +15023,7 @@ Our cache must store the results for all of the unique function calls that are v
                 memo = new long[n + 1][];
                 return (int)TotalWays(n, n);
             }
+
             private long TotalWays(int unpicked, int undelivered)
             {
                 if (unpicked == 0 && undelivered == 0)
@@ -14015,14 +15035,14 @@ Our cache must store the results for all of the unique function calls that are v
                 if (unpicked < 0 || undelivered < 0 || undelivered < unpicked)
                 {
                     // We can't pick or deliver more than N items
-                    // Number of deliveries can't exceed number of pickups 
+                    // Number of deliveries can't exceed number of pickups
                     // as we can only deliver after a pickup.
                     return 0;
                 }
 
                 if (memo[unpicked][undelivered] != 0)
                 {
-                    // Return cached value, if already present. 
+                    // Return cached value, if already present.
                     return memo[unpicked][undelivered];
                 }
 
@@ -14041,8 +15061,7 @@ Our cache must store the results for all of the unique function calls that are v
                 return memo[unpicked][undelivered] = ans;
             }
 
-
-            /* Approach 2: Tabulation (Bottom-Up DP) 
+            /* Approach 2: Tabulation (Bottom-Up DP)
             Complexity Analysis
             If N is the number of the orders given.
             •	Time complexity: O(N^2).
@@ -14069,7 +15088,7 @@ Our cache must store the results for all of the unique function calls that are v
                             continue;
                         }
 
-                        // There are some unpicked elements left. 
+                        // There are some unpicked elements left.
                         // We have choice to pick any one of those orders.
                         if (unpicked > 0)
                         {
@@ -14078,10 +15097,11 @@ Our cache must store the results for all of the unique function calls that are v
                         dp[unpicked][undelivered] %= MOD;
 
                         // Number of deliveries done is less than picked orders.
-                        // We have choice to deliver any one of (undelivered - unpicked) orders. 
+                        // We have choice to deliver any one of (undelivered - unpicked) orders.
                         if (undelivered > unpicked)
                         {
-                            dp[unpicked][undelivered] += (undelivered - unpicked) * dp[unpicked][undelivered - 1];
+                            dp[unpicked][undelivered] +=
+                                (undelivered - unpicked) * dp[unpicked][undelivered - 1];
                         }
                         dp[unpicked][undelivered] %= MOD;
                     }
@@ -14151,10 +15171,7 @@ But then the approach will not count as O(1) space, the reason is that in the wo
                 }
                 return (int)ans;
             }
-
         }
-
-
 
         /* 1383. Maximum Performance of a Team
         https://leetcode.com/problems/maximum-performance-of-a-team/description/
@@ -14181,7 +15198,12 @@ But then the approach will not count as O(1) space, the reason is that in the wo
     o	To sum up, the overall space complexity of the entire algorithm is O(N+K).
 
             */
-            public int GreedyWithPQ(int numberOfEngineers, int[] speeds, int[] efficiencies, int teamSize)
+            public int GreedyWithPQ(
+                int numberOfEngineers,
+                int[] speeds,
+                int[] efficiencies,
+                int teamSize
+            )
             {
                 int modulo = (int)Math.Pow(10, 9) + 7;
                 // build tuples of (efficiency, speed)
@@ -14196,7 +15218,8 @@ But then the approach will not count as O(1) space, the reason is that in the wo
                 // create a heap to keep the top (k-1) speeds
                 PriorityQueue<int, int> speedHeap = new PriorityQueue<int, int>();
 
-                long speedSum = 0, performance = 0;
+                long speedSum = 0,
+                    performance = 0;
                 foreach (Tuple<int, int> candidate in candidates)
                 {
                     int currentEfficiency = candidate.Item1;
@@ -14217,13 +15240,12 @@ But then the approach will not count as O(1) space, the reason is that in the wo
             }
         }
 
-
         /* 1402. Reducing Dishes
         https://leetcode.com/problems/reducing-dishes/description/
          */
         class FindMaxSatisfactionSol
         {
-            /*  
+            /*
             Approach 1: Top-Down Dynamic Programming
             Complexity Analysis
     Here N is the number of dishes.
@@ -14247,6 +15269,7 @@ But then the approach will not count as O(1) space, the reason is that in the wo
 
                 return FindMaxSatisfaction(satisfaction, memo, 0, 1);
             }
+
             private int FindMaxSatisfaction(int[] satisfaction, int[][] memo, int index, int time)
             {
                 // Return 0 if we have iterated over all the dishes.
@@ -14264,12 +15287,12 @@ But then the approach will not count as O(1) space, the reason is that in the wo
                 // Return the maximum of two choices:
                 // 1. Cook the dish at `index` with the time taken as `time` and move on to the next dish with time as time + 1.
                 // 2. Skip the current dish and move on to the next dish at the same time.
-                return memo[index][time] = Math.Max(satisfaction[index] * time + FindMaxSatisfaction(satisfaction, memo, index + 1, time + 1),
-                        FindMaxSatisfaction(satisfaction, memo, index + 1, time));
+                return memo[index][time] = Math.Max(
+                    satisfaction[index] * time
+                        + FindMaxSatisfaction(satisfaction, memo, index + 1, time + 1),
+                    FindMaxSatisfaction(satisfaction, memo, index + 1, time)
+                );
             }
-
-
-
 
             /*
             Approach 2: Bottom-Up Dynamic Programming
@@ -14334,7 +15357,10 @@ We have two tables, dp and prev, with size N. Hence, the space complexity is O(N
                         // Maximum of two choices:
                         // 1. Cook the dish at `index` with the time taken as `time` and move on to the next dish with time as time + 1.
                         // 2. Skip the current dish and move on to the next dish at the same time.
-                        dp[time] = Math.Max(satisfaction[index] * time + prev[time + 1], prev[time]);
+                        dp[time] = Math.Max(
+                            satisfaction[index] * time + prev[time + 1],
+                            prev[time]
+                        );
                     }
                     // Assign the current iteration result to prev to be used in the next iteration.
                     prev = dp;
@@ -14359,7 +15385,11 @@ No extra space is needed apart from two variables. However, some space is requir
 
                 int maxSatisfaction = 0;
                 int suffixSum = 0;
-                for (int i = satisfaction.Length - 1; i >= 0 && suffixSum + satisfaction[i] > 0; i--)
+                for (
+                    int i = satisfaction.Length - 1;
+                    i >= 0 && suffixSum + satisfaction[i] > 0;
+                    i--
+                )
                 {
                     // Total satisfaction with all dishes so far.
                     suffixSum += satisfaction[i];
@@ -14368,9 +15398,7 @@ No extra space is needed apart from two variables. However, some space is requir
                 }
                 return maxSatisfaction;
             }
-
         }
-
 
         /* 1431. Kids With the Greatest Number of Candies
         https://leetcode.com/problems/kids-with-the-greatest-number-of-candies/description/
@@ -14410,14 +15438,11 @@ o	Without counting the space of input and output, we are not using any space exc
             }
         }
 
-
-
         /* 1443. Minimum Time to Collect All Apples in a Tree
         https://leetcode.com/problems/minimum-time-to-collect-all-apples-in-a-tree/description/ */
 
         class MinTimeToCollectAllApplesSol
         {
-
             /*
             Approach: Depth First Search
            Complexity Analysis
@@ -14436,7 +15461,8 @@ o	Without counting the space of input and output, we are not using any space exc
                 Dictionary<int, List<int>> adjacencyList = new Dictionary<int, List<int>>();
                 foreach (int[] edge in edges)
                 {
-                    int nodeA = edge[0], nodeB = edge[1];
+                    int nodeA = edge[0],
+                        nodeB = edge[1];
                     if (!adjacencyList.ContainsKey(nodeA))
                     {
                         adjacencyList[nodeA] = new List<int>();
@@ -14451,12 +15477,19 @@ o	Without counting the space of input and output, we are not using any space exc
                 }
                 return Dfs(0, -1, adjacencyList, hasApple);
             }
-            private int Dfs(int node, int parent, Dictionary<int, List<int>> adjacencyList, List<bool> hasApple)
+
+            private int Dfs(
+                int node,
+                int parent,
+                Dictionary<int, List<int>> adjacencyList,
+                List<bool> hasApple
+            )
             {
                 if (!adjacencyList.ContainsKey(node))
                     return 0;
 
-                int totalTime = 0, childTime = 0;
+                int totalTime = 0,
+                    childTime = 0;
                 foreach (int child in adjacencyList[node])
                 {
                     if (child == parent)
@@ -14470,11 +15503,7 @@ o	Without counting the space of input and output, we are not using any space exc
                 }
                 return totalTime;
             }
-
-
         }
-
-
 
         /* 1444. Number of Ways of Cutting a Pizza
         https://leetcode.com/problems/number-of-ways-of-cutting-a-pizza/description/
@@ -14494,7 +15523,8 @@ o	Without counting the space of input and output, we are not using any space exc
             */
             public int WithDP(string[] pizza, int k)
             {
-                int numberOfRows = pizza.Length, numberOfColumns = pizza[0].Length;
+                int numberOfRows = pizza.Length,
+                    numberOfColumns = pizza[0].Length;
                 int[,] apples = new int[numberOfRows + 1, numberOfColumns + 1];
                 int[,,] dp = new int[k, numberOfRows, numberOfColumns];
 
@@ -14502,8 +15532,11 @@ o	Without counting the space of input and output, we are not using any space exc
                 {
                     for (int col = numberOfColumns - 1; col >= 0; col--)
                     {
-                        apples[row, col] = (pizza[row][col] == 'A' ? 1 : 0) + apples[row + 1, col] + apples[row, col + 1]
-                                - apples[row + 1, col + 1];
+                        apples[row, col] =
+                            (pizza[row][col] == 'A' ? 1 : 0)
+                            + apples[row + 1, col]
+                            + apples[row, col + 1]
+                            - apples[row + 1, col + 1];
                         dp[0, row, col] = apples[row, col] > 0 ? 1 : 0;
                     }
                 }
@@ -14549,7 +15582,8 @@ We store the matrices apples[rows+1][cols+1], f[rows][cols] and g[rows][cols].
             */
             public int DPSpaceOptimal(string[] pizza, int k)
             {
-                int rowCount = pizza.Length, columnCount = pizza[0].Length;
+                int rowCount = pizza.Length,
+                    columnCount = pizza[0].Length;
                 int[][] apples = new int[rowCount + 1][];
                 for (int i = 0; i < apples.Length; i++)
                 {
@@ -14566,8 +15600,11 @@ We store the matrices apples[rows+1][cols+1], f[rows][cols] and g[rows][cols].
                 {
                     for (int col = columnCount - 1; col >= 0; col--)
                     {
-                        apples[row][col] = (pizza[row][col] == 'A' ? 1 : 0) + apples[row + 1][col] + apples[row][col + 1]
-                                - apples[row + 1][col + 1];
+                        apples[row][col] =
+                            (pizza[row][col] == 'A' ? 1 : 0)
+                            + apples[row + 1][col]
+                            + apples[row][col + 1]
+                            - apples[row + 1][col + 1];
                         f[row][col] = apples[row][col] > 0 ? 1 : 0;
                     }
                 }
@@ -14612,8 +15649,6 @@ We store the matrices apples[rows+1][cols+1], f[rows][cols] and g[rows][cols].
             }
         }
 
-
-
         /* 1466. Reorder Routes to Make All Paths Lead to the City Zero
         https://leetcode.com/problems/reorder-routes-to-make-all-paths-lead-to-the-city-zero/description/
 
@@ -14621,6 +15656,7 @@ We store the matrices apples[rows+1][cols+1], f[rows][cols] and g[rows][cols].
         class MinReorderRoutesSol
         {
             private int count = 0;
+
             /*
             Approach 1: Depth First Search
            Complexity Analysis
@@ -14635,7 +15671,8 @@ o	The recursion call stack used by dfs can have no more than n elements in the w
             */
             public int DFS(int n, int[][] connections)
             {
-                Dictionary<int, List<List<int>>> adjacencyList = new Dictionary<int, List<List<int>>>();
+                Dictionary<int, List<List<int>>> adjacencyList =
+                    new Dictionary<int, List<List<int>>>();
                 foreach (int[] connection in connections)
                 {
                     if (!adjacencyList.ContainsKey(connection[0]))
@@ -14653,6 +15690,7 @@ o	The recursion call stack used by dfs can have no more than n elements in the w
                 Dfs(0, -1, adjacencyList);
                 return count;
             }
+
             private void Dfs(int node, int parent, Dictionary<int, List<List<int>>> adjacencyList)
             {
                 if (!adjacencyList.ContainsKey(node))
@@ -14670,6 +15708,7 @@ o	The recursion call stack used by dfs can have no more than n elements in the w
                     }
                 }
             }
+
             /*
             Approach 2: Breadth First Search
             Complexity Analysis
@@ -14703,6 +15742,7 @@ o	The recursion call stack used by dfs can have no more than n elements in the w
                 Bfs(0, n, adj);
                 return count;
             }
+
             private void Bfs(int node, int n, Dictionary<int, List<List<int>>> adj)
             {
                 Queue<int> queue = new Queue<int>();
@@ -14730,10 +15770,7 @@ o	The recursion call stack used by dfs can have no more than n elements in the w
                     }
                 }
             }
-
-
         }
-
 
         /* 1491. Average Salary Excluding the Minimum and Maximum Salary
         https://leetcode.com/problems/average-salary-excluding-the-minimum-and-maximum-salary/description/
@@ -14769,7 +15806,6 @@ We only need three variables to store the total sum, the maximum value and the m
                 return (double)(sum - minSalary - maxSalary) / (double)(salaries.Length - 2);
             }
         }
-
 
         /* 1564. Put Boxes Into the Warehouse I
         https://leetcode.com/problems/put-boxes-into-the-warehouse-i/description/
@@ -14807,6 +15843,7 @@ We only need three variables to store the total sum, the maximum value and the m
 
                 return count;
             }
+
             /*
             Approach 2: Add Largest Possible Boxes from Left to Right
             The time and space complexity will be similar to Approach 1. Let n be the number of boxes and m be the number of rooms in the warehouse.
@@ -14816,7 +15853,6 @@ We only need three variables to store the total sum, the maximum value and the m
             */
             public int AddLargestPossibleBoxesFromLeftToRigt(int[] boxes, int[] warehouse)
             {
-
                 int i = boxes.Length - 1;
                 int count = 0;
                 Array.Sort(boxes);
@@ -14830,18 +15866,15 @@ We only need three variables to store the total sum, the maximum value and the m
                         i--;
                     }
 
-                    if (i == -1) return count;
+                    if (i == -1)
+                        return count;
                     count++;
                     i--;
                 }
 
                 return count;
-
             }
         }
-
-
-
 
         /* 1580. Put Boxes Into the Warehouse II
         https://leetcode.com/problems/put-boxes-into-the-warehouse-ii/description/
@@ -14897,10 +15930,7 @@ o	In C++, the sort() function is implemented as a hybrid of Quick Sort, Heap Sor
                 // the smallest room to the largest
                 for (int i = 0; i < warehouseLength; ++i)
                 {
-                    if (
-                        boxIndex < boxes.Length &&
-                        boxes[boxIndex] <= effectiveHeights[i]
-                    )
+                    if (boxIndex < boxes.Length && boxes[boxIndex] <= effectiveHeights[i])
                     {
                         // Place the box and move to the next one
                         ++boxCount;
@@ -14910,6 +15940,7 @@ o	In C++, the sort() function is implemented as a hybrid of Quick Sort, Heap Sor
 
                 return boxCount;
             }
+
             /*
             Approach 2: Add Largest Possible Boxes from Both Ends
 Complexity Analysis
@@ -14958,14 +15989,13 @@ Besides the sorting space, our algorithm uses constant space O(1) by using two p
             }
         }
 
-
-
         /* 1601. Maximum Number of Achievable Transfer Requests
         https://leetcode.com/problems/maximum-number-of-achievable-transfer-requests/description/
          */
         class MaximumRequestsSol
         {
             int answer = 0;
+
             /*
             Approach 1: Backtracking
             Complexity Analysis
@@ -14984,6 +16014,7 @@ Besides the sorting space, our algorithm uses constant space O(1) by using two p
 
                 return answer;
             }
+
             void MaxRequest(int[][] requests, int[] indegree, int n, int index, int count)
             {
                 if (index == requests.Length)
@@ -15013,6 +16044,7 @@ Besides the sorting space, our algorithm uses constant space O(1) by using two p
                 // Ignore this request and move on to the next request without incrementing the count.
                 MaxRequest(requests, indegree, n, index + 1, count);
             }
+
             /*
             Approach 2: Bitmasking
             Complexity Analysis
@@ -15034,7 +16066,7 @@ Besides the sorting space, our algorithm uses constant space O(1) by using two p
                     // Number of set bits representing the requests we will consider.
                     int bitCount = int.PopCount(mask);
 
-                    // If the request count we're going to consider is less than the maximum request 
+                    // If the request count we're going to consider is less than the maximum request
                     // We have considered without violating the constraints; then we can return it cannot be the answer.
                     if (bitCount <= answer)
                     {
@@ -15070,10 +16102,7 @@ Besides the sorting space, our algorithm uses constant space O(1) by using two p
 
                 return answer;
             }
-
         }
-
-
 
         /* 1584. Min Cost to Connect All Points
         https://leetcode.com/problems/min-cost-to-connect-all-points/description/
@@ -15104,8 +16133,9 @@ o	Thus, the overall space complexity is O(N^2+N)≈O(N^2).
                 {
                     for (int nextPoint = currentPoint + 1; nextPoint < numberOfPoints; ++nextPoint)
                     {
-                        int weight = Math.Abs(points[currentPoint][0] - points[nextPoint][0]) +
-                                     Math.Abs(points[currentPoint][1] - points[nextPoint][1]);
+                        int weight =
+                            Math.Abs(points[currentPoint][0] - points[nextPoint][0])
+                            + Math.Abs(points[currentPoint][1] - points[nextPoint][1]);
 
                         int[] currentEdge = { weight, currentPoint, nextPoint };
                         allEdges.Add(currentEdge);
@@ -15134,6 +16164,7 @@ o	Thus, the overall space complexity is O(N^2+N)≈O(N^2).
 
                 return minimumSpanningTreeCost;
             }
+
             class UnionFind
             {
                 public int[] Group;
@@ -15205,7 +16236,8 @@ o	Thus, the overall space complexity is O(N^2+N)≈O(N^2).
                 int numberOfPoints = points.Length;
 
                 // Min-heap to store minimum weight edge at top.
-                PriorityQueue<(int weight, int node), int> priorityQueue = new PriorityQueue<(int, int), int>();
+                PriorityQueue<(int weight, int node), int> priorityQueue =
+                    new PriorityQueue<(int, int), int>();
 
                 // Track nodes which are included in MST.
                 bool[] includedInMST = new bool[numberOfPoints];
@@ -15237,8 +16269,9 @@ o	Thus, the overall space complexity is O(N^2+N)≈O(N^2).
                         // to next node can be pushed in the priority queue.
                         if (!includedInMST[nextNode])
                         {
-                            int nextWeight = Math.Abs(points[currentNode][0] - points[nextNode][0]) +
-                                             Math.Abs(points[currentNode][1] - points[nextNode][1]);
+                            int nextWeight =
+                                Math.Abs(points[currentNode][0] - points[nextNode][0])
+                                + Math.Abs(points[currentNode][1] - points[nextNode][1]);
 
                             priorityQueue.Enqueue((nextWeight, nextNode), nextWeight);
                         }
@@ -15247,6 +16280,7 @@ o	Thus, the overall space complexity is O(N^2+N)≈O(N^2).
 
                 return minimumSpanningTreeCost;
             }
+
             /* Approach 3: Prim's Algorithm (Optimized)
 Complexity Analysis
 If N is the number of points in the input array.
@@ -15298,8 +16332,9 @@ o	Thus, the overall space complexity is O(N+N)=O(N).
                     // Update adjacent nodes of current node.
                     for (int nextNode = 0; nextNode < n; ++nextNode)
                     {
-                        int weight = Math.Abs(points[currNode][0] - points[nextNode][0]) +
-                                     Math.Abs(points[currNode][1] - points[nextNode][1]);
+                        int weight =
+                            Math.Abs(points[currNode][0] - points[nextNode][0])
+                            + Math.Abs(points[currNode][1] - points[nextNode][1]);
 
                         if (!inMST[nextNode] && minDist[nextNode] > weight)
                         {
@@ -15310,10 +16345,7 @@ o	Thus, the overall space complexity is O(N+N)=O(N).
 
                 return mstCost;
             }
-
         }
-
-
 
         /* 1578. Minimum Time to Make Rope Colorful
         https://leetcode.com/problems/minimum-time-to-make-rope-colorful/description/
@@ -15335,14 +16367,16 @@ o	We only need to update several values: totalTime, currTotal, currMax, i and j,
             {
                 // Initalize two pointers i, j.
                 int totalTime = 0;
-                int i = 0, j = 0;
+                int i = 0,
+                    j = 0;
 
                 while (i < neededTime.Length && j < neededTime.Length)
                 {
-                    int currTotal = 0, currMax = 0;
+                    int currTotal = 0,
+                        currMax = 0;
 
-                    // Find all the balloons having the same color as the 
-                    // balloon indexed at i, record the total removal time 
+                    // Find all the balloons having the same color as the
+                    // balloon indexed at i, record the total removal time
                     // and the maximum removal time.
                     while (j < neededTime.Length && colors[i] == colors[j])
                     {
@@ -15351,13 +16385,14 @@ o	We only need to update several values: totalTime, currTotal, currMax, i and j,
                         j++;
                     }
 
-                    // Once we reach the end of the current group, add the cost of 
+                    // Once we reach the end of the current group, add the cost of
                     // this group to total_time, and reset two pointers.
                     totalTime += currTotal - currMax;
                     i = j;
                 }
                 return totalTime;
             }
+
             /*
             Approach 2: Advanced 1-Pass
             Complexity Analysis
@@ -15373,7 +16408,8 @@ o	We only need to update two values: totalTime and currMaxTime, which takes cons
             {
                 // totalTime: total time needed to make rope colorful;
                 // currMaxTime: maximum time of a balloon needed.
-                int totalTime = 0, currMaxTime = 0;
+                int totalTime = 0,
+                    currMaxTime = 0;
 
                 // For each balloon in the array:
                 for (int i = 0; i < colors.Length; ++i)
@@ -15395,8 +16431,6 @@ o	We only need to update two values: totalTime and currMaxTime, which takes cons
                 return totalTime;
             }
         }
-
-
 
         /* 1575. Count All Possible Routes
         https://leetcode.com/problems/count-all-possible-routes/description/
@@ -15427,7 +16461,14 @@ o	The recursion stack used in the solution can grow to a maximum size of O(fuel)
 
                 return Solve(locations, start, finish, fuel, memo);
             }
-            public int Solve(int[] locations, int currentCity, int destinationCity, int remainingFuel, int[][] memo)
+
+            public int Solve(
+                int[] locations,
+                int currentCity,
+                int destinationCity,
+                int remainingFuel,
+                int[][] memo
+            )
             {
                 if (remainingFuel < 0)
                 {
@@ -15443,9 +16484,18 @@ o	The recursion stack used in the solution can grow to a maximum size of O(fuel)
                 {
                     if (nextCity != currentCity)
                     {
-                        answer = (answer + Solve(locations, nextCity, destinationCity,
-                        remainingFuel - Math.Abs(locations[currentCity] - locations[nextCity]),
-                                           memo)) % 1000000007;
+                        answer =
+                            (
+                                answer
+                                + Solve(
+                                    locations,
+                                    nextCity,
+                                    destinationCity,
+                                    remainingFuel
+                                        - Math.Abs(locations[currentCity] - locations[nextCity]),
+                                    memo
+                                )
+                            ) % 1000000007;
                     }
                 }
 
@@ -15482,8 +16532,9 @@ o	The dp array consumes O(n⋅fuel) space.
                             }
                             if (Math.Abs(locations[i] - locations[k]) <= j)
                             {
-                                dp[i][j] = (dp[i][j] + dp[k][j - Math.Abs(locations[i] - locations[k])]) %
-                                           1000000007;
+                                dp[i][j] =
+                                    (dp[i][j] + dp[k][j - Math.Abs(locations[i] - locations[k])])
+                                    % 1000000007;
                             }
                         }
                     }
@@ -15492,7 +16543,6 @@ o	The dp array consumes O(n⋅fuel) space.
                 return dp[start][fuel];
             }
         }
-
 
         /* 1626. Best Team With No Conflicts
         https://leetcode.com/problems/best-team-with-no-conflicts/description/
@@ -15545,14 +16595,15 @@ The list ageScorePair will take 2∗N space. The memoization results are stored 
                 // If we can add this player, return the maximum of two choices we have.
                 if (prev == -1 || ageScorePair[index][1] >= ageScorePair[prev][1])
                 {
-                    return dp[prev + 1][index] = Math.Max(FindMaxScore(dp, ageScorePair, prev, index + 1),
-                            ageScorePair[index][1] + FindMaxScore(dp, ageScorePair, index, index + 1));
+                    return dp[prev + 1][index] = Math.Max(
+                        FindMaxScore(dp, ageScorePair, prev, index + 1),
+                        ageScorePair[index][1] + FindMaxScore(dp, ageScorePair, index, index + 1)
+                    );
                 }
 
                 // This player cannot be added; return the corresponding score.
                 return dp[prev + 1][index] = FindMaxScore(dp, ageScorePair, prev, index + 1);
             }
-
 
             /* Approach 2: Bottom-Up Dynamic Programming
             Complexity Analysis
@@ -15578,6 +16629,7 @@ The list ageScorePair will take 2∗N space. The memoization results are stored 
                 Array.Sort(ageScorePair, (a, b) => a[0] == b[0] ? a[1] - b[1] : a[0] - b[0]);
                 return FindMaxScore(ageScorePair);
             }
+
             private int FindMaxScore(int[][] ageScorePair)
             {
                 int n = ageScorePair.Length;
@@ -15590,7 +16642,6 @@ The list ageScorePair will take 2∗N space. The memoization results are stored 
                     dp[i] = ageScorePair[i][1];
                     answer = Math.Max(answer, dp[i]);
                 }
-
 
                 for (int i = 0; i < n; i++)
                 {
@@ -15674,10 +16725,7 @@ The list ageScorePair will take 2∗N space. BIT array will need O(K) space. The
                     BIT[i] = Math.Max(BIT[i], currentBest);
                 }
             }
-
         }
-
-
 
         /* 1629. Slowest Key
         https://leetcode.com/problems/slowest-key/description/
@@ -15705,7 +16753,10 @@ This gives us total time complexity is O(N)+O(K). Since, in this problem, K is a
                 {
                     int currentDuration = releaseTimes[i] - releaseTimes[i - 1];
                     char currentKey = keysPressed[i];
-                    durationMap[currentKey] = Math.Max(durationMap.GetValueOrDefault(currentKey, 0), currentDuration);
+                    durationMap[currentKey] = Math.Max(
+                        durationMap.GetValueOrDefault(currentKey, 0),
+                        currentDuration
+                    );
                 }
                 char slowestKey = ' ';
                 int longestPressDuration = 0;
@@ -15726,6 +16777,7 @@ This gives us total time complexity is O(N)+O(K). Since, in this problem, K is a
                 }
                 return slowestKey;
             }
+
             /*
             Approach 2: Fixed Size Array
             Complexity Analysis
@@ -15747,7 +16799,10 @@ This gives us total time complexity is O(N)+O(M). Since, in this problem, the va
                 {
                     int currentDuration = releaseTimes[i] - releaseTimes[i - 1];
                     char currentKey = keysPressed[i];
-                    durationArray[currentKey - 'a'] = Math.Max(durationArray[currentKey - 'a'], currentDuration);
+                    durationArray[currentKey - 'a'] = Math.Max(
+                        durationArray[currentKey - 'a'],
+                        currentDuration
+                    );
                 }
                 // initialize slowest key as 'z'
                 int slowestKeyIndex = 25;
@@ -15762,8 +16817,7 @@ This gives us total time complexity is O(N)+O(M). Since, in this problem, the va
                 return (char)(slowestKeyIndex + 'a');
             }
 
-
-            /* Approach 3: Constant Extra Space 
+            /* Approach 3: Constant Extra Space
 Complexity Analysis
 Let N be the size of array releaseTimes.
 •	Time Complexity: O(N). We iterate over the array releaseTimes of size N once to find the slowest key and each iteration requires only constant time.
@@ -15779,8 +16833,10 @@ Let N be the size of array releaseTimes.
                 {
                     int currentDuration = releaseTimes[i] - releaseTimes[i - 1];
                     // check if we found the key that is slower than slowestKey
-                    if (currentDuration > longestPress ||
-                        (currentDuration == longestPress && keysPressed[i] > slowestKey))
+                    if (
+                        currentDuration > longestPress
+                        || (currentDuration == longestPress && keysPressed[i] > slowestKey)
+                    )
                     {
                         // update the slowest key and longest press duration
                         longestPress = currentDuration;
@@ -15789,9 +16845,7 @@ Let N be the size of array releaseTimes.
                 }
                 return slowestKey;
             }
-
         }
-
 
         /* 1642. Furthest Building You Can Reach
         https://leetcode.com/problems/furthest-building-you-can-reach/description/
@@ -15810,7 +16864,11 @@ In practice, though, the heap will never contain more than L+1 climbs at a time�
 As we determined above, the heap can contain up to O(L) numbers at a time. In the worst case, L=N, so we get O(N).
 
             */
-            public int UsingMinHeap(int[] buildingHeights, int availableBricks, int availableLadders)
+            public int UsingMinHeap(
+                int[] buildingHeights,
+                int availableBricks,
+                int availableLadders
+            )
             {
                 // Create a priority queue -  min-heap by default.
                 PriorityQueue<int, int> ladderAllocations = new PriorityQueue<int, int>();
@@ -15841,6 +16899,7 @@ As we determined above, the heap can contain up to O(L) numbers at a time. In th
                 // If we got to here, this means we had enough materials to cover every climb.
                 return buildingHeights.Length - 1;
             }
+
             /*
             Approach 2: Max-Heap
 Complexity Analysis
@@ -15854,7 +16913,9 @@ Same as Approach 1. In the worst case, there'll be N−1 climbs in the heap.
             public int WithMaxHeap(int[] heights, int bricks, int ladders)
             {
                 // Create a priority queue with a comparator that makes it behave as a max-heap.
-                PriorityQueue<int, int> brickAllocations = new PriorityQueue<int, int>(Comparer<int>.Create((a, b) => b.CompareTo(a)));
+                PriorityQueue<int, int> brickAllocations = new PriorityQueue<int, int>(
+                    Comparer<int>.Create((a, b) => b.CompareTo(a))
+                );
                 for (int i = 0; i < heights.Length - 1; i++)
                 {
                     int climb = heights[i + 1] - heights[i];
@@ -15866,7 +16927,7 @@ Same as Approach 1. In the worst case, there'll be N−1 climbs in the heap.
                     // Otherwise, allocate a ladder for this climb.
                     brickAllocations.Enqueue(climb, climb);
                     bricks -= climb;
-                    // If we've used all the bricks, and have no ladders remaining, then 
+                    // If we've used all the bricks, and have no ladders remaining, then
                     // we can't go any further.
                     if (bricks < 0 && ladders == 0)
                     {
@@ -15883,6 +16944,7 @@ Same as Approach 1. In the worst case, there'll be N−1 climbs in the heap.
                 // If we got to here, this means we had enough materials to cover every climb.
                 return heights.Length - 1;
             }
+
             /*
             Approach 3: Binary Search for Final Reachable Building
 Complexity Analysis
@@ -15893,7 +16955,11 @@ On an array of length N, binary search requires O(logN) iterations to reduce the
 For each iteration, we need to make a new list of up to N - 1 climbs. This gives us a O(N) space complexity (the list is discarded at the end of each iteration, so we never have more than one of these lists using memory at the same time).
 
             */
-            public int UsingBinarySearchForFinalReachableBuliding(int[] heights, int bricks, int ladders)
+            public int UsingBinarySearchForFinalReachableBuliding(
+                int[] heights,
+                int bricks,
+                int ladders
+            )
             {
                 // Do a binary search on the heights array to find the final reachable building.
                 int lo = 0;
@@ -15966,7 +17032,11 @@ Because the creation of sorted_climbs and the binary search happen sequentially,
 The sorted list of climbs requires O(N) space.
 
             */
-            public int UsingImprovedBinarySearchForFinalReachableBuliding(int[] heights, int bricks, int ladders)
+            public int UsingImprovedBinarySearchForFinalReachableBuliding(
+                int[] heights,
+                int bricks,
+                int ladders
+            )
             {
                 // Make a sorted list of all the climbs.
                 List<int[]> sortedClimbs = new List<int[]>();
@@ -16135,10 +17205,7 @@ Comparing this to the previous approaches, it will generally perform quite well.
                 }
                 return new int[] { heights.Length - 1, ladders, bricks };
             }
-
         }
-
-
 
         /* 2940. Find Building Where Alice and Bob Can Meet
         https://leetcode.com/problems/find-building-where-alice-and-bob-can-meet/description/
@@ -16158,7 +17225,9 @@ where q = queries.size
             List<int[]>[] queryList = new List<int[]>[numberOfBuildings];
             for (int buildingIndex = 0; buildingIndex < numberOfBuildings; buildingIndex++)
                 queryList[buildingIndex] = new List<int[]>();
-            PriorityQueue<int[], int[]> heightQueue = new PriorityQueue<int[], int[]>(Comparer<int[]>.Create((a, b) => a[0].CompareTo(b[0])));
+            PriorityQueue<int[], int[]> heightQueue = new PriorityQueue<int[], int[]>(
+                Comparer<int[]>.Create((a, b) => a[0].CompareTo(b[0]))
+            );
             int[] results = new int[numberOfQueries];
             Array.Fill(results, -1);
             // Step 1
@@ -16180,7 +17249,14 @@ where q = queries.size
                 }
                 else
                 { // Step 2
-                    queryList[Math.Max(startIndex, endIndex)].Add(new int[] { Math.Max(heights[startIndex], heights[endIndex]), queryIndex });
+                    queryList[Math.Max(startIndex, endIndex)]
+                        .Add(
+                            new int[]
+                            {
+                                Math.Max(heights[startIndex], heights[endIndex]),
+                                queryIndex,
+                            }
+                        );
                 }
             }
             // Step 3
@@ -16198,7 +17274,6 @@ where q = queries.size
 
             return results;
         }
-
 
         /* 1944. Number of Visible People in a Queue
         https://leetcode.com/problems/number-of-visible-people-in-a-queue/description/
@@ -16232,7 +17307,6 @@ where q = queries.size
             }
         }
 
-
         /* 1762. Buildings With an Ocean View
         https://leetcode.com/problems/buildings-with-an-ocean-view/description/
          */
@@ -16242,13 +17316,13 @@ where q = queries.size
             Approach 1: Linear Iteration
             Complexity Analysis
 Here N is the size of the given array.
-	Time complexity: O(N).
-	We iterate over the given array once.
-	Each building's index can be pushed to answer and popped from answer at most once, and both of the operations take O(1) time.
-	In Java, copying the elements from an array list to an integer array will take an additional O(N) time.
-	Space complexity: O(N).
-	There is no auxiliary space used other than the output. The output does not count towards the space complexity. However, in the worst-case scenario, answer may contain as many as N−1 indices, and then the very last building is the tallest, so the output will reduce to one index. In this scenario, the algorithm must store N−1 elements at some point, but only 1 element is included in the output.
-	In Java, in order to maintain a dynamic size array, we created an extra Array List that supports fast O(1) push/pop operation. Array List can contain at most N elements. Hence in Java, an additional O(N) space is used.
+    Time complexity: O(N).
+    We iterate over the given array once.
+    Each building's index can be pushed to answer and popped from answer at most once, and both of the operations take O(1) time.
+    In Java, copying the elements from an array list to an integer array will take an additional O(N) time.
+    Space complexity: O(N).
+    There is no auxiliary space used other than the output. The output does not count towards the space complexity. However, in the worst-case scenario, answer may contain as many as N−1 indices, and then the very last building is the tallest, so the output will reduce to one index. In this scenario, the algorithm must store N−1 elements at some point, but only 1 element is included in the output.
+    In Java, in order to maintain a dynamic size array, we created an extra Array List that supports fast O(1) push/pop operation. Array List can contain at most N elements. Hence in Java, an additional O(N) space is used.
 
             */
             public int[] LinearRotation(int[] heights)
@@ -16258,7 +17332,7 @@ Here N is the size of the given array.
 
                 for (int current = 0; current < n; ++current)
                 {
-                    // If the current building is taller, 
+                    // If the current building is taller,
                     // it will block the shorter building's ocean view to its left.
                     // So we pop all the shorter buildings that have been added before.
                     while (list.Count > 0 && heights[list[list.Count - 1]] <= heights[current])
@@ -16298,15 +17372,22 @@ Here N is the size of the given array.
 
                 // Monotonically decreasing stack.
                 Stack<int> buildingStack = new Stack<int>();
-                for (int currentBuildingIndex = numberOfBuildings - 1; currentBuildingIndex >= 0; --currentBuildingIndex)
+                for (
+                    int currentBuildingIndex = numberOfBuildings - 1;
+                    currentBuildingIndex >= 0;
+                    --currentBuildingIndex
+                )
                 {
                     // If the building to the right is smaller, we can pop it.
-                    while (buildingStack.Count > 0 && heights[buildingStack.Peek()] < heights[currentBuildingIndex])
+                    while (
+                        buildingStack.Count > 0
+                        && heights[buildingStack.Peek()] < heights[currentBuildingIndex]
+                    )
                     {
                         buildingStack.Pop();
                     }
 
-                    // If the stack is empty, it means there is no building to the right 
+                    // If the stack is empty, it means there is no building to the right
                     // that can block the view of the current building.
                     if (buildingStack.Count == 0)
                     {
@@ -16328,16 +17409,16 @@ Here N is the size of the given array.
             }
 
             /*
-        Approach 3: Monotonic Stack Space Optimization   
+        Approach 3: Monotonic Stack Space Optimization
         Complexity Analysis
 Here N is the size of the given array.
-	Time complexity: O(N).
-	We iterate over the given array once, and for each building height, we perform a constant number of operations.
-	The answer array is reversed at the end, which also takes O(N) time.
-	In Java, copying the elements from the array list to an integer array in reverse order also takes O(N).
-	Space complexity: O(1).
-	No auxiliary space was used other than for the output array.
-	Although, in Java, in order to maintain a dynamic size array (since we don't know the size of the output array at the beginning), we created an extra Array List that supports fast O(1) push operation. Array List can contain at most N elements, hence for the Java solution, the space complexity is O(N).
+    Time complexity: O(N).
+    We iterate over the given array once, and for each building height, we perform a constant number of operations.
+    The answer array is reversed at the end, which also takes O(N) time.
+    In Java, copying the elements from the array list to an integer array in reverse order also takes O(N).
+    Space complexity: O(1).
+    No auxiliary space was used other than for the output array.
+    Although, in Java, in order to maintain a dynamic size array (since we don't know the size of the output array at the beginning), we created an extra Array List that supports fast O(1) push operation. Array List can contain at most N elements, hence for the Java solution, the space complexity is O(N).
  
             */
             public int[] UsingMontonicStackSpaceOptimaal(int[] heights)
@@ -16369,9 +17450,8 @@ Here N is the size of the given array.
             }
         }
 
-
         /* 2282. Number of People That Can Be Seen in a Grid
-        https://leetcode.com/problems/number-of-people-that-can-be-seen-in-a-grid/description/	
+        https://leetcode.com/problems/number-of-people-that-can-be-seen-in-a-grid/description/
          */
         public class SeePeopleSol
         {
@@ -16382,7 +17462,8 @@ Time Complextiy: O(MN)
             */
             public int[][] Monostack(int[][] heights)
             {
-                int rowCount = heights.Length, columnCount = heights[0].Length;
+                int rowCount = heights.Length,
+                    columnCount = heights[0].Length;
                 int[][] result = new int[rowCount][];
                 for (int i = 0; i < rowCount; i++)
                 {
@@ -16435,14 +17516,12 @@ Time Complextiy: O(MN)
             }
         }
 
-
-
-        /* 2281. Sum of Total Strength of Wizards	
+        /* 2281. Sum of Total Strength of Wizards
         https://leetcode.com/problems/sum-of-total-strength-of-wizards/description/
          */
         public class TotalStrengthSol
         {
-            /*           
+            /*
 Approach: Prefix Sum + Monotonic Stack
 Complexity Analysis
 Let n be the length of the input array strength.
@@ -16459,7 +17538,8 @@ o	We build some auxiliary arrays leftIndex, rightIndex, and presumOfPresum, each
             */
             public int PrefixSumwithMonoStack(int[] strength)
             {
-                int mod = (int)1e9 + 7, n = strength.Length;
+                int mod = (int)1e9 + 7,
+                    n = strength.Length;
 
                 // Get the first index of the non-larger value to strength[i]'s right.
                 Stack<int> stack = new Stack<int>();
@@ -16497,23 +17577,33 @@ o	We build some auxiliary arrays leftIndex, rightIndex, and presumOfPresum, each
                 for (int i = 0; i < n; ++i)
                 {
                     // Get the left index and the right index.
-                    int leftBound = leftIndex[i], rightBound = rightIndex[i];
+                    int leftBound = leftIndex[i],
+                        rightBound = rightIndex[i];
 
                     // Get leftCount and rightCount (marked as L and R in the previous slides)
-                    int leftCount = i - leftBound, rightCount = rightBound - i;
+                    int leftCount = i - leftBound,
+                        rightCount = rightBound - i;
 
                     // Get posPresum and negPresum.
-                    long negPresum = (presumOfPresum[i + 1] - presumOfPresum[i - leftCount + 1]) % mod;
-                    long posPresum = (presumOfPresum[i + rightCount + 1] - presumOfPresum[i + 1]) % mod;
+                    long negPresum =
+                        (presumOfPresum[i + 1] - presumOfPresum[i - leftCount + 1]) % mod;
+                    long posPresum =
+                        (presumOfPresum[i + rightCount + 1] - presumOfPresum[i + 1]) % mod;
 
                     // The total strength of all subarrays that have strength[i] as the minimum.
-                    answer = (answer + (posPresum * leftCount - negPresum * rightCount) % mod * strength[i] % mod) % mod;
+                    answer =
+                        (
+                            answer
+                            + (posPresum * leftCount - negPresum * rightCount)
+                                % mod
+                                * strength[i]
+                                % mod
+                        ) % mod;
                 }
 
                 return (int)(answer + mod) % mod;
             }
         }
-
 
         /* 2345. Finding the Number of Visible Mountains
         https://leetcode.com/problems/finding-the-number-of-visible-mountains/description/
@@ -16527,7 +17617,6 @@ Sort + linear pass
             int pCnt = peaks.Length;
             int[][] bases = new int[pCnt][];
 
-
             for (int idx = 0; idx < bases.Length; idx++)
             {
                 bases[idx][0] = peaks[idx][0] - peaks[idx][1];
@@ -16536,9 +17625,11 @@ Sort + linear pass
 
             Array.Sort(bases, (a, b) => a[0] - b[0] == 0 ? b[1] - a[1] : a[0] - b[0]);
 
-
-            int i = 0, j = 0, visible = 0;
-            Boolean go = true, duplicate = false;
+            int i = 0,
+                j = 0,
+                visible = 0;
+            Boolean go = true,
+                duplicate = false;
             while (go)
             {
                 go = false;
@@ -16547,7 +17638,6 @@ Sort + linear pass
                 j = i + 1;
                 while (j < pCnt)
                 {
-
                     if (bases[j][1] > bases[i][1])
                     {
                         i = j;
@@ -16563,14 +17653,10 @@ Sort + linear pass
 
                 if (!duplicate)
                     visible++;
-
             }
 
-
             return visible;
-
         }
-
 
         /* 1672. Richest Customer Wealth
         https://leetcode.com/problems/richest-customer-wealth/description/
@@ -16612,7 +17698,6 @@ Sort + linear pass
             }
         }
 
-
         /* 1710. Maximum Units on a Truck
         https://leetcode.com/problems/maximum-units-on-a-truck/description/
          */
@@ -16644,6 +17729,7 @@ Sort + linear pass
                 }
                 return unitCount;
             }
+
             private int FindMaxUnitBox(int[][] boxTypes)
             {
                 int maxUnitBoxIndex = -1;
@@ -16696,7 +17782,8 @@ Post that, we would continue iteration until queue is not empty or remaining tru
             {
                 // Create a priority queue sorted by the number of units per box in descending order
                 PriorityQueue<int[], int[]> queue = new PriorityQueue<int[], int[]>(
-                    Comparer<int[]>.Create((a, b) => b[1] - a[1]));
+                    Comparer<int[]>.Create((a, b) => b[1] - a[1])
+                );
                 foreach (var boxType in boxTypes)
                 {
                     queue.Enqueue(boxType, boxType);
@@ -16714,10 +17801,7 @@ Post that, we would continue iteration until queue is not empty or remaining tru
                 }
                 return totalUnitCount;
             }
-
         }
-
-
 
         /* 2279. Maximum Bags With Full Capacity of Rocks
         https://leetcode.com/problems/maximum-bags-with-full-capacity-of-rocks/description/
@@ -16741,7 +17825,8 @@ o	We use an array of size n to store the remaining capacity of each bag.
             */
             public int WithGreedy(int[] capacity, int[] rocks, int additionalRocks)
             {
-                int n = capacity.Length, fullBags = 0;
+                int n = capacity.Length,
+                    fullBags = 0;
 
                 // Sort bags by the remaining capacity.
                 int[] remainingCapacity = new int[n];
@@ -16767,7 +17852,6 @@ o	We use an array of size n to store the remaining capacity of each bag.
                 return fullBags;
             }
         }
-
 
         /* 1732. Find the Highest Altitude
         https://leetcode.com/problems/find-the-highest-altitude/description/
@@ -16802,7 +17886,6 @@ We only need two variables, currentAltitude andhighestPoint; hence the space com
             }
         }
 
-
         /* 1833. Maximum Ice Cream Bars
         https://leetcode.com/problems/maximum-ice-cream-bars/description/
          */
@@ -16836,13 +17919,14 @@ o	In Swift, copying the costs array will also take an additional O(n) space.
                 // Pick ice creams till we can.
                 while (icecream < n && costs[icecream] <= coins)
                 {
-                    // We can buy this icecream, reduce the cost from the coins. 
+                    // We can buy this icecream, reduce the cost from the coins.
                     coins -= costs[icecream];
                     icecream += 1;
                 }
 
                 return icecream;
             }
+
             /*
             
 Approach 2: Counting Sort (Greedy)
@@ -16899,7 +17983,7 @@ o	We use an additional array costsFrequency of size m.
         }
 
         /* 1834. Single-Threaded CPU
-        https://leetcode.com/problems/single-threaded-cpu/description/	
+        https://leetcode.com/problems/single-threaded-cpu/description/
          */
         class GetOrderSol
         {
@@ -16919,11 +18003,11 @@ o	Thus, we use O(N+N)≈O(N) extra space.
             */
             public int[] WihtMinHeapAndSorting(int[][] tasks)
             {
-
                 // Sort based on min task processing time or min task index.
                 // Store enqueue time, processing time, task index.
                 PriorityQueue<int[], int[]> nextTask = new PriorityQueue<int[], int[]>(
-                    Comparer<int[]>.Create((a, b) => (a[1] != b[1] ? (a[1] - b[1]) : (a[2] - b[2]))));
+                    Comparer<int[]>.Create((a, b) => (a[1] != b[1] ? (a[1] - b[1]) : (a[2] - b[2])))
+                );
 
                 // Store task enqueue time, processing time, index.
                 int[][] sortedTasks = new int[tasks.Length][];
@@ -16946,7 +18030,7 @@ o	Thus, we use O(N+N)≈O(N) extra space.
                 {
                     if (nextTask.Count == 0 && currTime < sortedTasks[taskIndex][0])
                     {
-                        // When the heap is empty, try updating currTime to next task's enqueue time. 
+                        // When the heap is empty, try updating currTime to next task's enqueue time.
                         currTime = sortedTasks[taskIndex][0];
                     }
 
@@ -16970,8 +18054,6 @@ o	Thus, we use O(N+N)≈O(N) extra space.
             }
         }
 
-
-
         /* 2589. Minimum Time to Complete All Tasks
         https://leetcode.com/problems/minimum-time-to-complete-all-tasks/description/
          */
@@ -16979,7 +18061,8 @@ o	Thus, we use O(N+N)≈O(N) extra space.
         {
             public int FindMinimumTimeToCompleteAllTasks(int[][] tasks)
             {
-                if (tasks == null || tasks.Length == 0) return 0;
+                if (tasks == null || tasks.Length == 0)
+                    return 0;
                 Array.Sort(tasks, (a, b) => (a[1] - b[1])); // sort by end time increasing to complete early task first
                 bool[] slots = new bool[2001];
                 foreach (int[] task in tasks)
@@ -17009,12 +18092,12 @@ o	Thus, we use O(N+N)≈O(N) extra space.
                 int res = 0;
                 foreach (bool slot in slots)
                 {
-                    if (slot) res++;
+                    if (slot)
+                        res++;
                 }
                 return res;
             }
         }
-
 
         /* 1908. Game of Nim
         https://leetcode.com/problems/game-of-nim/description/
@@ -17053,7 +18136,11 @@ o	Out of two terms, the first one is much larger than the second one. So, the to
                 return IsNextPersonWinner(piles, remainingStones, memoizationMap);
             }
 
-            private bool IsNextPersonWinner(int[] piles, int remainingStones, Dictionary<string, bool> memoizationMap)
+            private bool IsNextPersonWinner(
+                int[] piles,
+                int remainingStones,
+                Dictionary<string, bool> memoizationMap
+            )
             {
                 // Make a key by concatenating the count of stones
                 // in each pile, so key for the state [1, 2, 3] => '1-2-3'.
@@ -17112,6 +18199,7 @@ o	Out of two terms, the first one is much larger than the second one. So, the to
                 }
                 return keyBuilder.ToString();
             }
+
             /*
             Approach 2: Mathematical / Bit Manipulation
             Complexity Analysis
@@ -17130,7 +18218,6 @@ Let n be the number of piles, and m be the maximum number of stones in a heap.
                 return nimSum != 0;
             }
         }
-
 
         /* 1926. Nearest Exit from Entrance in Maze
         https://leetcode.com/problems/nearest-exit-from-entrance-in-maze/description/
@@ -17154,14 +18241,22 @@ o	The space complexity is O(m+n)+O(max(m,n)).
             */
             public int NearestExit(char[][] maze, int[] entrance)
             {
-                int numberOfRows = maze.Length, numberOfColumns = maze[0].Length;
-                int[][] directions = new int[][] { new int[] { 1, 0 }, new int[] { -1, 0 }, new int[] { 0, 1 }, new int[] { 0, -1 } };
+                int numberOfRows = maze.Length,
+                    numberOfColumns = maze[0].Length;
+                int[][] directions = new int[][]
+                {
+                    new int[] { 1, 0 },
+                    new int[] { -1, 0 },
+                    new int[] { 0, 1 },
+                    new int[] { 0, -1 },
+                };
 
                 // Mark the entrance as visited since it's not an exit.
-                int startRow = entrance[0], startColumn = entrance[1];
+                int startRow = entrance[0],
+                    startColumn = entrance[1];
                 maze[startRow][startColumn] = '+';
 
-                // Start BFS from the entrance, and use a queue `queue` to store all 
+                // Start BFS from the entrance, and use a queue `queue` to store all
                 // the cells to be visited.
                 Queue<int[]> queue = new Queue<int[]>();
                 queue.Enqueue(new int[] { startRow, startColumn, 0 });
@@ -17169,20 +18264,32 @@ o	The space complexity is O(m+n)+O(max(m,n)).
                 while (queue.Count > 0)
                 {
                     int[] currentState = queue.Dequeue();
-                    int currentRow = currentState[0], currentColumn = currentState[1], currentDistance = currentState[2];
+                    int currentRow = currentState[0],
+                        currentColumn = currentState[1],
+                        currentDistance = currentState[2];
 
                     // For the current cell, check its four neighbor cells.
                     foreach (int[] direction in directions)
                     {
-                        int nextRow = currentRow + direction[0], nextColumn = currentColumn + direction[1];
+                        int nextRow = currentRow + direction[0],
+                            nextColumn = currentColumn + direction[1];
 
                         // If there exists an unvisited empty neighbor:
-                        if (0 <= nextRow && nextRow < numberOfRows && 0 <= nextColumn && nextColumn < numberOfColumns
-                           && maze[nextRow][nextColumn] == '.')
+                        if (
+                            0 <= nextRow
+                            && nextRow < numberOfRows
+                            && 0 <= nextColumn
+                            && nextColumn < numberOfColumns
+                            && maze[nextRow][nextColumn] == '.'
+                        )
                         {
-
                             // If this empty cell is an exit, return distance + 1.
-                            if (nextRow == 0 || nextRow == numberOfRows - 1 || nextColumn == 0 || nextColumn == numberOfColumns - 1)
+                            if (
+                                nextRow == 0
+                                || nextRow == numberOfRows - 1
+                                || nextColumn == 0
+                                || nextColumn == numberOfColumns - 1
+                            )
                                 return currentDistance + 1;
 
                             // Otherwise, add this cell to 'queue' and mark it as visited.
@@ -17203,6 +18310,7 @@ o	The space complexity is O(m+n)+O(max(m,n)).
         class LongestObstacleCourseAtEachPositionSol
         {
             List<int> answer;
+
             /*
             Approach: Greedy + Binary Search.
             Complexity Analysis
@@ -17217,10 +18325,12 @@ o	The space complexity is O(m+n)+O(max(m,n)).
             */
             public int[] GreedyWithBinarySearch(int[] obstacles)
             {
-                int n = obstacles.Length, lisLength = 0;
+                int n = obstacles.Length,
+                    lisLength = 0;
 
                 // lis[i] records the lowest increasing sequence of length i + 1.
-                int[] answer = new int[n], lis = new int[n];
+                int[] answer = new int[n],
+                    lis = new int[n];
 
                 for (int i = 0; i < n; ++i)
                 {
@@ -17236,7 +18346,8 @@ o	The space complexity is O(m+n)+O(max(m,n)).
                 }
                 return answer;
             }
-            // Find the rightmost insertion position. We use a fixed-length array and a changeable right boundary 
+
+            // Find the rightmost insertion position. We use a fixed-length array and a changeable right boundary
             // to represent an arraylist of dynamic size.
             private int BisectRight(int[] A, int target, int right)
             {
@@ -17254,7 +18365,6 @@ o	The space complexity is O(m+n)+O(max(m,n)).
                 return left;
             }
         }
-
 
         /* 1996. The Number of Weak Characters in the Game
         https://leetcode.com/problems/the-number-of-weak-characters-in-the-game/description/
@@ -17274,8 +18384,7 @@ We only need two variables maxDefense and weakCharacters to solve the problem. S
      */
             public int WithSorting(int[][] properties)
             {
-
-                // Sort in ascending order of attack, 
+                // Sort in ascending order of attack,
                 // If attack is same sort in descending order of defense
                 Array.Sort(properties, (a, b) => (a[0] == b[0]) ? (b[1] - a[1]) : a[0] - b[0]);
 
@@ -17293,6 +18402,7 @@ We only need two variables maxDefense and weakCharacters to solve the problem. S
 
                 return weakCharacters;
             }
+
             /*
             Approach 2: Greedy
 Complexity Analysis
@@ -17300,7 +18410,7 @@ Here, N is the number of pairs in the given list properties, and K is the maximu
 •	Time complexity: O(N+K)
 The iteration over the pairs to find the maximum defense value for a particular attack value takes O(N) time. The iteration over the possible value of the attack property takes O(K) time. The iteration over the properties to count the weak characters takes O(N) time. Therefore, the total time complexity equals to O(N+K).
 •	Space complexity: O(K)
-The array maxDefense will be of size K to store the defense value corresponding to all the attack values.	
+The array maxDefense will be of size K to store the defense value corresponding to all the attack values.
 
             */
             public int WithGreedy(int[][] properties)
@@ -17346,10 +18456,9 @@ The array maxDefense will be of size K to store the defense value corresponding 
             }
         }
 
-
-        /* 
-        354. Russian Doll Envelopes	
-        https://leetcode.com/problems/russian-doll-envelopes/description/	
+        /*
+        354. Russian Doll Envelopes
+        https://leetcode.com/problems/russian-doll-envelopes/description/
          */
 
         class MaxEnvelopesSol
@@ -17365,20 +18474,24 @@ The array maxDefense will be of size K to store the defense value corresponding 
             public int UsingSortAndLIS(int[][] envelopes)
             {
                 // sort on increasing in first dimension and decreasing in second
-                Array.Sort(envelopes, (arr1, arr2) =>
-                {
-                    if (arr1[0] == arr2[0])
+                Array.Sort(
+                    envelopes,
+                    (arr1, arr2) =>
                     {
-                        return arr2[1] - arr1[1];
+                        if (arr1[0] == arr2[0])
+                        {
+                            return arr2[1] - arr1[1];
+                        }
+                        else
+                        {
+                            return arr1[0] - arr2[0];
+                        }
                     }
-                    else
-                    {
-                        return arr1[0] - arr2[0];
-                    }
-                });
+                );
                 // extract the second dimension and run LIS
                 int[] secondDimension = new int[envelopes.Length];
-                for (int i = 0; i < envelopes.Length; ++i) secondDimension[i] = envelopes[i][1];
+                for (int i = 0; i < envelopes.Length; ++i)
+                    secondDimension[i] = envelopes[i][1];
                 return LengthOfLIS(secondDimension);
             }
 
@@ -17401,8 +18514,6 @@ The array maxDefense will be of size K to store the defense value corresponding 
                 }
                 return length;
             }
-
-
         }
 
         /* 529. Minesweeper
@@ -17411,12 +18522,14 @@ The array maxDefense will be of size K to store the defense value corresponding 
         public class UpdateBoardSol
         {
             /*
-            1. DFS 
+            1. DFS
             */
             public char[][] DFS(char[][] board, int[] click)
             {
-                int m = board.Length, n = board[0].Length;
-                int row = click[0], col = click[1];
+                int m = board.Length,
+                    n = board[0].Length;
+                int row = click[0],
+                    col = click[1];
 
                 if (board[row][col] == 'M')
                 { // Mine
@@ -17424,16 +18537,20 @@ The array maxDefense will be of size K to store the defense value corresponding 
                 }
                 else
                 { // Empty
-                  // Get number of mines first.
+                    // Get number of mines first.
                     int count = 0;
                     for (int i = -1; i < 2; i++)
                     {
                         for (int j = -1; j < 2; j++)
                         {
-                            if (i == 0 && j == 0) continue;
-                            int r = row + i, c = col + j;
-                            if (r < 0 || r >= m || c < 0 || c < 0 || c >= n) continue;
-                            if (board[r][c] == 'M' || board[r][c] == 'X') count++;
+                            if (i == 0 && j == 0)
+                                continue;
+                            int r = row + i,
+                                c = col + j;
+                            if (r < 0 || r >= m || c < 0 || c < 0 || c >= n)
+                                continue;
+                            if (board[r][c] == 'M' || board[r][c] == 'X')
+                                count++;
                         }
                     }
 
@@ -17448,10 +18565,14 @@ The array maxDefense will be of size K to store the defense value corresponding 
                         {
                             for (int j = -1; j < 2; j++)
                             {
-                                if (i == 0 && j == 0) continue;
-                                int r = row + i, c = col + j;
-                                if (r < 0 || r >= m || c < 0 || c < 0 || c >= n) continue;
-                                if (board[r][c] == 'E') DFS(board, new int[] { r, c });
+                                if (i == 0 && j == 0)
+                                    continue;
+                                int r = row + i,
+                                    c = col + j;
+                                if (r < 0 || r >= m || c < 0 || c < 0 || c >= n)
+                                    continue;
+                                if (board[r][c] == 'E')
+                                    DFS(board, new int[] { r, c });
                             }
                         }
                     }
@@ -17459,19 +18580,22 @@ The array maxDefense will be of size K to store the defense value corresponding 
 
                 return board;
             }
+
             /*
             2.BFS
             */
             public char[][] BFS(char[][] board, int[] click)
             {
-                int m = board.Length, n = board[0].Length;
+                int m = board.Length,
+                    n = board[0].Length;
                 Queue<int[]> queue = new Queue<int[]>();
                 queue.Enqueue(click);
 
                 while (queue.Count > 0)
                 {
                     int[] cell = queue.Dequeue();
-                    int row = cell[0], col = cell[1];
+                    int row = cell[0],
+                        col = cell[1];
 
                     if (board[row][col] == 'M')
                     { // Mine
@@ -17479,16 +18603,20 @@ The array maxDefense will be of size K to store the defense value corresponding 
                     }
                     else
                     { // Empty
-                      // Get number of mines first.
+                        // Get number of mines first.
                         int count = 0;
                         for (int i = -1; i < 2; i++)
                         {
                             for (int j = -1; j < 2; j++)
                             {
-                                if (i == 0 && j == 0) continue;
-                                int r = row + i, c = col + j;
-                                if (r < 0 || r >= m || c < 0 || c < 0 || c >= n) continue;
-                                if (board[r][c] == 'M' || board[r][c] == 'X') count++;
+                                if (i == 0 && j == 0)
+                                    continue;
+                                int r = row + i,
+                                    c = col + j;
+                                if (r < 0 || r >= m || c < 0 || c < 0 || c >= n)
+                                    continue;
+                                if (board[r][c] == 'M' || board[r][c] == 'X')
+                                    count++;
                             }
                         }
 
@@ -17503,9 +18631,12 @@ The array maxDefense will be of size K to store the defense value corresponding 
                             {
                                 for (int j = -1; j < 2; j++)
                                 {
-                                    if (i == 0 && j == 0) continue;
-                                    int r = row + i, c = col + j;
-                                    if (r < 0 || r >= m || c < 0 || c < 0 || c >= n) continue;
+                                    if (i == 0 && j == 0)
+                                        continue;
+                                    int r = row + i,
+                                        c = col + j;
+                                    if (r < 0 || r >= m || c < 0 || c < 0 || c >= n)
+                                        continue;
                                     if (board[r][c] == 'E')
                                     {
                                         queue.Enqueue(new int[] { r, c });
@@ -17519,8 +18650,6 @@ The array maxDefense will be of size K to store the defense value corresponding 
 
                 return board;
             }
-
-
         }
 
         /* 2101. Detonate the Maximum Bombs
@@ -17559,11 +18688,18 @@ o	The call stack of dfs contains also takes n space.
                         {
                             continue;
                         }
-                        int bombX = bombs[i][0], bombY = bombs[i][1], bombRadius = bombs[i][2];
-                        int targetX = bombs[j][0], targetY = bombs[j][1];
+                        int bombX = bombs[i][0],
+                            bombY = bombs[i][1],
+                            bombRadius = bombs[i][2];
+                        int targetX = bombs[j][0],
+                            targetY = bombs[j][1];
 
                         // Create a path from node i to node j, if bomb i detonates bomb j.
-                        if ((long)bombRadius * bombRadius >= (long)(bombX - targetX) * (bombX - targetX) + (long)(bombY - targetY) * (bombY - targetY))
+                        if (
+                            (long)bombRadius * bombRadius
+                            >= (long)(bombX - targetX) * (bombX - targetX)
+                                + (long)(bombY - targetY) * (bombY - targetY)
+                        )
                         {
                             if (!graph.ContainsKey(i))
                             {
@@ -17628,11 +18764,17 @@ o	To sum up, the space complexity is O(n^2).
                         {
                             continue;
                         }
-                        int x1 = bombs[i][0], y1 = bombs[i][1], radius1 = bombs[i][2];
-                        int x2 = bombs[j][0], y2 = bombs[j][1];
+                        int x1 = bombs[i][0],
+                            y1 = bombs[i][1],
+                            radius1 = bombs[i][2];
+                        int x2 = bombs[j][0],
+                            y2 = bombs[j][1];
 
                         // Create a path from node i to node j, if bomb i detonates bomb j.
-                        if ((long)radius1 * radius1 >= (long)(x1 - x2) * (x1 - x2) + (long)(y1 - y2) * (y1 - y2))
+                        if (
+                            (long)radius1 * radius1
+                            >= (long)(x1 - x2) * (x1 - x2) + (long)(y1 - y2) * (y1 - y2)
+                        )
                         {
                             if (!graph.ContainsKey(i))
                             {
@@ -17698,11 +18840,19 @@ o	queue can store up to n nodes.
                 {
                     for (int j = 0; j < numberOfBombs; j++)
                     {
-                        int xCoordinateI = bombs[i][0], yCoordinateI = bombs[i][1], radiusI = bombs[i][2];
-                        int xCoordinateJ = bombs[j][0], yCoordinateJ = bombs[j][1];
+                        int xCoordinateI = bombs[i][0],
+                            yCoordinateI = bombs[i][1],
+                            radiusI = bombs[i][2];
+                        int xCoordinateJ = bombs[j][0],
+                            yCoordinateJ = bombs[j][1];
 
                         // Create a path from node i to node j, if bomb i detonates bomb j.
-                        if ((long)radiusI * radiusI >= (long)(xCoordinateI - xCoordinateJ) * (xCoordinateI - xCoordinateJ) + (long)(yCoordinateI - yCoordinateJ) * (yCoordinateI - yCoordinateJ))
+                        if (
+                            (long)radiusI * radiusI
+                            >= (long)(xCoordinateI - xCoordinateJ) * (xCoordinateI - xCoordinateJ)
+                                + (long)(yCoordinateI - yCoordinateJ)
+                                    * (yCoordinateI - yCoordinateJ)
+                        )
                         {
                             if (!graph.ContainsKey(i))
                             {
@@ -17744,9 +18894,8 @@ o	queue can store up to n nodes.
             }
         }
 
-
         /* 2140. Solving Questions With Brainpower
-        https://leetcode.com/problems/solving-questions-with-brainpower/description/	
+        https://leetcode.com/problems/solving-questions-with-brainpower/description/
          */
         class MostPointsSol
         {
@@ -17796,6 +18945,7 @@ o	We initialize an array of size n.
 
              */
             long[] dp;
+
             public long DFSRec(int[][] questions)
             {
                 int n = questions.Length;
@@ -17803,6 +18953,7 @@ o	We initialize an array of size n.
 
                 return dfs(questions, 0);
             }
+
             private long dfs(int[][] questions, int i)
             {
                 if (i >= questions.Length)
@@ -17820,14 +18971,11 @@ o	We initialize an array of size n.
                 dp[i] = Math.Max(points + dfs(questions, i + skip + 1), dfs(questions, i + 1));
                 return dp[i];
             }
-
-
-
         }
 
-        /* 
+        /*
         2225. Find Players With Zero or One Losses
-        https://leetcode.com/problems/find-players-with-zero-or-one-losses/description/	
+        https://leetcode.com/problems/find-players-with-zero-or-one-losses/description/
          */
 
 
@@ -17847,12 +18995,14 @@ o	We use three hash sets to store all the players, there are at most O(n) player
             */
             public IList<List<int>> WithHashSet(int[][] matches)
             {
-                HashSet<int> noLossPlayers = new HashSet<int>(), oneLossPlayers = new HashSet<int>(),
-                        moreLossPlayers = new HashSet<int>();
+                HashSet<int> noLossPlayers = new HashSet<int>(),
+                    oneLossPlayers = new HashSet<int>(),
+                    moreLossPlayers = new HashSet<int>();
 
                 foreach (int[] match in matches)
                 {
-                    int winner = match[0], loser = match[1];
+                    int winner = match[0],
+                        loser = match[1];
                     // Add winner.
                     if (!oneLossPlayers.Contains(winner) && !moreLossPlayers.Contains(winner))
                     {
@@ -17879,10 +19029,7 @@ o	We use three hash sets to store all the players, there are at most O(n) player
                     }
                 }
 
-                IList<List<int>> result = new List<List<int>> {
-            new List<int>(),
-            new List<int>()
-        };
+                IList<List<int>> result = new List<List<int>> { new List<int>(), new List<int>() };
                 result[0] = noLossPlayers.ToList();
                 result[1] = oneLossPlayers.ToList();
                 result[0].Sort();
@@ -17911,7 +19058,8 @@ o	We use a hash set and a hash map to store all the players, there are at most O
 
                 foreach (int[] match in matches)
                 {
-                    int winner = match[0], loser = match[1];
+                    int winner = match[0],
+                        loser = match[1];
                     playersSeen.Add(winner);
                     playersSeen.Add(loser);
                     if (playerLossesCount.ContainsKey(loser))
@@ -17961,7 +19109,8 @@ o	We use a hash map to store all players and their number of losses, which requi
 
                 foreach (int[] match in matches)
                 {
-                    int winner = match[0], loser = match[1];
+                    int winner = match[0],
+                        loser = match[1];
                     if (!lossesCount.ContainsKey(winner))
                     {
                         lossesCount[winner] = 0;
@@ -17973,7 +19122,11 @@ o	We use a hash map to store all players and their number of losses, which requi
                     lossesCount[loser]++;
                 }
 
-                IList<IList<int>> answer = new List<IList<int>> { new List<int>(), new List<int>() };
+                IList<IList<int>> answer = new List<IList<int>>
+                {
+                    new List<int>(),
+                    new List<int>(),
+                };
                 foreach (int player in lossesCount.Keys)
                 {
                     if (lossesCount[player] == 0)
@@ -18028,7 +19181,11 @@ o	We need to create an array of size O(k) to cover all players. Thus the overall
                     }
                 }
 
-                IList<IList<int>> answer = new List<IList<int>> { new List<int>(), new List<int>() };
+                IList<IList<int>> answer = new List<IList<int>>
+                {
+                    new List<int>(),
+                    new List<int>(),
+                };
                 for (int i = 1; i < 100001; ++i)
                 {
                     if (lossesCount[i] == 0)
@@ -18044,7 +19201,6 @@ o	We need to create an array of size O(k) to cover all players. Thus the overall
                 return answer;
             }
         }
-
 
         /* 2306. Naming a Company
         https://leetcode.com/problems/naming-a-company/description/
@@ -18097,14 +19253,16 @@ o	We store the suffixes of all words in an array of sets, it takes O(n⋅m) spac
 
                         // Valid names are only from distinct suffixes in both groups.
                         // Since we can swap a with b and swap b with a to create two valid names, multiple answer by 2.
-                        answer += 2 * (initialGroup[i].Count - numOfMutual) * (initialGroup[j].Count - numOfMutual);
+                        answer +=
+                            2
+                            * (initialGroup[i].Count - numOfMutual)
+                            * (initialGroup[j].Count - numOfMutual);
                     }
                 }
 
                 return answer;
             }
         }
-
 
         /* 2305. Fair Distribution of Cookies
         https://leetcode.com/problems/fair-distribution-of-cookies/description/
@@ -18130,6 +19288,7 @@ o	The space complexity of a recursive call depends on the maximum depth of the r
 
                 return Dfs(0, distribute, cookies, k, k);
             }
+
             private int Dfs(int i, int[] distribute, int[] cookies, int k, int zeroCount)
             {
                 // If there are not enough cookies remaining, return int.MaxValue
@@ -18168,11 +19327,7 @@ o	The space complexity of a recursive call depends on the maximum depth of the r
 
                 return answer;
             }
-
-
         }
-
-
 
         /* 2477. Minimum Fuel Cost to Report to the Capital
         https://leetcode.com/problems/minimum-fuel-cost-to-report-to-the-capital/description/
@@ -18192,6 +19347,7 @@ o	The recursion call stack used by dfs can have no more than n elements in the w
 
             */
             long fuel;
+
             public long DFS(int[][] roads, int seats)
             {
                 Dictionary<int, List<int>> adj = new Dictionary<int, List<int>>();
@@ -18212,6 +19368,7 @@ o	The recursion call stack used by dfs can have no more than n elements in the w
                 Dfs(0, -1, adj, seats);
                 return fuel;
             }
+
             private long Dfs(int node, int parent, Dictionary<int, List<int>> adj, int seats)
             {
                 // The node itself has one representative.
@@ -18236,6 +19393,7 @@ o	The recursion call stack used by dfs can have no more than n elements in the w
                 }
                 return representatives;
             }
+
             /*
             Approach 2: Breadth First Search
             Complexity Analysis
@@ -18275,7 +19433,13 @@ o	The recursion call stack used by dfs can have no more than n elements in the w
 
                 return Bfs(nodeCount, adjacencyList, degree, seats);
             }
-            public long Bfs(int nodeCount, Dictionary<int, List<int>> adjacencyList, int[] degree, int seats)
+
+            public long Bfs(
+                int nodeCount,
+                Dictionary<int, List<int>> adjacencyList,
+                int[] degree,
+                int seats
+            )
             {
                 Queue<int> queue = new Queue<int>();
                 for (int i = 1; i < nodeCount; i++)
@@ -18307,18 +19471,15 @@ o	The recursion call stack used by dfs can have no more than n elements in the w
                 }
                 return fuel;
             }
-
-
-
         }
 
         /* 2492. Minimum Score of a Path Between Two Cities
-        https://leetcode.com/problems/minimum-score-of-a-path-between-two-cities/description/	
+        https://leetcode.com/problems/minimum-score-of-a-path-between-two-cities/description/
          */
         class MinScoreSol
         {
             /*
-Approach 1: Breadth First 
+Approach 1: Breadth First
 Complexity Analysis
 Here n is the number of nodes and e is the total number edges.
 •	Time complexity: O(n+e).
@@ -18333,7 +19494,8 @@ o	The visit array takes O(n) space as well.
             */
             public int BFS(int numberOfNodes, int[][] roads)
             {
-                Dictionary<int, List<List<int>>> adjacencyList = new Dictionary<int, List<List<int>>>();
+                Dictionary<int, List<List<int>>> adjacencyList =
+                    new Dictionary<int, List<List<int>>>();
                 foreach (int[] road in roads)
                 {
                     if (!adjacencyList.ContainsKey(road[0]))
@@ -18350,6 +19512,7 @@ o	The visit array takes O(n) space as well.
                 }
                 return Bfs(numberOfNodes, adjacencyList);
             }
+
             private int Bfs(int numberOfNodes, Dictionary<int, List<List<int>>> adjacencyList)
             {
                 bool[] visitedNodes = new bool[numberOfNodes + 1];
@@ -18396,7 +19559,8 @@ o	The visit array takes O(n) space as well.
             */
             public int DFS(int numberOfNodes, int[][] roads)
             {
-                Dictionary<int, List<List<int>>> adjacencyList = new Dictionary<int, List<List<int>>>();
+                Dictionary<int, List<List<int>>> adjacencyList =
+                    new Dictionary<int, List<List<int>>>();
                 foreach (int[] road in roads)
                 {
                     if (!adjacencyList.ContainsKey(road[0]))
@@ -18417,9 +19581,14 @@ o	The visit array takes O(n) space as well.
 
                 return minimumScore;
             }
+
             int minimumScore = int.MaxValue;
 
-            public void DepthFirstSearch(int currentNode, Dictionary<int, List<List<int>>> adjacencyList, bool[] visitedNodes)
+            public void DepthFirstSearch(
+                int currentNode,
+                Dictionary<int, List<List<int>>> adjacencyList,
+                bool[] visitedNodes
+            )
             {
                 visitedNodes[currentNode] = true;
                 if (!adjacencyList.ContainsKey(currentNode))
@@ -18435,6 +19604,7 @@ o	The visit array takes O(n) space as well.
                     }
                 }
             }
+
             /*
             Approach 3: Union-find
             Complexity Analysis
@@ -18469,6 +19639,7 @@ o	We are using the parent and rank arrays, both of which require O(n) space each
 
                 return answer;
             }
+
             class UnionFind
             {
                 int[] parent;
@@ -18491,7 +19662,8 @@ o	We are using the parent and rank arrays, both of which require O(n) space each
 
                 public void UnionSet(int x, int y)
                 {
-                    int xset = Find(x), yset = Find(y);
+                    int xset = Find(x),
+                        yset = Find(y);
                     if (xset == yset)
                     {
                         return;
@@ -18511,11 +19683,7 @@ o	We are using the parent and rank arrays, both of which require O(n) space each
                     }
                 }
             }
-
-
         }
-
-
 
         /* 2551. Put Marbles in Bags
         https://leetcode.com/problems/put-marbles-in-bags/description/
@@ -18545,7 +19713,7 @@ o	We create an auxiliary array pairWeights of size n - 1 to store the value of a
                 // We will sort only the first (n - 1) elements of the array.
                 Array.Sort(pairWeights, 0, n - 1);
 
-                // Get the difference between the largest k - 1 values and the 
+                // Get the difference between the largest k - 1 values and the
                 // smallest k - 1 values.
                 long answer = 0l;
                 for (int i = 0; i < k - 1; ++i)
@@ -18557,48 +19725,48 @@ o	We create an auxiliary array pairWeights of size n - 1 to store the value of a
             }
         }
 
-
-
         /* 351. Android Unlock Patterns
         https://leetcode.com/problems/android-unlock-patterns/description/
          */
 
         class NumberOfPatternsSol
         {
-
             // All possible single-step moves on the lock pattern grid
             // Each array represents a move as {row change, column change}
-            private static int[][] SINGLE_STEP_MOVES = {
-        new int[]{ 0, 1 },
-        new int[]{ 0, -1 },
-        new int[]{ 1, 0 },
-        new int[]{ -1, 0 }, // Adjacent moves (right, left, down, up)
-        new int[]{ 1, 1 },
-        new int[]{ -1, 1 },
-        new int[]{ 1, -1 },
-        new int[]{ -1, -1 }, // Diagonal moves
-        new int[]{ -2, 1 },
-        new int[]{ -2, -1 },
-        new int[]{ 2, 1 },
-        new int[]{ 2, -1 }, // Extended moves (knight-like moves)
-        new int[]{ 1, -2 },
-        new int[]{ -1, -2 },
-        new int[]{ 1, 2 },
-        new int[]{ -1, 2 },
-    };
+            private static int[][] SINGLE_STEP_MOVES =
+            {
+                new int[] { 0, 1 },
+                new int[] { 0, -1 },
+                new int[] { 1, 0 },
+                new int[] { -1, 0 }, // Adjacent moves (right, left, down, up)
+                new int[] { 1, 1 },
+                new int[] { -1, 1 },
+                new int[] { 1, -1 },
+                new int[] { -1, -1 }, // Diagonal moves
+                new int[] { -2, 1 },
+                new int[] { -2, -1 },
+                new int[] { 2, 1 },
+                new int[] { 2, -1 }, // Extended moves (knight-like moves)
+                new int[] { 1, -2 },
+                new int[] { -1, -2 },
+                new int[] { 1, 2 },
+                new int[] { -1, 2 },
+            };
 
             // Moves that require a dot to be visited in between
             // These moves "jump" over a dot, which must have been previously visited
-            private static int[][] SKIP_DOT_MOVES = {
-        new int[]{ 0, 2 },
-        new int[]{ 0, -2 },
-        new int[]{ 2, 0 },
-        new int[]{ -2, 0 }, // Straight skip moves (e.g., 1 to 3, 4 to 6)
-        new int[]{ -2, -2 },
-        new int[]{ 2, 2 },
-        new int[]{ 2, -2 },
-        new int[]{ -2, 2 }, // Diagonal skip moves (e.g., 1 to 9, 3 to 7)
-    };
+            private static int[][] SKIP_DOT_MOVES =
+            {
+                new int[] { 0, 2 },
+                new int[] { 0, -2 },
+                new int[] { 2, 0 },
+                new int[] { -2, 0 }, // Straight skip moves (e.g., 1 to 3, 4 to 6)
+                new int[] { -2, -2 },
+                new int[] { 2, 2 },
+                new int[] { 2, -2 },
+                new int[] { -2, 2 }, // Diagonal skip moves (e.g., 1 to 9, 3 to 7)
+            };
+
             /*
             Approach 1: Backtracking
             Complexity Analysis
@@ -18625,8 +19793,7 @@ o	We create an auxiliary array pairWeights of size n - 1 to store the value of a
                     {
                         bool[][] visitedDots = new bool[3][];
                         // Count patterns starting from this dot
-                        totalPatterns +=
-                        CountPatternsFromDot(m, n, 1, row, col, visitedDots);
+                        totalPatterns += CountPatternsFromDot(m, n, 1, row, col, visitedDots);
                     }
                 }
                 return totalPatterns;
@@ -18649,7 +19816,8 @@ o	We create an auxiliary array pairWeights of size n - 1 to store the value of a
 
                 int validPatterns = 0;
                 // If current pattern length is within the valid range, count it
-                if (currentLength >= m) validPatterns++;
+                if (currentLength >= m)
+                    validPatterns++;
 
                 // Mark current dot as visited
                 visitedDots[currentRow][currentCol] = true;
@@ -18662,8 +19830,7 @@ o	We create an auxiliary array pairWeights of size n - 1 to store the value of a
                     if (IsValidMove(newRow, newCol, visitedDots))
                     {
                         // Recursively count patterns from the new position
-                        validPatterns +=
-                        CountPatternsFromDot(
+                        validPatterns += CountPatternsFromDot(
                             m,
                             n,
                             currentLength + 1,
@@ -18687,8 +19854,7 @@ o	We create an auxiliary array pairWeights of size n - 1 to store the value of a
                         if (visitedDots[middleRow][middleCol])
                         {
                             // If middle dot is visited, this move is valid
-                            validPatterns +=
-                            CountPatternsFromDot(
+                            validPatterns += CountPatternsFromDot(
                                 m,
                                 n,
                                 currentLength + 1,
@@ -18709,9 +19875,7 @@ o	We create an auxiliary array pairWeights of size n - 1 to store the value of a
             private bool IsValidMove(int row, int col, bool[][] visitedDots)
             {
                 // A move is valid if it's within the grid and the dot hasn't been visited
-                return (
-                    row >= 0 && col >= 0 && row < 3 && col < 3 && !visitedDots[row][col]
-                );
+                return (row >= 0 && col >= 0 && row < 3 && col < 3 && !visitedDots[row][col]);
             }
 
             /*
@@ -18741,16 +19905,13 @@ The jump array is a 10×10 grid which takes constant space. The maximum depth of
                 int totalPatterns = 0;
 
                 // Count patterns starting from corner numbers (1, 3, 7, 9) and multiply by 4 due to symmetry
-                totalPatterns +=
-                CountPatternsFromNumber(1, 1, m, n, jump, visitedNumbers) * 4;
+                totalPatterns += CountPatternsFromNumber(1, 1, m, n, jump, visitedNumbers) * 4;
 
                 // Count patterns starting from edge numbers (2, 4, 6, 8) and multiply by 4 due to symmetry
-                totalPatterns +=
-                CountPatternsFromNumber(2, 1, m, n, jump, visitedNumbers) * 4;
+                totalPatterns += CountPatternsFromNumber(2, 1, m, n, jump, visitedNumbers) * 4;
 
                 // Count patterns starting from the center number (5)
-                totalPatterns +=
-                CountPatternsFromNumber(5, 1, m, n, jump, visitedNumbers);
+                totalPatterns += CountPatternsFromNumber(5, 1, m, n, jump, visitedNumbers);
 
                 return totalPatterns;
             }
@@ -18765,7 +19926,8 @@ The jump array is a 10×10 grid which takes constant space. The maximum depth of
             )
             {
                 // Base case: if current pattern length exceeds maxLength, stop exploring
-                if (currentLength > maxLength) return 0;
+                if (currentLength > maxLength)
+                    return 0;
 
                 int validPatterns = 0;
                 // If current pattern length is within the valid range, count it
@@ -18784,12 +19946,11 @@ The jump array is a 10×10 grid which takes constant space. The maximum depth of
                     // 1. There's no number to jump over, or
                     // 2. The number to jump over has been visited
                     if (
-                        !visitedNumbers[nextNumber] &&
-                        (jumpOverNumber == 0 || visitedNumbers[jumpOverNumber])
+                        !visitedNumbers[nextNumber]
+                        && (jumpOverNumber == 0 || visitedNumbers[jumpOverNumber])
                     )
                     {
-                        validPatterns +=
-                        CountPatternsFromNumber(
+                        validPatterns += CountPatternsFromNumber(
                             nextNumber,
                             currentLength + 1,
                             minLength,
@@ -18843,13 +20004,25 @@ The jump array and the dp array both use constant space irrelevant of the input.
                 }
 
                 // Count patterns starting from corner numbers (1, 3, 7, 9) and multiply by 4 due to symmetry
-                totalPatterns += CountPatternsFromNumber(1, 1, minLength, maxLength, jump, visitedNumbers, dp) * 4;
+                totalPatterns +=
+                    CountPatternsFromNumber(1, 1, minLength, maxLength, jump, visitedNumbers, dp)
+                    * 4;
 
                 // Count patterns starting from edge numbers (2, 4, 6, 8) and multiply by 4 due to symmetry
-                totalPatterns += CountPatternsFromNumber(2, 1, minLength, maxLength, jump, visitedNumbers, dp) * 4;
+                totalPatterns +=
+                    CountPatternsFromNumber(2, 1, minLength, maxLength, jump, visitedNumbers, dp)
+                    * 4;
 
                 // Count patterns starting from the center number (5)
-                totalPatterns += CountPatternsFromNumber(5, 1, minLength, maxLength, jump, visitedNumbers, dp);
+                totalPatterns += CountPatternsFromNumber(
+                    5,
+                    1,
+                    minLength,
+                    maxLength,
+                    jump,
+                    visitedNumbers,
+                    dp
+                );
 
                 return totalPatterns;
             }
@@ -18865,9 +20038,11 @@ The jump array and the dp array both use constant space irrelevant of the input.
             )
             {
                 // Base case: if current pattern length exceeds maxLength, stop exploring
-                if (currentLength > maxLength) return 0;
+                if (currentLength > maxLength)
+                    return 0;
 
-                if (dp[currentNumber][visitedNumbers] != null) return dp[currentNumber][visitedNumbers].Value;
+                if (dp[currentNumber][visitedNumbers] != null)
+                    return dp[currentNumber][visitedNumbers].Value;
 
                 int validPatterns = 0;
                 // If current pattern length is within the valid range, count it
@@ -18885,8 +20060,10 @@ The jump array and the dp array both use constant space irrelevant of the input.
                     // Check if the next number is unvisited and either:
                     // 1. There's no number to jump over, or
                     // 2. The number to jump over has been visited
-                    if (!IsSet(visitedNumbers, nextNumber) &&
-                        (jumpOverNumber == 0 || IsSet(visitedNumbers, jumpOverNumber)))
+                    if (
+                        !IsSet(visitedNumbers, nextNumber)
+                        && (jumpOverNumber == 0 || IsSet(visitedNumbers, jumpOverNumber))
+                    )
                     {
                         validPatterns += CountPatternsFromNumber(
                             nextNumber,
@@ -18924,8 +20101,6 @@ The jump array and the dp array both use constant space irrelevant of the input.
                 return bitAtPosition == 1;
             }
         }
-
-
 
         /* 465. Optimal Account Balancing
         https://leetcode.com/problems/optimal-account-balancing/description/
@@ -18983,14 +20158,17 @@ o	The space complexity of a recursive call relies on the maximum depth of the re
                 int minimumCost = int.MaxValue;
                 for (int nextIndex = currentIndex + 1; nextIndex < totalCount; nextIndex++)
                 {
-                    // If nextIndex is a valid recipient, do the following: 
+                    // If nextIndex is a valid recipient, do the following:
                     // 1. add currentIndex's balance to nextIndex.
                     // 2. recursively call Dfs(currentIndex + 1).
                     // 3. remove currentIndex's balance from nextIndex.
                     if (creditList[nextIndex] * creditList[currentIndex] < 0)
                     {
                         creditList[nextIndex] += creditList[currentIndex];
-                        minimumCost = Math.Min(minimumCost, 1 + Dfs(currentIndex + 1, totalCount, creditList));
+                        minimumCost = Math.Min(
+                            minimumCost,
+                            1 + Dfs(currentIndex + 1, totalCount, creditList)
+                        );
                         creditList[nextIndex] -= creditList[currentIndex];
                     }
                 }
@@ -19014,8 +20192,10 @@ o	The space complexity of a recursive call depends on the maximum depth of the r
                 Dictionary<int, int> creditMap = new Dictionary<int, int>();
                 foreach (int[] transaction in transactions)
                 {
-                    creditMap[transaction[0]] = creditMap.GetValueOrDefault(transaction[0], 0) + transaction[2];
-                    creditMap[transaction[1]] = creditMap.GetValueOrDefault(transaction[1], 0) - transaction[2];
+                    creditMap[transaction[0]] =
+                        creditMap.GetValueOrDefault(transaction[0], 0) + transaction[2];
+                    creditMap[transaction[1]] =
+                        creditMap.GetValueOrDefault(transaction[1], 0) - transaction[2];
                 }
 
                 List<int> creditList = new List<int>();
@@ -19040,7 +20220,8 @@ o	The space complexity of a recursive call depends on the maximum depth of the r
                 {
                     return memo[totalMask];
                 }
-                int balanceSum = 0, answer = 0;
+                int balanceSum = 0,
+                    answer = 0;
 
                 // Remove one person at a time in total_mask
                 for (int i = 0; i < creditList.Count; i++)
@@ -19066,9 +20247,14 @@ o	The space complexity of a recursive call depends on the maximum depth of the r
 
         class MostVisitedPatternSol
         {
-            public IList<string> MostVisitedPattern(string[] username, int[] timestamp, string[] website)
+            public IList<string> MostVisitedPattern(
+                string[] username,
+                int[] timestamp,
+                string[] website
+            )
             {
-                Dictionary<string, List<Pair>> userWebsiteMap = new Dictionary<string, List<Pair>>();
+                Dictionary<string, List<Pair>> userWebsiteMap =
+                    new Dictionary<string, List<Pair>>();
                 int userCount = username.Length;
                 // collect the website info for every user, key: username, value: (timestamp, website)
                 for (int i = 0; i < userCount; i++)
@@ -19088,14 +20274,19 @@ o	The space complexity of a recursive call depends on the maximum depth of the r
                     // this set is to avoid visit the same 3-seq in one user
                     List<Pair> userVisits = userWebsiteMap[user];
                     userVisits.Sort((a, b) => a.Time.CompareTo(b.Time)); // sort by time
-                                                                         // brute force O(N ^ 3)
+                    // brute force O(N ^ 3)
                     for (int i = 0; i < userVisits.Count; i++)
                     {
                         for (int j = i + 1; j < userVisits.Count; j++)
                         {
                             for (int k = j + 1; k < userVisits.Count; k++)
                             {
-                                string pattern = userVisits[i].Web + " " + userVisits[j].Web + " " + userVisits[k].Web;
+                                string pattern =
+                                    userVisits[i].Web
+                                    + " "
+                                    + userVisits[j].Web
+                                    + " "
+                                    + userVisits[k].Web;
                                 if (!visitedPatterns.Contains(pattern))
                                 {
                                     if (!countMap.ContainsKey(pattern))
@@ -19105,8 +20296,14 @@ o	The space complexity of a recursive call depends on the maximum depth of the r
                                     countMap[pattern]++;
                                     visitedPatterns.Add(pattern);
                                 }
-                                if (resultPattern == "" || countMap[resultPattern] < countMap[pattern] ||
-                                    (countMap[resultPattern] == countMap[pattern] && string.Compare(resultPattern, pattern) > 0))
+                                if (
+                                    resultPattern == ""
+                                    || countMap[resultPattern] < countMap[pattern]
+                                    || (
+                                        countMap[resultPattern] == countMap[pattern]
+                                        && string.Compare(resultPattern, pattern) > 0
+                                    )
+                                )
                                 {
                                     // make sure the right lexicographical order
                                     resultPattern = pattern;
@@ -19120,6 +20317,7 @@ o	The space complexity of a recursive call depends on the maximum depth of the r
                 List<string> result = new List<string>(resultArray);
                 return result;
             }
+
             class Pair
             {
                 public int Time { get; set; }
@@ -19132,7 +20330,6 @@ o	The space complexity of a recursive call depends on the maximum depth of the r
                 }
             }
         }
-
 
         /* 224. Basic Calculator
         https://leetcode.com/problems/basic-calculator/description/
@@ -19149,46 +20346,39 @@ o	The space complexity of a recursive call depends on the maximum depth of the r
 
             public int UsingStackAndStringRev(string expression)
             {
-
                 int operand = 0;
                 int digitCount = 0;
                 Stack<object> stack = new Stack<object>();
 
                 for (int i = expression.Length - 1; i >= 0; i--)
                 {
-
                     char currentChar = expression[i];
 
                     if (char.IsDigit(currentChar))
                     {
-
                         // Forming the operand - in reverse order.
-                        operand = (int)Math.Pow(10, digitCount) * (int)(currentChar - '0') + operand;
+                        operand =
+                            (int)Math.Pow(10, digitCount) * (int)(currentChar - '0') + operand;
                         digitCount += 1;
-
                     }
                     else if (currentChar != ' ')
                     {
                         if (digitCount != 0)
                         {
-
                             // Save the operand on the stack
                             // As we encounter some non-digit.
                             stack.Push(operand);
                             digitCount = 0;
                             operand = 0;
-
                         }
                         if (currentChar == '(')
                         {
-
                             int evaluatedResult = EvaluateExpression(stack);
                             stack.Pop();
 
                             // Append the evaluated result to the stack.
                             // This result could be of a sub-expression within the parenthesis.
                             stack.Push(evaluatedResult);
-
                         }
                         else
                         {
@@ -19207,9 +20397,9 @@ o	The space complexity of a recursive call depends on the maximum depth of the r
                 // Evaluate any left overs in the stack.
                 return EvaluateExpression(stack);
             }
+
             private int EvaluateExpression(Stack<object> stack)
             {
-
                 // If stack is empty or the expression starts with
                 // a symbol, then append 0 to the stack.
                 // i.e. [1, '-', 2, '-'] becomes [1, '-', 2, '-', 0]
@@ -19223,7 +20413,6 @@ o	The space complexity of a recursive call depends on the maximum depth of the r
                 // Evaluate the expression till we get corresponding ')'
                 while (stack.Count > 0 && !((char)stack.Peek() == ')'))
                 {
-
                     char sign = (char)stack.Pop();
 
                     if (sign == '+')
@@ -19237,6 +20426,7 @@ o	The space complexity of a recursive call depends on the maximum depth of the r
                 }
                 return result;
             }
+
             /*
 Approach 2: Stack and No String Reversal
 Complexity Analysis
@@ -19246,26 +20436,21 @@ Complexity Analysis
             */
             public int UsingStack(String s)
             {
-
                 Stack<int> stack = new Stack<int>();
                 int operand = 0;
                 int result = 0; // For the on-going result
-                int sign = 1;  // 1 means positive, -1 means negative
+                int sign = 1; // 1 means positive, -1 means negative
 
                 for (int i = 0; i < s.Length; i++)
                 {
-
                     char ch = s[i];
                     if (Char.IsDigit(ch))
                     {
-
                         // Forming operand, since it could be more than one digit
                         operand = 10 * operand + (int)(ch - '0');
-
                     }
                     else if (ch == '+')
                     {
-
                         // Evaluate the expression to the left,
                         // with result, sign, operand
                         result += sign * operand;
@@ -19275,19 +20460,15 @@ Complexity Analysis
 
                         // Reset operand
                         operand = 0;
-
                     }
                     else if (ch == '-')
                     {
-
                         result += sign * operand;
                         sign = -1;
                         operand = 0;
-
                     }
                     else if (ch == '(')
                     {
-
                         // Push the result and sign on to the stack, for later
                         // We push the result first, then sign
                         stack.Push(result);
@@ -19296,11 +20477,9 @@ Complexity Analysis
                         // Reset operand and result, as if new evaluation begins for the new sub-expression
                         sign = 1;
                         result = 0;
-
                     }
                     else if (ch == ')')
                     {
-
                         // Evaluate the expression to the left
                         // with result, sign and operand
                         result += sign * operand;
@@ -19323,7 +20502,6 @@ Complexity Analysis
             }
         }
 
-
         /* 227. Basic Calculator II
         https://leetcode.com/problems/basic-calculator-ii/description/
          */
@@ -19338,8 +20516,8 @@ Complexity Analysis
             */
             public int UsingStack(String s)
             {
-
-                if (s == null || s.Length == 0) return 0;
+                if (s == null || s.Length == 0)
+                    return 0;
                 int len = s.Length;
                 Stack<int> stack = new Stack<int>();
                 int currentNumber = 0;
@@ -19351,7 +20529,10 @@ Complexity Analysis
                     {
                         currentNumber = (currentNumber * 10) + (currentChar - '0');
                     }
-                    if (!Char.IsDigit(currentChar) && !Char.IsWhiteSpace(currentChar) || i == len - 1)
+                    if (
+                        !Char.IsDigit(currentChar) && !Char.IsWhiteSpace(currentChar)
+                        || i == len - 1
+                    )
                     {
                         if (operation == '-')
                         {
@@ -19380,6 +20561,7 @@ Complexity Analysis
                 }
                 return result;
             }
+
             /*
             Approach 2: Optimised Approach without the stack
             Complexity Analysis
@@ -19389,9 +20571,12 @@ Complexity Analysis
             */
             public int OptimalWithoutStack(String s)
             {
-                if (s == null || s.Length == 0) return 0;
+                if (s == null || s.Length == 0)
+                    return 0;
                 int length = s.Length;
-                int currentNumber = 0, lastNumber = 0, result = 0;
+                int currentNumber = 0,
+                    lastNumber = 0,
+                    result = 0;
                 char operation = '+';
                 for (int i = 0; i < length; i++)
                 {
@@ -19400,7 +20585,10 @@ Complexity Analysis
                     {
                         currentNumber = (currentNumber * 10) + (currentChar - '0');
                     }
-                    if (!Char.IsDigit(currentChar) && !Char.IsWhiteSpace(currentChar) || i == length - 1)
+                    if (
+                        !Char.IsDigit(currentChar) && !Char.IsWhiteSpace(currentChar)
+                        || i == length - 1
+                    )
                     {
                         if (operation == '+' || operation == '-')
                         {
@@ -19423,7 +20611,6 @@ Complexity Analysis
                 return result;
             }
         }
-
 
         /* 772. Basic Calculator III
         https://leetcode.com/problems/basic-calculator-iii/description/
@@ -19496,6 +20683,7 @@ The stack could grow to a size of O(n) - for example, if the expression contains
 
                 return answer;
             }
+
             private string Evaluate(char operatorChar, string first, string second)
             {
                 int firstNumber = int.Parse(first);
@@ -19521,6 +20709,7 @@ The stack could grow to a size of O(n) - for example, if the expression contains
 
                 return result.ToString();
             }
+
             /*
             Approach 2: Solve Isolated Expressions With Recursion
 Complexity Analysis
@@ -19537,6 +20726,7 @@ The stacks across all function calls could grow to a size of O(n) - for example,
                 int[] index = new int[1];
                 return Solve(expression, index);
             }
+
             private int Evaluate(char operatorChar, int x, int y)
             {
                 if (operatorChar == '+')
@@ -19604,11 +20794,7 @@ The stacks across all function calls could grow to a size of O(n) - for example,
 
                 return result;
             }
-
-
-
         }
-
 
         /* 770. Basic Calculator IV
         https://leetcode.com/problems/basic-calculator-iv/description/
@@ -19624,28 +20810,35 @@ The stacks across all function calls could grow to a size of O(n) - for example,
 
                 public override string ToString()
                 {
-                    if (parameter == 0) return "";
+                    if (parameter == 0)
+                        return "";
                     string result = "";
-                    foreach (string variable in variables) result += "*" + variable;
+                    foreach (string variable in variables)
+                        result += "*" + variable;
                     return parameter + result;
                 }
 
                 public bool Equals(Term that)
                 {
-                    if (this.variables.Count != that.variables.Count) return false;
+                    if (this.variables.Count != that.variables.Count)
+                        return false;
                     for (int i = 0; i < this.variables.Count; i++)
-                        if (!this.variables[i].Equals(that.variables[i])) return false;
+                        if (!this.variables[i].Equals(that.variables[i]))
+                            return false;
                     return true;
                 }
 
                 public int CompareTo(Term that)
                 {
-                    if (this.variables.Count > that.variables.Count) return -1;
-                    if (this.variables.Count < that.variables.Count) return 1;
+                    if (this.variables.Count > that.variables.Count)
+                        return -1;
+                    if (this.variables.Count < that.variables.Count)
+                        return 1;
                     for (int i = 0; i < this.variables.Count; i++)
                     {
                         int comparisonResult = this.variables[i].CompareTo(that.variables[i]);
-                        if (comparisonResult != 0) return comparisonResult;
+                        if (comparisonResult != 0)
+                            return comparisonResult;
                     }
                     return 0;
                 }
@@ -19653,13 +20846,19 @@ The stacks across all function calls could grow to a size of O(n) - for example,
                 public Term Multiply(Term that)
                 {
                     Term product = new Term(this.parameter * that.parameter);
-                    foreach (string variable in this.variables) product.variables.Add(new string(variable));
-                    foreach (string variable in that.variables) product.variables.Add(new string(variable));
+                    foreach (string variable in this.variables)
+                        product.variables.Add(new string(variable));
+                    foreach (string variable in that.variables)
+                        product.variables.Add(new string(variable));
                     product.variables.Sort();
                     return product;
                 }
 
-                public Term(int x) { parameter = x; }
+                public Term(int x)
+                {
+                    parameter = x;
+                }
+
                 public Term(string s)
                 {
                     //TODO: fix below code trying to access outer callss fields
@@ -19668,6 +20867,7 @@ The stacks across all function calls could grow to a size of O(n) - for example,
                     else
                         variables.Add(s); */
                 }
+
                 public Term(Term that)
                 {
                     this.parameter = that.parameter;
@@ -19681,7 +20881,10 @@ The stacks across all function calls could grow to a size of O(n) - for example,
                 List<Term> combinedTerms = new List<Term>();
                 foreach (Term term in terms)
                 {
-                    if (combinedTerms.Count != 0 && term.Equals(combinedTerms[combinedTerms.Count - 1]))
+                    if (
+                        combinedTerms.Count != 0
+                        && term.Equals(combinedTerms[combinedTerms.Count - 1])
+                    )
                         combinedTerms[combinedTerms.Count - 1].parameter += term.parameter;
                     else
                         combinedTerms.Add(new Term(term));
@@ -19689,10 +20892,16 @@ The stacks across all function calls could grow to a size of O(n) - for example,
                 return combinedTerms;
             }
 
-            public List<string> BasicCalculatorIV(string expression, string[] evalVars, int[] evalInts)
+            public List<string> BasicCalculatorIV(
+                string expression,
+                string[] evalVars,
+                int[] evalInts
+            )
             {
-                for (int i = 0; i < evalVars.Length; i++) evaluationMap[evalVars[i]] = evalInts[i];
-                int index = 0, length = expression.Length;
+                for (int i = 0; i < evalVars.Length; i++)
+                    evaluationMap[evalVars[i]] = evalInts[i];
+                int index = 0,
+                    length = expression.Length;
                 Stack<Expression> stack = new Stack<Expression>();
                 Stack<int> priorityStack = new Stack<int>();
                 Expression zero = new Expression(0);
@@ -19725,15 +20934,19 @@ The stacks across all function calls could grow to a size of O(n) - for example,
                         stack.Push(new Expression(variable));
                         continue;
                     }
-                    if (character == '(') priority += 2;
-                    if (character == ')') priority -= 2;
+                    if (character == '(')
+                        priority += 2;
+                    if (character == ')')
+                        priority -= 2;
                     if (character == '+' || character == '-' || character == '*')
                     {
                         int currentPriority = priority;
-                        if (character == '*') currentPriority++;
+                        if (character == '*')
+                            currentPriority++;
                         while (priorityStack.Count > 0 && currentPriority <= priorityStack.Peek())
                         {
-                            Expression current = stack.Pop(), last = stack.Pop();
+                            Expression current = stack.Pop(),
+                                last = stack.Pop();
                             priorityStack.Pop();
                             stack.Push(last.Calculate(current));
                         }
@@ -19744,11 +20957,13 @@ The stacks across all function calls could grow to a size of O(n) - for example,
                 }
                 while (stack.Count > 1)
                 {
-                    Expression current = stack.Pop(), last = stack.Pop();
+                    Expression current = stack.Pop(),
+                        last = stack.Pop();
                     stack.Push(last.Calculate(current));
                 }
                 return stack.Peek().ToList();
             }
+
             class Expression
             {
                 List<Term> termList = new List<Term>(); // Term List
@@ -19802,8 +21017,10 @@ The stacks across all function calls could grow to a size of O(n) - for example,
 
                 public Expression Calculate(Expression that)
                 {
-                    if (operatorSymbol == '+') return Plus(that, 1);
-                    if (operatorSymbol == '-') return Plus(that, -1);
+                    if (operatorSymbol == '+')
+                        return Plus(that, 1);
+                    if (operatorSymbol == '-')
+                        return Plus(that, -1);
                     return Times(that);
                 }
 
@@ -19813,7 +21030,8 @@ The stacks across all function calls could grow to a size of O(n) - for example,
                     foreach (Term term in termList)
                     {
                         string termString = term.ToString();
-                        if (termString.Length > 0) resultList.Add(termString);
+                        if (termString.Length > 0)
+                            resultList.Add(termString);
                     }
                     return resultList;
                 }
@@ -19825,7 +21043,6 @@ The stacks across all function calls could grow to a size of O(n) - for example,
                 }
             }
         }
-
 
         /* 1114. Print in Order
         https://leetcode.com/problems/print-in-order/description/
@@ -19888,7 +21105,6 @@ The stacks across all function calls could grow to a size of O(n) - for example,
             }
         }
 
-
         /* 1115. Print FooBar Alternately
         https://leetcode.com/problems/print-foobar-alternately/description/
          */
@@ -19911,10 +21127,8 @@ The stacks across all function calls could grow to a size of O(n) - for example,
 
                 public void Foo(Action printFoo)
                 {
-
                     for (int i = 0; i < n; i++)
                     {
-
                         // printFoo() outputs "foo". Do not change or remove this line.
                         printFoo();
                         auto.Set();
@@ -19924,8 +21138,6 @@ The stacks across all function calls could grow to a size of O(n) - for example,
 
                 public void Bar(Action printBar)
                 {
-
-
                     for (int i = 0; i < n; i++)
                     {
                         auto.WaitOne();
@@ -19935,6 +21147,7 @@ The stacks across all function calls could grow to a size of O(n) - for example,
                     }
                 }
             }
+
             /*
             2. Mutex And Monitors
             */
@@ -19953,12 +21166,12 @@ The stacks across all function calls could grow to a size of O(n) - for example,
 
                 public void Foo(Action printFoo)
                 {
-
                     for (int i = 0; i < n; i++)
                     {
                         lock (mutex)
                         {
-                            while (bar is false) Monitor.Wait(mutex);
+                            while (bar is false)
+                                Monitor.Wait(mutex);
                             bar = false;
                             // printFoo() outputs "foo". Do not change or remove this line.
                             printFoo();
@@ -19970,12 +21183,12 @@ The stacks across all function calls could grow to a size of O(n) - for example,
 
                 public void Bar(Action printBar)
                 {
-
                     for (int i = 0; i < n; i++)
                     {
                         lock (mutex)
                         {
-                            while (foo is false) Monitor.Wait(mutex);
+                            while (foo is false)
+                                Monitor.Wait(mutex);
                             foo = false;
                             // printBar() outputs "bar". Do not change or remove this line.
                             printBar();
@@ -19985,13 +21198,16 @@ The stacks across all function calls could grow to a size of O(n) - for example,
                     }
                 }
             }
+
             /*
             3. Semaphores
             */
             public class UsingSemaphores
             {
-                private Semaphore fooSem, barSem;
+                private Semaphore fooSem,
+                    barSem;
                 private int n;
+
                 public UsingSemaphores(int n)
                 {
                     this.n = n;
@@ -20059,7 +21275,6 @@ The stacks across all function calls could grow to a size of O(n) - for example,
 
                 public void Bar(Action printBar)
                 {
-
                     for (int i = 0; i < n; i++)
                     {
                         lock (m_SyncRoot)
@@ -20115,18 +21330,15 @@ The stacks across all function calls could grow to a size of O(n) - for example,
                     }
                 }
             }
-
-
         }
 
-
-        /* 1116. Print Zero Even Odd 
+        /* 1116. Print Zero Even Odd
         https://leetcode.com/problems/print-zero-even-odd/description/
          */
         public class PrintZeroEvenOddMultiThreadConcurrency
         {
-            /* 
-            1. Seamphore Slim 
+            /*
+            1. Seamphore Slim
             */
             public class UsingSemaphoreSlimSol
             {
@@ -20180,8 +21392,8 @@ The stacks across all function calls could grow to a size of O(n) - for example,
                 }
             }
 
-            /* 
-            2. Mutex 
+            /*
+            2. Mutex
             */
             public class UsingMutexSol
             {
@@ -20265,7 +21477,7 @@ The stacks across all function calls could grow to a size of O(n) - for example,
                 }
             }
 
-            /* 
+            /*
              3. Semaphores
                 */
             public class UsingSemaphoresSol
@@ -20318,7 +21530,8 @@ The stacks across all function calls could grow to a size of O(n) - for example,
                     }
                 }
             }
-            /* 
+
+            /*
                         4. Lock And Monotors
                            */
             public class UsingLockAndMonitorSol
@@ -20337,12 +21550,10 @@ The stacks across all function calls could grow to a size of O(n) - for example,
                 // printNumber(x) outputs "x", where x is an integer.
                 public void Zero(Action<int> printNumber)
                 {
-
                     while (i <= n)
                     {
                         lock (mutex)
                         {
-
                             while (turn != 0 && i <= n)
                             {
                                 Monitor.Wait(mutex);
@@ -20357,12 +21568,10 @@ The stacks across all function calls could grow to a size of O(n) - for example,
                             Monitor.PulseAll(mutex);
                         }
                     }
-
                 }
 
                 public void Even(Action<int> printNumber)
                 {
-
                     while (i <= n)
                     {
                         lock (mutex)
@@ -20380,12 +21589,10 @@ The stacks across all function calls could grow to a size of O(n) - for example,
                             Monitor.PulseAll(mutex);
                         }
                     }
-
                 }
 
                 public void Odd(Action<int> printNumber)
                 {
-
                     while (i <= n)
                     {
                         lock (mutex)
@@ -20403,11 +21610,10 @@ The stacks across all function calls could grow to a size of O(n) - for example,
                             Monitor.PulseAll(mutex);
                         }
                     }
-
                 }
             }
 
-            /* 
+            /*
             5. AutoResetEvent
                 */
             public class UsingAutoResetEventSol
@@ -20473,11 +21679,7 @@ The stacks across all function calls could grow to a size of O(n) - for example,
                     }
                 }
             }
-
-
-
         }
-
 
         /* 1195. Fizz Buzz Multithreaded
         https://leetcode.com/problems/fizz-buzz-multithreaded/description/
@@ -20485,17 +21687,16 @@ The stacks across all function calls could grow to a size of O(n) - for example,
         public class FizzBuzzMultiThreadConcurrency
         {
             /*
-            1. SemaphoreSlim 
+            1. SemaphoreSlim
             */
             public class UsingSemaphoreSlimSol
             {
-
                 private enum FizzBuzzEnum
                 {
                     Fizz = 0,
                     Buzz = 1,
                     FizzBuzz = 2,
-                    Number = 3
+                    Number = 3,
                 }
 
                 private int _n;
@@ -20507,19 +21708,16 @@ The stacks across all function calls could grow to a size of O(n) - for example,
                 {
                     _n = n;
                     _k = 0;
-                    _semaphores = Enum
-                        .GetValues<FizzBuzzEnum>()
+                    _semaphores = Enum.GetValues<FizzBuzzEnum>()
                         .Select(v => new SemaphoreSlim(0, 1))
                         .ToArray();
                     _cts = new CancellationTokenSource();
                     _semaphores[(int)GetFizzBuzz(++_k)].Release();
                 }
 
-                public void Fizz(Action printFizz) =>
-                    Execute(FizzBuzzEnum.Fizz, printFizz);
+                public void Fizz(Action printFizz) => Execute(FizzBuzzEnum.Fizz, printFizz);
 
-                public void Buzz(Action printBuzz) =>
-                    Execute(FizzBuzzEnum.Buzz, printBuzz);
+                public void Buzz(Action printBuzz) => Execute(FizzBuzzEnum.Buzz, printBuzz);
 
                 public void Fizzbuzz(Action printFizzBuzz) =>
                     Execute(FizzBuzzEnum.FizzBuzz, printFizzBuzz);
@@ -20542,10 +21740,7 @@ The stacks across all function calls could grow to a size of O(n) - for example,
                         }
                         _cts.Cancel();
                     }
-                    catch (OperationCanceledException)
-                    {
-
-                    }
+                    catch (OperationCanceledException) { }
                 }
 
                 private FizzBuzzEnum GetFizzBuzz(int i)
@@ -20561,11 +21756,10 @@ The stacks across all function calls could grow to a size of O(n) - for example,
             }
 
             /*
-            2. Spinlocks  
+            2. Spinlocks
             */
             public class UsingSpinLocksSol
             {
-
                 private int _printerIndex = 1;
                 private readonly int _n;
 
@@ -20620,6 +21814,7 @@ The stacks across all function calls could grow to a size of O(n) - for example,
                     }
                 }
             }
+
             /*
                       3. conditional variables - Lock/Monitor/Wait
                       */
@@ -20649,7 +21844,8 @@ The stacks across all function calls could grow to a size of O(n) - for example,
                                 System.Threading.Monitor.Wait(m_SyncRoot);
                             }
 
-                            if (!m_KeepRunning) break;
+                            if (!m_KeepRunning)
+                                break;
                             printFizz();
                             NextState();
                         }
@@ -20668,7 +21864,8 @@ The stacks across all function calls could grow to a size of O(n) - for example,
                                 System.Threading.Monitor.Wait(m_SyncRoot);
                             }
 
-                            if (!m_KeepRunning) break;
+                            if (!m_KeepRunning)
+                                break;
                             printBuzz();
                             NextState();
                         }
@@ -20687,7 +21884,8 @@ The stacks across all function calls could grow to a size of O(n) - for example,
                                 System.Threading.Monitor.Wait(m_SyncRoot);
                             }
 
-                            if (!m_KeepRunning) break;
+                            if (!m_KeepRunning)
+                                break;
                             printFizzBuzz();
                             NextState();
                         }
@@ -20706,7 +21904,8 @@ The stacks across all function calls could grow to a size of O(n) - for example,
                                 System.Threading.Monitor.Wait(m_SyncRoot);
                             }
 
-                            if (!m_KeepRunning) break;
+                            if (!m_KeepRunning)
+                                break;
                             printNumber(m_NextNumber);
                             NextState();
                         }
@@ -20747,7 +21946,7 @@ The stacks across all function calls could grow to a size of O(n) - for example,
                     Number,
                     Fizz,
                     Buzz,
-                    FizzBuzz
+                    FizzBuzz,
                 }
             }
 
@@ -20760,6 +21959,7 @@ The stacks across all function calls could grow to a size of O(n) - for example,
                 private int n;
                 private int i = 1;
                 int x = 0;
+
                 public UsingSpinWaitAndUntil(int n)
                 {
                     this.n = n;
@@ -20771,11 +21971,16 @@ The stacks across all function calls could grow to a size of O(n) - for example,
                     while (i <= n)
                     {
                         SpinWait.SpinUntil(() => x == 3 || x == -1);
-                        if (x == -1) break;
-                        if (i % 3 == 0 && i % 5 != 0) x = 3;
-                        else if (i % 3 != 0 && i % 5 == 0) x = 2;
-                        else if (i % 3 == 0 && i % 5 == 0) x = 1;
-                        else x = 0;
+                        if (x == -1)
+                            break;
+                        if (i % 3 == 0 && i % 5 != 0)
+                            x = 3;
+                        else if (i % 3 != 0 && i % 5 == 0)
+                            x = 2;
+                        else if (i % 3 == 0 && i % 5 == 0)
+                            x = 1;
+                        else
+                            x = 0;
 
                         if (x != 3)
                         {
@@ -20783,7 +21988,8 @@ The stacks across all function calls could grow to a size of O(n) - for example,
                         }
                         printFizz();
                         i++;
-                        if (i > n) x = -1;
+                        if (i > n)
+                            x = -1;
                     }
                 }
 
@@ -20793,11 +21999,16 @@ The stacks across all function calls could grow to a size of O(n) - for example,
                     while (i <= n)
                     {
                         SpinWait.SpinUntil(() => x == 2 || x == -1);
-                        if (x == -1) break;
-                        if (i % 3 == 0 && i % 5 != 0) x = 3;
-                        else if (i % 3 != 0 && i % 5 == 0) x = 2;
-                        else if (i % 3 == 0 && i % 5 == 0) x = 1;
-                        else x = 0;
+                        if (x == -1)
+                            break;
+                        if (i % 3 == 0 && i % 5 != 0)
+                            x = 3;
+                        else if (i % 3 != 0 && i % 5 == 0)
+                            x = 2;
+                        else if (i % 3 == 0 && i % 5 == 0)
+                            x = 1;
+                        else
+                            x = 0;
 
                         if (x != 2)
                         {
@@ -20805,7 +22016,8 @@ The stacks across all function calls could grow to a size of O(n) - for example,
                         }
                         printBuzz();
                         i++;
-                        if (i > n) x = -1;
+                        if (i > n)
+                            x = -1;
                     }
                 }
 
@@ -20815,11 +22027,16 @@ The stacks across all function calls could grow to a size of O(n) - for example,
                     while (i <= n)
                     {
                         SpinWait.SpinUntil(() => x == 1 || x == -1);
-                        if (x == -1) break;
-                        if (i % 3 == 0 && i % 5 != 0) x = 3;
-                        else if (i % 3 != 0 && i % 5 == 0) x = 2;
-                        else if (i % 3 == 0 && i % 5 == 0) x = 1;
-                        else x = 0;
+                        if (x == -1)
+                            break;
+                        if (i % 3 == 0 && i % 5 != 0)
+                            x = 3;
+                        else if (i % 3 != 0 && i % 5 == 0)
+                            x = 2;
+                        else if (i % 3 == 0 && i % 5 == 0)
+                            x = 1;
+                        else
+                            x = 0;
 
                         if (x != 1)
                         {
@@ -20827,7 +22044,8 @@ The stacks across all function calls could grow to a size of O(n) - for example,
                         }
                         printFizzBuzz();
                         i++;
-                        if (i > n) x = -1;
+                        if (i > n)
+                            x = -1;
                     }
                 }
 
@@ -20837,11 +22055,16 @@ The stacks across all function calls could grow to a size of O(n) - for example,
                     while (i <= n)
                     {
                         SpinWait.SpinUntil(() => x == 0 || x == -1);
-                        if (x == -1) break;
-                        if (i % 3 == 0 && i % 5 != 0) x = 3;
-                        else if (i % 3 != 0 && i % 5 == 0) x = 2;
-                        else if (i % 3 == 0 && i % 5 == 0) x = 1;
-                        else x = 0;
+                        if (x == -1)
+                            break;
+                        if (i % 3 == 0 && i % 5 != 0)
+                            x = 3;
+                        else if (i % 3 != 0 && i % 5 == 0)
+                            x = 2;
+                        else if (i % 3 == 0 && i % 5 == 0)
+                            x = 1;
+                        else
+                            x = 0;
 
                         if (x != 0)
                         {
@@ -20849,11 +22072,11 @@ The stacks across all function calls could grow to a size of O(n) - for example,
                         }
                         printNumber(i);
                         i++;
-                        if (i > n) x = -1;
+                        if (i > n)
+                            x = -1;
                     }
                 }
             }
-
         }
 
         /* 1117. Building H2O
@@ -20867,15 +22090,12 @@ The stacks across all function calls could grow to a size of O(n) - for example,
             */
             public class UsingSemaphoreSlimSol
             {
-
                 private int count = 0;
                 private object _lock = new object();
                 private SemaphoreSlim hSem = new SemaphoreSlim(2);
                 private SemaphoreSlim oSem = new SemaphoreSlim(1);
-                public UsingSemaphoreSlimSol()
-                {
 
-                }
+                public UsingSemaphoreSlimSol() { }
 
                 public void Hydrogen(Action releaseHydrogen)
                 {
@@ -20899,6 +22119,7 @@ The stacks across all function calls could grow to a size of O(n) - for example,
                     hSem.Release(2);
                 }
             }
+
             /*
                         2.Semaphore
                         */
@@ -20933,30 +22154,24 @@ The stacks across all function calls could grow to a size of O(n) - for example,
                     hydrogen.Release();
                 }
             }
-
-
         }
-
 
         /* 1279. Traffic Light Controlled Intersection
         https://leetcode.com/problems/traffic-light-controlled-intersection/description/
          */
         public class TrafficLight
         {
-
             bool n = true;
             ReaderWriterLockSlim rws = new ReaderWriterLockSlim();
 
-            public TrafficLight()
-            {
-            }
+            public TrafficLight() { }
 
             public void CarArrived(
-                int carId,         // ID of the car
-                int roadId,        // ID of the road the car travels on. Can be 1 (road A) or 2 (road B)
-                int direction,     // Direction of the car
-                Action turnGreen,  // Use turnGreen() to turn light to green on current road
-                Action crossCar    // Use crossCar() to make car cross the intersection
+                int carId, // ID of the car
+                int roadId, // ID of the road the car travels on. Can be 1 (road A) or 2 (road B)
+                int direction, // Direction of the car
+                Action turnGreen, // Use turnGreen() to turn light to green on current road
+                Action crossCar // Use crossCar() to make car cross the intersection
             )
             {
                 bool crossed = false;
@@ -20993,23 +22208,23 @@ The stacks across all function calls could grow to a size of O(n) - for example,
                     }
                 }
             }
-
-
-
-
         }
-
 
         /* 13. Roman to int
         https://leetcode.com/problems/roman-to-integer/description
          */
         public class RomanToIntSol
         {
-
-            private static Dictionary<char, int> values =
-                new Dictionary<char, int>() { { 'I', 1 },   { 'V', 5 },   { 'X', 10 },
-                                      { 'L', 50 },  { 'C', 100 }, { 'D', 500 },
-                                      { 'M', 1000 } };
+            private static Dictionary<char, int> values = new Dictionary<char, int>()
+            {
+                { 'I', 1 },
+                { 'V', 5 },
+                { 'X', 10 },
+                { 'L', 50 },
+                { 'C', 100 },
+                { 'D', 500 },
+                { 'M', 1000 },
+            };
 
             /*
 Approach 1: Left-to-Right Pass
@@ -21063,11 +22278,22 @@ Same as Approach 1.
 Same as Approach 1.
 
             */
-            static Dictionary<string, int> valuesStr = new Dictionary<string, int> {
-        { "I", 1 },   { "V", 5 },    { "X", 10 },  { "L", 50 }, { "C", 100 },
-        { "D", 500 }, { "M", 1000 }, { "IV", 4 },  { "IX", 9 }, { "XL", 40 },
-        { "XC", 90 }, { "CD", 400 }, { "CM", 900 }
-    };
+            static Dictionary<string, int> valuesStr = new Dictionary<string, int>
+            {
+                { "I", 1 },
+                { "V", 5 },
+                { "X", 10 },
+                { "L", 50 },
+                { "C", 100 },
+                { "D", 500 },
+                { "M", 1000 },
+                { "IV", 4 },
+                { "IX", 9 },
+                { "XL", 40 },
+                { "XC", 90 },
+                { "CD", 400 },
+                { "CM", 900 },
+            };
 
             public int LeftToRightPassOptimal(string s)
             {
@@ -21093,7 +22319,8 @@ Same as Approach 1.
 
                 return sum;
             }
-            /*            
+
+            /*
 Approach 3: Right-to-Left Pass
 Complexity Analysis
 •	Time complexity : O(1).
@@ -21229,7 +22456,7 @@ Same as Approach 1.
             }
         }
 
-        /*     
+        /*
             135. Candy
         https://leetcode.com/problems/candy/description/
          */
@@ -21246,22 +22473,25 @@ Complexity Analysis
             public int Naive(int[] ratings)
             {
                 int[] candies = new int[ratings.Length];
-                for (int i = 0; i < candies.Length; i++) candies[i] = 1;
+                for (int i = 0; i < candies.Length; i++)
+                    candies[i] = 1;
                 bool hasChanged = true;
                 while (hasChanged)
                 {
                     hasChanged = false;
                     for (int i = 0; i < ratings.Length; i++)
                     {
-                        if (i != ratings.Length - 1 && ratings[i] > ratings[i + 1] &&
-                            candies[i] <= candies[i + 1])
+                        if (
+                            i != ratings.Length - 1
+                            && ratings[i] > ratings[i + 1]
+                            && candies[i] <= candies[i + 1]
+                        )
                         {
                             candies[i] = candies[i + 1] + 1;
                             hasChanged = true;
                         }
 
-                        if (i > 0 && ratings[i] > ratings[i - 1] &&
-                            candies[i] <= candies[i - 1])
+                        if (i > 0 && ratings[i] > ratings[i - 1] && candies[i] <= candies[i - 1])
                         {
                             candies[i] = candies[i - 1] + 1;
                             hasChanged = true;
@@ -21325,7 +22555,8 @@ Complexity Analysis
             public int UsingOneArray(int[] ratings)
             {
                 int[] candies = new int[ratings.Length];
-                for (int i = 0; i < candies.Length; i++) candies[i] = 1;
+                for (int i = 0; i < candies.Length; i++)
+                    candies[i] = 1;
                 for (int i = 1; i < ratings.Length; i++)
                 {
                     if (ratings[i] > ratings[i - 1])
@@ -21347,6 +22578,7 @@ Complexity Analysis
 
                 return sum;
             }
+
             /*
             Approach 4: Single Pass Approach with Constant Space
 Complexity Analysis
@@ -21373,11 +22605,9 @@ Complexity Analysis
                 int oldSlope = 0;
                 for (int i = 1; i < ratings.Length; i++)
                 {
-                    int newSlope = (ratings[i] > ratings[i - 1])
-                                       ? 1
-                                       : (ratings[i] < ratings[i - 1] ? -1 : 0);
-                    if ((oldSlope > 0 && newSlope == 0) ||
-                        (oldSlope < 0 && newSlope >= 0))
+                    int newSlope =
+                        (ratings[i] > ratings[i - 1]) ? 1 : (ratings[i] < ratings[i - 1] ? -1 : 0);
+                    if ((oldSlope > 0 && newSlope == 0) || (oldSlope < 0 && newSlope >= 0))
                     {
                         candies += count(up) + count(down) + Math.Max(up, down);
                         up = 0;
@@ -21398,7 +22628,6 @@ Complexity Analysis
             }
         }
 
-
         /* 330. Patching Array
         https://leetcode.com/problems/patching-array/description/
          */
@@ -21412,7 +22641,8 @@ Complexity Analysis
             */
             public int MinPatches(int[] nums, int n)
             {
-                int patches = 0, i = 0;
+                int patches = 0,
+                    i = 0;
                 long miss = 1; // use long to avoid integer overflow error
                 while (miss <= n)
                 {
@@ -21427,7 +22657,6 @@ Complexity Analysis
                 return patches;
             }
         }
-
 
         /* 719. Find K-th Smallest Pair Distance
         https://leetcode.com/problems/find-k-th-smallest-pair-distance/description/
@@ -21568,12 +22797,11 @@ Thus, the total space complexity of the algorithm is O(n+M+S).
                     int currentValue = nums[index];
                     int valueCountForCurrent = valueCount[currentValue];
                     int pairsWithLargerValues =
-                        prefixCount[Math.Min(currentValue + maxDistance, prefixCount.Length - 1)] -
-                        prefixCount[currentValue];
+                        prefixCount[Math.Min(currentValue + maxDistance, prefixCount.Length - 1)]
+                        - prefixCount[currentValue];
                     int pairsWithSameValues =
                         (valueCountForCurrent * (valueCountForCurrent - 1)) / 2;
-                    count +=
-                        pairsWithLargerValues * valueCountForCurrent + pairsWithSameValues;
+                    count += pairsWithLargerValues * valueCountForCurrent + pairsWithSameValues;
                     while (index + 1 < arraySize && nums[index] == nums[index + 1])
                     {
                         ++index;
@@ -21650,7 +22878,6 @@ Thus, the total space complexity of the algorithm is O(S).
             }
         }
 
-
         /* 664. Strange Printer
         https://leetcode.com/problems/strange-printer/description/
          */
@@ -21704,8 +22931,7 @@ Thus, the total space complexity of the algorithm is O(S).
                     {
                         // If match found, try splitting the problem
                         int turnsWithMatch =
-                            MinimumTurns(start, k - 1, s, memo) +
-                            MinimumTurns(k + 1, end, s, memo);
+                            MinimumTurns(start, k - 1, s, memo) + MinimumTurns(k + 1, end, s, memo);
                         minTurns = Math.Min(minTurns, turnsWithMatch);
                     }
                 }
@@ -21730,6 +22956,7 @@ Thus, the total space complexity of the algorithm is O(S).
                 }
                 return uniqueChars.ToString();
             }
+
             /*
             Approach 2: Bottom Up Dynamic Programming (Tabulation)
 Complexity Analysis
@@ -21777,8 +23004,7 @@ Consequently, the overall space complexity of the algorithm is O(n^2)+O(n)=O(n^2
                         for (int split = 0; split < currentLength - 1; split++)
                         {
                             int totalTurns =
-                                minTurns[start, start + split] +
-                                minTurns[start + split + 1, end];
+                                minTurns[start, start + split] + minTurns[start + split + 1, end];
 
                             // If the characters at the split and end match, we can save one turn
                             if (s[start + split] == s[end])
@@ -21786,10 +23012,7 @@ Consequently, the overall space complexity of the algorithm is O(n^2)+O(n)=O(n^2
                                 totalTurns--;
                             }
 
-                            minTurns[start, end] = Math.Min(
-                                minTurns[start, end],
-                                totalTurns
-                            );
+                            minTurns[start, end] = Math.Min(minTurns[start, end], totalTurns);
                         }
                     }
                 }
@@ -21797,11 +23020,7 @@ Consequently, the overall space complexity of the algorithm is O(n^2)+O(n)=O(n^2
                 // Return the minimum turns needed to print the entire string
                 return minTurns[0, lengthOfString - 1];
             }
-
         }
-
-
-
 
         /* 3161. Block Placement Queries
         https://leetcode.com/problems/block-placement-queries/description/
@@ -21870,18 +23089,25 @@ Consequently, the overall space complexity of the algorithm is O(n^2)+O(n)=O(n^2
                     {
                         if (position + 1 < blocks.Count)
                         {
-                            Update(blocks[position + 1], blocks[position + 1] - blocks[position - 1]);
+                            Update(
+                                blocks[position + 1],
+                                blocks[position + 1] - blocks[position - 1]
+                            );
                         }
                         blocks.RemoveAt(position);
                     }
                     else
                     {
-                        results.Add(query[1] - blocks[position - 1] >= query[2] || GetMax(query[1]) >= query[2]);
+                        results.Add(
+                            query[1] - blocks[position - 1] >= query[2]
+                                || GetMax(query[1]) >= query[2]
+                        );
                     }
                 }
                 results.Reverse();
                 return results;
             }
+
             private class BitRangeEnumerable : IEnumerable<int>
             {
                 private int currentPosition;
@@ -21898,7 +23124,11 @@ Consequently, the overall space complexity of the algorithm is O(n^2)+O(n)=O(n^2
                     while (currentPosition >= 0 && currentPosition < 50000)
                     {
                         yield return currentPosition;
-                        currentPosition = (down ? (currentPosition & (currentPosition + 1)) - 1 : currentPosition | (currentPosition + 1));
+                        currentPosition = (
+                            down
+                                ? (currentPosition & (currentPosition + 1)) - 1
+                                : currentPosition | (currentPosition + 1)
+                        );
                     }
                 }
 
@@ -21907,6 +23137,7 @@ Consequently, the overall space complexity of the algorithm is O(n^2)+O(n)=O(n^2
                     return GetEnumerator();
                 }
             }
+
             /*
             Approach2: Segment Tree
             Complexity
@@ -21928,11 +23159,15 @@ Consequently, the overall space complexity of the algorithm is O(n^2)+O(n)=O(n^2
                     int x = query[1];
                     if (query[0] == 1)
                     {
-                        var rightIterator = observedValues.GetViewBetween(x + 1, int.MaxValue).GetEnumerator();
+                        var rightIterator = observedValues
+                            .GetViewBetween(x + 1, int.MaxValue)
+                            .GetEnumerator();
                         rightIterator.MoveNext();
                         int rightValue = rightIterator.Current;
 
-                        var leftIterator = observedValues.GetViewBetween(int.MinValue, x - 1).GetEnumerator();
+                        var leftIterator = observedValues
+                            .GetViewBetween(int.MinValue, x - 1)
+                            .GetEnumerator();
                         leftIterator.MoveNext();
                         int leftValue = leftIterator.Current;
 
@@ -21946,7 +23181,9 @@ Consequently, the overall space complexity of the algorithm is O(n^2)+O(n)=O(n^2
                         bool isValid = segmentTree.GetMax(x) >= size;
                         if (!isValid)
                         {
-                            var leftIterator = observedValues.GetViewBetween(int.MinValue, x - 1).GetEnumerator();
+                            var leftIterator = observedValues
+                                .GetViewBetween(int.MinValue, x - 1)
+                                .GetEnumerator();
                             leftIterator.MoveNext();
                             if (leftIterator.Current != x)
                             {
@@ -21961,6 +23198,7 @@ Consequently, the overall space complexity of the algorithm is O(n^2)+O(n)=O(n^2
 
                 return results;
             }
+
             class SegmentTree
             {
                 private int size;
@@ -21982,7 +23220,13 @@ Consequently, the overall space complexity of the algorithm is O(n^2)+O(n)=O(n^2
                     UpdateValueInternal(index, newValue, 1, 0, size - 1);
                 }
 
-                private int GetRangeValueInternal(int left, int right, int nodeIndex, int nodeRangeLeftIndex, int nodeRangeRightIndex)
+                private int GetRangeValueInternal(
+                    int left,
+                    int right,
+                    int nodeIndex,
+                    int nodeRangeLeftIndex,
+                    int nodeRangeRightIndex
+                )
                 {
                     if (left > right)
                         return 0;
@@ -21991,12 +23235,30 @@ Consequently, the overall space complexity of the algorithm is O(n^2)+O(n)=O(n^2
                         return tree[nodeIndex];
 
                     int rangeMid = (nodeRangeLeftIndex + nodeRangeRightIndex) / 2;
-                    int leftValue = GetRangeValueInternal(left, Math.Min(right, rangeMid), nodeIndex * 2, nodeRangeLeftIndex, rangeMid);
-                    int rightValue = GetRangeValueInternal(Math.Max(left, rangeMid + 1), right, nodeIndex * 2 + 1, rangeMid + 1, nodeRangeRightIndex);
+                    int leftValue = GetRangeValueInternal(
+                        left,
+                        Math.Min(right, rangeMid),
+                        nodeIndex * 2,
+                        nodeRangeLeftIndex,
+                        rangeMid
+                    );
+                    int rightValue = GetRangeValueInternal(
+                        Math.Max(left, rangeMid + 1),
+                        right,
+                        nodeIndex * 2 + 1,
+                        rangeMid + 1,
+                        nodeRangeRightIndex
+                    );
                     return Math.Max(leftValue, rightValue);
                 }
 
-                private void UpdateValueInternal(int index, int newValue, int nodeIndex, int nodeRangeLeftIndex, int nodeRangeRightIndex)
+                private void UpdateValueInternal(
+                    int index,
+                    int newValue,
+                    int nodeIndex,
+                    int nodeRangeLeftIndex,
+                    int nodeRangeRightIndex
+                )
                 {
                     if (nodeRangeLeftIndex == nodeRangeRightIndex)
                     {
@@ -22013,12 +23275,17 @@ Consequently, the overall space complexity of the algorithm is O(n^2)+O(n)=O(n^2
                     }
                     else
                     {
-                        UpdateValueInternal(index, newValue, rightChild, mid + 1, nodeRangeRightIndex);
+                        UpdateValueInternal(
+                            index,
+                            newValue,
+                            rightChild,
+                            mid + 1,
+                            nodeRangeRightIndex
+                        );
                     }
                     tree[nodeIndex] = Math.Max(tree[leftChild], tree[rightChild]);
                 }
             }
-
         }
 
         /* 691. Stickers to Spell Word
@@ -22040,7 +23307,8 @@ Consequently, the overall space complexity of the algorithm is O(n^2)+O(n)=O(n^2
             public int OptimizedExhaustiveSearch(String[] stickers, String target)
             {
                 int[] targetNaiveCount = new int[26];
-                foreach (char c in target) targetNaiveCount[c - 'a']++;
+                foreach (char c in target)
+                    targetNaiveCount[c - 'a']++;
 
                 int[] index = new int[26];
                 int t = 0;
@@ -22058,7 +23326,8 @@ Consequently, the overall space complexity of the algorithm is O(n^2)+O(n)=O(n^2
 
                 targetCount = new int[t];
                 t = 0;
-                foreach (int c in targetNaiveCount) if (c > 0)
+                foreach (int c in targetNaiveCount)
+                    if (c > 0)
                     {
                         targetCount[t++] = c;
                     }
@@ -22069,14 +23338,16 @@ Consequently, the overall space complexity of the algorithm is O(n^2)+O(n)=O(n^2
                     foreach (char c in stickers[i])
                     {
                         int j = index[c - 'a'];
-                        if (j >= 0) stickersCount[i][j]++;
+                        if (j >= 0)
+                            stickersCount[i][j]++;
                     }
                 }
 
                 int anchor = 0;
                 for (int i = 0; i < stickers.Length; i++)
                 {
-                    for (int j = anchor; j < stickers.Length; j++) if (j != i)
+                    for (int j = anchor; j < stickers.Length; j++)
+                        if (j != i)
                         {
                             bool dominated = true;
                             for (int k = 0; k < t; k++)
@@ -22102,12 +23373,16 @@ Consequently, the overall space complexity of the algorithm is O(n^2)+O(n)=O(n^2
                 Search(0, anchor);
                 return best <= target.Length ? best : -1;
             }
+
             private void Search(int ans, int row)
             {
-                if (ans >= best) return;
+                if (ans >= best)
+                    return;
                 if (row == stickersCount.Length)
                 {
-                    foreach (int c in targetCount) if (c > 0) return;
+                    foreach (int c in targetCount)
+                        if (c > 0)
+                            return;
                     best = ans;
                     return;
                 }
@@ -22148,11 +23423,13 @@ Complexity Analysis
             {
                 int N = target.Length;
                 int[] dp = new int[1 << N];
-                for (int i = 1; i < 1 << N; i++) dp[i] = -1;
+                for (int i = 1; i < 1 << N; i++)
+                    dp[i] = -1;
 
                 for (int state = 0; state < 1 << N; state++)
                 {
-                    if (dp[state] == -1) continue;
+                    if (dp[state] == -1)
+                        continue;
                     foreach (String sticker in stickers)
                     {
                         int now = state;
@@ -22160,7 +23437,8 @@ Complexity Analysis
                         {
                             for (int i = 0; i < N; i++)
                             {
-                                if (((now >> i) & 1) == 1) continue;
+                                if (((now >> i) & 1) == 1)
+                                    continue;
                                 if (target[i] == letter)
                                 {
                                     now |= 1 << i;
@@ -22177,8 +23455,6 @@ Complexity Analysis
                 return dp[(1 << N) - 1];
             }
         }
-
-
 
         /* 410. Split Array Largest Sum
         https://leetcode.com/problems/split-array-largest-sum/description/
@@ -22212,6 +23488,7 @@ Complexity Analysis
 
                 return GetMinimumLargestSplitSum(prefixSum, 0, m);
             }
+
             private int GetMinimumLargestSplitSum(int[] prefixSum, int currIndex, int subarrayCount)
             {
                 int n = prefixSum.Length - 1;
@@ -22238,8 +23515,10 @@ Complexity Analysis
                     int firstSplitSum = prefixSum[i + 1] - prefixSum[currIndex];
 
                     // Find the maximum subarray sum for the current first split.
-                    int largestSplitSum = Math.Max(firstSplitSum,
-                                              GetMinimumLargestSplitSum(prefixSum, i + 1, subarrayCount - 1));
+                    int largestSplitSum = Math.Max(
+                        firstSplitSum,
+                        GetMinimumLargestSplitSum(prefixSum, i + 1, subarrayCount - 1)
+                    );
 
                     // Find the minimum among all possible combinations.
                     minimumLargestSplitSum = Math.Min(minimumLargestSplitSum, largestSplitSum);
@@ -22253,7 +23532,7 @@ Complexity Analysis
                 return memo[currIndex][subarrayCount] = minimumLargestSplitSum;
             }
 
-            /*           
+            /*
 Approach 2: Bottom-Up Dynamic Programming
 Complexity Analysis
 Here N is the length of the array and M is the number of subarrays allowed.
@@ -22268,7 +23547,6 @@ The results are stored in the table memo with size N⋅M. Hence, the space compl
             public int BottomUpDP(int[] nums, int m)
             {
                 int[][] memo = new int[1001][];
-
 
                 int n = nums.Length;
 
@@ -22300,10 +23578,16 @@ The results are stored in the table memo with size N⋅M. Hence, the space compl
                             int firstSplitSum = prefixSum[i + 1] - prefixSum[currIndex];
 
                             // Find the maximum subarray sum for the current first split.
-                            int largestSplitSum = Math.Max(firstSplitSum, memo[i + 1][subarrayCount - 1]);
+                            int largestSplitSum = Math.Max(
+                                firstSplitSum,
+                                memo[i + 1][subarrayCount - 1]
+                            );
 
                             // Find the minimum among all possible combinations.
-                            minimumLargestSplitSum = Math.Min(minimumLargestSplitSum, largestSplitSum);
+                            minimumLargestSplitSum = Math.Min(
+                                minimumLargestSplitSum,
+                                largestSplitSum
+                            );
 
                             if (firstSplitSum >= minimumLargestSplitSum)
                             {
@@ -22317,6 +23601,7 @@ The results are stored in the table memo with size N⋅M. Hence, the space compl
 
                 return memo[0][m];
             }
+
             /*
 Approach 3: Binary Search
 Complexity Analysis
@@ -22363,6 +23648,7 @@ We do not use any data structures that require more than constant extra space.
 
                 return minimumLargestSplitSum;
             }
+
             private int MinimumSubarraysRequired(int[] nums, int maxSumAllowed)
             {
                 int currentSum = 0;
@@ -22387,11 +23673,7 @@ We do not use any data structures that require more than constant extra space.
                 // Return the number of subarrays, which is the number of splits + 1
                 return splitsRequired + 1;
             }
-
-
         }
-
-
 
         /* 2234. Maximum Total Beauty of the Gardens
         https://leetcode.com/problems/maximum-total-beauty-of-the-gardens/description/
@@ -22404,7 +23686,13 @@ We do not use any data structures that require more than constant extra space.
 O(n logn).
 O(n) steps in the iteration, since we have to complete at most n buildings before finding out the maximum score. Binary search in each step takes O(logn) (I think it can be reduced to O(1) since the minimum flower is monotonically decreasing, as we increase the number of complete gardens).
             */
-            public long MaximumBeauty(int[] flowers, long newFlowers, int target, int full, int partial)
+            public long MaximumBeauty(
+                int[] flowers,
+                long newFlowers,
+                int target,
+                int full,
+                int partial
+            )
             {
                 int numberOfFlowers = flowers.Length;
 
@@ -22421,22 +23709,35 @@ O(n) steps in the iteration, since we have to complete at most n buildings befor
                     return (long)full * flowers.Length;
                 }
 
-                if (newFlowers >= cost[numberOfFlowers - 1] + (target - flowers[numberOfFlowers - 1]) * numberOfFlowers)
+                if (
+                    newFlowers
+                    >= cost[numberOfFlowers - 1]
+                        + (target - flowers[numberOfFlowers - 1]) * numberOfFlowers
+                )
                 {
-                    return Math.Max((long)full * numberOfFlowers, (long)full * (numberOfFlowers - 1) + (long)partial * (target - 1));
+                    return Math.Max(
+                        (long)full * numberOfFlowers,
+                        (long)full * (numberOfFlowers - 1) + (long)partial * (target - 1)
+                    );
                 }
 
                 int j = numberOfFlowers - 1;
-                while (flowers[j] == target) j--;
+                while (flowers[j] == target)
+                    j--;
 
-                long answer = 0, remainingFlowers = newFlowers;
+                long answer = 0,
+                    remainingFlowers = newFlowers;
                 while (remainingFlowers >= 0)
                 {
                     int index = Array.BinarySearch(cost, 0, j + 1, remainingFlowers);
-                    if (index < 0) index = -index - 2;
+                    if (index < 0)
+                        index = -index - 2;
 
                     long bar = flowers[index] + (remainingFlowers - cost[index]) / (index + 1);
-                    answer = Math.Max(answer, bar * partial + (long)full * (numberOfFlowers - j - 1));
+                    answer = Math.Max(
+                        answer,
+                        bar * partial + (long)full * (numberOfFlowers - j - 1)
+                    );
                     remainingFlowers -= (target - flowers[j]);
                     j--;
                 }
@@ -22459,9 +23760,12 @@ Complexity Analysis
             */
             public bool ExhaustiveSearch(int sx, int sy, int tx, int ty)
             {
-                if (sx > tx || sy > ty) return false;
-                if (sx == tx && sy == ty) return true;
-                return ExhaustiveSearch(sx + sy, sy, tx, ty) || ExhaustiveSearch(sx, sx + sy, tx, ty);
+                if (sx > tx || sy > ty)
+                    return false;
+                if (sx == tx && sy == ty)
+                    return true;
+                return ExhaustiveSearch(sx + sy, sy, tx, ty)
+                    || ExhaustiveSearch(sx, sx + sy, tx, ty);
             }
 
             /*
@@ -22472,17 +23776,21 @@ Complexity Analysis
 
             */
             HashSet<Point> seen;
-            int tx, ty;
+            int tx,
+                ty;
+
             public struct Point
             {
-                public int x, y;
+                public int x,
+                    y;
+
                 public Point(int sx, int sy)
                 {
                     this.x = sx;
                     this.y = sy;
                 }
-
             }
+
             public bool DP(int sx, int sy, int tx, int ty)
             {
                 seen = new HashSet<Point>();
@@ -22494,8 +23802,10 @@ Complexity Analysis
 
             private void Search(Point P)
             {
-                if (seen.Contains(P)) return;
-                if (P.x > tx || P.y > ty) return;
+                if (seen.Contains(P))
+                    return;
+                if (P.x > tx || P.y > ty)
+                    return;
                 seen.Add(P);
                 Search(new Point(P.x + P.y, P.y));
                 Search(new Point(P.x, P.x + P.y));
@@ -22514,8 +23824,10 @@ Complexity Analysis
                 {
                     if (sx == tx && sy == ty)
                         return true;
-                    if (tx > ty) tx -= ty;
-                    else ty -= tx;
+                    if (tx > ty)
+                        tx -= ty;
+                    else
+                        ty -= tx;
                 }
                 return false;
             }
@@ -22531,23 +23843,26 @@ Complexity Analysis
             {
                 while (tx >= sx && ty >= sy)
                 {
-                    if (tx == ty) break;
+                    if (tx == ty)
+                        break;
                     if (tx > ty)
                     {
-                        if (ty > sy) tx %= ty;
-                        else return (tx - sx) % ty == 0;
+                        if (ty > sy)
+                            tx %= ty;
+                        else
+                            return (tx - sx) % ty == 0;
                     }
                     else
                     {
-                        if (tx > sx) ty %= tx;
-                        else return (ty - sy) % tx == 0;
+                        if (tx > sx)
+                            ty %= tx;
+                        else
+                            return (ty - sy) % tx == 0;
                     }
                 }
                 return (tx == sx && ty == sy);
             }
-
         }
-
 
         /* 2742. Painting the Walls
         https://leetcode.com/problems/painting-the-walls/description/
@@ -22629,6 +23944,7 @@ The dp table takes O(n^2) space.
 
                 return dp[0][n];
             }
+
             /*
             Approach 3: Space-Optimized Dynamic Programming
             Complexity Analysis
@@ -22664,8 +23980,6 @@ We have improved on space by making dp a 1d array of length O(n).
             }
         }
 
-
-
         /* 2468. Split Message Based on Limit
         https://leetcode.com/problems/split-message-based-on-limit/description/
          */
@@ -22679,10 +23993,13 @@ We have improved on space by making dp a 1d array of length O(n).
             */
             public String[] SplitMessageBasedOnLimit(String message, int limit)
             {
-                int sumOfA = 0, b = 0;
+                int sumOfA = 0,
+                    b = 0;
                 int messageTotalLength = message.Length;
-                while (DigitLength(b) * 2 + 3 < limit &&
-                        sumOfA + messageTotalLength + (3 + DigitLength(b)) * b > limit * b)
+                while (
+                    DigitLength(b) * 2 + 3 < limit
+                    && sumOfA + messageTotalLength + (3 + DigitLength(b)) * b > limit * b
+                )
                 {
                     b++;
                     sumOfA += DigitLength(b);
@@ -22695,7 +24012,12 @@ We have improved on space by making dp a 1d array of length O(n).
                     {
                         int messageLength = limit - (3 + DigitLength(b) + DigitLength(i + 1));
                         StringBuilder sb = new StringBuilder();
-                        sb.Append(message.Substring(pos, Math.Min(pos + messageLength, messageTotalLength)));
+                        sb.Append(
+                            message.Substring(
+                                pos,
+                                Math.Min(pos + messageLength, messageTotalLength)
+                            )
+                        );
                         sb.Append("<").Append(i + 1).Append("/").Append(b).Append(">");
                         result[i] = sb.ToString();
                         pos += messageLength;
@@ -22709,7 +24031,6 @@ We have improved on space by making dp a 1d array of length O(n).
             {
                 return num.ToString().Length;
             }
-
         }
 
         /* 3102. Minimize Manhattan Distances
@@ -22722,21 +24043,26 @@ We have improved on space by making dp a 1d array of length O(n).
                 int[] m = MaxManhattanDistance(points, -1);
                 int[] m1 = MaxManhattanDistance(points, m[0]); // remove mi
                 int[] m2 = MaxManhattanDistance(points, m[1]); // remove mj
-                return Math.Min(
-                    Manhattan(points, m1[0], m1[1]),
-                    Manhattan(points, m2[0], m2[1])
-                );
+                return Math.Min(Manhattan(points, m1[0], m1[1]), Manhattan(points, m2[0], m2[1]));
             }
+
             private int Manhattan(int[][] points, int i, int j)
             {
-                return Math.Abs(points[i][0] - points[j][0]) + Math.Abs(points[i][1] - points[j][1]);
+                return Math.Abs(points[i][0] - points[j][0])
+                    + Math.Abs(points[i][1] - points[j][1]);
             }
 
             private int[] MaxManhattanDistance(int[][] points, int remove)
             {
                 int n = points.Length;
-                int maxSum = int.MinValue, minSum = int.MaxValue, maxDiff = int.MinValue, minDiff = int.MaxValue;
-                int maxSumIndex = -1, minSumIndex = -1, maxDiffIndex = -1, minDiffIndex = -1;
+                int maxSum = int.MinValue,
+                    minSum = int.MaxValue,
+                    maxDiff = int.MinValue,
+                    minDiff = int.MaxValue;
+                int maxSumIndex = -1,
+                    minSumIndex = -1,
+                    maxDiffIndex = -1,
+                    minDiffIndex = -1;
                 for (int i = 0; i < n; i++)
                 {
                     if (i != remove)
@@ -22770,17 +24096,13 @@ We have improved on space by making dp a 1d array of length O(n).
                     ? new int[] { maxSumIndex, minSumIndex }
                     : new int[] { maxDiffIndex, minDiffIndex };
             }
-
-
         }
-
 
         /* 1255. Maximum Score Words Formed by Letters
         https://leetcode.com/problems/maximum-score-words-formed-by-letters/description/
          */
         class MaxScoreWordsFormedByLettersSol
         {
-
             /*
             Approach 1: Iterative Loop for Every Subset
             Complexity Analysis
@@ -22820,10 +24142,7 @@ We have improved on space by making dp a 1d array of length O(n).
                             }
                         }
                     }
-                    maxScore = Math.Max(
-                        maxScore,
-                        SubsetScore(subsetLetters, score, freq)
-                    );
+                    maxScore = Math.Max(maxScore, SubsetScore(subsetLetters, score, freq));
                 }
                 return maxScore;
             }
@@ -22843,6 +24162,7 @@ We have improved on space by making dp a 1d array of length O(n).
                 }
                 return totalScore;
             }
+
             /*
             Approach 2: Backtracking
 Complexity Analysis
@@ -22922,10 +24242,6155 @@ In this implementation, only two arrays of length A are created: the freq array 
                     totalScore -= score[c];
                 }
             }
+        }
+
+        /*
+        2945. Find Maximum Non-decreasing Array Length
+        https://leetcode.com/problems/find-maximum-non-decreasing-array-length/description/
+         */
+
+        public class FindMaximumNonDecreasingArrayLengthSol
+        {
+            /*
+            Approach 1: DP - Brute Force - TLE
+            Complexity
+Time O(n^2)
+Space O(n)
+
+            */
+            public int Naive(List<int> nums)
+            {
+                int n = nums.Count;
+                List<int> last = new List<int>();
+                last.Add(0);
+                for (int i = 0; i < n; i++)
+                {
+                    last.Add(int.MaxValue);
+                }
+                List<int> acc = new List<int>();
+                acc.Add(0);
+                List<int> dp = new List<int>();
+                dp.Add(0);
+                for (int j = 0; j < n; j++)
+                {
+                    int a = nums[j];
+                    acc.Add(a + acc[acc.Count - 1]);
+                    int i = j;
+                    while (last[i + 1] > acc[acc.Count - 1] - acc[i])
+                    {
+                        i--;
+                    }
+                    last[j + 1] = acc[acc.Count - 1] - acc[i];
+                    dp.Add(dp[i] + 1);
+                }
+                return dp[dp.Count - 1];
+            }
+
+            /*
+                       Approach 2: PrefixSum - Brute Force - TLE
+                       Complexity
+           Time O(n^2)
+           Space O(n) */
+            public int PrefixSumNaive(List<int> nums)
+            {
+                //Idea:
+                //1. say max_len[i] is the result/answer for first i elements
+                ////1a. max_len[0] = 0; max_len[1] = 1
+                //2. say last_val[i] is last value of array
+                /////////////////after performing optimal operations for first i elements
+                //3. max_len[i] = max(max_len[i], max_len[q]+1) for all valid 'q'
+                ////See below for valid 'q' definition
+                ////3a. q < i
+                ////3b. last_val[q] <= nums[q] + nums[q+1] + ...+ nums[i-1]
+                ////    => last_val[q] <= prefix_sum[i] - prefix_sum[q]
+                ////    => last_val[q] + prefix_sum[q] <= prefix_sum[i]  (for O(n) solution)
+                ////
+
+                //O(n^2) solution
+
+                int n = nums.Count;
+                List<int> max_len = new List<int>(n + 1);
+                List<long> last_val = new List<long>(n + 1);
+                List<long> prefix_sum = new List<long>(n + 1);
+
+                for (int j = 1; j <= n; j++)
+                {
+                    prefix_sum[j] = prefix_sum[j - 1] + nums[j - 1];
+                }
+
+                for (int i = 1; i <= n; i++)
+                {
+                    for (int q = 0; q < i; q++)
+                    {
+                        if (last_val[q] <= prefix_sum[i] - prefix_sum[q])
+                        {
+                            max_len[i] = max_len[q] + 1;
+                            last_val[i] = prefix_sum[i] - prefix_sum[q];
+                        }
+                    }
+                }
+
+                return max_len[n];
+            }
+
+            /*
+            Approach 3: DP + BinarySearch
+            Complexity
+Time O(nlogn)
+Space O(n)
+
+            */
+            public int DPWithBinarySearch(int[] nums)
+            {
+                int n = nums.Length;
+                int[] pre = new int[n + 2],
+                    dp = new int[n + 1];
+                long[] acc = new long[n + 1];
+                for (int i = 1; i <= n; i++)
+                {
+                    acc[i] = acc[i - 1] + nums[i - 1];
+                }
+                for (int i = 0, j = 1; j <= n; j++)
+                {
+                    i = Math.Max(i, pre[j]); // if this was previously optimizesd.
+                    dp[j] = dp[i] + 1;
+                    int k = Array.BinarySearch(acc, 2 * acc[j] - acc[i]);
+                    if (k < 0)
+                    {
+                        k = -k - 1;
+                    }
+                    pre[k] = j;
+                }
+                return dp[n];
+            }
+
+            /*
+            Approach 4: Prefix Sum with Monotonic Stack
+            Complexity
+Time O(n)
+Space O(n) */
+            public int PrefixSumwithMonoStack(List<int> nums)
+            {
+                int n = nums.Count;
+                List<int> max_len = new List<int>(n + 1);
+                List<long> last_val = new List<long>(n + 1);
+                List<long> prefix_sum = new List<long>(n + 1);
+                List<int> stk = new List<int>();
+
+                for (int j = 1; j <= n; j++)
+                {
+                    prefix_sum[j] = prefix_sum[j - 1] + nums[j - 1];
+                }
+
+                stk.Add(0);
+                int stk_ptr = 0;
+                int q = 0;
+                for (int i = 1; i <= n; i++)
+                {
+                    stk_ptr = Math.Min(stk_ptr, stk.Count - 1);
+                    while (
+                        stk_ptr < stk.Count - 1
+                        && last_val[stk[stk_ptr + 1]] + prefix_sum[stk[stk_ptr + 1]]
+                            <= prefix_sum[i]
+                    )
+                    {
+                        stk_ptr++;
+                    }
+
+                    q = stk[stk_ptr];
+                    max_len[i] = max_len[q] + 1;
+                    last_val[i] = prefix_sum[i] - prefix_sum[q];
+
+                    while (
+                        stk.Count > 0
+                        && last_val[stk[stk.Count - 1]] + prefix_sum[stk[stk.Count - 1]]
+                            >= last_val[i] + prefix_sum[i]
+                    )
+                    {
+                        stk.RemoveAt(stk.Count - 1);
+                    }
+                    stk.Add(i);
+                }
+                return max_len[n];
+            }
+        }
+
+        /* 1611. Minimum One Bit Operations to Make Integers Zero
+        https://leetcode.com/problems/minimum-one-bit-operations-to-make-integers-zero/description/
+         */
+        class MinimumOneBitOperationsSol
+        {
+            /*
+            Approach 1: Math and Recursion
+            Complexity Analysis
+            •	Time complexity: O((log^2)n)
+            The worst case scenario is when n can be written in the form (2^k)−1. The while loop to find the most significant bit will iterate logn times. Then, we call the function again with the most significant bit removed. The while loop will then iterate (logn)−1 times. In the next function call, it will iterate (logn)−2 times, and so on.
+            In total, there would be 1+2+3+...+logn iterations. This is the partial sum of this series for logn, which is equal to 2logn⋅((logn)+1)=O((log^2)n).
+            In addition, exponentiation has a logarithmic time complexity, which cannot be ignored in an analysis such as this.
+            •	Space complexity: O(logn)
+            The recursion call stack can have a max depth of O(logn).
+             */
+            public int UsingMathAndRecursion(int n)
+            {
+                if (n == 0)
+                {
+                    return 0;
+                }
+
+                int k = 0;
+                int curr = 1;
+                while (curr * 2 <= n)
+                {
+                    curr *= 2;
+                    k++;
+                }
+
+                return (1 << (k + 1)) - 1 - UsingMathAndRecursion(n ^ curr);
+            }
+
+            /*
+            Approach 2: Iteration
+Complexity Analysis
+•	Time complexity: O((log^2)n)
+The while loop will iterate logn times. For each set bit, it will perform an exponentiation that costs O(logn).
+This algorithm shares the same worst-case scenario as the previous approach. When n=(2^k)−1, the cost of exponentiation would be 1+2+3+...+logn. This is the partial sum of this series for logn, which is equal to (logn⋅((logn)+1))/2=O((log^2)n).
+•	Space complexity: O(1)
+This may be controversial. We aren't using any extra space other than a few integers. However, mask grows to a value linear with n. One could argue that such a value uses O(logn) space, although mask never has more than one bit set.
+We have written the space complexity as constant here as it is a standard convention to consider integers as using O(1) space. However, there is nuance to consider when the nature of the problem focuses on bits.
+
+             */
+            public int UsingMathAndIteration(int n)
+            {
+                int ans = 0;
+                int k = 0;
+                int mask = 1;
+
+                while (mask <= n)
+                {
+                    if ((n & mask) != 0)
+                    {
+                        ans = (1 << (k + 1)) - 1 - ans;
+                    }
+
+                    mask <<= 1;
+                    k++;
+                }
+
+                return ans;
+            }
+
+            /*             Approach 3: Gray Code
+Complexity Analysis
+•	Time complexity: O(logn)
+The bit operations require logarithmic time. As we are always performing 10 operations (5 XORs, 5 shifts), the time complexity is O(logn).
+However, we should note that the reason we are able to hardcode these 5 lines is because we know the input is a 32-bit integer. What if we wanted to develop an algorithm that could handle an arbitrarily large integer?
+The number of logarithmic-time operations we would require is logarithmic with the number of bits, which is logarithmic with n. Thus, the time complexity would be O(log(logn)⋅logn).
+As log(logn) grows extremely slowly, this is a very efficient algorithm. For log(logn) to grow to even a value of 100 would require n to have 2^100 bits, a number so large it could not be explicitly written in any physical format within the observable universe. As such, this term could be considered a constant for any practical value of n.
+•	Space complexity: O(1)
+We aren't using any extra space. The previous approach's analysis does not apply here since we don't count the answer as part of the space complexity.
+
+             */
+            public int UsingGrayCode(int n)
+            {
+                int ans = n;
+                ans ^= ans >> 16;
+                ans ^= ans >> 8;
+                ans ^= ans >> 4;
+                ans ^= ans >> 2;
+                ans ^= ans >> 1;
+                return ans;
+            }
+        }
+
+        /* 420. Strong Password Checker
+        https://leetcode.com/problems/strong-password-checker/description/
+         */
+
+        public class StrongPasswordCheckerSol
+        {
+            public int StrongPasswordChecker(string password)
+            {
+                int result = 0,
+                    hasLowercase = 1,
+                    hasUppercase = 1,
+                    hasDigit = 1;
+                char[] characterArray = password.ToCharArray();
+                int[] lengthArray = new int[characterArray.Length];
+
+                for (int index = 0; index < lengthArray.Length;)
+                {
+                    if (char.IsLower(characterArray[index]))
+                        hasLowercase = 0;
+                    if (char.IsUpper(characterArray[index]))
+                        hasUppercase = 0;
+                    if (char.IsDigit(characterArray[index]))
+                        hasDigit = 0;
+
+                    int currentIndex = index;
+                    while (
+                        index < characterArray.Length
+                        && characterArray[index] == characterArray[currentIndex]
+                    )
+                        index++;
+                    lengthArray[currentIndex] = index - currentIndex;
+                }
+
+                int totalMissingTypes = (hasLowercase + hasUppercase + hasDigit);
+
+                if (lengthArray.Length < 6)
+                {
+                    result +=
+                        totalMissingTypes
+                        + Math.Max(0, 6 - (lengthArray.Length + totalMissingTypes));
+                }
+                else
+                {
+                    int excessLength = Math.Max(lengthArray.Length - 20, 0),
+                        remainingExcess = 0;
+                    result += excessLength;
+
+                    for (int k = 1; k < 3; k++)
+                    {
+                        for (int i = 0; i < lengthArray.Length && excessLength > 0; i++)
+                        {
+                            if (lengthArray[i] < 3 || lengthArray[i] % 3 != (k - 1))
+                                continue;
+                            lengthArray[i] -= Math.Min(excessLength, k);
+                            excessLength -= k;
+                        }
+                    }
+
+                    for (int i = 0; i < lengthArray.Length; i++)
+                    {
+                        if (lengthArray[i] >= 3 && excessLength > 0)
+                        {
+                            int neededReduction = lengthArray[i] - 2;
+                            lengthArray[i] -= excessLength;
+                            excessLength -= neededReduction;
+                        }
+
+                        if (lengthArray[i] >= 3)
+                            remainingExcess += lengthArray[i] / 3;
+                    }
+
+                    result += Math.Max(totalMissingTypes, remainingExcess);
+                }
+
+                return result;
+            }
+        }
+
+        /*   269. Alien Dictionary
+        https://leetcode.com/problems/alien-dictionary/description/
+         */
+
+        public class AlienOrderSol
+        {
+            /*             Approach 1: Breadth-First Search
+            Complexity Analysis
+            Let N be the total number of strings in the input list.
+            Let C be the total length of all the words in the input list, added together.
+            Let U be the total number of unique letters in the alien alphabet. While this is limited to 26 in the question description, we'll still look at how it would impact the complexity if it was not limited (as this could potentially be a follow-up question).
+            •	Time complexity : O(C).
+            There were three parts to the algorithm; identifying all the relations, putting them into an adjacency list, and then converting it into a valid alphabet ordering.
+            In the worst case, the first and second parts require checking every letter of every word (if the difference between two words was always in the last letter). This is O(C).
+            For the third part, recall that a breadth-first search has a cost of O(V+E), where V is the number of vertices and E is the number of edges. Our algorithm has the same cost as BFS, as it too is visiting each edge and node once (a node is visited once all of its edges are visited, unlike the traditional BFS where it is visited once one edge is visited). Therefore, determining the cost of our algorithm requires determining how many nodes and edges there are in the graph.
+            •	Space complexity : O(1) or O(U+min(U^2,N)).
+            The adjacency list uses the most auxiliary memory. This list uses O(V+E) memory, where V is the number of unique letters, and E is the number of relations.
+            The number of vertices is simply U; the number of unique letters.
+            The number of edges in the worst case is min(U^2,N), as explained in the time complexity analysis.
+            So in total the adjacency list takes O(U+min(U^2,N)) space.
+            So for the question we're given, where U is a constant fixed at a maximum of 26, the space complexity is simply O(1). This is because U is fixed at 26, and the number of relations is fixed at 26^2, so O(min(26^2,N))=O(26^2)=O(1).
+            But when we consider an arbitrarily large number of possible letters, we use the size of the adjacency list; O(U+min(U^2,N)).
+
+             */
+
+            public string BFS(string[] words)
+            {
+                // Step 0: Create data structures and find all unique letters.
+                Dictionary<char, List<char>> adjacencyList = new Dictionary<char, List<char>>();
+                Dictionary<char, int> letterCounts = new Dictionary<char, int>();
+                foreach (string word in words)
+                {
+                    foreach (char letter in word.ToCharArray())
+                    {
+                        letterCounts[letter] = 0;
+                        adjacencyList[letter] = new List<char>();
+                    }
+                }
+
+                // Step 1: Find all edges.
+                for (int i = 0; i < words.Length - 1; i++)
+                {
+                    string firstWord = words[i];
+                    string secondWord = words[i + 1];
+                    // Check that secondWord is not a prefix of firstWord.
+                    if (firstWord.Length > secondWord.Length && firstWord.StartsWith(secondWord))
+                    {
+                        return "";
+                    }
+                    // Find the first non match and insert the corresponding relation.
+                    for (int j = 0; j < Math.Min(firstWord.Length, secondWord.Length); j++)
+                    {
+                        if (firstWord[j] != secondWord[j])
+                        {
+                            adjacencyList[firstWord[j]].Add(secondWord[j]);
+                            letterCounts[secondWord[j]]++;
+                            break;
+                        }
+                    }
+                }
+
+                // Step 2: Breadth-first search.
+                StringBuilder resultBuilder = new StringBuilder();
+                Queue<char> characterQueue = new Queue<char>();
+                foreach (char letter in letterCounts.Keys)
+                {
+                    if (letterCounts[letter] == 0)
+                    {
+                        characterQueue.Enqueue(letter);
+                    }
+                }
+                while (characterQueue.Count > 0)
+                {
+                    char currentChar = characterQueue.Dequeue();
+                    resultBuilder.Append(currentChar);
+                    foreach (char nextChar in adjacencyList[currentChar])
+                    {
+                        letterCounts[nextChar]--;
+                        if (letterCounts[nextChar] == 0)
+                        {
+                            characterQueue.Enqueue(nextChar);
+                        }
+                    }
+                }
+
+                if (resultBuilder.Length < letterCounts.Count)
+                {
+                    return "";
+                }
+                return resultBuilder.ToString();
+            }
+
+            /*             Approach 2: Depth-First Search
+            Complexity Analysis
+            •	Time complexity : O(C).
+            Building the adjacency list has a time complexity of O(C) for the same reason as in Approach 1.
+            Again, like in Approach 1, we traverse every "edge", but this time we're using depth-first-search.
+            •	Space complexity : O(1) or O(U+min(U^2,N)).
+            Like in Approach 1, we build an adjacency list. Even though this one is a reversed adjacency list, it still contains the same number of relations.
+
+             */
+            private Dictionary<char, List<char>> reverseAdjList =
+                new Dictionary<char, List<char>>();
+            private Dictionary<char, bool> seen = new Dictionary<char, bool>();
+            private StringBuilder output = new StringBuilder();
+
+            public string DFS(string[] words)
+            {
+                // Step 0: Put all unique letters into reverseAdjList as keys.
+                foreach (string word in words)
+                {
+                    foreach (char c in word)
+                    {
+                        if (!reverseAdjList.ContainsKey(c))
+                        {
+                            reverseAdjList[c] = new List<char>();
+                        }
+                    }
+                }
+
+                // Step 1: Find all edges and add reverse edges to reverseAdjList.
+                for (int i = 0; i < words.Length - 1; i++)
+                {
+                    string word1 = words[i];
+                    string word2 = words[i + 1];
+                    // Check that word2 is not a prefix of word1.
+                    if (word1.Length > word2.Length && word1.StartsWith(word2))
+                    {
+                        return "";
+                    }
+                    // Find the first non match and insert the corresponding relation.
+                    for (int j = 0; j < Math.Min(word1.Length, word2.Length); j++)
+                    {
+                        if (word1[j] != word2[j])
+                        {
+                            reverseAdjList[word2[j]].Add(word1[j]);
+                            break;
+                        }
+                    }
+                }
+
+                // Step 2: DFS to build up the output list.
+                foreach (char c in reverseAdjList.Keys)
+                {
+                    bool result = Dfs(c);
+                    if (!result)
+                        return "";
+                }
+
+                return output.ToString();
+            }
+
+            // Return true iff no cycles detected.
+            private bool Dfs(char c)
+            {
+                if (seen.ContainsKey(c))
+                {
+                    return seen[c]; // If this node was grey (false), a cycle was detected.
+                }
+                seen[c] = false;
+                foreach (char next in reverseAdjList[c])
+                {
+                    bool result = Dfs(next);
+                    if (!result)
+                        return false;
+                }
+                seen[c] = true;
+                output.Append(c);
+                return true;
+            }
+        }
+
+        /* 3235. Check if the Rectangle Corner Is Reachable
+        https://leetcode.com/problems/check-if-the-rectangle-corner-is-reachable/description/
+         */
+        public class CanReachRectangleCornerSol
+        {
+            /*
+            1. Union Find
+           Complexity
+Time O(n^2logn), where logn can be improved to constant.
+Space O(n)
+
+ 
+            */
+            private int Find(int[] f, int i)
+            {
+                if (f[i] != i)
+                {
+                    f[i] = Find(f, f[i]);
+                }
+                return f[i];
+            }
+
+            public bool UsingUnionFind(int X, int Y, int[][] A)
+            {
+                int n = A.Length;
+                int[] f = new int[n + 2];
+                for (int i = 0; i < f.Length; i++)
+                {
+                    f[i] = i;
+                }
+                for (int i = 0; i < n; i++)
+                {
+                    int x = A[i][0],
+                        y = A[i][1],
+                        r = A[i][2];
+                    if (x - r <= 0 || y + r >= Y)
+                    {
+                        f[Find(f, n)] = Find(f, i);
+                    }
+                    if (x + r >= X || y - r <= 0)
+                    {
+                        f[Find(f, n + 1)] = Find(f, i);
+                    }
+                    for (int j = 0; j < i; j++)
+                    {
+                        int x2 = A[j][0],
+                            y2 = A[j][1],
+                            r2 = A[j][2];
+                        if (Math.Pow(x - x2, 2) + Math.Pow(y - y2, 2) <= Math.Pow(r + r2, 2))
+                        {
+                            f[Find(f, i)] = Find(f, j);
+                        }
+                    }
+                }
+                return Find(f, n) != Find(f, n + 1);
+            }
+        }
+
+        /* 2781. Length of the Longest Valid Substring
+        https://leetcode.com/problems/length-of-the-longest-valid-substring/description/
+         */
+        public class LongestValidSubstringSol
+        {
+            /*
+            Approach 1: HashSet for smaller elments
+            */
+            public int UsingHashSet(string word, IList<string> forbidden)
+            {
+                HashSet<string> setF = new HashSet<string>(forbidden);
+                int res = 0,
+                    left = 0;
+                for (int i = 0; i < word.Length; i++)
+                {
+                    for (int j = Math.Max(left, i - 10); j <= i; j++)
+                    {
+                        if (setF.Contains(word.Substring(j, i - j + 1)))
+                        {
+                            left = j + 1;
+                        }
+                    }
+                    res = Math.Max(res, i - left + 1);
+                }
+                return res;
+            }
+
+            /*
+          Approach 1: Trie for larger elments
+          */
+            public int LongestValidSubstring(string word, IList<string> forbidden)
+            {
+                Dictionary<char, Dictionary<char, string>> trie =
+                    new Dictionary<char, Dictionary<char, string>>();
+
+                //TODO: Fix below trie code
+                foreach (string forbiddenWord in forbidden)
+                {
+                    Dictionary<char, Dictionary<char, string>> node = trie;
+
+                    foreach (char c in forbiddenWord)
+                    {
+                        if (!node.ContainsKey(c))
+                        {
+                            node[c] = new Dictionary<char, string>();
+                        }
+                        //  node = node[c];
+                    }
+                    // node['$'] = forbiddenWord;
+                }
+
+                int res = 0;
+                int n = word.Length;
+                int right = n - 1;
+
+                for (int left = n - 1; left >= 0; left--)
+                {
+                    //Dictionary<char, string> node = trie;
+                    for (int k = left; k <= Math.Min(left + 10, right); k++)
+                    {
+                        char c = word[k];
+
+                        /*   if (!node.ContainsKey(c))
+                          {
+                              break;
+                          }
+
+                          node = node[c];
+
+                          if (node.ContainsKey("$"))
+                          {
+                              right = k - 1;
+                              break;
+                          } */
+                    }
+                    res = Math.Max(res, right - left + 1);
+                }
+                return res;
+            }
+        }
+
+        /* 1307. Verbal Arithmetic Puzzle
+        https://leetcode.com/problems/verbal-arithmetic-puzzle/description/
+         */
+        class IsSolvableSol
+        {
+            private static readonly int[] POW_10 = new int[]
+            {
+                1,
+                10,
+                100,
+                1000,
+                10000,
+                100000,
+                1000000,
+            };
+
+            /*
+            Approach1: BackTracking
+            Complexity
+
+            Time: O(n!), n is the number of different characters of words and result, n <= 10
+            Space: O(n)
+
+            */
+            public bool UsingBacktracking(string[] words, string result)
+            {
+                HashSet<char> charSet = new HashSet<char>();
+                int[] charCount = new int[91];
+                bool[] nonLeadingZero = new bool[91]; // ASCII of `A..Z` chars are in range `65..90`
+
+                foreach (string word in words)
+                {
+                    char[] charArray = word.ToCharArray();
+                    for (int index = 0; index < charArray.Length; index++)
+                    {
+                        if (index == 0 && charArray.Length > 1)
+                            nonLeadingZero[charArray[index]] = true;
+                        charSet.Add(charArray[index]);
+                        charCount[charArray[index]] += POW_10[charArray.Length - index - 1]; // charCount is calculated by units
+                    }
+                }
+
+                char[] resultArray = result.ToCharArray();
+                for (int index = 0; index < resultArray.Length; index++)
+                {
+                    if (index == 0 && resultArray.Length > 1)
+                        nonLeadingZero[resultArray[index]] = true;
+                    charSet.Add(resultArray[index]);
+                    charCount[resultArray[index]] -= POW_10[resultArray.Length - index - 1]; // charCount is calculated by units
+                }
+
+                bool[] usedDigits = new bool[10];
+                char[] charList = new char[charSet.Count];
+                int i = 0;
+                foreach (char character in charSet)
+                    charList[i++] = character;
+
+                return Backtracking(usedDigits, charList, nonLeadingZero, 0, 0, charCount);
+            }
+
+            private bool Backtracking(
+                bool[] usedDigits,
+                char[] charList,
+                bool[] nonLeadingZero,
+                int step,
+                int diff,
+                int[] charCount
+            )
+            {
+                if (step == charList.Length)
+                    return diff == 0; // difference between sum of words and result equal to 0
+
+                for (int digit = 0; digit <= 9; digit++) // each character is decoded as one digit (0 - 9).
+                {
+                    char currentChar = charList[step];
+                    if (
+                        !usedDigits[digit] // each different characters must map to different digits
+                        && (digit > 0 || !nonLeadingZero[currentChar])
+                    ) // decoded as one number without leading zeros.
+                    {
+                        usedDigits[digit] = true;
+                        if (
+                            Backtracking(
+                                usedDigits,
+                                charList,
+                                nonLeadingZero,
+                                step + 1,
+                                diff + charCount[currentChar] * digit,
+                                charCount
+                            )
+                        )
+                            return true;
+                        usedDigits[digit] = false;
+                    }
+                }
+                return false;
+            }
+        }
+
+        /* 440. K-th Smallest in Lexicographical Order
+        https://leetcode.com/problems/k-th-smallest-in-lexicographical-order/description/
+         */
+        class FindKthSmallestInLexicographOrderSolution
+        {
+            /*
+            Approach: Prefix Tree
+            Complexity Analysis
+            Let n be the input number.
+            •	Time complexity: O(log(n)^2)
+            The outer while loop runs as long as k > 0. In the worst case, it runs O(logn) times, because at each step, we either move to the next prefix or move deeper into the tree (multiplying the current prefix by 10).
+            The countSteps function, which calculates the number of steps between two prefixes, runs in O(logn) time, as it traverses deeper levels of the number range by multiplying the prefixes by 10 in each iteration.
+            Since the countSteps function is called inside the while loop, which also runs O(logn) times, the overall time complexity is O(log(n)×log(n))=O(log(n)^2).
+            •	Space complexity: O(1)
+            The space complexity is O(1) because we're only using a constant amount of additional space for variables like curr, k, step, prefix1, prefix2, etc. We're not using any data structures that grow with the input size.
+
+            */
+            public int UsingPrefixTree(int n, int k)
+            {
+                int curr = 1;
+                k--;
+
+                while (k > 0)
+                {
+                    int step = CountSteps(n, curr, curr + 1);
+                    // If the steps are less than or equal to k, we skip this prefix's subtree
+                    if (step <= k)
+                    {
+                        // Move to the next prefix and decrease k by the number of steps we skip
+                        curr++;
+                        k -= step;
+                    }
+                    else
+                    {
+                        // Move to the next level of the tree and decrement k by 1
+                        curr *= 10;
+                        k--;
+                    }
+                }
+
+                return curr;
+            }
+
+            // To count how many numbers exist between prefix1 and prefix2
+            private int CountSteps(int n, long prefix1, long prefix2)
+            {
+                int steps = 0;
+                while (prefix1 <= n)
+                {
+                    steps += (int)(Math.Min(n + 1, prefix2) - prefix1);
+                    prefix1 *= 10;
+                    prefix2 *= 10;
+                }
+                return steps;
+            }
+        }
+
+        /* 2702. Minimum Operations to Make Numbers Non-positive
+        https://leetcode.com/problems/minimum-operations-to-make-numbers-non-positive/description/
+         */
+        class MinOperationsToMakeNumbersNonPositiveSol
+        {
+            /*
+            1. Binary Search
+            Complexity
+Time complexity:
+O(n * log(N)) where N is the maximum value in nums.
+
+Space complexity:
+O(1)        */
+            public int UsingBinarySearch(int[] nums, int x, int y)
+            {
+                int right = nums[0];
+                foreach (int v in nums)
+                {
+                    right = Math.Max(v, right);
+                }
+                int left = 1;
+                right = right / y + 1;
+                x -= y;
+                while (left <= right)
+                {
+                    int mid = (left + right) >> 1,
+                        s = mid;
+                    foreach (int v in nums)
+                    {
+                        int t = (v + y - 1) / y;
+                        if (mid >= t)
+                        {
+                            continue;
+                        }
+                        s -= (v - mid * y + x - 1) / x;
+                        if (s < 0)
+                        {
+                            break;
+                        }
+                    }
+                    if (s >= 0)
+                    {
+                        right = mid - 1;
+                    }
+                    else
+                    {
+                        left = mid + 1;
+                    }
+                }
+                return right + 1;
+            }
+        }
+
+        /* 312. Burst Balloons
+        https://leetcode.com/problems/burst-balloons/description/
+         */
+        public class BurstBalloonsSol
+        {
+            /*
+            Approach 1: Dynamic Programming (Naive) - TLE
+                        Complexity Analysis
+            Let N be the number of balloons given.
+            •	Time complexity: O(N(2^N))
+            o	There are O(2^N) states. For each state, determining the maximum coins requires iterating over all balloons. Thus the total time complexity is O(2^N)×O(N)=O(N(2^N)).
+            o	From the problem description, we know that 1 <= N <= 500. Therefore, in the worst case, time_complexity =2^500×500≈1.6×10^154, which is unacceptable. Generally, a number around or less then 10^8 is feasible.
+            •	Space complexity: O(N(2^N))
+            o	There areO (2^N) states, and we need O(N) to store each state. In total, this algorithm requires O(2^N)×O(N)=O(N(2^N)) space.
+            How can we improve our time complexity? Let's go to Approach 2.
+            This approach is Time Limit Exceed and will be optimized in Approach 2 and 3.
+             */
+            /*
+            Approach 2: Dynamic Programming (Top-Down)
+            Complexity Analysis
+Let N be the number of balloons given.
+•	Time complexity: O(N^3). There are O(N^2) states. For each state, determining the maximum coins requires iterating over all balloons in the range [left, right]. Thus the total time complexity is O(N^2)×O(N)=O(N^3).
+•	Space complexity: O(N^2). We need O(N^2) to store all states, O(N) for stacks to perform recursion, and O(N) to store [1] + nums + [1]. In total, this algorithm requires O(N^2)+O(N)+O(N)=O(N^2) space.
+
+
+            */
+            public int TopDownDP(int[] nums)
+            {
+                // add 1 before and after nums
+                int numberOfBalloons = nums.Length + 2;
+                int[] newNums = new int[numberOfBalloons];
+                Array.Copy(nums, 0, newNums, 1, numberOfBalloons - 2);
+                newNums[0] = 1;
+                newNums[numberOfBalloons - 1] = 1;
+
+                // cache the results of dp
+                int[][] memo = new int[numberOfBalloons][];
+                for (int i = 0; i < numberOfBalloons; i++)
+                {
+                    memo[i] = new int[numberOfBalloons];
+                }
+
+                // we can not burst the first one and the last one
+                // since they are both fake balloons added by ourselves
+                return Dp(memo, newNums, 1, numberOfBalloons - 2);
+            }
+
+            public int Dp(int[][] memo, int[] nums, int left, int right)
+            {
+                // return maximum if we burst all nums[left]...nums[right], inclusive
+                if (right - left < 0)
+                {
+                    return 0;
+                }
+
+                // we've already seen this, return from cache
+                if (memo[left][right] > 0)
+                {
+                    return memo[left][right];
+                }
+
+                // find the last burst one in nums[left]...nums[right]
+                int result = 0;
+                for (int i = left; i <= right; i++)
+                {
+                    // nums[i] is the last burst one
+                    int gain = nums[left - 1] * nums[i] * nums[right + 1];
+                    // nums[i] is fixed, recursively call left side and right side
+                    int remaining = Dp(memo, nums, left, i - 1) + Dp(memo, nums, i + 1, right);
+                    result = Math.Max(result, remaining + gain);
+                }
+                // add to the cache
+                memo[left][right] = result;
+                return result;
+            }
+
+            /* Approach 3: Dynamic Programming (Bottom-Up)
+            Complexity Analysis
+            Let N be the number of balloons given.
+            •	Time complexity: O(N^3). There are O(N^2) states. For each state, determining the maximum coins requires iterating over all balloons in the range [left, right], giving O(N^2)×O(N)=O(N^3).
+            •	Space complexity: O(N^2). We need O(N^2) to store dp, and O(N) to store [1] + nums + [1] (if fake balloons are added). In total, we need O(N^2)+O(N)+O(N)=O(N^2) space.
+
+             */
+            public int BottomUpDP(int[] nums)
+            {
+                // add 1 before and after nums
+                int n = nums.Length + 2;
+                int[] newNums = new int[n];
+                System.Array.Copy(nums, 0, newNums, 1, n - 2);
+                newNums[0] = 1;
+                newNums[n - 1] = 1;
+                // dp[i][j] represents
+                // maximum if we burst all newNums[left]...newNums[right], inclusive
+                int[,] dp = new int[n, n];
+                // do not include the first one and the last one
+                // since they are both fake balloons added by ourselves and we can not burst
+                // them
+                for (int left = n - 2; left >= 1; left--)
+                {
+                    for (int right = left; right <= n - 2; right++)
+                    {
+                        // find the last burst one in newNums[left]...newNums[right]
+                        for (int i = left; i <= right; i++)
+                        {
+                            // newNums[i] is the last burst one
+                            int gain = newNums[left - 1] * newNums[i] * newNums[right + 1];
+                            // recursively call left side and right side
+                            int remaining = dp[left, i - 1] + dp[i + 1, right];
+                            // update
+                            dp[left, right] = Math.Max(remaining + gain, dp[left, right]);
+                        }
+                    }
+                }
+                // burst newNums[1]...newNums[n-2], excluding the first one and the last one
+                return dp[1, n - 2];
+            }
+        }
+
+        /* 2246. Longest Path With Different Adjacent Characters
+        https://leetcode.com/problems/longest-path-with-different-adjacent-characters/description/
+         */
+
+        class LongestPathWithDifferentAdjacentCharSol
+        {
+            private int longestPath = 1;
+
+            /* Approach 1: Depth First Search
+            Complexity Analysis
+Here, n is the number of nodes.
+•	Time complexity: O(n)
+o	Each node is visited by the dfs function once, which takes O(n) time in total. We also iterate over the edges of every node once (since we don't visit a node more than once, we don't iterate its edges more than once), which adds O(n) time since we have n−1 edges.
+o	We also need O(n) time to initialize the children array.
+•	Space complexity: O(n)
+o	The recursion call stack used by dfs can have no more than n elements in the worst-case scenario. So, we would take up O(n) space in the worst case.
+o	We also need O(n) space for the the children array.
+
+             */
+            public int DFS(int[] parent, string s)
+            {
+                int n = parent.Length;
+                Dictionary<int, List<int>> children = new Dictionary<int, List<int>>();
+                // Start from node 1, since root node 0 does not have a parent.
+                for (int i = 1; i < n; i++)
+                {
+                    if (!children.ContainsKey(parent[i]))
+                    {
+                        children[parent[i]] = new List<int>();
+                    }
+                    children[parent[i]].Add(i);
+                }
+
+                Dfs(0, children, s);
+
+                return longestPath;
+            }
+
+            public int Dfs(int currentNode, Dictionary<int, List<int>> children, string s)
+            {
+                // If the node is the only child, return 1 for the currentNode itself.
+                if (!children.ContainsKey(currentNode))
+                {
+                    return 1;
+                }
+
+                // Longest and second longest path starting from currentNode (does not count the
+                // currentNode itself).
+                int longestChain = 0,
+                    secondLongestChain = 0;
+                foreach (int child in children[currentNode])
+                {
+                    // Get the number of nodes in the longest chain starting from the child,
+                    // including the child.
+                    int longestChainStartingFromChild = Dfs(child, children, s);
+                    // We won't move to the child if it has the same character as the currentNode.
+                    if (s[currentNode] == s[child])
+                    {
+                        continue;
+                    }
+                    // Modify the longestChain and secondLongestChain if longestChainStartingFromChild
+                    // is bigger.
+                    if (longestChainStartingFromChild > longestChain)
+                    {
+                        secondLongestChain = longestChain;
+                        longestChain = longestChainStartingFromChild;
+                    }
+                    else if (longestChainStartingFromChild > secondLongestChain)
+                    {
+                        secondLongestChain = longestChainStartingFromChild;
+                    }
+                }
+
+                // Add "1" for the node itself.
+                longestPath = Math.Max(longestPath, longestChain + secondLongestChain + 1);
+                return longestChain + 1;
+            }
+
+            /* Approach 2: Breadth First Search
+            Complexity Analysis
+            Here, n is the number of nodes.
+            •	Time complexity: O(n)
+            o	Each node is only queued once, which takes O(1) time for each node. We also iterate over the edges of every node once. Since we only visit each node once, we won't iterate over a node's edges multiple times. There are n−1 edges, so we need O(n) time.
+            o	We also need O(n) time to initialize the childrenCount and the longestChains arrays.
+            •	Space complexity: O(n)
+            o	In the worst case, the queue can grow to a size linear with n.
+            o	We also require O(n) space each for the childrenCount and the longestChains arrays.
+
+             */
+            public int BFS(int[] parent, string s)
+            {
+                int nodeCount = parent.Length;
+                int[] childrenCount = new int[nodeCount];
+                // Start from node 1, since the root node does not have a parent.
+                for (int node = 1; node < nodeCount; node++)
+                {
+                    childrenCount[parent[node]]++;
+                }
+
+                Queue<int> queue = new Queue<int>();
+                int longestPath = 1;
+                int[][] longestChains = new int[nodeCount][];
+                for (int i = 0; i < nodeCount; i++)
+                {
+                    longestChains[i] = new int[2];
+                }
+
+                for (int node = 1; node < nodeCount; node++)
+                {
+                    // Push all the leaf nodes in the queue.
+                    if (childrenCount[node] == 0)
+                    {
+                        longestChains[node][0] = 1;
+                        queue.Enqueue(node);
+                    }
+                }
+
+                while (queue.Count > 0)
+                {
+                    int currentNode = queue.Dequeue();
+                    int parentNode = parent[currentNode];
+                    // Get the number of nodes in the longest chain starting from the currentNode,
+                    // including the currentNode.
+                    int longestChainStartingFromCurrentNode = longestChains[currentNode][0];
+                    if (s[currentNode] != s[parentNode])
+                    {
+                        // Modify the longest chain and second longest chain if
+                        // longestChainStartingFromCurrentNode is bigger.
+                        if (longestChainStartingFromCurrentNode > longestChains[parentNode][0])
+                        {
+                            longestChains[parentNode][1] = longestChains[parentNode][0];
+                            longestChains[parentNode][0] = longestChainStartingFromCurrentNode;
+                        }
+                        else if (longestChainStartingFromCurrentNode > longestChains[parentNode][1])
+                        {
+                            longestChains[parentNode][1] = longestChainStartingFromCurrentNode;
+                        }
+                    }
+
+                    longestPath = Math.Max(
+                        longestPath,
+                        longestChains[parentNode][0] + longestChains[parentNode][1] + 1
+                    );
+                    childrenCount[parentNode]--;
+
+                    if (childrenCount[parentNode] == 0 && parentNode != 0)
+                    {
+                        longestChains[parentNode][0]++;
+                        queue.Enqueue(parentNode);
+                    }
+                }
+
+                return longestPath;
+            }
+        }
+
+        /* 1579. Remove Max Number of Edges to Keep Graph Fully Traversable
+        https://leetcode.com/problems/remove-max-number-of-edges-to-keep-graph-fully-traversable/description/
+         */
+        public class RemoveMaxNumberOfEdgesToKeepGraphFullyTraversableSol
+        {
+            /*             Approach 1: Disjoint Set Union (DSU)
+            Complexity Analysis
+            Here, E is the number of edges in the list edges and N is the number nodes.
+            •	Time complexity: O(E∗α(N)).
+            We iterate over edges, and for every edge we call the function performUnion(), whose time complexity is equal to O(α(N) as we have included union by size as well as path compression. Therefore, the total time complexity is equal to O(E∗α(N)). Note that α is the Inverse Ackermann function which grows so slowly that it can be considered as O(1).
+            •	Space complexity: O(N).
+            For both Alice and Bob we keep two lists in union find data structures, representative and componentSize of size both N. Therefore the total space complexity is equal to O(N).
+
+             */
+            public int UsingDisjointSetUnion(int numberOfNodes, int[][] edges)
+            {
+                // Different objects for Alice and Bob.
+                UnionFind alice = new UnionFind(numberOfNodes);
+                UnionFind bob = new UnionFind(numberOfNodes);
+
+                int edgesRequired = 0;
+                // Perform union for edges of type = 3, for both Alice and Bob.
+                foreach (var edge in edges)
+                {
+                    if (edge[0] == 3)
+                    {
+                        edgesRequired += (
+                            alice.PerformUnion(edge[1], edge[2])
+                            | bob.PerformUnion(edge[1], edge[2])
+                        );
+                    }
+                }
+
+                // Perform union for Alice if type = 1 and for Bob if type = 2.
+                foreach (var edge in edges)
+                {
+                    if (edge[0] == 1)
+                    {
+                        edgesRequired += alice.PerformUnion(edge[1], edge[2]);
+                    }
+                    else if (edge[0] == 2)
+                    {
+                        edgesRequired += bob.PerformUnion(edge[1], edge[2]);
+                    }
+                }
+
+                // Check if the Graphs for Alice and Bob have n - 1 edges or is a single component.
+                if (alice.IsConnected() && bob.IsConnected())
+                {
+                    return edges.Length - edgesRequired;
+                }
+
+                return -1;
+            }
+
+            private class UnionFind
+            {
+                private int[] representative;
+                private int[] componentSize;
+
+                // Number of distinct components in the graph.
+                private int components;
+
+                // Initialize the list representative and componentSize
+                // Each node is representative of itself with size 1.
+                public UnionFind(int numberOfNodes)
+                {
+                    components = numberOfNodes;
+                    representative = new int[numberOfNodes + 1];
+                    componentSize = new int[numberOfNodes + 1];
+
+                    for (int i = 0; i <= numberOfNodes; i++)
+                    {
+                        representative[i] = i;
+                        componentSize[i] = 1;
+                    }
+                }
+
+                // Get the root of a node.
+                private int FindRepresentative(int node)
+                {
+                    if (representative[node] == node)
+                    {
+                        return node;
+                    }
+
+                    // Path compression.
+                    return representative[node] = FindRepresentative(representative[node]);
+                }
+
+                // Perform the union of two components that belongs to node x and node y.
+                public int PerformUnion(int nodeX, int nodeY)
+                {
+                    nodeX = FindRepresentative(nodeX);
+                    nodeY = FindRepresentative(nodeY);
+
+                    if (nodeX == nodeY)
+                    {
+                        return 0;
+                    }
+
+                    if (componentSize[nodeX] > componentSize[nodeY])
+                    {
+                        componentSize[nodeX] += componentSize[nodeY];
+                        representative[nodeY] = nodeX;
+                    }
+                    else
+                    {
+                        componentSize[nodeY] += componentSize[nodeX];
+                        representative[nodeX] = nodeY;
+                    }
+
+                    components--;
+                    return 1;
+                }
+
+                // Returns true if all nodes get merged to one.
+                public bool IsConnected()
+                {
+                    return components == 1;
+                }
+            }
+        }
+
+        /* 975. Odd Even Jump
+        https://leetcode.com/problems/odd-even-jump/description/
+         */
+
+        public class OddEvenJumpsSol
+        {
+            /*             Solution 1: Using Map/SortedDictionary
+            Complexity
+            Time O(NlogN)
+            Space O(N)
+
+             */
+            public int UsingSortedDict(int[] array)
+            {
+                int arrayLength = array.Length,
+                    result = 1;
+                bool[] canJumpHigher = new bool[arrayLength],
+                    canJumpLower = new bool[arrayLength];
+                canJumpHigher[arrayLength - 1] = canJumpLower[arrayLength - 1] = true;
+                SortedDictionary<int, int> sortedMap = new SortedDictionary<int, int>();
+                sortedMap.Add(array[arrayLength - 1], arrayLength - 1);
+
+                for (int index = arrayLength - 2; index >= 0; --index)
+                {
+                    KeyValuePair<int, int>? higherEntry = sortedMap.FirstOrDefault(x =>
+                        x.Key >= array[index]
+                    );
+                    KeyValuePair<int, int>? lowerEntry = sortedMap.LastOrDefault(x =>
+                        x.Key <= array[index]
+                    );
+
+                    if (higherEntry.HasValue)
+                        canJumpHigher[index] = canJumpLower[higherEntry.Value.Value];
+                    if (lowerEntry.HasValue)
+                        canJumpLower[index] = canJumpHigher[lowerEntry.Value.Value];
+                    if (canJumpHigher[index])
+                        result++;
+
+                    sortedMap[array[index]] = index;
+                }
+
+                return result;
+            }
+
+            /*             Solution 2: using Stack
+             */
+            public int UsingStack(int[] A)
+            {
+                int n = A.Length;
+                int[] nextHigher = new int[n];
+                int[] nextLower = new int[n];
+
+                Stack<int> stack = new Stack<int>();
+                for (int i = 0; i < A.Length; i++)
+                {
+                    while (stack.Count > 0 && stack.Peek() < i)
+                    {
+                        nextHigher[stack.Pop()] = i;
+                    }
+                    stack.Push(i);
+                }
+
+                stack.Clear();
+                for (int i = 0; i < A.Length; i++)
+                {
+                    while (stack.Count > 0 && stack.Peek() < i)
+                    {
+                        nextLower[stack.Pop()] = i;
+                    }
+                    stack.Push(i);
+                }
+
+                int[] higher = new int[n];
+                int[] lower = new int[n];
+                higher[n - 1] = lower[n - 1] = 1;
+                for (int i = n - 2; i >= 0; i--)
+                {
+                    higher[i] = lower[nextHigher[i]];
+                    lower[i] = higher[nextLower[i]];
+                }
+
+                int result = 0;
+                for (int i = 0; i < n; i++)
+                {
+                    result += higher[i];
+                }
+                return result;
+            }
+        }
+
+        /* 403. Frog Jump
+        https://leetcode.com/problems/frog-jump/description/
+         */
+        class CanFrogJumpSol
+        {
+            Dictionary<int, int> stoneMap = new Dictionary<int, int>();
+            int[,] dp = new int[2001, 2001];
+            bool[,] dpBool = new bool[2001, 2001];
+
+            /* Approach 1: Top-Down Dynamic Programming
+            Complexity Analysis
+            Here, N is the number of stones in the river.
+            •	Time complexity: O(N^2)
+            Each state is defined by the values index and prevJump. Hence, there will be N2 possible states because both index and jump can take up to N values; this is because if there are N stones, the frog can only jump on them in the forward direction, so if the frog chooses the maximum jump in every case and there is a stone on those jumps position as well then the value of prevJump will be {0, 1, 2, 3, 4, 5, 6.....} and since the jumps could not be more than the number of stones the value of prevStone would also be not more than N. We must visit these states to solve the original problem. Each recursive call requires O(1) time, as we have a loop with three iterations. Thus, the total time complexity equals O(N^2).
+            •	Space complexity: O(N^2)
+            The size of the dp array is N2; also, the size of the map mark is N (although the keys are the values of stones' position, the number of entries would be equal to the number of stones). There would be some stack space, too; the maximum number of active stack calls would be O(N) one for each stone. Hence, the total space complexity would be O(N^2).
+
+
+             */
+            public bool TopDownDP(int[] stones)
+            {
+                // Mark stones in the map to identify if such stone exists or not.
+                for (int i = 0; i < stones.Length; i++)
+                {
+                    stoneMap[stones[i]] = i;
+                }
+
+                // Mark all states as -1 to denote they're not calculated.
+                for (int i = 0; i < 2000; i++)
+                {
+                    for (int j = 0; j < 2001; j++)
+                    {
+                        dp[i, j] = -1;
+                    }
+                }
+
+                return Solve(stones, stones.Length, 0, 0);
+            }
+
+            private bool Solve(int[] stones, int totalStones, int currentIndex, int previousJump)
+            {
+                // If reached the last stone, return true.
+                if (currentIndex == totalStones - 1)
+                {
+                    return true;
+                }
+
+                // If this subproblem has already been calculated, return it.
+                if (dp[currentIndex, previousJump] != -1)
+                {
+                    return dp[currentIndex, previousJump] == 1;
+                }
+
+                bool canCross = false;
+                // Iterate over the three possibilities {k - 1, k, k + 1}.
+                for (int nextJump = previousJump - 1; nextJump <= previousJump + 1; nextJump++)
+                {
+                    if (nextJump > 0 && stoneMap.ContainsKey(stones[currentIndex] + nextJump))
+                    {
+                        canCross =
+                            canCross
+                            || Solve(
+                                stones,
+                                totalStones,
+                                stoneMap[stones[currentIndex] + nextJump],
+                                nextJump
+                            );
+                    }
+                }
+
+                // Store the result to fetch later.
+                dp[currentIndex, previousJump] = canCross ? 1 : 0;
+                return canCross;
+            }
+
+            /*             Approach 2: Bottom-up Dynamic Programming
+            Complexity Analysis
+            Here, N is the number of stones in the river.
+            •	Time complexity: O(N^2)
+            Each state is defined by the values index and prevJump. Hence, there will be N2 possible states because both index and jump can take up to N values, and we must visit these states to solve the original problem. Thus, the total time complexity equals O(N^2).
+            •	Space complexity: O(N^2)
+            The size of the dp array is N2; also, the size of the map mark is N (although the keys are the values of the stone's position but the number of entries would be equal to the number of stones). Hence, the total space complexity would be O(N^2).
+
+             */
+            public bool BottomUpDP(int[] stones)
+            {
+                int numberOfStones = stones.Length;
+                // Mark stones in the map to identify if such stone exists or not.
+                for (int i = 0; i < numberOfStones; i++)
+                {
+                    stoneMap[stones[i]] = i;
+                }
+
+                dpBool[0, 0] = true;
+                for (int index = 0; index < numberOfStones; index++)
+                {
+                    for (int previousJump = 0; previousJump <= numberOfStones; previousJump++)
+                    {
+                        // If stone exists, mark the value with position and jump as 1.
+                        if (dpBool[index, previousJump])
+                        {
+                            if (stoneMap.ContainsKey(stones[index] + previousJump))
+                            {
+                                dpBool[stoneMap[stones[index] + previousJump], previousJump] = true;
+                            }
+                            if (stoneMap.ContainsKey(stones[index] + previousJump + 1))
+                            {
+                                dpBool[
+                                    stoneMap[stones[index] + previousJump + 1],
+                                    previousJump + 1
+                                ] = true;
+                            }
+                            if (stoneMap.ContainsKey(stones[index] + previousJump - 1))
+                            {
+                                dpBool[
+                                    stoneMap[stones[index] + previousJump - 1],
+                                    previousJump - 1
+                                ] = true;
+                            }
+                        }
+                    }
+                }
+
+                // If any value with index as numberOfStones - 1 is true, return true.
+                for (int index = 0; index <= numberOfStones; index++)
+                {
+                    if (dpBool[numberOfStones - 1, index])
+                    {
+                        return true;
+                    }
+                }
+                return false;
+            }
+        }
+
+        /* 632. Smallest Range Covering Elements from K Lists
+        https://leetcode.com/problems/smallest-range-covering-elements-from-k-lists/description/
+         */
+
+        public class SmallestRangeSol
+        {
+            /*
+            1. Priorirty Queue - MinHeap
+            */
+            public int[] MinHeapPQ(IList<IList<int>> nums)
+            {
+                PriorityQueue<Tuple<int, int>, int> pq =
+                    new(Comparer<int>.Create((a, b) => a.CompareTo(b)));
+                int min = Int32.MaxValue,
+                    max = Int32.MinValue;
+                for (int i = 0; i < nums.Count; i++)
+                {
+                    pq.Enqueue(Tuple.Create(i, 0), nums[i][0]);
+                    min = Math.Min(min, nums[i][0]);
+                    max = Math.Max(max, nums[i][0]);
+                }
+                int[] res = { min, max };
+                while (pq.Count > 0)
+                {
+                    int row = pq.Peek().Item1,
+                        col = pq.Dequeue().Item2;
+                    if (col + 1 == nums[row].Count)
+                        break;
+                    pq.Enqueue(Tuple.Create(row, col + 1), nums[row][col + 1]);
+                    max = Math.Max(max, nums[row][col + 1]);
+                    min = nums[pq.Peek().Item1][pq.Peek().Item2];
+                    // get New Range
+                    if (max - min < res[1] - res[0])
+                    {
+                        res[1] = max;
+                        res[0] = min;
+                    }
+                    if (res[1] - res[0] == 0)
+                        break;
+                }
+                return res;
+            }
+        }
+
+        /* 282. Expression Add Operators
+        https://leetcode.com/problems/expression-add-operators/description/
+         */
+        class ExpressionAddOperatorsSol
+        {
+            public List<string> Answer { get; set; }
+            public string Digits { get; set; }
+            public long Target { get; set; }
+
+            /* Approach 1: Backtracking
+            Complexity Analysis
+            •	Time Complexity:
+            o	At every step along the way, we consider exactly 4 different choices or 4 different recursive paths. The base case is when the value of index reaches N i.e. the length of the nums array. Hence, our complexity would be O(4^N).
+            o	For the base case we use a StringBuilder::toString operation in Java and .join() operation in Python and that takes O(N) time. Here N represents the length of our expression. In the worst case, each digit would be an operand and we would have N digits and N−1 operators. So O(N). This is for one expression. In the worst case, we can have O(4^N) valid expressions.
+            o	Overall time complexity = O(N×4^N).
+            •	Space Complexity:
+            o	For both Python and Java implementations we have a list data structure that we update on the fly and only for valid expressions do we create a new string and add to our answers array. So, the space occupied by the intermediate list would be O(N) since in the worst case the expression would be built out of all the digits as operands.
+            o	Additionally, the space used up by the recursion stack would also be O(N) since the size of recursion stack is determined by the value of index and it goes from 0 all the way to N.
+            o	We don't consider the space occupied by the answers array since that is a part of the question's requirement and we can't reduce that in any way
+
+             */
+            public List<string> WithBacktracking(string num, int target)
+            {
+                if (num.Length == 0)
+                {
+                    return new List<string>();
+                }
+
+                this.Target = target;
+                this.Digits = num;
+                this.Answer = new List<string>();
+                this.Recurse(0, 0, 0, 0, new List<string>());
+                return this.Answer;
+            }
+
+            private void Recurse(
+                int index,
+                long previousOperand,
+                long currentOperand,
+                long value,
+                List<string> operations
+            )
+            {
+                string nums = this.Digits;
+
+                // Done processing all the digits in num
+                if (index == nums.Length)
+                {
+                    // If the final value == target expected AND
+                    // no operand is left unprocessed
+                    if (value == this.Target && currentOperand == 0)
+                    {
+                        StringBuilder stringBuilder = new StringBuilder();
+                        operations
+                            .GetRange(1, operations.Count - 1)
+                            .ForEach(v => stringBuilder.Append(v));
+                        this.Answer.Add(stringBuilder.ToString());
+                    }
+                    return;
+                }
+
+                // Extending the current operand by one digit
+                currentOperand = currentOperand * 10 + (nums[index] - '0');
+                string currentValRepresentation = currentOperand.ToString();
+                int length = nums.Length;
+
+                // To avoid cases where we have 1 + 05 or 1 * 05 since 05 won't be a
+                // valid operand. Hence this check
+                if (currentOperand > 0)
+                {
+                    // NO OP recursion
+                    Recurse(index + 1, previousOperand, currentOperand, value, operations);
+                }
+
+                // ADDITION
+                operations.Add("+");
+                operations.Add(currentValRepresentation);
+                Recurse(index + 1, currentOperand, 0, value + currentOperand, operations);
+                operations.RemoveAt(operations.Count - 1);
+                operations.RemoveAt(operations.Count - 1);
+
+                if (operations.Count > 0)
+                {
+                    // SUBTRACTION
+                    operations.Add("-");
+                    operations.Add(currentValRepresentation);
+                    Recurse(index + 1, -currentOperand, 0, value - currentOperand, operations);
+                    operations.RemoveAt(operations.Count - 1);
+                    operations.RemoveAt(operations.Count - 1);
+
+                    // MULTIPLICATION
+                    operations.Add("*");
+                    operations.Add(currentValRepresentation);
+                    Recurse(
+                        index + 1,
+                        currentOperand * previousOperand,
+                        0,
+                        value - previousOperand + (currentOperand * previousOperand),
+                        operations
+                    );
+                    operations.RemoveAt(operations.Count - 1);
+                    operations.RemoveAt(operations.Count - 1);
+                }
+            }
+        }
+
+        /* 761. Special Binary String
+        https://leetcode.com/problems/special-binary-string/description/
+         */
+        public class MakeLargestSpecialSol
+        {
+            /* Approach #1: Recursion
+            Complexity Analysis
+•	Time Complexity: O(N^2), where N is the length of S.
+•	Space Complexity: O(N).
+
+             */
+            public string Recur(string inputString)
+            {
+                if (inputString.Length == 0)
+                    return inputString;
+                int anchor = 0,
+                    balance = 0;
+                List<string> mountains = new List<string>();
+                for (int i = 0; i < inputString.Length; ++i)
+                {
+                    balance += inputString[i] == '1' ? 1 : -1;
+                    if (balance == 0)
+                    {
+                        mountains.Add(
+                            "1" + Recur(inputString.Substring(anchor + 1, i - anchor)) + "0"
+                        );
+                        anchor = i + 1;
+                    }
+                }
+                mountains.Sort((x, y) => string.Compare(y, x)); // Sort in descending order
+                StringBuilder result = new StringBuilder();
+                foreach (string mountain in mountains)
+                    result.Append(mountain);
+                return result.ToString();
+            }
+        }
+
+        /* 149. Max Points on a Line
+        https://leetcode.com/problems/max-points-on-a-line/description/
+         */
+
+        public class MaxPointsOnALineSol
+        {
+            /*             Complexity Analysis
+            •	Time complexity: O(n^2). For each of the n points, we calculate O(n) values of atan2 and insert them into the hash map, which takes O(1). Then, we find the maximum frequency of an angle, which also takes O(n).
+            •	Space complexity: O(n). We store O(n) values of atan2 in the hash map.
+             */
+            public int MaxPoints(int[][] points)
+            {
+                int n = points.Length;
+                if (n == 1)
+                {
+                    return 1;
+                }
+
+                int result = 2;
+                for (int i = 0; i < n; i++)
+                {
+                    Dictionary<double, int> cnt = new Dictionary<double, int>();
+                    for (int j = 0; j < n; j++)
+                    {
+                        if (j != i)
+                        {
+                            double key = Math.Atan2(
+                                points[j][1] - points[i][1],
+                                points[j][0] - points[i][0]
+                            );
+                            if (cnt.ContainsKey(key))
+                            {
+                                cnt[key]++;
+                            }
+                            else
+                            {
+                                cnt[key] = 1;
+                            }
+                        }
+                    }
+
+                    result = Math.Max(result, cnt.Values.Max() + 1);
+                }
+
+                return result;
+            }
+        }
+
+        /* 2493. Divide Nodes Into the Maximum Number of Groups
+        https://leetcode.com/problems/divide-nodes-into-the-maximum-number-of-groups/description/
+         */
+
+        public class MagnificentSetsSol
+        {
+            public int MagnificentSets(int nodeCount, int[][] edges)
+            {
+                List<List<int>> adjacencyList = new List<List<int>>();
+                DisjointSet disjointSet = new DisjointSet(nodeCount);
+
+                for (int i = 0; i <= nodeCount; i++)
+                    adjacencyList.Add(new List<int>());
+                foreach (int[] edge in edges)
+                {
+                    adjacencyList[edge[0]].Add(edge[1]);
+                    adjacencyList[edge[1]].Add(edge[0]);
+                    disjointSet.Merge(edge[0], edge[1]);
+                }
+
+                for (int i = 1; i <= nodeCount; i++)
+                {
+                    Queue<int> queue = new Queue<int>();
+                    queue.Enqueue(i);
+                    bool isInvalid = false;
+                    HashSet<int> visitedNodes = new HashSet<int>();
+                    int levelCounter = 0;
+
+                    while (queue.Count > 0)
+                    {
+                        int size = queue.Count;
+                        HashSet<int> nodesInQueue = new HashSet<int>();
+                        for (int j = 0; j < size; j++)
+                        {
+                            int currentNode = queue.Dequeue();
+                            if (visitedNodes.Contains(currentNode))
+                                continue;
+                            nodesInQueue.Add(currentNode);
+                            visitedNodes.Add(currentNode);
+                            foreach (int neighbor in adjacencyList[currentNode])
+                            {
+                                if (nodesInQueue.Contains(neighbor))
+                                {
+                                    return -1;
+                                }
+                                if (!visitedNodes.Contains(neighbor))
+                                    queue.Enqueue(neighbor);
+                            }
+                        }
+                        levelCounter++;
+                    }
+                    int parent = disjointSet.Find(i);
+                    disjointSet.GroupSize[parent] = Math.Max(
+                        disjointSet.GroupSize[parent],
+                        levelCounter
+                    );
+                }
+
+                HashSet<int> processedParents = new HashSet<int>();
+                int totalResult = 0;
+                for (int i = 1; i <= nodeCount; i++)
+                {
+                    int parent = disjointSet.Find(i);
+                    if (processedParents.Contains(parent))
+                        continue;
+                    processedParents.Add(parent);
+                    totalResult += disjointSet.GroupSize[parent];
+                }
+                return totalResult;
+            }
+
+            public class DisjointSet
+            {
+                public int[] Parent,
+                    GroupSize,
+                    Rank;
+
+                public DisjointSet(int size)
+                {
+                    this.Parent = new int[size + 1];
+                    this.GroupSize = new int[size + 1];
+                    this.Rank = new int[size + 1];
+                    for (int i = 0; i < size; i++)
+                    {
+                        Parent[i] = i;
+                        GroupSize[i] = -1;
+                    }
+                }
+
+                public int Find(int element)
+                {
+                    if (Parent[element] == element)
+                        return element;
+                    return Parent[element] = Find(Parent[element]);
+                }
+
+                public void Merge(int firstElement, int secondElement)
+                {
+                    int parentFirst = Find(firstElement),
+                        parentSecond = Find(secondElement);
+                    if (Rank[parentFirst] == Rank[parentSecond])
+                    {
+                        Parent[parentFirst] = Parent[parentSecond];
+                        Rank[parentSecond]++;
+                    }
+                    else if (Rank[parentFirst] > Rank[parentSecond])
+                    {
+                        Parent[parentSecond] = Parent[parentFirst];
+                    }
+                    else
+                    {
+                        Parent[parentFirst] = Parent[parentSecond];
+                    }
+
+                    GroupSize[parentSecond] = Math.Max(
+                        GroupSize[parentSecond],
+                        GroupSize[parentFirst]
+                    );
+                    GroupSize[parentFirst] = GroupSize[parentSecond];
+                }
+            }
+        }
+
+        /* 1478. Allocate Mailboxes
+        https://leetcode.com/problems/allocate-mailboxes/description/
+         */
+        public class MinDistanceSol // 13 ms, faster than 57.37%
+        {
+            /*
+             1. Top down DP - Prove median mailbox - O(n^3
+            */
+            public const int MAX = 100;
+            public const int INF = 100 * 10000; // maximum distance = N * MAX_POS = 100 * 10^4 = 10^6
+            private int[,] costs = new int[MAX, MAX];
+            private int?[,] memo = new int?[MAX, MAX];
+
+            public int TopDownDP(int[] houses, int k)
+            {
+                int n = houses.Length;
+                Array.Sort(houses);
+                for (int i = 0; i < n; i++)
+                {
+                    for (int j = 0; j < n; j++)
+                    {
+                        int medianPos = houses[(i + j) / 2];
+                        for (int m = i; m <= j; m++)
+                            costs[i, j] += Math.Abs(medianPos - houses[m]);
+                    }
+                }
+                return Dp(houses, n, k, 0);
+            }
+
+            private int Dp(int[] houses, int n, int k, int i)
+            {
+                if (k == 0 && i == n)
+                    return 0;
+                if (k == 0 || i == n)
+                    return INF;
+                if (memo[k, i].HasValue)
+                    return memo[k, i].Value;
+                int ans = INF;
+                for (int j = i; j < n; j++)
+                    ans = Math.Min(ans, costs[i, j] + Dp(houses, n, k - 1, j + 1));
+                return (int)(memo[k, i] = ans);
+            }
+        }
+
+        /* 1000. Minimum Cost to Merge Stones
+        https://leetcode.com/problems/minimum-cost-to-merge-stones/description/
+         */
+
+        public class MinCostToMergeStornesSol
+        {
+            /*
+            Approach 1: Bottom Up  (2D)
+            Time Complexity: O(n ^ 3) (n is the number of stone)
+            */
+            public int BottomUp2DDP(int[] stones)
+            {
+                if (stones == null || stones.Length == 0)
+                {
+                    return 0;
+                }
+                int length = stones.Length;
+                int maxValue = int.MaxValue;
+                int[,] dp = new int[length + 1, length + 1];
+                int[] prefixSum = new int[length + 1];
+                int i,
+                    j,
+                    k,
+                    l;
+                for (i = 1; i <= length; i++)
+                {
+                    prefixSum[i] = prefixSum[i - 1] + stones[i - 1];
+                }
+
+                for (i = 1; i <= length; i++)
+                {
+                    dp[i, i] = 0;
+                }
+
+                for (l = 2; l <= length; l++)
+                {
+                    for (i = 1; i <= length - l + 1; i++)
+                    {
+                        j = i + l - 1;
+                        dp[i, j] = maxValue;
+                        int sum = prefixSum[j] - prefixSum[i - 1];
+                        for (k = i; k < j; k++)
+                        {
+                            dp[i, j] = Math.Min(dp[i, j], dp[i, k] + dp[k + 1, j] + sum);
+                        }
+                    }
+                }
+
+                return dp[1, length];
+            }
+
+            /*
+Approach 2: Bottom Up DP  (3D)
+Time Complexity: O(n^3 * K) (n is the number of stone)
+
+*/
+            public int BottomUp3DDP(int[] stones, int K)
+            {
+                int len = stones.Length;
+                if ((len - 1) % (K - 1) != 0)
+                {
+                    return -1;
+                }
+
+                int i,
+                    j,
+                    k,
+                    l,
+                    t;
+
+                int[] prefixSum = new int[len + 1];
+                for (i = 1; i <= len; i++)
+                {
+                    prefixSum[i] = prefixSum[i - 1] + stones[i - 1];
+                }
+
+                int max = 99999999;
+                int[][][] dp = new int[len + 1][][];
+                for (i = 1; i <= len; i++)
+                {
+                    for (j = 1; j <= len; j++)
+                    {
+                        for (k = 1; k <= K; k++)
+                        {
+                            dp[i][j][k] = max;
+                        }
+                    }
+                }
+
+                for (i = 1; i <= len; i++)
+                {
+                    dp[i][i][1] = 0;
+                }
+
+                for (l = 2; l <= len; l++)
+                {
+                    for (i = 1; i <= len - l + 1; i++)
+                    {
+                        j = i + l - 1;
+                        for (k = 2; k <= K; k++)
+                        {
+                            for (t = i; t < j; t++)
+                            {
+                                dp[i][j][k] = Math.Min(
+                                    dp[i][j][k],
+                                    dp[i][t][k - 1] + dp[t + 1][j][1]
+                                );
+                            }
+                        }
+
+                        dp[i][j][1] = dp[i][j][K] + prefixSum[j] - prefixSum[i - 1];
+                    }
+                }
+
+                return dp[1][len][1];
+            }
+
+            /*
+    Approach 3: Top Down DP (3D)
+    Time Complexity: O(n^3 * K) (n is the number of stone)
+
+    */
+            int[][][] dynamicProgrammingArray;
+            int maximumValue = 99999999;
+            int K;
+
+            public int TopDown3DDP(int[] stones, int K)
+            {
+                this.K = K;
+                int length = stones.Length;
+                if ((length - 1) % (K - 1) != 0)
+                {
+                    return -1;
+                }
+                dynamicProgrammingArray = new int[length + 1][][];
+                int[] prefixSum = new int[length + 1];
+
+                for (int i = 1; i <= length; i++)
+                {
+                    prefixSum[i] = prefixSum[i - 1] + stones[i - 1];
+                }
+
+                return GetResult(prefixSum, 1, length, 1);
+            }
+
+            private int GetResult(int[] prefixSum, int left, int right, int piles)
+            {
+                if (dynamicProgrammingArray[left][right][piles] != 0)
+                {
+                    return dynamicProgrammingArray[left][right][piles];
+                }
+                int result = maximumValue;
+                int t;
+                if (left == right)
+                {
+                    result = (piles == 1) ? 0 : maximumValue;
+                }
+                else
+                {
+                    if (piles == 1)
+                    {
+                        result =
+                            GetResult(prefixSum, left, right, K)
+                            + prefixSum[right]
+                            - prefixSum[left - 1];
+                    }
+                    else
+                    {
+                        for (t = left; t < right; t++)
+                        {
+                            result = Math.Min(
+                                result,
+                                GetResult(prefixSum, left, t, piles - 1)
+                                    + GetResult(prefixSum, t + 1, right, 1)
+                            );
+                        }
+                    }
+                }
+                dynamicProgrammingArray[left][right][piles] = result;
+                return result;
+            }
+        }
+
+        /* 332. Reconstruct Itinerary
+        https://leetcode.com/problems/reconstruct-itinerary/description/
+         */
+
+        public class ReconstructItenerarySol
+        {
+            // origin -> list of destinations
+            private Dictionary<string, List<string>> flightMap =
+                new Dictionary<string, List<string>>();
+            private Dictionary<string, bool[]> visitBitmap = new Dictionary<string, bool[]>();
+            private int totalFlights = 0;
+            private List<string> itineraryResult = null;
+
+            /*
+            Approach 1: Backtracking + Greedy (Time Limit Exceed)
+            Complexity
+            •	Time Complexity: O(∣E∣^d) where ∣E∣ is the number of total flights and d is the maximum number of flights from an airport.
+            o	It is tricky to estimate the time complexity of the backtracking algorithm since the algorithm often has an early stopping depending on the input.
+            o	To calculate a loose upper bound for the time complexity, let us consider it as a combination problem where the goal is to construct a sequence of a specific order, i.e. ∣V1V2...Vn∣. For each position Vi, we could have d choices, i.e. at each airport one could have at most d possible destinations. Since the length of the sequence is ∣E∣, the total number of combinations would be ∣E∣^d.
+            o	In the worst case, our backtracking algorithm would have to enumerate all possible combinations.
+            •	Space Complexity: O(∣V∣+∣E∣) where ∣V∣ is the number of airports and ∣E∣ is the number of flights.
+            o	In the algorithm, we use the graph as well as the visit bitmap, which would require the space of ∣V∣+∣E∣.
+            o	Since we applied recursion in the algorithm, which would incur additional memory consumption in the function call stack. The maximum depth of the recursion would be exactly the number of flights in the input, i.e. ∣E∣.
+            o	As a result, the total space complexity of the algorithm would be O(∣V∣+2⋅∣E∣)=O(∣V∣+∣E∣).
+
+             */
+            public List<string> WithBacktrackingAndGreedy(List<List<string>> tickets)
+            {
+                // Step 1). build the graph first
+                foreach (var ticket in tickets)
+                {
+                    string origin = ticket[0];
+                    string destination = ticket[1];
+                    if (this.flightMap.ContainsKey(origin))
+                    {
+                        List<string> destinationList = this.flightMap[origin];
+                        destinationList.Add(destination);
+                    }
+                    else
+                    {
+                        List<string> destinationList = new List<string>();
+                        destinationList.Add(destination);
+                        this.flightMap[origin] = destinationList;
+                    }
+                }
+
+                // Step 2). order the destinations and init the visit bitmap
+                foreach (var entry in this.flightMap)
+                {
+                    entry.Value.Sort();
+                    this.visitBitmap[entry.Key] = new bool[entry.Value.Count];
+                }
+
+                this.totalFlights = tickets.Count;
+                LinkedList<string> route = new LinkedList<string>();
+                route.AddLast("JFK");
+
+                // Step 3). backtracking
+                this.Backtracking("JFK", route);
+                return this.itineraryResult;
+            }
+
+            protected bool Backtracking(string origin, LinkedList<string> route)
+            {
+                if (route.Count == this.totalFlights + 1)
+                {
+                    this.itineraryResult = new List<string>(route);
+                    return true;
+                }
+
+                if (!this.flightMap.ContainsKey(origin))
+                    return false;
+
+                int index = 0;
+                bool[] bitmap = this.visitBitmap[origin];
+
+                foreach (string destination in this.flightMap[origin])
+                {
+                    if (!bitmap[index])
+                    {
+                        bitmap[index] = true;
+                        route.AddLast(destination);
+                        bool result = this.Backtracking(destination, route);
+                        route.RemoveLast();
+                        bitmap[index] = false;
+
+                        if (result)
+                            return true;
+                    }
+                    ++index;
+                }
+
+                return false;
+            }
+
+            /* Approach 2: Hierholzer's Algorithm
+            Complexity
+•	Time Complexity: O(∣E∣log (∣E∣/∣V|)) where ∣E∣ is the number of edges (flights) in the input.
+o	As one can see from the above algorithm, during the DFS process, we would traverse each edge once. Therefore, the complexity of the DFS function would be ∣E∣.
+o	However, before the DFS, we need to sort the outgoing edges for each vertex. And this, unfortunately, dominates the overall complexity.
+o	It is though tricky to estimate the complexity of sorting, which depends on the structure of the input graph.
+o	In the worst case where the graph is not balanced, i.e. the connections are concentered in a single airport. Imagine the graph is of star shape, in this case, the JFK airport would assume half of the flights (since we still need the return flight). As a result, the sorting operation on this airport would be exceptionally expensive, i.e. NlogN, where N=2∣E∣. And this would be the final complexity as well since it dominates the rest of the calculation.
+o	Let us consider a less bad case, or an average case, where the graph is less clustered, i.e. each node has an equal number of outgoing flights. Under this assumption, each airport would have (2⋅∣V∣)∣E∣ number of flights (still we need the return flights). Again, we can plug it into the NlogN minimal sorting complexity. In addition, this time, we need to take into consideration all airports, rather than the superhub (JFK) in the above case. As a result, we have ∣V∣⋅(NlogN), where N=2⋅∣V∣∣E∣. If we expand the formula, we will obtain the complexity of the average case as O(2∣E∣log2⋅∣V∣∣E∣)=O(∣E∣log∣V∣∣E∣)
+•	Space Complexity: O(∣V∣+∣E∣) where ∣V∣ is the number of airports and ∣E∣ is the number of flights.
+o	In the algorithm, we use the graph, which would require the space of ∣V∣+∣E∣.
+o	Since we applied recursion in the algorithm, which would incur additional memory consumption in the function call stack. The maximum depth of the recursion would be exactly the number of flights in the input, i.e. ∣E∣.
+o	As a result, the total space complexity of the algorithm would be O(∣V∣+2⋅∣E∣)=O(∣V∣+∣E∣).
+
+             */
+            // origin -> list of destinations
+            private Dictionary<string, LinkedList<string>> flightMap1 =
+                new Dictionary<string, LinkedList<string>>();
+            private LinkedList<string> result = null;
+
+            public IList<string> HierholzerAlgo(IList<IList<string>> tickets)
+            {
+                // Step 1). build the graph first
+                foreach (var ticket in tickets)
+                {
+                    string origin = ticket[0];
+                    string dest = ticket[1];
+                    if (this.flightMap1.ContainsKey(origin))
+                    {
+                        LinkedList<string> destList = this.flightMap1[origin];
+                        destList.AddLast(dest);
+                    }
+                    else
+                    {
+                        LinkedList<string> destList = new LinkedList<string>();
+                        destList.AddLast(dest);
+                        this.flightMap1[origin] = destList;
+                    }
+                }
+
+                // Step 2). order the destinations
+                foreach (var key in flightMap.Keys)
+                {
+                    var value = flightMap[key];
+                    var sortedList = new List<string>(value);
+                    sortedList.Sort();
+                    flightMap1[key] = new LinkedList<string>(sortedList);
+                }
+
+                this.result = new LinkedList<string>();
+                // Step 3). post-order DFS
+                this.DFS("JFK");
+                return (IList<string>)this.result;
+            }
+
+            protected void DFS(string origin)
+            {
+                // Visit all the outgoing edges first.
+                if (this.flightMap1.ContainsKey(origin))
+                {
+                    LinkedList<string> destList = this.flightMap1[origin];
+                    while (destList.Count > 0)
+                    {
+                        // while we visit the edge, we trim it off from graph.
+                        string dest = destList.First.Value;
+                        destList.RemoveFirst();
+                        DFS(dest);
+                    }
+                }
+                // add the airport to the head of the itinerary
+                this.result.AddFirst(origin);
+            }
+        }
+
+        /* 381. Insert Delete GetRandom O(1) - Duplicates allowed
+        https://leetcode.com/problems/insert-delete-getrandom-o1-duplicates-allowed/description/
+         */
+        class RandomizedCollection
+        {
+            private List<int> lst;
+            private Dictionary<int, HashSet<int>> idx;
+            private Random rand;
+
+            /*
+            Approach 1: ArrayList + HashMap
+            Complexity Analysis
+            •	Time complexity : O(N), with N being the number of operations. All of our operations are O(1), giving N∗O(1)=O(N).
+            •	Space complexity : O(N), with N being the number of operations. The worst case scenario is if we get N add operations, in which case our ArrayList and our HashMap grow to size N.
+
+
+             */
+            /** Initialize your data structure here. */
+            public RandomizedCollection()
+            {
+                lst = new List<int>();
+                idx = new Dictionary<int, HashSet<int>>();
+                rand = new Random();
+            }
+
+            /** Inserts a value to the collection. Returns true if the collection did not already contain the specified element. */
+            public bool Insert(int val)
+            {
+                if (!idx.ContainsKey(val))
+                    idx[val] = new HashSet<int>();
+                idx[val].Add(lst.Count);
+                lst.Add(val);
+                return idx[val].Count == 1;
+            }
+
+            /** Removes a value from the collection. Returns true if the collection contained the specified element. */
+            public bool Remove(int val)
+            {
+                if (!idx.ContainsKey(val) || idx[val].Count == 0)
+                    return false;
+                int removeIdx = idx[val].GetEnumerator().Current;
+                idx[val].Remove(removeIdx);
+                int last = lst[lst.Count - 1];
+                lst[removeIdx] = last;
+                idx[last].Add(removeIdx);
+                idx[last].Remove(lst.Count - 1);
+
+                lst.RemoveAt(lst.Count - 1);
+                return true;
+            }
+
+            /** Get a random element from the collection. */
+            public int GetRandom()
+            {
+                return lst[rand.Next(lst.Count)];
+            }
+        }
+
+        /* 773. Sliding Puzzle
+        https://leetcode.com/problems/sliding-puzzle/description/
+         */
+
+        public class SlidingPuzzleSol
+        {
+            public int SlidingPuzzle(int[][] board)
+            {
+                string target = "123450";
+                string start = "";
+                for (int i = 0; i < board.Length; i++)
+                {
+                    for (int j = 0; j < board[0].Length; j++)
+                    {
+                        start += board[i][j].ToString();
+                    }
+                }
+                HashSet<string> visited = new HashSet<string>();
+                // all the positions 0 can be swapped to
+                int[][] directions = new int[][]
+                {
+                    new int[] { 1, 3 },
+                    new int[] { 0, 2, 4 },
+                    new int[] { 1, 5 },
+                    new int[] { 0, 4 },
+                    new int[] { 1, 3, 5 },
+                    new int[] { 2, 4 },
+                };
+                Queue<string> queue = new Queue<string>();
+                queue.Enqueue(start);
+                visited.Add(start);
+                int result = 0;
+                while (queue.Count > 0)
+                {
+                    // level count, has to use size control here, otherwise not needed
+                    int size = queue.Count;
+                    for (int i = 0; i < size; i++)
+                    {
+                        string current = queue.Dequeue();
+                        if (current.Equals(target))
+                        {
+                            return result;
+                        }
+                        int zeroIndex = current.IndexOf('0');
+                        // swap if possible
+                        foreach (int direction in directions[zeroIndex])
+                        {
+                            string next = Swap(current, zeroIndex, direction);
+                            if (visited.Contains(next))
+                            {
+                                continue;
+                            }
+                            visited.Add(next);
+                            queue.Enqueue(next);
+                        }
+                    }
+                    result++;
+                }
+                return -1;
+            }
+
+            private string Swap(string str, int i, int j)
+            {
+                StringBuilder stringBuilder = new StringBuilder(str);
+                stringBuilder[i] = str[j];
+                stringBuilder[j] = str[i];
+                return stringBuilder.ToString();
+            }
+        }
+
+        /* 829. Consecutive Numbers Sum
+        https://leetcode.com/problems/consecutive-numbers-sum/description/
+         */
+
+        public class ConsecutiveNumbersSumSol
+        {
+            /*             Complexity:
+            To be more accurate, it's O(biggest prime factor).
+            Because every time I find a odd factor, we do N /= i.
+            This help reduce N faster.
+
+            Assume P is the biggest prime factor of a odd number N .
+            If N = 3^x * 5^y ...* P, Loop on i will stop at P^0.5
+            If N = 3^x * 5^y ...* P^z, Loop on i will stop at P.
+            In the best case, N = 3^x and our solution is O(log3N)
+            In the worst case, N = P^2 and our solution is O(P) = O(N^0.5)
+
+            Though in my solution, we didn't cache our process of finding odd factor.
+            Moreover, if we prepare all prime between [3，10^4.5].
+            it will be super faster because there are only 3400 primes in this range.
+            This complexity will be O(P/logP) with P < sqrt(N)
+             */
+            public int ConsecutiveNumbersSum(int N)
+            {
+                int res = 1,
+                    count;
+                while (N % 2 == 0)
+                    N /= 2; //we dont want any even factors, so squeeze all 2 factors first
+                //iterate 3,5,7,9... note: when oddNum get to 9, it will just skip because factor 3 already removed.
+                for (int i = 3; i * i <= N; i += 2)
+                {
+                    count = 0;
+                    while (N % i == 0)
+                    {
+                        N /= i;
+                        count++;
+                    }
+                    res *= count + 1;
+                }
+                //Suppose initial N = P1^e1.P2^e2...Pn^en,  Pi is in assending order
+
+                //so for the last iteration in the above for loop, the oddNum is Pn and N is Pn^en
+                if (N == 1)
+                { // en>=2 so oddNum*oddNum <= N (which is Pn^en)
+                    return res;
+                }
+                else
+                { //en==1 so oddNum*oddNum > N (Pn*Pn > Pn^1)
+                    //why 2 ?: last N is the largest prime number and its exponent is 1
+                    return res * 2;
+                }
+            }
+        }
+
+        /* 3251. Find the Count of Monotonic Pairs II
+        https://leetcode.com/problems/find-the-count-of-monotonic-pairs-ii/description/
+         */
+        public class CountOfPairsSol
+        {
+            public int CountOfPairs(int[] A)
+            {
+                int n = A.Length,
+                    m = 1001,
+                    mod = 1000000007;
+                int[] dp = new int[m];
+                Array.Fill(dp, 1);
+
+                for (int i = 1; i < n; ++i)
+                {
+                    int d = Math.Max(0, A[i] - A[i - 1]);
+                    int[] dp2 = new int[m];
+                    for (int j = d; j < A[i] + 1; ++j)
+                    {
+                        dp2[j] = ((j > 0 ? dp2[j - 1] : 0) + dp[j - d]) % mod;
+                    }
+                    dp = dp2;
+                }
+
+                int res = 0;
+                for (int j = 0; j <= A[n - 1]; ++j)
+                    res = (res + dp[j]) % mod;
+                return res;
+            }
+        }
+
+        /* 2508. Add Edges to Make Degrees of All Nodes Even
+        https://leetcode.com/problems/add-edges-to-make-degrees-of-all-nodes-even/description/
+         */
+
+        public class MakeDegreesOfAllNodesEvenSol
+        {
+            /*             Complexity
+            Time O(edges)
+            Space O(edges)
+             */
+            public bool IsPossible(int n, int[][] edges)
+            {
+                HashSet<int>[] G = new HashSet<int>[n];
+                for (int i = 0; i < n; i++)
+                {
+                    G[i] = new HashSet<int>();
+                }
+                foreach (int[] edge in edges)
+                {
+                    G[edge[0] - 1].Add(edge[1] - 1);
+                    G[edge[1] - 1].Add(edge[0] - 1);
+                }
+                List<int> odd = new List<int>();
+                for (int i = 0; i < n; i++)
+                {
+                    if (G[i].Count % 2 == 1)
+                    {
+                        odd.Add(i);
+                    }
+                }
+
+                bool f(int a, int b)
+                {
+                    return !G[b].Contains(a);
+                }
+
+                if (odd.Count == 2)
+                {
+                    int a = odd[0],
+                        b = odd[1];
+                    foreach (int i in Enumerable.Range(0, n))
+                    {
+                        if (f(a, i) && f(b, i))
+                        {
+                            return true;
+                        }
+                    }
+                }
+
+                if (odd.Count == 4)
+                {
+                    int a = odd[0],
+                        b = odd[1],
+                        c = odd[2],
+                        d = odd[3];
+                    return (f(a, b) && f(c, d)) || (f(a, c) && f(b, d)) || (f(a, d) && f(c, b));
+                }
+
+                return odd.Count == 0;
+            }
+        }
+
+        /* 546. Remove Boxes
+        https://leetcode.com/problems/remove-boxes/description/
+         */
+        public class RemoveBoxesSol
+        {
+            /*
+             Approach 1: Brute Force Approach [Time Limit Exceeded]
+             Complexity Analysis
+•	Time complexity: O(n!). Let f(n) be the time to find the solution of n boxes with n different colors, then f(n)=n∗f(n−1) which results in the n! time complexity.
+•	Space complexity: O(n^2). The recursive tree goes upto a depth of n, with every level consisting of upto n newBoxes elements.
+
+             */
+            public int Naive(int[] boxes)
+            {
+                return Remove(boxes);
+            }
+
+            private int Remove(int[] boxes)
+            {
+                if (boxes.Length == 0)
+                {
+                    return 0;
+                }
+
+                int res = 0;
+
+                for (int i = 0, j = i + 1; i < boxes.Length; i++)
+                {
+                    while (j < boxes.Length && boxes[i] == boxes[j])
+                    {
+                        j++;
+                    }
+
+                    int[] newboxes = new int[boxes.Length - (j - i)];
+                    for (int k = 0, p = 0; k < boxes.Length; k++)
+                    {
+                        if (k == i)
+                        {
+                            k = j;
+                        }
+                        if (k < boxes.Length)
+                        {
+                            newboxes[p++] = boxes[k];
+                        }
+                    }
+                    res = Math.Max(res, Remove(newboxes) + (j - i) * (j - i));
+                }
+
+                return res;
+            }
+
+            /*
+            Approach 2: Top-Down Dynamic Programming
+            Complexity Analysis
+•	Time complexity: O(n^4) dp array of size n^3 is filled, and linear
+time is taken to process each element.
+•	Space complexity: O(n^3) dp array is of size n^3.
+
+            */
+            public int TopDownDP(int[] boxes)
+            {
+                int[][][] dp = new int[100][][];
+                return CalculatePoints(boxes, dp, 0, boxes.Length - 1, 0);
+            }
+
+            public int CalculatePoints(int[] boxes, int[][][] dp, int l, int r, int k)
+            {
+                if (l > r)
+                {
+                    return 0;
+                }
+
+                while (r > l && boxes[r] == boxes[r - 1])
+                {
+                    r--;
+                    k++;
+                }
+
+                if (dp[l][r][k] != 0)
+                {
+                    return dp[l][r][k];
+                }
+
+                dp[l][r][k] = CalculatePoints(boxes, dp, l, r - 1, 0) + (k + 1) * (k + 1);
+                for (int i = l; i < r; i++)
+                {
+                    if (boxes[i] == boxes[r])
+                    {
+                        dp[l][r][k] = Math.Max(
+                            dp[l][r][k],
+                            CalculatePoints(boxes, dp, l, i, k + 1)
+                                + CalculatePoints(boxes, dp, i + 1, r - 1, 0)
+                        );
+                    }
+                }
+
+                return dp[l][r][k];
+            }
+        }
+
+        /* 233. Number of Digit One
+        https://leetcode.com/problems/number-of-digit-one/description/
+         */
+        public class CountDigitOneSol
+        {
+            /*
+                        Approach #1 Brute force [Time Limit Exceeded]
+                        Complexity Analysis
+            •	Time complexity: O(n∗log10(n)).
+            o	We iterate from 1 to n
+            o	In each iteration, we convert integer to string and count '1' in string which takes linear time in number of digits in i, which is log10(n).
+            •	Space complexity: O(log10(n)) Extra space for the countr and the converted string str.
+
+                        */
+
+            public int Naive(int n)
+            {
+                int countr = 0;
+                for (int i = 1; i <= n; i++)
+                {
+                    string str = i.ToString();
+                    countr += str.Count(c => c == '1');
+                }
+                return countr;
+            }
+
+            /*
+            Approach #2 Solve it mathematically [Accepted]
+            Complexity analysis
+            •	Time complexity: O(log10(n)).
+            o	No of iterations equal to the number of digits in n which is log10(n)
+            •	Space complexity: O(1) space required.
+
+            */
+            public int UsingMaths(int n)
+            {
+                int countr = 0;
+                for (long i = 1; i <= n; i *= 10)
+                {
+                    long divider = i * 10;
+                    countr += (int)(
+                        (n / divider) * i + Math.Min(Math.Max(n % divider - i + 1, 0L), i)
+                    );
+                }
+                return countr;
+            }
+        }
+
+        /* 850. Rectangle Area II
+        https://leetcode.com/problems/rectangle-area-ii/description/
+         */
+        public class ReactangleAreaIISolution
+        {
+            /*
+            Approach 1: Coordinate Compression
+            Complexity Analysis
+•	Time Complexity: O(N^3), where N is the number of rectangles.
+•	Space Complexity: O(N^2).
+
+             */
+            public int UsingCoordinateCompression(int[][] rectangles)
+            {
+                int numberOfRectangles = rectangles.Length;
+                HashSet<int> xValues = new HashSet<int>();
+                HashSet<int> yValues = new HashSet<int>();
+
+                foreach (int[] rectangle in rectangles)
+                {
+                    xValues.Add(rectangle[0]);
+                    xValues.Add(rectangle[2]);
+                    yValues.Add(rectangle[1]);
+                    yValues.Add(rectangle[3]);
+                }
+
+                int[] indexedXValues = new int[xValues.Count];
+                xValues.CopyTo(indexedXValues);
+                Array.Sort(indexedXValues);
+                int[] indexedYValues = new int[yValues.Count];
+                yValues.CopyTo(indexedYValues);
+                Array.Sort(indexedYValues);
+
+                Dictionary<int, int> mapX = new Dictionary<int, int>();
+                Dictionary<int, int> mapY = new Dictionary<int, int>();
+                for (int i = 0; i < indexedXValues.Length; ++i)
+                    mapX[indexedXValues[i]] = i;
+                for (int i = 0; i < indexedYValues.Length; ++i)
+                    mapY[indexedYValues[i]] = i;
+
+                bool[,] grid = new bool[indexedXValues.Length, indexedYValues.Length];
+                foreach (int[] rectangle in rectangles)
+                    for (int x = mapX[rectangle[0]]; x < mapX[rectangle[2]]; ++x)
+                        for (int y = mapY[rectangle[1]]; y < mapY[rectangle[3]]; ++y)
+                            grid[x, y] = true;
+
+                long area = 0;
+                for (int x = 0; x < grid.GetLength(0); ++x)
+                    for (int y = 0; y < grid.GetLength(1); ++y)
+                        if (grid[x, y])
+                            area +=
+                                (long)(indexedXValues[x + 1] - indexedXValues[x])
+                                * (indexedYValues[y + 1] - indexedYValues[y]);
+
+                area %= 1_000_000_007;
+                return (int)area;
+            }
+
+            /*
+            Approach 2: Line Sweep
+            Complexity Analysis
+•	Time Complexity: O((N^2)logN), where N is the number of rectangles.
+•	Space Complexity: O(N).
+
+             */
+            public int UsingLineSwap(int[][] rectangles)
+            {
+                const int OPEN = 0,
+                    CLOSE = 1;
+                int[][] events = new int[rectangles.Length * 2][];
+                int eventIndex = 0;
+                for (int i = 0; i < rectangles.Length; i++)
+                {
+                    int[] rec = rectangles[i];
+                    events[eventIndex++] = new int[] { rec[1], OPEN, rec[0], rec[2] };
+                    events[eventIndex++] = new int[] { rec[3], CLOSE, rec[0], rec[2] };
+                }
+
+                Array.Sort(events, (a, b) => a[0].CompareTo(b[0]));
+
+                List<int[]> activeIntervals = new List<int[]>();
+                int currentY = events[0][0];
+                long totalArea = 0;
+                foreach (int[] eventItem in events)
+                {
+                    int y = eventItem[0],
+                        type = eventItem[1],
+                        x1 = eventItem[2],
+                        x2 = eventItem[3];
+
+                    // Calculate query
+                    long query = 0;
+                    int currentX = -1;
+                    foreach (int[] interval in activeIntervals)
+                    {
+                        currentX = Math.Max(currentX, interval[0]);
+                        query += Math.Max(interval[1] - currentX, 0);
+                        currentX = Math.Max(currentX, interval[1]);
+                    }
+
+                    totalArea += query * (y - currentY);
+
+                    if (type == OPEN)
+                    {
+                        activeIntervals.Add(new int[] { x1, x2 });
+                        activeIntervals.Sort((a, b) => a[0].CompareTo(b[0]));
+                    }
+                    else
+                    {
+                        for (int i = 0; i < activeIntervals.Count; i++)
+                            if (activeIntervals[i][0] == x1 && activeIntervals[i][1] == x2)
+                            {
+                                activeIntervals.RemoveAt(i);
+                                break;
+                            }
+                    }
+
+                    currentY = y;
+                }
+
+                totalArea %= 1_000_000_007;
+                return (int)totalArea;
+            }
+
+            /*
+            Approach 3: Segment Tree
+            Complexity Analysis
+Let N be the number of rectangles.
+•	Time Complexity: O(N^2)
+The update operation takes O(logN) in the average case and O(N) in the worst case when the segment tree is unbalanced. update() is called N times, so the overall time complexity is O(NlogN) in the average case and O(N^2) in the worst case.
+•	Space Complexity: O(N).
+
+             */
+            public int UsingSegmentTree(int[][] rectangles)
+            {
+                const int OPEN = 1,
+                    CLOSE = -1;
+                int[][] events = new int[rectangles.Length * 2][];
+                HashSet<int> xValues = new HashSet<int>();
+                int t = 0;
+
+                foreach (int[] rectangle in rectangles)
+                {
+                    if (rectangle[0] < rectangle[2] && rectangle[1] < rectangle[3])
+                    {
+                        events[t++] = new int[] { rectangle[1], OPEN, rectangle[0], rectangle[2] };
+                        events[t++] = new int[] { rectangle[3], CLOSE, rectangle[0], rectangle[2] };
+                        xValues.Add(rectangle[0]);
+                        xValues.Add(rectangle[2]);
+                    }
+                }
+
+                Array.Sort(events, 0, t, Comparer<int[]>.Create((a, b) => a[0].CompareTo(b[0])));
+
+                int[] xArray = new int[xValues.Count];
+                xValues.CopyTo(xArray);
+                Array.Sort(xArray);
+                Dictionary<int, int> xIndex = new Dictionary<int, int>();
+                for (int i = 0; i < xArray.Length; ++i)
+                {
+                    xIndex[xArray[i]] = i;
+                }
+
+                SegmentTree active = new SegmentTree(0, xArray.Length - 1, xArray);
+                long area = 0;
+                long currentXSum = 0;
+                int currentY = events[0][0];
+
+                foreach (int[] eventArray in events)
+                {
+                    if (eventArray == null)
+                        break;
+                    int y = eventArray[0],
+                        type = eventArray[1],
+                        x1 = eventArray[2],
+                        x2 = eventArray[3];
+                    area += currentXSum * (y - currentY);
+                    currentXSum = active.Update(xIndex[x1], xIndex[x2], type);
+                    currentY = y;
+                }
+
+                area %= 1_000_000_007;
+                return (int)area;
+            }
+
+            public class SegmentTree
+            {
+                private int start,
+                    end;
+                private int[] xArray;
+                private SegmentTree left,
+                    right;
+                private int count;
+                private long total;
+
+                public SegmentTree(int start, int end, int[] xArray)
+                {
+                    this.start = start;
+                    this.end = end;
+                    this.xArray = xArray;
+                    left = null;
+                    right = null;
+                    count = 0;
+                    total = 0;
+                }
+
+                private int GetRangeMid()
+                {
+                    return start + (end - start) / 2;
+                }
+
+                private SegmentTree GetLeft()
+                {
+                    if (left == null)
+                        left = new SegmentTree(start, GetRangeMid(), xArray);
+                    return left;
+                }
+
+                private SegmentTree GetRight()
+                {
+                    if (right == null)
+                        right = new SegmentTree(GetRangeMid(), end, xArray);
+                    return right;
+                }
+
+                public long Update(int i, int j, int val)
+                {
+                    if (i >= j)
+                        return 0;
+                    if (start == i && end == j)
+                    {
+                        count += val;
+                    }
+                    else
+                    {
+                        GetLeft().Update(i, Math.Min(GetRangeMid(), j), val);
+                        GetRight().Update(Math.Max(GetRangeMid(), i), j, val);
+                    }
+
+                    if (count > 0)
+                        total = xArray[end] - xArray[start];
+                    else
+                        total = GetLeft().total + GetRight().total;
+
+                    return total;
+                }
+            }
+        }
+
+        /* 679. 24 Game
+        https://leetcode.com/problems/24-game/description/
+         */
+        class JudgePoint24GameSol
+        {
+            /*
+            Approach 1: Backtracking
+            Complexity Analysis
+If N is the number of cards in the input array.
+•	Time complexity: O(N^3⋅3^(N−1)⋅N!⋅(N−1)!).
+o	In a time-sensitive interview setting, it may be difficult to provide an exact analysis for this problem. A tighter upper bound likely exists, but the current analysis provides a reasonable upper bound for the time complexity.
+o	In each recursive call, if we have k elements in our array, we choose k⋅(k−1)/2 pairs of numbers and for each pair, we perform 6 operations and for each operation, we make a recursive call.
+o	With each recursive call, the array size decreases by 1. Thus, the total number of recursive calls is:
+N(N−1)(3)⋅(N−1)(N−2)(3)⋅...⋅(2)(1)(3) =N!⋅(N−1)!⋅3^(N−1)
+ 
+o	As the number of nodes more than doubles at every level, the total number of nodes can be approximated by the number of nodes in the last level, N!⋅(N−1)!⋅3^(N−1).
+o	And the maximum time required for any node will be O(outer_two_for_loops)⋅O(array_copy + inner_for_loop)=O(N(N−1)/2)⋅O(N+6)=O(N^3)
+o	So, we can say the time complexity is O(N^3⋅3^(N−1)⋅N!⋅(N−1)!).
+•	Space complexity: O(N^2).
+o	At one time, we make at most N recursive calls, and the recursive stack will take O(N) space.
+o	With each recursive call, we create a new array, and the array size decreases by 1 with each call.
+Thus, space used by new arrays will be O((N−1)+(N−2)+(N−3)+....+2+1)=O(N^2)
+
+            */
+            public bool JudgePoint24(int[] cards)
+            {
+                List<double> list = new List<double>();
+                foreach (int card in cards)
+                {
+                    list.Add((double)card);
+                }
+
+                return CheckIfResultReached(list);
+            }
+
+            // All possible operations we can perform on two numbers.
+            private List<double> GeneratePossibleResults(double a, double b)
+            {
+                List<double> results = new List<double>();
+                results.Add(a + b);
+                results.Add(a - b);
+                results.Add(b - a);
+                results.Add(a * b);
+                if (b != 0)
+                {
+                    results.Add(a / b);
+                }
+                if (a != 0)
+                {
+                    results.Add(b / a);
+                }
+                return results;
+            }
+
+            // Check if using current list we can reach result 24.
+            private bool CheckIfResultReached(List<double> list)
+            {
+                if (list.Count == 1)
+                {
+                    // Base Case: We have only one number left, check if it is approximately 24.
+                    return Math.Abs(list[0] - 24) <= 0.1;
+                }
+
+                for (int i = 0; i < list.Count; i++)
+                {
+                    for (int j = i + 1; j < list.Count; j++)
+                    {
+                        // Create a new list with the remaining numbers and the new result.
+                        List<double> newList = new List<double>();
+                        for (int k = 0; k < list.Count; k++)
+                        {
+                            if (k != j && k != i)
+                            {
+                                newList.Add(list[k]);
+                            }
+                        }
+
+                        // For any two numbers in our list,
+                        // we perform every operation one by one.
+                        foreach (double result in GeneratePossibleResults(list[i], list[j]))
+                        {
+                            // Push the new result in the list
+                            newList.Add(result);
+
+                            // Check if using this new list we can obtain the result 24.
+                            if (CheckIfResultReached(newList))
+                            {
+                                return true;
+                            }
+
+                            // Backtrack: remove the result from the list.
+                            newList.RemoveAt(newList.Count - 1);
+                        }
+                    }
+                }
+                return false;
+            }
+        }
+
+        /* 1639. Number of Ways to Form a Target String Given a Dictionary
+        https://leetcode.com/problems/number-of-ways-to-form-a-target-string-given-a-dictionary/description/
+         */
+        class NumberOfWaysToFormTargetStringGivenDictionarySol
+        {
+            /*             Approach 1: Bottom-up Dynamic Programming
+            Complexity Analysis
+            •	Time complexity: O(n⋅wordLength+targetLength⋅wordLength).
+            We compute the matrix charOccurrences in two nested loops. The for col loop performs wordLength iterations, and the for word loop performs n iterations. Thus the time complexity of calculating the charOccurrences matrix is O(n⋅wordLength).
+            Then we calculate the DP matrix in two nested for length and for col loops, which perform targetLength+1 and wordLength iterations, respectively. Similarly, the time complexity of this part is O(targetLength⋅wordLength).
+            The total time complexity is O(n⋅wordLength+targetLength⋅wordLength).
+            •	Space complexity: O(targetLength⋅wordLength).
+            The size of the matrix charOccurrences is [alphabetSize][wordLength], and the size of the DP matrix is [targetLength + 1][wordLength + 1].
+            The total space complexity is O(alphabetSize⋅wordLength+targetLength⋅wordLength)=O(targetLength⋅wordLength).
+
+             */
+            public int BottomUpDP(String[] words, String target)
+            {
+                int ALPHABET_SIZE = 26;
+                int MOD = 1_000_000_007;
+                int targetLength = target.Length;
+                int wordLength = words[0].Length;
+
+                int[][] charOccurrences = new int[ALPHABET_SIZE][];
+                for (int col = 0; col < wordLength; col++)
+                {
+                    foreach (String word in words)
+                    {
+                        charOccurrences[word[col] - 'a'][col]++;
+                    }
+                }
+
+                long[][] dp = new long[targetLength + 1][];
+                dp[0][0] = 1;
+
+                for (int length = 0; length <= targetLength; length++)
+                {
+                    for (int col = 0; col < wordLength; col++)
+                    {
+                        if (length < targetLength)
+                        {
+                            dp[length + 1][col + 1] +=
+                                charOccurrences[target[length] - 'a'][col] * dp[length][col];
+                            dp[length + 1][col + 1] %= MOD;
+                        }
+                        dp[length][col + 1] += dp[length][col];
+                        dp[length][col + 1] %= MOD;
+                    }
+                }
+
+                return (int)dp[targetLength][wordLength];
+            }
+
+            /*
+            Approach 2: Top-Down Dynamic Programming (Memoization)
+Complexity Analysis
+•	Time complexity: O(n⋅wordLength+targetLength⋅wordLength).
+The time complexity of calculating the charOccurrences matrix is O(n⋅wordLength).
+Even though we changed the order of calculating DP, the time complexity of this part is the same as in the previous approach: for each pair (length, col), we calculate dp[length][col] in O(1). Since we store the results in memory, we will compute each dp[length][col] only once.
+•	Space complexity: O(targetLength⋅wordLength).
+It is the same as in the first approach.
+
+            */
+            public int TopDownDPWithMemo(IList<string> words, string target)
+            {
+                const int ALPHABET_SIZE = 26;
+                const int MOD = 1000000007;
+                int targetLength = target.Length,
+                    wordLength = words[0].Length;
+                int[][] charOccurrences = new int[ALPHABET_SIZE][];
+                for (int i = 0; i < ALPHABET_SIZE; i++)
+                {
+                    charOccurrences[i] = new int[wordLength];
+                }
+
+                for (int col = 0; col < wordLength; col++)
+                {
+                    foreach (string word in words)
+                    {
+                        charOccurrences[word[col] - 'a'][col]++;
+                    }
+                }
+
+                long CalculateDP(int length, int col)
+                {
+                    if (col == 0)
+                    {
+                        return length == 0 ? 1 : 0;
+                    }
+                    long result = CalculateDP(length, col - 1);
+                    if (length > 0)
+                    {
+                        result +=
+                            charOccurrences[target[length - 1] - 'a'][col - 1]
+                            * CalculateDP(length - 1, col - 1);
+                    }
+                    result %= MOD;
+                    return result;
+                }
+
+                return (int)CalculateDP(targetLength, wordLength);
+            }
+        }
+
+        /* 3009. Maximum Number of Intersections on the Chart
+        https://leetcode.com/problems/maximum-number-of-intersections-on-the-chart/description/
+         */
+        class MaxIntersectionCountSol
+        {
+            public int MaxIntersectionCount(int[] y)
+            {
+                long[][] intervals = new long[y.Length - 1][];
+                for (int i = 0; i < intervals.Length; ++i)
+                {
+                    // to avoid double counting, will make all left node of interval to a open node except the first one
+                    // to continue use int/long instead of float, double all the values
+                    // [1,2,1,2,1,3,2] => [2,4], [3,2], [3,4], [3,2], [3,6], [5,4]
+                    long left = 2 * y[i];
+                    if (i != 0)
+                    {
+                        left += y[i] < y[i + 1] ? 1 : -1;
+                    }
+                    long right = 2 * y[i + 1];
+                    intervals[i] = new long[2];
+                    intervals[i][0] = Math.Min(left, right);
+                    intervals[i][1] = Math.Max(left, right);
+                }
+
+                // question change to meeting room 2
+                Array.Sort(intervals, (a, b) => a[0].CompareTo(b[0]));
+
+                PriorityQueue<long, long> priorityQueue = new PriorityQueue<long, long>(); //MinHeap
+                int result = 0;
+                foreach (long[] interval in intervals)
+                {
+                    priorityQueue.Enqueue(interval[1], interval[1]);
+                    while (priorityQueue.Count > 0 && priorityQueue.Peek() < interval[0])
+                    {
+                        priorityQueue.Dequeue();
+                    }
+                    result = Math.Max(result, priorityQueue.Count);
+                }
+
+                return result;
+            }
+        }
+
+        /* 1723. Find Minimum Time to Finish All Jobs
+        https://leetcode.com/problems/find-minimum-time-to-finish-all-jobs/description/
+         */
+
+        public class MinimumTimeRequiredToFinishAllJobsSol
+        {
+            private int res;
+
+            /*             Solution 1: DFS
+             */
+
+            public int DFS(int[] A, int k)
+            {
+                Array.Sort(A);
+                Array.Reverse(A);
+                res = A.Sum();
+                int[] count = new int[k];
+                Dfs(A, 0, count);
+                return res;
+            }
+
+            private void Dfs(int[] A, int i, int[] count)
+            {
+                if (i == A.Length)
+                {
+                    res = Math.Min(res, count.Max());
+                    return;
+                }
+                for (int j = 0; j < count.Length; j++)
+                {
+                    if (count[j] + A[i] < res)
+                    {
+                        count[j] += A[i];
+                        Dfs(A, i + 1, count);
+                        count[j] -= A[i];
+                    }
+                    if (count[j] == 0)
+                        break;
+                }
+            }
+
+            /*             Solution 2: Bianry search */
+
+            public int UsingBinarySearch(int[] jobs, int numberOfWorkers)
+            {
+                Array.Sort(jobs);
+                int jobCount = jobs.Length;
+                int left = jobs[jobCount - 1];
+                int right = jobs[jobCount - 1] * jobCount;
+                while (left < right)
+                {
+                    int[] capacities = new int[numberOfWorkers];
+                    int mid = left + (right - left) / 2;
+                    Array.Fill(capacities, mid);
+                    if (DepthFirstSearch(jobs, capacities, jobCount - 1, numberOfWorkers, mid))
+                    {
+                        right = mid;
+                    }
+                    else
+                    {
+                        left = mid + 1;
+                    }
+                }
+                return left;
+            }
+
+            private bool DepthFirstSearch(
+                int[] jobs,
+                int[] capacities,
+                int jobIndex,
+                int numberOfWorkers,
+                int maxCapacity
+            )
+            {
+                if (jobIndex == -1)
+                {
+                    return true;
+                }
+                for (int workerIndex = 0; workerIndex < numberOfWorkers; workerIndex++)
+                {
+                    if (capacities[workerIndex] >= jobs[jobIndex])
+                    {
+                        capacities[workerIndex] -= jobs[jobIndex];
+                        if (
+                            DepthFirstSearch(
+                                jobs,
+                                capacities,
+                                jobIndex - 1,
+                                numberOfWorkers,
+                                maxCapacity
+                            )
+                        )
+                        {
+                            return true;
+                        }
+                        capacities[workerIndex] += jobs[jobIndex];
+                    }
+                    if (capacities[workerIndex] == maxCapacity)
+                    {
+                        break;
+                    }
+                }
+                return false;
+            }
+        }
+
+        /* 3283. Maximum Number of Moves to Kill All Pawns
+        https://leetcode.com/problems/maximum-number-of-moves-to-kill-all-pawns/description/
+         */
+        public class MaxMovesToKillAllPawnsSol
+        {
+            public int[,,,] distExt = new int[50, 50, 50, 50]; // 4D array to store distances between all pairs of points on the board
+            private int[,,,] dist; // Precomputed distances between positions
+            private int[,] memo; // Memoization table for storing intermediate results
+            public int[] dx = { 1, 2, 2, 1, -1, -2, -2, -1 }; // Possible moves in x-direction for a knight
+            public int[] dy = { 2, 1, -1, -2, -2, -1, 1, 2 }; // Possible moves in y-direction for a knight
+
+            public int PrecomputeWithBFSAndBitMaskDP(int kx, int ky, List<int[]> positions)
+            {
+                positions.Add(new int[] { kx, ky }); // Add knight's starting position to the list
+                int n = positions.Count; // Total number of positions
+                PreProcess(); // Preprocess distances
+                memo = new int[n, 1 << n]; // Initialize memoization table
+                for (int i = 0; i < n; i++)
+                {
+                    for (int j = 0; j < (1 << n); j++)
+                    {
+                        memo[i, j] = -1;
+                    }
+                }
+                return f(n - 1, (1 << (n - 1)), false, positions); // Start recursion with knight's position
+            }
+
+            // Recursive function to compute maximum/minimum score
+            private int f(int curr, int mask, bool turn, List<int[]> positions)
+            {
+                int n = positions.Count;
+                if (mask == (1 << n) - 1)
+                    return 0; // All positions visited, base case
+
+                // Check if result is already computed
+                if (memo[curr, mask] != -1)
+                    return memo[curr, mask];
+
+                int ans;
+                int x = positions[curr][0]; // Current x-coordinate
+                int y = positions[curr][1]; // Current y-coordinate
+
+                if (!turn)
+                { // Alice
+                    ans = int.MinValue; // Initialize to minimum value
+                    for (int i = 0; i < n; i++)
+                    {
+                        if ((mask & (1 << i)) != 0)
+                            continue; // Skip if position already visited
+                        int nextx = positions[i][0]; // Next x-coordinate
+                        int nexty = positions[i][1]; // Next y-coordinate
+                        int newDist = dist[x, y, nextx, nexty]; // Distance to next position
+                        // Compute maximum score by taking the maximum of all possible moves
+                        ans = Math.Max(ans, newDist + f(i, mask | (1 << i), !turn, positions));
+                    }
+                }
+                else
+                { // Bob
+                    ans = int.MaxValue; // Initialize to maximum value
+                    for (int i = 0; i < n; i++)
+                    {
+                        if ((mask & (1 << i)) != 0)
+                            continue; // Skip if position already visited
+                        int nextx = positions[i][0]; // Next x-coordinate
+                        int nexty = positions[i][1]; // Next y-coordinate
+                        int newDist = dist[x, y, nextx, nexty]; // Distance to next position
+                        // Compute minimum score by taking the minimum of all possible moves
+                        ans = Math.Min(ans, newDist + f(i, mask | (1 << i), !turn, positions));
+                    }
+                }
+
+                return memo[curr, mask] = ans;
+            }
+
+            private void PreProcess()
+            {
+                // Implement the PreProcess method to precompute the distances between positions
+                bool flag = false;
+                if (flag)
+                    return;
+                Array.Clear(dist, 0, dist.Length);
+                for (int i = 0; i < 50; i++)
+                {
+                    for (int j = 0; j < 50; j++)
+                    {
+                        if (dist[i, j, i, j] == -1)
+                            Dis(i, j);
+                    }
+                }
+                flag = true;
+            }
+
+            // Function to compute shortest distances from (startx, starty) to all other points
+            public void Dis(int startx, int starty)
+            {
+                Queue<(int, int, int)> q = new Queue<(int, int, int)>(); // Queue to perform BFS: (current position, distance)
+                q.Enqueue((startx, starty, 0));
+                dist[startx, starty, startx, starty] = 0; // Distance from a point to itself is zero
+
+                while (q.Count != 0)
+                {
+                    int x = q.Peek().Item1; // Current x-coordinate
+                    int y = q.Peek().Item2; // Current y-coordinate
+                    int d = q.Peek().Item3; // Distance from start point
+                    q.Dequeue();
+
+                    for (int i = 0; i < 8; i++)
+                    {
+                        int newx = x + dx[i]; // New x-coordinate after move
+                        int newy = y + dy[i]; // New y-coordinate after move
+                        // Check if new position is within bounds and has not been visited yet
+                        if (
+                            newx >= 0
+                            && newx < 50
+                            && newy >= 0
+                            && newy < 50
+                            && dist[startx, starty, newx, newy] == -1
+                        )
+                        {
+                            dist[startx, starty, newx, newy] = 1 + d; // Update distance
+                            q.Enqueue((newx, newy, d + 1)); // Add new position to queue
+                        }
+                    }
+                }
+            }
+        }
+
+        /* 1553. Minimum Number of Days to Eat N Oranges
+        https://leetcode.com/problems/minimum-number-of-days-to-eat-n-oranges/description/
+         */
+        public class MinDaysToEatNOrangesSol
+        {
+            Dictionary<int, int> dp = new();
+
+            public int DPRec(int n)
+            {
+                if (n <= 1)
+                    return n;
+                if (!dp.ContainsKey(n))
+                    dp[n] = 1 + Math.Min(n % 2 + DPRec(n / 2), n % 3 + DPRec(n / 3));
+
+                return dp[n];
+            }
+        }
+
+        /* 2092. Find All People With Secret
+        https://leetcode.com/problems/find-all-people-with-secret/description/
+         */
+
+        class FindAllPeopleWithSecretSol
+        {
+            /* Approach 1: Breadth First Search
+            Complexity Analysis
+            Let N be the number of people, and M be the number of meetings.
+            •	Time complexity: O(M⋅(M+N))
+            o	Initially, we are creating a graph by processing meetings. This will take O(M) time.
+            o	Then we are initializing q by enqueuing two people. It will take O(1) time.
+            o	Then we initialize the earliest array of size N. It will take O(N) time.
+            o	Now there is a while loop.
+            o	In each iteration, we are dequeuing one element from q. It will take O(1) time.
+            o	Then we iterate over neighbors of the dequeued element using the for loop. There will be at most M neighbors because a person can meet at most M people. In each iteration of the for loop, we are doing some constant time operations of checking conditions and enqueuing.
+            Hence, the time complexity of the for loop will be O(M).
+            o	Thus, each iteration of the while loop will take O(1+M), which is O(M) time.
+            o	How many times while loop will run?
+            In each iteration, one person is processed. The person was enqueued because of meeting with some other person. Hence, there will be at most M+N iterations of the while loop.
+            o	Thus, the while loop takes O((M+N)⋅M) time.
+            o	Finally, we are iterating over the earliest array to find indices of people who know the secret. It will take O(N) time.
+            Hence, total time complexity will be O(M+1+N+(M+N)⋅M+N), which is O(M⋅(M+N)).
+            •	Space complexity: O(M+N)
+            o	The graph will take O(M) space.
+            o	The earliest array will take O(N) space.
+            o	The q may grow upto O(M+N), because at any instance, there can be at most M+N nodes in the queue. It is worth noting that there can be multiple instances of person x in the queue, with multiple times of knowing the secret
+            Hence, total space complexity will be O(M+N).
+
+             */
+
+            public List<int> BFS(int numberOfPeople, int[][] meetings, int firstPerson)
+            {
+                // For every person, we store the meeting time and label of the person met.
+                Dictionary<int, List<int[]>> meetingGraph = new Dictionary<int, List<int[]>>();
+                foreach (int[] meeting in meetings)
+                {
+                    int personX = meeting[0],
+                        personY = meeting[1],
+                        meetingTime = meeting[2];
+                    if (!meetingGraph.ContainsKey(personX))
+                    {
+                        meetingGraph[personX] = new List<int[]>();
+                    }
+                    meetingGraph[personX].Add(new int[] { meetingTime, personY });
+
+                    if (!meetingGraph.ContainsKey(personY))
+                    {
+                        meetingGraph[personY] = new List<int[]>();
+                    }
+                    meetingGraph[personY].Add(new int[] { meetingTime, personX });
+                }
+
+                // Earliest time at which a person learned the secret
+                // as per current state of knowledge. If due to some new information,
+                // the earliest time of knowing the secret changes, we will update it
+                // and again process all the people whom he/she meets after the time
+                // at which he/she learned the secret.
+                int[] earliestKnownTime = new int[numberOfPeople];
+                Array.Fill(earliestKnownTime, int.MaxValue);
+                earliestKnownTime[0] = 0;
+                earliestKnownTime[firstPerson] = 0;
+
+                // Queue for BFS. It will store (person, time of knowing the secret)
+                Queue<int[]> bfsQueue = new Queue<int[]>();
+                bfsQueue.Enqueue(new int[] { 0, 0 });
+                bfsQueue.Enqueue(new int[] { firstPerson, 0 });
+
+                // Do BFS
+                while (bfsQueue.Count > 0)
+                {
+                    int[] personTime = bfsQueue.Dequeue();
+                    int currentPerson = personTime[0],
+                        currentTime = personTime[1];
+                    foreach (
+                        int[] nextPersonTime in meetingGraph.GetValueOrDefault(
+                            currentPerson,
+                            new List<int[]>()
+                        )
+                    )
+                    {
+                        int meetingTime = nextPersonTime[0],
+                            nextPerson = nextPersonTime[1];
+                        if (
+                            meetingTime >= currentTime
+                            && earliestKnownTime[nextPerson] > meetingTime
+                        )
+                        {
+                            earliestKnownTime[nextPerson] = meetingTime;
+                            bfsQueue.Enqueue(new int[] { nextPerson, meetingTime });
+                        }
+                    }
+                }
+
+                // Since we visited only those people who know the secret,
+                // we need to return indices of all visited people.
+                List<int> result = new List<int>();
+                for (int i = 0; i < numberOfPeople; ++i)
+                {
+                    if (earliestKnownTime[i] != int.MaxValue)
+                    {
+                        result.Add(i);
+                    }
+                }
+                return result;
+            }
+
+            /*
+             Approach 2: Depth First Search - Iterative And Recursion
+Complexity Analysis
+Let N be the number of people, and M be the number of meetings.
+•	Time complexity: O(M⋅(M+N))
+o	Initially, we are creating a graph by processing meetings. This will take O(M) time.
+o	Then we initialize the earliest array of size N. It will take O(N) time.
+o	Now there is a while loop.
+o	In each iteration, we are popping one element from stack. It will take O(1) time.
+o	Then we iterate over neighbors of the popped element using the for loop. There will be at most M neighbors because a person can meet at most M people. In each iteration of the for loop, we are doing some constant time operations of checking conditions and pushing.
+Hence, the time complexity of the for loop will be O(M).
+o	Thus, each iteration of the while loop will take O(1+M), which is O(M) time.
+o	How many times while loop will run?
+In each iteration, one person is processed. The person was pushed because of meeting with some other person. Hence, there will be at most M+N iterations of the while loop.
+o	Thus, the while loop takes O((M+N)⋅M) time.
+o	Finally, we are iterating over the earliest array to find indices of people who know the secret. It will take O(N) time.
+Hence, the total time complexity will be O(M+N+(M+N)⋅M+N), which is O(M⋅(M+N)).
+•	Space complexity: O(M+N)
+o	The graph will take O(M) space.
+o	The earliest array will take O(N) space.
+o	The stack may grow upto O(M+N), because at any instance, there can be at most M+N nodes in the stack. It is worth noting that there can be multiple instances of person x in the stack, with multiple times of knowing the secret.
+Hence, total space complexity will be O(M+N).
+
+             */
+            public List<int> DFSIterative(int numberOfPeople, int[][] meetings, int firstPerson)
+            {
+                // For every person, we store the meeting time and label of the person met.
+                Dictionary<int, List<int[]>> meetingGraph = new Dictionary<int, List<int[]>>();
+                foreach (int[] meeting in meetings)
+                {
+                    int personX = meeting[0],
+                        personY = meeting[1],
+                        meetingTime = meeting[2];
+                    if (!meetingGraph.ContainsKey(personX))
+                    {
+                        meetingGraph[personX] = new List<int[]>();
+                    }
+                    meetingGraph[personX].Add(new int[] { meetingTime, personY });
+
+                    if (!meetingGraph.ContainsKey(personY))
+                    {
+                        meetingGraph[personY] = new List<int[]>();
+                    }
+                    meetingGraph[personY].Add(new int[] { meetingTime, personX });
+                }
+
+                // Earliest time at which a person learned the secret
+                int[] earliestKnowledgeTime = new int[numberOfPeople];
+                Array.Fill(earliestKnowledgeTime, int.MaxValue);
+                earliestKnowledgeTime[0] = 0;
+                earliestKnowledgeTime[firstPerson] = 0;
+
+                // Stack for DFS. It will store (person, time of knowing the secret)
+                Stack<int[]> dfsStack = new Stack<int[]>();
+                dfsStack.Push(new int[] { 0, 0 });
+                dfsStack.Push(new int[] { firstPerson, 0 });
+
+                // Do DFS
+                while (dfsStack.Count > 0)
+                {
+                    int[] currentPersonTime = dfsStack.Pop();
+                    int currentPerson = currentPersonTime[0],
+                        currentTime = currentPersonTime[1];
+                    foreach (
+                        int[] nextPersonTime in meetingGraph.GetValueOrDefault(
+                            currentPerson,
+                            new List<int[]>()
+                        )
+                    )
+                    {
+                        int nextMeetingTime = nextPersonTime[0],
+                            nextPerson = nextPersonTime[1];
+                        if (
+                            nextMeetingTime >= currentTime
+                            && earliestKnowledgeTime[nextPerson] > nextMeetingTime
+                        )
+                        {
+                            earliestKnowledgeTime[nextPerson] = nextMeetingTime;
+                            dfsStack.Push(new int[] { nextPerson, nextMeetingTime });
+                        }
+                    }
+                }
+
+                // Since we visited only those people who know the secret
+                // we need to return indices of all visited people.
+                List<int> result = new List<int>();
+                for (int i = 0; i < numberOfPeople; ++i)
+                {
+                    if (earliestKnowledgeTime[i] != int.MaxValue)
+                    {
+                        result.Add(i);
+                    }
+                }
+                return result;
+            }
+
+            public IList<int> DFSRecursion(int numberOfPeople, int[][] meetings, int firstPerson)
+            {
+                // For every person, we store the meeting time and label of the person met.
+                Dictionary<int, List<int[]>> meetingGraph = new Dictionary<int, List<int[]>>();
+                foreach (int[] meeting in meetings)
+                {
+                    int personX = meeting[0],
+                        personY = meeting[1],
+                        meetingTime = meeting[2];
+                    if (!meetingGraph.ContainsKey(personX))
+                        meetingGraph[personX] = new List<int[]>();
+                    meetingGraph[personX].Add(new int[] { meetingTime, personY });
+
+                    if (!meetingGraph.ContainsKey(personY))
+                        meetingGraph[personY] = new List<int[]>();
+                    meetingGraph[personY].Add(new int[] { meetingTime, personX });
+                }
+
+                // Earliest time at which a person learned the secret
+                // as per current state of knowledge. If due to some new information,
+                // the earliest time of knowing the secret changes, we will update it
+                // and again process all the people whom he/she meets after the time
+                // at which he/she learned the secret.
+                int[] earliestKnowledgeTime = new int[numberOfPeople];
+                Array.Fill(earliestKnowledgeTime, int.MaxValue);
+                earliestKnowledgeTime[0] = 0;
+                earliestKnowledgeTime[firstPerson] = 0;
+
+                // Do DFS
+                DepthFirstSearch(0, 0, meetingGraph, earliestKnowledgeTime);
+                DepthFirstSearch(firstPerson, 0, meetingGraph, earliestKnowledgeTime);
+
+                // Since we visited only those people who know the secret
+                // we need to return indices of all visited people.
+                List<int> result = new List<int>();
+                for (int i = 0; i < numberOfPeople; ++i)
+                {
+                    if (earliestKnowledgeTime[i] != int.MaxValue)
+                    {
+                        result.Add(i);
+                    }
+                }
+                return result;
+            }
+
+            private void DepthFirstSearch(
+                int person,
+                int time,
+                Dictionary<int, List<int[]>> graph,
+                int[] earliest
+            )
+            {
+                foreach (int[] nextPersonTime in graph.GetValueOrDefault(person, new List<int[]>()))
+                {
+                    int meetingTime = nextPersonTime[0],
+                        nextPerson = nextPersonTime[1];
+                    if (meetingTime >= time && earliest[nextPerson] > meetingTime)
+                    {
+                        earliest[nextPerson] = meetingTime;
+                        DepthFirstSearch(nextPerson, meetingTime, graph, earliest);
+                    }
+                }
+            }
+
+            /*
+            Approach 3: Earliest Informed First Traversal
+Complexity Analysis
+Let N be the number of people, and M be the number of meetings.
+•	Time complexity: O((N+M)log(N+M)+NM).
+o	Initially, we are creating a graph by processing meetings. This will take O(M) time.
+o	Then we are initializing min-heap pq by enqueuing two people. It will take O(1) time.
+o	Then we initialize the visited array of size N. It will take O(N) time.
+o	Now there is a while loop.
+o	In each iteration, we are popping one element from pq. It will take O(log(N+M)) time because, at any instance, there can be at most N+M elements in the heap.
+o	Then we iterate over neighbors of the popped element using the for loop. There will be at most M neighbors because a person can meet at most M people. In each iteration of the for loop, we are doing some constant time operations of checking conditions and pushing.
+Hence, the time complexity of the for loop will be O(M).
+o	Thus, each iteration of the while loop will take O(log(N+M)+M), which is O(M) time.
+o	How many times while loop will run?
+In each iteration, one person is processed. The person was enqueued because of meeting with some other person. Hence, there will be at most N+M iterations of the while loop.
+o	However, we will process the for loop only for those neighbors of a person who has not been visited. Hence, the for loop of time complexity O(M) will run for at most N iterations of the while loop.
+o	Thus, for N iterations of the while loop, it will take O(log(N+M)+M) time.
+o	For M iterations of the while loop, it will take O(log(N+M)) time. The for loop will not run for these iterations.
+Thus, while loop takes O(N⋅(log(N+M)+M)+M⋅log(N+M)) time, which is O(N⋅log(N+M)+N⋅M+log(N+M)⋅M) time. This can be rearranged as O((N+M)log(N+M)+NM) time.
+o	Finally, we are iterating over the visited array to find indices of people who know the secret. It will take O(N) time.
+Hence, total time complexity will be O(M+1+N+(N+M)log(N+M)+NM+N), which is O((N+M)log(N+M)+NM).
+•	Space complexity: O(M+N)
+o	The graph will take O(M) space.
+o	The pq may grow upto O(M+N), because at any instance, there can be at most M+N nodes in the queue. It is worth noting that there can be multiple instances of person x in the queue, with multiple times of knowing the secret.
+o	The visited array will take O(N) space.
+Hence, total space complexity will be O(M+N).
+
+             */
+            public List<int> EarliestInformedFirstTraversal(
+                int totalPeople,
+                int[][] meetings,
+                int firstPerson
+            )
+            {
+                // For every person, we store the meeting time and label of the person met.
+                Dictionary<int, List<int[]>> meetingGraph = new Dictionary<int, List<int[]>>();
+                foreach (int[] meeting in meetings)
+                {
+                    int personX = meeting[0],
+                        personY = meeting[1],
+                        meetingTime = meeting[2];
+                    if (!meetingGraph.ContainsKey(personX))
+                        meetingGraph[personX] = new List<int[]>();
+                    meetingGraph[personX].Add(new int[] { meetingTime, personY });
+
+                    if (!meetingGraph.ContainsKey(personY))
+                        meetingGraph[personY] = new List<int[]>();
+                    meetingGraph[personY].Add(new int[] { meetingTime, personX });
+                }
+
+                // Priority Queue for BFS. It will store (time of knowing the secret, person)
+                // We will pop the person with the minimum time of knowing the secret.
+                PriorityQueue<int[], int[]> priorityQueue = new PriorityQueue<int[], int[]>(
+                    Comparer<int[]>.Create((a, b) => a[0] - b[0])
+                );
+                priorityQueue.Enqueue(new int[] { 0, 0 }, new int[] { 0, 0 });
+                priorityQueue.Enqueue(new int[] { 0, firstPerson }, new int[] { 0, firstPerson });
+
+                // Visited array to mark if a person is visited or not.
+                // We will mark a person as visited after it is dequeued
+                // from the queue.
+                bool[] visited = new bool[totalPeople];
+
+                // Do BFS, but pop minimum.
+                while (priorityQueue.Count > 0)
+                {
+                    int[] timeAndPerson = priorityQueue.Dequeue();
+                    int currentTime = timeAndPerson[0],
+                        currentPerson = timeAndPerson[1];
+                    if (visited[currentPerson])
+                    {
+                        continue;
+                    }
+                    visited[currentPerson] = true;
+                    foreach (
+                        int[] nextPersonTime in meetingGraph.GetValueOrDefault(
+                            currentPerson,
+                            new List<int[]>()
+                        )
+                    )
+                    {
+                        int nextMeetingTime = nextPersonTime[0],
+                            nextPerson = nextPersonTime[1];
+                        if (!visited[nextPerson] && nextMeetingTime >= currentTime)
+                        {
+                            priorityQueue.Enqueue(
+                                new int[] { nextMeetingTime, nextPerson },
+                                new int[] { nextMeetingTime, nextPerson }
+                            );
+                        }
+                    }
+                }
+
+                // Since we visited only those people who know the secret
+                // we need to return indices of all visited people.
+                List<int> result = new List<int>();
+                for (int i = 0; i < totalPeople; ++i)
+                {
+                    if (visited[i])
+                    {
+                        result.Add(i);
+                    }
+                }
+                return result;
+            }
+
+            /*
+            Approach 4: Breadth First Search on Time Scale
+            Complexity Analysis
+Let N be the number of people, and M be the number of meetings.
+•	Time complexity: O(MlogM+N)
+o	Sorting meetings will take O(MlogM) time. This may vary depending on the implementation of the sorting algorithm in the programming language.
+o	In Python3, the sort method sorts a list using the Timsort algorithm, which is a combination of Merge Sort and Insertion Sort and takes O(MlogM) time in the worst case.
+o	In C++, the sort() function is implemented as a hybrid of Quick Sort, Heap Sort, and Insertion Sort, with worst-case time complexity of O(MlogM).
+o	In Java, Arrays.sort() is implemented using a variant of the Quick Sort algorithm which has a time complexity of O(MlogM).
+o	Populating sameTimeMeetings will take O(M) time.
+o	Then we initialize the knowsSecret array of size N. It will take O(N) time.
+o	Then there is a for loop. The number of iterations of the for loop depends on the number of unique meeting times. It will be at most M. Let's narrow our analysis to one iteration of the for loop.
+o	Creating meet and initiating q may vary from O(1) time to O(M) time, depending on the number of meetings happening at the time t. However, the amortized time complexity will be O(1).
+(Amortized time complexity is the time taken per operation averaged over all operations)
+o	If one iteration of creating meet and initiating q takes O(1) time (when a single meeting is happening at the time t), then there may be the next iteration of the for loop. However, it will be limited to M iterations.
+o	If one iteration of creating meet and initiating q takes O(M) time, then there will be no next iteration of the for loop because all meetings happening will get processed in the current iteration.
+Hence, when creating meet and initiating q takes O(1) time, the number of for loop iterations will be O(M). When creating meet and initiating q takes O(M) time, the number of for loop iterations will be O(1).
+Thus, the amortized time complexity for creating meet and initiating q per iteration of the for loop will be O(1)
+o	The BFS may take O(N) time in the worst case because, at any instance, there can be at most N nodes in the queue. However, the amortized time complexity will be O(1).
+o	If every meeting time has only 2 participants, then there will be O(M) unique meeting times deciding the number of iterations of the for loop. In each iteration of the for loop, there will be O(2) people in the queue. Hence, the time complexity will be O(2⋅M) which is O(M).
+o	If every meeting time has N participants, then there will be O(NM) unique meeting times deciding the number of iterations of the for loop. In each iteration of the for loop, there will be O(N) people in the queue. Hence, the time complexity will be O(N⋅NM) which is O(M).
+Thus, the amortized time complexity of BFS per iteration of the for loop will be O(1).
+o	Thus, each iteration of the for loop will take amortized O(1) time for creating meet, initiating q, and BFS.
+o	Finally, we are iterating over the knowsSecret array to find indices of people who know the secret. It will take O(N) time.
+Hence, the total time complexity will be O(MlogM+M+N+M⋅1+N), which is O(MlogM+N).
+•	Space complexity: O(M+N)
+o	We are sorting the meetings array in place. When we sort an array in place, some extra space is used. The space complexity depends on the implementation of the sorting algorithm in the programming language.
+o	In Python3, the sort method sorts a list using the Timsort algorithm, which is a combination of Merge Sort and Insertion Sort and uses O(M) space in the worst case.
+o	In C++, the sort() function is implemented as a hybrid of Quick Sort, Heap Sort, and Insertion Sort, with worst-case space complexity of O(logM).
+o	In Java, Arrays.sort() is implemented using a variant of the Quick Sort algorithm which has a space complexity of O(logM).
+o	The sameTimeMeetings will take O(M) space.
+o	The knowsSecret array will take O(N) space.
+o	The meet HashMap will take O(M) space per iteration of for loop. After iteration, it will be empty. Hence, the total space complexity will be O(M).
+o	The q may grow up to O(N) per iteration of the for loop because any person can be in the queue at most once. After iteration, it will be empty. Hence, the total space complexity will be O(N).
+Hence, total space complexity will be O(M+N).
+
+             */
+            public List<int> BreadthFirstSearchOnTimeScale(
+                int numberOfPeople,
+                int[][] meetings,
+                int firstPerson
+            )
+            {
+                // Sort meetings in increasing order of time
+                Array.Sort(meetings, (a, b) => a[2].CompareTo(b[2]));
+
+                // Group Meetings in increasing order of time
+                SortedDictionary<int, List<int[]>> meetingsByTime =
+                    new SortedDictionary<int, List<int[]>>();
+                foreach (int[] meeting in meetings)
+                {
+                    int personX = meeting[0],
+                        personY = meeting[1],
+                        time = meeting[2];
+                    if (!meetingsByTime.ContainsKey(time))
+                    {
+                        meetingsByTime[time] = new List<int[]>();
+                    }
+                    meetingsByTime[time].Add(new int[] { personX, personY });
+                }
+
+                // Boolean Array to mark if a person knows the secret or not
+                bool[] knowsSecret = new bool[numberOfPeople];
+                knowsSecret[0] = true;
+                knowsSecret[firstPerson] = true;
+
+                // Process in increasing order of time
+                foreach (int time in meetingsByTime.Keys)
+                {
+                    // For each person, save all the people whom he/she meets at time t
+                    Dictionary<int, List<int>> meetingsMap = new Dictionary<int, List<int>>();
+                    foreach (int[] meeting in meetingsByTime[time])
+                    {
+                        int personX = meeting[0],
+                            personY = meeting[1];
+                        if (!meetingsMap.ContainsKey(personX))
+                        {
+                            meetingsMap[personX] = new List<int>();
+                        }
+                        meetingsMap[personX].Add(personY);
+
+                        if (!meetingsMap.ContainsKey(personY))
+                        {
+                            meetingsMap[personY] = new List<int>();
+                        }
+                        meetingsMap[personY].Add(personX);
+                    }
+
+                    // Start traversal from those who already know the secret at time t
+                    // Set to avoid redundancy
+                    HashSet<int> start = new HashSet<int>();
+                    foreach (int[] meeting in meetingsByTime[time])
+                    {
+                        int personX = meeting[0],
+                            personY = meeting[1];
+                        if (knowsSecret[personX])
+                        {
+                            start.Add(personX);
+                        }
+                        if (knowsSecret[personY])
+                        {
+                            start.Add(personY);
+                        }
+                    }
+
+                    // Do BFS
+                    Queue<int> queue = new Queue<int>(start);
+                    while (queue.Count > 0)
+                    {
+                        int currentPerson = queue.Dequeue();
+                        foreach (
+                            int nextPerson in meetingsMap.GetValueOrDefault(
+                                currentPerson,
+                                new List<int>()
+                            )
+                        )
+                        {
+                            if (!knowsSecret[nextPerson])
+                            {
+                                knowsSecret[nextPerson] = true;
+                                queue.Enqueue(nextPerson);
+                            }
+                        }
+                    }
+                }
+
+                // List of people who know the secret
+                List<int> result = new List<int>();
+                for (int i = 0; i < numberOfPeople; ++i)
+                {
+                    if (knowsSecret[i])
+                    {
+                        result.Add(i);
+                    }
+                }
+                return result;
+            }
+
+            /* Approach 5: Union-Find with Reset
+            Complexity Analysis
+Before analyzing the time complexity, let's first understand the time complexity of Union-Find. If an instance of Union-Find is created with nodes, then the following are the time complexities of Union-Find methods:
+•	Constructor: O(nodes), because we are initializing parent and rank arrays of size nodes. However, the constructor is called only once.
+•	find(x): It is amortized O(1) time, because we are using Path Compression and Union by Rank heuristics.
+•	unite(x, y): It is amortized O(1) time, because we are using Path Compression and Union by Rank heuristics.
+•	connected(x, y): It is amortized O(1) time, because we are using Path Compression and Union by Rank heuristics.
+In actuality, the time complexity of the above three methods after using Path Compression and Union by Rank heuristics is O(α(nodes)) time, where α is Inverse Ackermann Function. However, α(nodes) is less than 5 for all practical purposes. More here
+•	reset(x): It is O(1) time because we are just resetting the initial properties of node x.
+For analyzing the time complexity of our algorithm, let N be the number of people, and M be the number of meetings.
+•	Time complexity: O(MlogM+N)
+o	Sorting meetings will take O(MlogM) time. This may vary depending on the implementation of the sorting algorithm in the programming language.
+o	In Python3, the sort method sorts a list using the Timsort algorithm, which is a combination of Merge Sort and Insertion Sort and takes O(MlogM) time in the worst case.
+o	In C++, the sort() function is implemented as a hybrid of Quick Sort, Heap Sort, and Insertion Sort, with worst-case time complexity of O(MlogM).
+o	In Java, Arrays.sort() is implemented using a variant of the Quick Sort algorithm which has a time complexity of O(MlogM).
+o	Populating sameTimeMeetings will take O(M) time.
+o	Creating graph will take O(N) time.
+o	Uniting firstPerson with 0 will take O(1) time.
+o	Upon looking at the for loop, we can observe that we will process each meeting exactly twice, once for uniting, and once while checking if any one of them is connected to 0 or not.
+o	For uniting, it will be amortized O(1) time.
+o	For checking if any one of them is connected to 0 or not, it will be amortized O(1) time. Resetting, if required, will be O(1) time.
+Hence, the total time complexity of the for loop will be O(2⋅M⋅1), which is O(M).
+o	Finally, we are iterating over the graph to find indices that are connected to 0. It will take O(N⋅1) time.
+Hence, the total time complexity will be O(MlogM+M+N+M+N), which is O(MlogM+N).
+•	Space complexity: O(M+N)
+o	We are sorting the meetings array in place. When we sort an array in place, some extra space is used. The space complexity depends on the implementation of the sorting algorithm in the programming language.
+o	In Python3, the sort method sorts a list using the Timsort algorithm, which is a combination of Merge Sort and Insertion Sort and uses O(M) space in the worst case.
+o	In C++, the sort() function is implemented as a hybrid of Quick Sort, Heap Sort, and Insertion Sort, with worst-case space complexity of O(logM).
+o	In Java, Arrays.sort() is implemented using a variant of the Quick Sort algorithm which has a space complexity of O(logM).
+o	The sameTimeMeetings will take O(M) space.
+o	The graph will take O(N) space for parent and rank arrays.
+Hence, total space complexity will be O(M+N).
+As a challenge, try to implement the Union-Find approach without using the sameTimeMeetings HashMap! We perhaps may need some iterators to process all the meetings happening at the same time. Readers can comment their code below.
+             */
+            public List<int> UsingUnionFindWithReset(
+                int numberOfPeople,
+                int[][] meetings,
+                int firstPerson
+            )
+            {
+                // Sort meetings in increasing order of time
+                Array.Sort(meetings, (a, b) => a[2] - b[2]);
+
+                // Group Meetings in increasing order of time
+                Dictionary<int, List<int[]>> sameTimeMeetings = new Dictionary<int, List<int[]>>();
+                foreach (int[] meeting in meetings)
+                {
+                    int personX = meeting[0],
+                        personY = meeting[1],
+                        meetingTime = meeting[2];
+                    if (!sameTimeMeetings.ContainsKey(meetingTime))
+                    {
+                        sameTimeMeetings[meetingTime] = new List<int[]>();
+                    }
+                    sameTimeMeetings[meetingTime].Add(new int[] { personX, personY });
+                }
+
+                // Create graph
+                UnionFind unionFindGraph = new UnionFind(numberOfPeople);
+                unionFindGraph.Unite(firstPerson, 0);
+
+                // Process in increasing order of time
+                foreach (int meetingTime in sameTimeMeetings.Keys)
+                {
+                    // Unite two persons taking part in a meeting
+                    foreach (int[] meeting in sameTimeMeetings[meetingTime])
+                    {
+                        int personX = meeting[0],
+                            personY = meeting[1];
+                        unionFindGraph.Unite(personX, personY);
+                    }
+
+                    // If any one knows the secret, both will be connected to 0.
+                    // If no one knows the secret, then reset.
+                    foreach (int[] meeting in sameTimeMeetings[meetingTime])
+                    {
+                        int personX = meeting[0],
+                            personY = meeting[1];
+                        if (!unionFindGraph.Connected(personX, 0))
+                        {
+                            // No need to check for personY since personX and personY were united
+                            unionFindGraph.Reset(personX);
+                            unionFindGraph.Reset(personY);
+                        }
+                    }
+                }
+
+                // All those who are connected to 0 will know the secret
+                List<int> result = new List<int>();
+                for (int i = 0; i < numberOfPeople; ++i)
+                {
+                    if (unionFindGraph.Connected(i, 0))
+                    {
+                        result.Add(i);
+                    }
+                }
+                return result;
+            }
+
+            class UnionFind
+            {
+                private int[] parent;
+                private int[] rank;
+
+                public UnionFind(int numberOfNodes)
+                {
+                    // Initialize parent and rank arrays
+                    parent = new int[numberOfNodes];
+                    rank = new int[numberOfNodes];
+                    for (int i = 0; i < numberOfNodes; ++i)
+                    {
+                        parent[i] = i;
+                    }
+                }
+
+                public int Find(int node)
+                {
+                    // Find parent of node. Use Path Compression
+                    if (parent[node] != node)
+                    {
+                        parent[node] = Find(parent[node]);
+                    }
+                    return parent[node];
+                }
+
+                public void Unite(int nodeX, int nodeY)
+                {
+                    // Unite two nodes if they are not already united
+                    int parentX = Find(nodeX);
+                    int parentY = Find(nodeY);
+                    if (parentX != parentY)
+                    {
+                        // Union by Rank Heuristic
+                        if (rank[parentX] > rank[parentY])
+                        {
+                            parent[parentY] = parentX;
+                        }
+                        else if (rank[parentX] < rank[parentY])
+                        {
+                            parent[parentX] = parentY;
+                        }
+                        else
+                        {
+                            parent[parentY] = parentX;
+                            rank[parentX] += 1;
+                        }
+                    }
+                }
+
+                public bool Connected(int nodeX, int nodeY)
+                {
+                    // Check if two nodes are connected
+                    return Find(nodeX) == Find(nodeY);
+                }
+
+                public void Reset(int node)
+                {
+                    // Reset the initial properties of the node
+                    parent[node] = node;
+                    rank[node] = 0;
+                }
+            }
+        }
+
+        /* 1799. Maximize Score After N Operations
+        https://leetcode.com/problems/maximize-score-after-n-operations/description/
+         */
+        class MaxScoreAfterNOperationsSol
+        {
+            /* Approach 1: DP with Bitmasking (Recursive)
+            Complexity Analysis
+            Here, m=2∗n is the number of elements, and A is the maximum value in the nums array.
+            The maximum value of A can be 106.
+            •	Time complexity: O(2^(2n)⋅(2n)^2⋅logA)=O(4^n⋅n^2⋅logA)
+            o	We make exponential amount of calls to backtrack function, but as only 2^m unique states of mask are possible, due to memoization, we will only evaluate 2^m calls of the function (in other calls we directly return stored result).
+            o	In each backtrack function call we iterate on all pairs using a nested for loop which will take O(m^2) time, and for each pair, we perform a gcd operation which will take at most O(logA) time. So, we take O(m^2⋅logA) time in each function call.
+            o	Thus, overall we take O(2^m⋅m^2⋅logA) time.
+            Note: A better upper bound for the time complexity might exist for this approach, but this analysis is sufficient during the limited time of an interview setting.
+            •	Space complexity: O(n+2^(2n))=O(4^n)
+            o	The recursive stack will take at most O(n) space at any time.
+            o	We store the results of all possible states in the memo array, and a total of 2^m=2^(2n) states are possible.
+            o	Thus, we use O(n+2^(2n))=O(4^n) space.
+
+
+             */
+            public int DPRecWithBitMasking(int[] nums)
+            {
+                int memoSize = 1 << nums.Length; // 2^(nums array size)
+                int[] memo = new int[memoSize];
+                Array.Fill(memo, -1);
+                return Backtrack(nums, 0, 0, memo);
+            }
+
+            private int Backtrack(int[] nums, int mask, int pairsPicked, int[] memo)
+            {
+                // If we have picked all the numbers from 'nums' array, we can't get more score.
+                if (2 * pairsPicked == nums.Length)
+                {
+                    return 0;
+                }
+
+                // If we already solved this sub-problem then return the stored result.
+                if (memo[mask] != -1)
+                {
+                    return memo[mask];
+                }
+
+                int maxScore = 0;
+
+                // Iterate on 'nums' array to pick the first and second number of the pair.
+                for (int firstIndex = 0; firstIndex < nums.Length; ++firstIndex)
+                {
+                    for (int secondIndex = firstIndex + 1; secondIndex < nums.Length; ++secondIndex)
+                    {
+                        // If the numbers are same, or already picked, then we move to next number.
+                        if (((mask >> firstIndex) & 1) == 1 || ((mask >> secondIndex) & 1) == 1)
+                        {
+                            continue;
+                        }
+
+                        // Both numbers are marked as picked in this new mask.
+                        int newMask = mask | (1 << firstIndex) | (1 << secondIndex);
+
+                        // Calculate score of current pair of numbers, and the remaining array.
+                        int currScore =
+                            (pairsPicked + 1) * Gcd(nums[firstIndex], nums[secondIndex]);
+                        int remainingScore = Backtrack(nums, newMask, pairsPicked + 1, memo);
+
+                        // Store the maximum score.
+                        maxScore = Math.Max(maxScore, currScore + remainingScore);
+                        // We will use old mask in loop's next interation,
+                        // means we discarded the picked number and backtracked.
+                    }
+                }
+
+                // Store the result of the current sub-problem.
+                memo[mask] = maxScore;
+                return maxScore;
+            }
+
+            // Helper method to calculate GCD using Euclidean algorithm.
+            public int Gcd(int a, int b)
+            {
+                if (b == 0)
+                {
+                    return a;
+                }
+                return Gcd(b, a % b);
+            }
+
+            /* Approach 2: DP with Bitmasking (Iterative)
+            Complexity Analysis
+Here, m=2∗n is the number of elements, and A is the maximum value in the nums array.
+The maximum value of A can be 10^6.
+•	Time complexity: O(2^2n⋅(2n) ^2⋅logA)=O(4^n⋅n^2⋅logA)
+o	We iterate over 2^m states.
+o	And for each state, we find the number of set bits in the current state which in the worst case will take O(log2(2^(m−1)))=O(log2 2^m)=O(m) time, then we iterate on all pairs using a nested for loop which will take O(m^2) time, and for each pair, we perform a gcd operation which will take at most O(logA) time. So, we take O(m+m^2⋅logA)=O(m^2⋅logA) time.
+o	Thus, overall we take O(2^m⋅m^2⋅logA) time.
+•	Space complexity: O(2^(2)n)=O(4^n)
+o	We keep an additional array dp of size 2^m=2^(2n) to store results for all possible states.
+
+             */
+            public int DPIterativeWithBitMasking(int[] nums)
+            {
+                int maxStates = 1 << nums.Length; // 2^(nums array size)
+                int finalMask = maxStates - 1;
+
+                // 'dp[i]' stores max score we can get after picking remaining numbers represented by 'i'.
+                int[] dp = new int[maxStates];
+
+                // Iterate on all possible states one-by-one.
+                for (int state = finalMask; state >= 0; state--)
+                {
+                    // If we have picked all numbers, we know we can't get more score as no number is remaining.
+                    if (state == finalMask)
+                    {
+                        dp[state] = 0;
+                        continue;
+                    }
+
+                    int numbersTaken = int.PopCount(state);
+                    int pairsFormed = numbersTaken / 2;
+                    // States representing even numbers are taken are only valid.
+                    if (numbersTaken % 2 != 0)
+                    {
+                        continue;
+                    }
+
+                    // We have picked 'pairsFormed' pairs, we try all combinations of one more pair now.
+                    // We iterate on two numbers using two nested for loops.
+                    for (int firstIndex = 0; firstIndex < nums.Length; firstIndex++)
+                    {
+                        for (
+                            int secondIndex = firstIndex + 1;
+                            secondIndex < nums.Length;
+                            secondIndex++
+                        )
+                        {
+                            // We only choose those numbers which were not already picked.
+                            if (
+                                ((state >> firstIndex) & 1) == 1
+                                || ((state >> secondIndex) & 1) == 1
+                            )
+                            {
+                                continue;
+                            }
+                            int currentScore =
+                                (pairsFormed + 1) * Gcd(nums[firstIndex], nums[secondIndex]);
+                            int stateAfterPickingCurrPair =
+                                state | (1 << firstIndex) | (1 << secondIndex);
+                            int remainingScore = dp[stateAfterPickingCurrPair];
+                            dp[state] = Math.Max(dp[state], currentScore + remainingScore);
+                        }
+                    }
+                }
+
+                // Returning score we get from 'n' remaining numbers of array.
+                return dp[0];
+            }
+        }
+
+        /* 517. Super Washing Machines
+        https://leetcode.com/problems/super-washing-machines/description/
+         */
+        class FindMinMovesSol
+        {
+            /* Approach 1: Greedy
+Complexity Analysis
+•	Time complexity: O(N) since there is a three-level iteration over the input array.
+•	Space complexity: O(1) since it's a constant space solution.
+
+             */
+
+            public int UsingGreedy(int[] machines)
+            {
+                int n = machines.Length,
+                    dressTotal = 0;
+                foreach (int m in machines)
+                    dressTotal += m;
+                if (dressTotal % n != 0)
+                    return -1;
+
+                int dressPerMachine = dressTotal / n;
+                // Change the number of dresses in the machines to
+                // the number of dresses to be removed from this machine
+                // (could be negative)
+                for (int i = 0; i < n; i++)
+                    machines[i] -= dressPerMachine;
+
+                // currSum is a number of dresses to move at this point,
+                // maxSum is the max number of dresses to move at this point or before,
+                // m is the number of dresses to move out from the current machine.
+                int currSum = 0,
+                    maxSum = 0,
+                    tmpRes = 0,
+                    res = 0;
+                foreach (int m in machines)
+                {
+                    currSum += m;
+                    maxSum = Math.Max(maxSum, Math.Abs(currSum));
+                    tmpRes = Math.Max(maxSum, m);
+                    res = Math.Max(res, tmpRes);
+                }
+                return res;
+            }
+        }
+
+        /* 2577. Minimum Time to Visit a Cell In a Grid
+        https://leetcode.com/problems/minimum-time-to-visit-a-cell-in-a-grid/description/
+         */
+        public int MinimumTime(int[][] grid)
+        {
+            // Check for a situation where the path is blocked just next to the starting point
+
+            if (grid[0][1] > 1 && grid[1][0] > 1)
+                return -1;
+
+            int rows = grid.Length,
+                columns = grid[0].Length;
+            int[][] directions = new int[][]
+            {
+                new int[] { 1, 0 },
+                new int[] { -1, 0 },
+                new int[] { 0, 1 },
+                new int[] { 0, -1 },
+            };
+            bool[][] visited = new bool[rows][];
+            for (int i = 0; i < rows; i++)
+            {
+                visited[i] = new bool[columns];
+            }
+            // Priority queue for efficient retrieval of the next cell to process
+            PriorityQueue<int[], int[]> priorityQueue = new PriorityQueue<int[], int[]>(
+                Comparer<int[]>.Create((a, b) => a[0].CompareTo(b[0]))
+            );
+            priorityQueue.Enqueue(new int[] { grid[0][0], 0, 0 }, new int[] { grid[0][0], 0, 0 }); // Add starting cell to the queue
+
+            while (priorityQueue.Count > 0)
+            {
+                int[] cell = priorityQueue.Dequeue();
+                int time = cell[0],
+                    row = cell[1],
+                    col = cell[2];
+
+                // If we're at the bottom-right corner, return the distance
+                if (row == rows - 1 && col == columns - 1)
+                    return time;
+                if (visited[row][col])
+                    continue;
+                visited[row][col] = true;
+
+                // Explore all possible directions (up, left, down, right)
+                foreach (int[] direction in directions)
+                {
+                    int newRow = row + direction[0],
+                        newCol = col + direction[1];
+                    // Check if the new position is within the bounds of the grid
+                    if (
+                        newRow < 0
+                        || newRow >= rows
+                        || newCol < 0
+                        || newCol >= columns
+                        || visited[newRow][newCol]
+                    )
+                        continue;
+
+                    int wait = ((grid[newRow][newCol] - time) % 2 == 0) ? 1 : 0;
+
+                    // If a shorter path to (nextX, nextY) is found, update the distance and add to the queue
+                    var newSet = new int[]
+                    {
+                        Math.Max(grid[newRow][newCol] + wait, time + 1),
+                        newRow,
+                        newCol,
+                    };
+                    priorityQueue.Enqueue(newSet, newSet);
+                }
+            }
+            return -1; // If we reach this point, there is no path to the bottom-right corner, return -1
+        }
+
+        /* 3027. Find the Number of Ways to Place People II
+        https://leetcode.com/problems/find-the-number-of-ways-to-place-people-ii/description/
+         */
+        public int NumberOfPairs(int[][] array)
+        {
+            /*             Complexity
+            Time O(n^2)
+            Space O(logn)
+
+             */
+            int result = 0,
+                length = array.Length;
+            Array.Sort(array, (a, b) => a[0] == b[0] ? b[1].CompareTo(a[1]) : a[0].CompareTo(b[0]));
+            for (int i = 0; i < length; ++i)
+            {
+                int y = -(int)2e9;
+                for (int j = i + 1; j < length; ++j)
+                {
+                    if (array[i][1] >= array[j][1] && array[j][1] > y)
+                    {
+                        result++;
+                        y = array[j][1];
+                    }
+                }
+            }
+            return result;
+        }
+
+        /* 660. Remove 9
+        https://leetcode.com/problems/remove-9/description/
+         */
+        class Remove9Sol
+        {
+            public int NewInteger(int number)
+            {
+                return int.Parse(Convert.ToString(number, 9));
+            }
+        }
+
+        /* 683. K Empty Slots
+        https://leetcode.com/problems/k-empty-slots/description/
+         */
+        class KEmptySlotsSol
+        {
+            /* Approach #1: Insert Into Sorted Structure [Accepted]
+            Complexity Analysis
+•	Time Complexity (Java): O(NlogN), where N is the length of flowers. Every insertion and search is O(logN).
+•	Time Complexity (Python): O(N2). As above, except list.insert is O(N).
+•	Space Complexity: O(N), the size of active.
+
+             */
+            public int SortedSetWithInsertion(int[] flowers, int k)
+            {
+                SortedSet<int> activeFlowers = new SortedSet<int>();
+                int day = 0;
+                foreach (int flower in flowers)
+                {
+                    day++;
+                    activeFlowers.Add(flower);
+                    int a;
+                    //TODO: test below logic
+                    int? lowerFlower = activeFlowers.TryGetValue(flower - 1, out a)
+                        ? (int?)activeFlowers.GetViewBetween(int.MinValue, flower - 1).Max
+                        : null;
+                    int? higherFlower = activeFlowers.TryGetValue(flower + 1, out a)
+                        ? (int?)activeFlowers.GetViewBetween(flower + 1, int.MaxValue).Min
+                        : null;
+
+                    if (
+                        (lowerFlower != null && flower - lowerFlower.Value - 1 == k)
+                        || (higherFlower != null && higherFlower.Value - flower - 1 == k)
+                    )
+                    {
+                        return day;
+                    }
+                }
+                return -1;
+            }
+
+            /* Approach #2: Min Queue [Accepted]
+Complexity Analysis
+•	Time Complexity: O(N), where N is the length of flowers. In enumerating through the O(N) outer loop, we do constant work as MinQueue.popleft and MinQueue.min operations are (amortized) constant time.
+•	Space Complexity: O(N), the size of our window.
+
+             */
+            public int UsingMinQueue(int[] flowers, int k)
+            {
+                int[] days = new int[flowers.Length];
+                for (int i = 0; i < flowers.Length; i++)
+                {
+                    days[flowers[i] - 1] = i + 1;
+                }
+
+                MinQueue<int> window = new MinQueue<int>();
+                int answer = days.Length;
+
+                for (int i = 0; i < days.Length; i++)
+                {
+                    int day = days[i];
+                    window.AddLast(day);
+                    if (k <= i && i < days.Length - 1)
+                    {
+                        window.PollFirst();
+                        if (k == 0 || days[i - k] < window.Min() && days[i + 1] < window.Min())
+                        {
+                            answer = Math.Min(answer, Math.Max(days[i - k], days[i + 1]));
+                        }
+                    }
+                }
+
+                return answer < days.Length ? answer : -1;
+            }
+
+            class MinQueue<E>
+                where E : IComparable<E>
+            {
+                private LinkedList<E> minQueue;
+                private LinkedList<E> queue;
+
+                public MinQueue()
+                {
+                    minQueue = new LinkedList<E>();
+                    queue = new LinkedList<E>();
+                }
+
+                public void AddLast(E x)
+                {
+                    queue.AddLast(x);
+                    while (minQueue.Last != null && x.CompareTo(minQueue.Last.Value) < 0)
+                    {
+                        minQueue.RemoveLast();
+                    }
+                    minQueue.AddLast(x);
+                }
+
+                public E PollFirst()
+                {
+                    E x = queue.First.Value;
+                    queue.RemoveFirst();
+                    if (x.Equals(minQueue.First.Value))
+                    {
+                        minQueue.RemoveFirst();
+                    }
+                    return x;
+                }
+
+                public E Min()
+                {
+                    return minQueue.First.Value;
+                }
+            }
+
+            /* Approach #3: Sliding Window [Accepted]
+Complexity Analysis
+•	Time and Space Complexity: O(N
+
+             */
+            public int UsingSlidingWindow(int[] flowers, int k)
+            {
+                int[] days = new int[flowers.Length];
+                for (int day = 0; day < flowers.Length; day++)
+                {
+                    days[flowers[day] - 1] = day + 1;
+                }
+
+                int ans = int.MaxValue;
+                int left = 0,
+                    right = k + 1;
+                while (right < days.Length)
+                {
+                    for (int i = left + 1; i < right; i++)
+                    {
+                        if (days[i] < days[left] || days[i] < days[right])
+                        {
+                            left = i;
+                            right = i + k + 1;
+                            break;
+                        }
+                    }
+                    if (left + 1 < right)
+                    {
+                        ans = Math.Min(ans, Math.Max(days[left], days[right]));
+                        left = right;
+                        right = left + k + 1;
+                    }
+                }
+
+                return ans == int.MaxValue ? -1 : ans;
+            }
+        }
+
+        /* 749. Contain Virus
+        https://leetcode.com/problems/contain-virus/description/
+        https://algo.monster/liteproblems/749
+         */
+        class ContainVirusSol
+        {
+            // DIRECTIONS array used to explore in four direct neighboring positions (up, right, down, left)
+            private static readonly int[] DIRECTIONS = { -1, 0, 1, 0, -1 };
+            private List<int> wallCount = new List<int>();
+            private List<List<int>> infectedAreas = new List<List<int>>();
+            private List<HashSet<int>> areaBoundaries = new List<HashSet<int>>();
+            private int[][] isInfected;
+            private bool[][] visited;
+            private int rowCount;
+            private int colCount;
+
+            /* Time and Space Complexity
+            The given Python code defines a Solution class with the method containVirus that implements a containment strategy for a virus spread simulation in a two-dimensional grid. The containment works by finding the infected region that threatens to contaminate the most uninfected cells and then putting a "wall" around that region to prevent its spread. The code uses a depth-first search (DFS) algorithm to find the infected regions and determine the area and boundaries for each of them.
+            Time Complexity
+            The time complexity of the algorithm can be analyzed by examining the operations in each significant block of the code:
+            •	The main loop (while 1) continues until there are no more regions to contain. In the worst case, where each region spreads every turn and is quarantined in the order of individual cells, the main loop can run m*n times, where m is the number of rows and n is the number of columns in the grid.
+            •	Inside the main loop, a nested loop iterates over each grid cell and potentially calls dfs for infected cells. This nested loop always iterates m*n times.
+            •	The DFS (dfs) performs a traversal of the infected areas. In the worst case, a complete traversal of the grid is performed if the entire grid becomes infected, which would be another m*n operations.
+            •	For each area, we also need to consider the boundaries and the updating of the isInfected grid cells. Each of these operations can again take up to m*n in the worst case when updating all cells.
+            Putting this all together, the worst-case time complexity is O((m*n)^2), since each call to DFS can traverse the entire grid, and we might be doing this for each cell.
+            Space Complexity
+            The space complexity of the algorithm is mainly determined by the storage needs:
+            •	The vis array which is of size m * n.
+            •	areas, boundaries, and c, all of which in the worst case can store information for every cell.
+            •	The dfs call stack, which in the worst case might need to go as deep as the number of cells in the grid, m*n.
+            Therefore, in the worst case, the space complexity of the code is O(m*n), reflecting the storage needed for the auxiliary data structures and the call stack for DFS in the scenario where the entire grid is part of a single connected region.
+             */
+            public int ContainVirus(int[][] isInfected)
+            {
+                this.isInfected = isInfected;
+                this.rowCount = isInfected.GetLength(0);
+                this.colCount = isInfected.GetLength(1);
+                this.visited = new bool[rowCount][];
+                int wallsRequired = 0;
+
+                while (true)
+                {
+                    // Resetting visited for the new iteration
+                    foreach (bool[] row in visited)
+                    {
+                        Array.Fill(row, false);
+                    }
+                    wallCount.Clear();
+                    infectedAreas.Clear();
+                    areaBoundaries.Clear();
+
+                    // Iterate over each cell in the grid
+                    for (int i = 0; i < rowCount; ++i)
+                    {
+                        for (int j = 0; j < colCount; ++j)
+                        {
+                            // for each unvisited infected cell start a new exploration
+                            if (isInfected[i][j] == 1 && !visited[i][j])
+                            {
+                                wallCount.Add(0);
+                                infectedAreas.Add(new List<int>());
+                                areaBoundaries.Add(new HashSet<int>());
+                                DeepFirstSearch(i, j);
+                            }
+                        }
+                    }
+
+                    // If no areas are infected, break the loop as no further action is required
+                    if (infectedAreas.Count == 0)
+                    {
+                        break;
+                    }
+
+                    // Choose the most threatening area (one that affects most uninfected cells)
+                    int mostThreatIndex = GetMaxBoundaryIndex();
+                    // Add the wall count for the most threatening area to the answer
+                    wallsRequired += wallCount[mostThreatIndex];
+
+                    // Process each infected area
+                    for (int index = 0; index < infectedAreas.Count; ++index)
+                    {
+                        if (index == mostThreatIndex)
+                        {
+                            // For the most threatening area, add walls (mark as -1)
+                            foreach (int infectedCell in infectedAreas[index])
+                            {
+                                int row = infectedCell / colCount;
+                                int col = infectedCell % colCount;
+                                isInfected[row][col] = -1;
+                            }
+                        }
+                        else
+                        {
+                            // Spread the virus from the other areas
+                            foreach (int infectedCell in infectedAreas[index])
+                            {
+                                int row = infectedCell / colCount;
+                                int col = infectedCell % colCount;
+                                for (int k = 0; k < 4; ++k)
+                                {
+                                    int newRow = row + DIRECTIONS[k];
+                                    int newCol = col + DIRECTIONS[k + 1];
+                                    if (
+                                        IsValidPosition(newRow, newCol)
+                                        && isInfected[newRow][newCol] == 0
+                                    )
+                                    {
+                                        isInfected[newRow][newCol] = 1;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                return wallsRequired;
+            }
+
+            // Utility method to get the index of the area which is spreading the virus most
+            private int GetMaxBoundaryIndex()
+            {
+                int index = 0;
+                int maxBoundarySize = areaBoundaries[0].Count;
+                for (int i = 1; i < areaBoundaries.Count; ++i)
+                {
+                    int boundarySize = areaBoundaries[i].Count;
+                    if (maxBoundarySize < boundarySize)
+                    {
+                        maxBoundarySize = boundarySize;
+                        index = i;
+                    }
+                }
+                return index;
+            }
+
+            // Deep first search to explore and mark all cells in an infected area
+            private void DeepFirstSearch(int row, int col)
+            {
+                visited[row][col] = true;
+                int currentAreaIndex = infectedAreas.Count - 1;
+                infectedAreas[currentAreaIndex].Add(row * colCount + col);
+
+                for (int directionIndex = 0; directionIndex < 4; ++directionIndex)
+                {
+                    int newRow = row + DIRECTIONS[directionIndex];
+                    int newCol = col + DIRECTIONS[directionIndex + 1];
+                    if (IsValidPosition(newRow, newCol))
+                    {
+                        if (isInfected[newRow][newCol] == 1 && !visited[newRow][newCol])
+                        {
+                            DeepFirstSearch(newRow, newCol);
+                        }
+                        else if (isInfected[newRow][newCol] == 0)
+                        {
+                            // If the neighboring cell is uninfected, count it as a potential wall and add to the boundary
+                            wallCount[currentAreaIndex] += 1;
+                            areaBoundaries[currentAreaIndex].Add(newRow * colCount + newCol);
+                        }
+                    }
+                }
+            }
+
+            // Utility method to check if a given position is within the boundaries of the grid
+            private bool IsValidPosition(int row, int col)
+            {
+                return row >= 0 && row < rowCount && col >= 0 && col < colCount;
+            }
+        }
+
+        /* 927. Three Equal Parts
+        https://leetcode.com/problems/three-equal-parts/description/
+         */
+
+        class ThreeEqualPartsSol
+        {
+            private static readonly int[] IMPOSSIBLE = new int[] { -1, -1 };
+
+            public int[] ThreeEqualParts(int[] arr)
+            {
+                int n = arr.Length;
+
+                // Count how many 1s are in arr.
+                int totalOnes = 0;
+                foreach (int bit in arr)
+                {
+                    totalOnes += bit;
+                }
+
+                // If total number of ones is not evenly divisible by 3, then no solution exists.
+                if (totalOnes % 3 != 0)
+                {
+                    return IMPOSSIBLE;
+                }
+
+                // Otherwise, each part should contain an equal amount of 1s.
+                int targetOnes = totalOnes / 3;
+                if (targetOnes == 0)
+                {
+                    return new int[] { 0, n - 1 };
+                }
+
+                // i1, j1 marks the index of the first and last one in the first block of 1s, etc.
+                int i1 = -1,
+                    j1 = -1,
+                    i2 = -1,
+                    j2 = -1,
+                    i3 = -1,
+                    j3 = -1;
+
+                //Find the index of the first and last 1 in each block of ones.
+                int oneCount = 0;
+                for (int i = 0; i < n; ++i)
+                {
+                    if (arr[i] == 1)
+                    {
+                        oneCount += 1;
+                        if (oneCount == 1)
+                            i1 = i;
+                        if (oneCount == targetOnes)
+                            j1 = i;
+                        if (oneCount == targetOnes + 1)
+                            i2 = i;
+                        if (oneCount == 2 * targetOnes)
+                            j2 = i;
+                        if (oneCount == 2 * targetOnes + 1)
+                            i3 = i;
+                        if (oneCount == 3 * targetOnes)
+                            j3 = i;
+                    }
+                }
+
+                // The array is in the form W [i1, j1] X [i2, j2] Y [i3, j3] Z
+                // where each [i, j] is a block of 1s and W, X, Y, and Z represent blocks of 0s.
+                int[] part1 = new int[j1 - i1 + 1];
+                Array.Copy(arr, i1, part1, 0, j1 - i1 + 1);
+                int[] part2 = new int[j2 - i2 + 1];
+                Array.Copy(arr, i2, part2, 0, j2 - i2 + 1);
+                int[] part3 = new int[j3 - i3 + 1];
+                Array.Copy(arr, i3, part3, 0, j3 - i3 + 1);
+
+                if (!part1.SequenceEqual(part2) || !part1.SequenceEqual(part3))
+                {
+                    return IMPOSSIBLE;
+                }
+
+                // The number of zeros after the left, middle, and right parts
+                int trailingZerosLeft = i2 - j1 - 1;
+                int trailingZerosMid = i3 - j2 - 1;
+                int trailingZeros = n - j3 - 1;
+
+                if (trailingZeros > Math.Min(trailingZerosLeft, trailingZerosMid))
+                {
+                    return IMPOSSIBLE;
+                }
+                return new int[] { j1 + trailingZeros, j2 + trailingZeros + 1 };
+            }
+        }
+
+        /*
+        1199. Minimum Time to Build Blocks
+        https://leetcode.com/problems/minimum-time-to-build-blocks/description/
+         */
+        class MinBuildTimeSol
+        {
+            /*             Approach 1: Top-down Dynamic Programming
+            Complexity Analysis
+            Let N be the length of blocks.
+            •	Time complexity: O(N^2).
+            o	Sorting would take O(N⋅logN) time.
+            o	Initializing the dp array would take O(N2) time, since there are N∗(N+1) elements in the array.
+            o	Then, we are calling the solve function. It will be called at most O(N^2) times, since there are N∗(N+1) elements in the dp array, and each element is called at most once. In every sub-problem call, we are doing O(1) work.
+            Hence, the total time complexity would be O(N^2).
+            •	Space complexity: O(N^2).
+            o	We are sorting the blocks array in place. When we sort an array in place, some extra space is used. The space complexity depends on the implementation of the sorting algorithm in the programming language.
+            o	In Python, the sort method sorts a list using the Timsort algorithm, which is a combination of Merge Sort and Insertion Sort and uses O(N) additional space.
+            o	In C++, the sort() function is implemented as a hybrid of Quick Sort, Heap Sort, and Insertion Sort, with worst-case space complexity of O(logN).
+            o	In Java, Arrays.sort() is implemented using a variant of the Quick Sort algorithm which has a space complexity of O(logN).
+            o	The dp array would take O(N2) space, since there are N∗(N+1) elements in the array.
+
+             */
+            public int TopDownDP(int[] blocks, int split)
+            {
+                // Sort the blocks in descending order
+                Array.Sort(blocks);
+                for (int i = 0; i < blocks.Length / 2; i++)
+                {
+                    int temp = blocks[i];
+                    blocks[i] = blocks[blocks.Length - i - 1];
+                    blocks[blocks.Length - i - 1] = temp;
+                }
+
+                // dp[i][j] represents the minimum time taken to build blocks[i~n-1] block using j workers
+                int[][] dp = new int[blocks.Length][];
+
+                // Initialize the dp array with -1
+                foreach (int[] row in dp)
+                {
+                    Array.Fill(row, -1);
+                }
+
+                // Call for the block from index 0 with 1 worker
+                return Solve(blocks, split, 0, 1, dp);
+            }
+
+            private int Solve(int[] blocks, int split, int b, int w, int[][] dp)
+            {
+                // Base cases
+                if (b == blocks.Length)
+                {
+                    return 0;
+                }
+                if (w == 0)
+                {
+                    return int.MaxValue;
+                }
+                if (w >= blocks.Length - b)
+                {
+                    return blocks[b];
+                }
+
+                // If the sub-problem is already solved, return the result
+                if (dp[b][w] != -1)
+                {
+                    return dp[b][w];
+                }
+
+                // Two Choices
+                int workHere = Math.Max(blocks[b], Solve(blocks, split, b + 1, w - 1, dp));
+                int splitHere =
+                    split + Solve(blocks, split, b, Math.Min(2 * w, blocks.Length - b), dp);
+
+                // Store the result in the dp array
+                dp[b][w] = Math.Min(workHere, splitHere);
+                return dp[b][w];
+            }
+
+            /* Approach 2: Bottom-up Dynamic Programming
+            Complexity Analysis
+Let N be the length of blocks.
+•	Time complexity: O(N^2).
+o	Sorting the blocks takes O(N⋅logN) time.
+o	Filling two base cases takes O(N) time.
+o	We are traversing O(N^2) cells of dp array. In each traversal, we do constant time operations.
+Thus, total time complexity is O(N⋅logN+N+N^2)=O(N^2).
+•	Space complexity: O(N^2).
+o	We are sorting the blocks array in place. When we sort an array in place, some extra space is used. The space complexity depends on the implementation of the sorting algorithm in the programming language.
+o	In Python, the sort method sorts a list using the Timsort algorithm, which is a combination of Merge Sort and Insertion Sort and uses O(N) additional space.
+o	In C++, the sort() function is implemented as a hybrid of Quick Sort, Heap Sort, and Insertion Sort, with worst-case space complexity of O(logN).
+o	In Java, Arrays.sort() is implemented using a variant of the Quick Sort algorithm which has a space complexity of O(logN).
+o	dp array consumes O(N^2) space.
+Thus, total space complexity is O(N+N^2)=O(N^2).
+
+             */
+            public int BottomUpDP(int[] blocks, int split)
+            {
+                // Sort the blocks in descending order.
+                int N = blocks.Length;
+                Array.Sort(blocks);
+                for (int i = 0; i < N / 2; i++)
+                {
+                    int tmp = blocks[i];
+                    blocks[i] = blocks[N - i - 1];
+                    blocks[N - i - 1] = tmp;
+                }
+
+                // Initialize the dp array.
+                int[][] dp = new int[N + 1][];
+
+                // Base case 1: If there are no workers, then we can't build any block.
+                for (int b = 0; b < N; b++)
+                {
+                    dp[b][0] = int.MaxValue;
+                }
+
+                // Base case 2: If there are no blocks, then we don't need any time.
+                for (int w = 0; w <= N; w++)
+                {
+                    dp[N][w] = 0;
+                }
+
+                // Fill the dp array in a bottom-up fashion.
+                for (int b = N - 1; b >= 0; b--)
+                {
+                    for (int w = N; w >= 1; w--)
+                    {
+                        // Base case 3: If we have more workers than blocks,
+                        //Then we can build all the blocks.
+                        if (w >= N - b)
+                        {
+                            dp[b][w] = blocks[b];
+                            continue;
+                        }
+
+                        // Recurrence relation.
+                        int workHere = Math.Max(blocks[b], dp[b + 1][w - 1]);
+                        int splitHere = split + dp[b][Math.Min(2 * w, N - b)];
+
+                        // Store the result in the dp array
+                        dp[b][w] = Math.Min(workHere, splitHere);
+                    }
+                }
+
+                // For building all the blocks, with
+                // initially 1 worker.
+                return dp[0][1];
+            }
+
+            /* Approach 3: Space-Optimized Bottom-up Dynamic Programming
+            Complexity Analysis
+Let N be the length of blocks.
+•	Time complexity: O(N^2).
+o	Sorting the blocks takes O(N⋅logN) time.
+o	We are doing O(N^2) traversals using nested loops. In each traversal, we do constant time operations.
+Thus, total time complexity is O(N⋅logN+N^2)=O(N^2).
+•	Space complexity: O(N)
+o	We are sorting the blocks array in place. When we sort an array in place, some extra space is used. The space complexity depends on the implementation of the sorting algorithm in the programming language.
+o	In Python, the sort method sorts a list using the Timsort algorithm, which is a combination of Merge Sort and Insertion Sort and uses O(N) additional space.
+o	In C++, the sort() function is implemented as a hybrid of Quick Sort, Heap Sort, and Insertion Sort, with worst-case space complexity of O(logN).
+o	In Java, Arrays.sort() is implemented using a variant of the Quick Sort algorithm which has a space complexity of O(logN).
+o	dp array consumes O(N) space.
+Thus, total space complexity is O(N+N)=O(N).
+
+             */
+            public int BottomUpDPWithSpaceOptimal(int[] blocks, int split)
+            {
+                // Sort the blocks in descending order.
+                int N = blocks.Length;
+                Array.Sort(blocks);
+                for (int i = 0; i < N / 2; i++)
+                {
+                    int temp = blocks[i];
+                    blocks[i] = blocks[N - i - 1];
+                    blocks[N - i - 1] = temp;
+                }
+
+                // Initialize the dp array. When all N blocks
+                // done, we need 0 time.
+                int[] dp = new int[N + 1];
+                for (int w = 0; w <= N; w++)
+                {
+                    dp[w] = 0;
+                }
+
+                // The case when we have no workers.
+                dp[0] = int.MaxValue;
+
+                // Fill the dp array in a bottom-up fashion.
+                for (int b = N - 1; b >= 0; b--)
+                {
+                    for (int w = N; w > 0; w--)
+                    {
+                        // If we have more workers than blocks,
+                        // Then we can build all the blocks.
+                        if (w >= N - b)
+                        {
+                            dp[w] = blocks[b];
+                            continue;
+                        }
+
+                        // Recurrence relation.
+                        int workHere = Math.Max(blocks[b], dp[w - 1]);
+                        int splitHere = split + dp[Math.Min(2 * w, N - b)];
+
+                        // Store the result in the dp array
+                        dp[w] = Math.Min(workHere, splitHere);
+                    }
+                }
+
+                // For building all the blocks, with initially 1 worker.
+                return dp[1];
+            }
+
+            /*             Approach 4: Optimal Merge Pattern
+            Complexity Analysis
+            Let N be the length of blocks.
+            •	Time complexity: O(N⋅logN).
+            o	Inserting an element into heap takes O(logN) time. There will be initial N insertions. Thus, it will take O(N⋅logN) time.
+            o	Now, the while loop will run until we have more than one building time in the heap. In each iteration, we pop two and push one. Thus, there will be N−1 iterations.
+            Now, in each iteration, two pops will take O(logN) time, and one push will take O(logN) time. Hence, the overall time complexity for the while loop will be O((N−1)⋅(3⋅logN))=O(N⋅logN).
+            o	The last pop will take O(1) time since we don't have to restore the heap property.
+            Therefore, overall time complexity will be O(N⋅logN)+O(N⋅logN)+O(1)=O(N⋅logN).
+            •	Space complexity: O(N)
+            If we are heapifying the existing blocks array, then space complexity will be O(1). Otherwise, to have a new priority queue, we will need O(N) space.
+
+             */
+            public int OptimalMergePattern(int[] blocks, int split)
+            {
+                // Prepare Heap of Building Time
+                PriorityQueue<int, int> pq = new();
+                foreach (int block in blocks)
+                {
+                    pq.Enqueue(block, block);
+                }
+
+                // Make sibling blocks until we are left with only one root node
+                while (pq.Count > 1)
+                {
+                    // Pop two minimum. The time of the abstracted sub-root will be
+                    // split + max(x, y) which is split + y
+                    int x = pq.Dequeue();
+                    int y = pq.Dequeue();
+                    pq.Enqueue(split + y, split + y);
+                }
+
+                // Time of final root node
+                return pq.Dequeue();
+            }
+
+            /* Approach 5: Binary Search
+Complexity Analysis
+Let N be the number of blocks, M be the maximum building time in blocks and S be the split time.
+•	Time complexity: O(N⋅(logN+logS))
+o	Sorting the blocks array takes O(N⋅logN) time.
+o	Now, we have binary search on time range [M,S⋅logN+M].
+The total number of iterations will be O(log(S⋅logN+M−M)) which is O(log(S⋅logN)).
+This term can be written as O(logS+log(logN)).
+We now call the possible function in each iteration. Hence, the time complexity of the binary search loop depends on the time complexity of the possible function.
+o	Let's analyze the possible function.
+It has a for loop which runs N times.
+Inside the loop, we have a while loop. The while loop will terminate when the number of worker exceeds the remaining blocks. Hence, there will be at most O(N) total iterations of the while loop. This is because we are doubling the number of the remaining worker in each iteration until we reach the N, which creates at least 1 worker each time.
+Here is the case where we will have O(N) splits for creating N workers. The worst case varies with split and limit, but it won't exceed O(N).
+ 
+It's worth noting that the while loop will run at most O(N) times in total, and not O(N) times in each iteration of the for loop. On doing amortized analysis, we can say that the while loop will run O(1) times in each iteration of the for loop.
+Thus, the time complexity of the possible function will be O(N).
+•	Hence, overall time complexity will be O(N⋅logN)+O(logS+log(logN))⋅O(N) which can be simplified as O(N⋅logN+N⋅logS+N⋅log(logN))
+•	Thus, the final time complexity will be O(N⋅(logN+logS)).
+•	Space complexity: O(N)
+We are sorting the blocks array in place. When we sort an array in place, some extra space is used. The space complexity depends on the implementation of the sorting algorithm in the programming language.
+o	In Python, the sort method sorts a list using the Timsort algorithm, which is a combination of Merge Sort and Insertion Sort and uses O(N) additional space.
+o	In C++, the sort() function is implemented as a hybrid of Quick Sort, Heap Sort, and Insertion Sort, with worst-case space complexity of O(logN).
+o	In Java, Arrays.sort() is implemented using a variant of the Quick Sort algorithm which has a space complexity of O(logN).
+Thus, the space complexity will be O(N).
+
+            */
+            public int UsingBinarySearch(int[] blocks, int split)
+            {
+                // Sort Array in Descending Order of the required time
+                Array.Sort(blocks);
+                Array.Reverse(blocks);
+
+                // If can be built in "limit"
+                Func<int, bool> possible = (limit) =>
+                {
+                    // Build all blocks starting with one worker
+                    int workerCount = 1;
+
+                    for (int i = 0; i < blocks.Length; i++)
+                    {
+                        int time = blocks[i];
+                        // If no worker or no sufficient time
+                        if (workerCount <= 0 || time > limit)
+                        {
+                            return false;
+                        }
+
+                        // Keep splitting and producing workers as long as
+                        // we are within the limit for this block
+                        while (time + split <= limit)
+                        {
+                            limit -= split;
+                            workerCount *= 2;
+
+                            // Sufficient worker for remaining block
+                            if (workerCount >= blocks.Length - i)
+                            {
+                                return true;
+                            }
+                        }
+
+                        // Build Block
+                        workerCount--;
+                    }
+
+                    // All blocks build
+                    return true;
+                };
+
+                // Binary Search Algorithm
+                int left = blocks[0];
+                int right =
+                    split * (int)(Math.Ceiling(Math.Log(blocks.Length) / Math.Log(2))) + blocks[0];
+                while (left < right)
+                {
+                    int mid = left + (right - left) / 2;
+                    if (possible(mid))
+                    {
+                        right = mid;
+                    }
+                    else
+                    {
+                        left = mid + 1;
+                    }
+                }
+
+                return right;
+            }
+        }
+
+        /* 1178. Number of Valid Words for Each Puzzle
+        https://leetcode.com/problems/number-of-valid-words-for-each-puzzle/description/
+         */
+        class FindNumberOfValidWordsForEachPuzzleSol
+        {
+            /* Approach 1: Hashing (Bitmask)
+Complexity Analysis
+Let N and M be the length of words and puzzles respectively. Let Nˉ,Mˉ be the average length of words[i] and puzzles[i] respectively. Let k be the size of the character set.
+Note that in this problem, the value of Mˉ is fixed at 7, and the value of k is fixed at 26.
+•	Time Complexity: O(N⋅Nˉ+M⋅2^Mˉ).
+For each words[i] in words, we spend O(Nˉ) time to calculate its mask. For each puzzles[i] in puzzles, we spend O(Mˉ) to transform its characters into a bitmask, and O(2^Mˉ) to iterate over all of its subsets.
+In total, we have O(N⋅Nˉ+M⋅(2^Mˉ+Mˉ))=O(N⋅Nˉ+M⋅2^Mˉ).
+•	Space Complexity: O(N).
+We use a map to store the mask of each word[i], and each entry uses an integer for the key and the value.
+Alternatively, if you use a list with length = (1<<k), then the space complexity is O(2^k). Note that, in practice, 2^26=67108864, which is much larger than the maximum of the given N, 10^5.
+
+             */
+            public List<int> UsingBitMasking(string[] words, string[] puzzles)
+            {
+                Dictionary<int, int> wordCount = new Dictionary<int, int>(); // a List instead of Dictionary also works
+                foreach (string word in words)
+                {
+                    int bitmask = CreateBitmask(word);
+                    if (wordCount.ContainsKey(bitmask))
+                    {
+                        wordCount[bitmask]++;
+                    }
+                    else
+                    {
+                        wordCount[bitmask] = 1;
+                    }
+                }
+                List<int> result = new List<int>();
+                foreach (string puzzle in puzzles)
+                {
+                    int firstBitmask = 1 << (puzzle[0] - 'a');
+                    int count = wordCount.ContainsKey(firstBitmask) ? wordCount[firstBitmask] : 0;
+
+                    // Make bitmask but ignore the first character since it must always be there.
+                    int mask = CreateBitmask(puzzle.Substring(1));
+
+                    // iterate over the submask
+                    for (int submask = mask; submask > 0; submask = (submask - 1) & mask)
+                    {
+                        count += wordCount.ContainsKey(submask | firstBitmask)
+                            ? wordCount[submask | firstBitmask]
+                            : 0; // add first character
+                    }
+                    result.Add(count);
+                }
+                return result;
+            }
+
+            private int CreateBitmask(string word)
+            {
+                // Build a bitmask of chars to represent each word
+                // the builtin System.BitArray also works
+                int bitmask = 0;
+                foreach (char letter in word)
+                {
+                    bitmask |= 1 << (letter - 'a');
+                }
+                return bitmask;
+            }
+
+            /*             Approach 2: Trie
+Complexity Analysis
+Let N and M be the length of words and puzzles respectively. Let Nˉ,Mˉ be the average length of words[i] and puzzles[i] respectively. Let k be the size of the character set.
+Note that in this problem, the value of Mˉ is fixed at 7, and the value of k is fixed at 26.
+•	Time Complexity: O(N⋅(NˉlogNˉ+Mˉ)+M⋅Mˉ!).
+o	To build the trie, for each word[i] in words, we spend O(NˉlogNˉ) to sort it and remove the duplicates, and, we spend O(Mˉ) to insert into the trie.
+o	To search for the answer for each puzzles[i] in puzzles, we spend O(Mˉ!) to iterate the whole trie.
+o	Totally, we have O(N⋅(NˉlogNˉ+Mˉ)+M⋅Mˉ!).
+o	Alternatively, one can use bucket sort to reduce the time complexity to O(N⋅(Nˉ+k+Mˉ)+M⋅Mˉ!).
+•	Space Complexity: O(k⋅Mˉ!).
+Our trie has at most O(Mˉ!) nodes, and each node is an array of size k.
+
+             */
+            public List<int> UsingTrie(string[] words, string[] puzzles)
+            {
+                int SIZE = 26; // total character size
+                List<int[]> trie = new List<int[]>(); // we use list to mimic the trie tree
+                trie.Add(new int[SIZE]);
+                List<int> count = new List<int> { 0 }; // the number of words ending at node i
+
+                foreach (string word in words)
+                {
+                    // sort and remove duplicates
+                    char[] chars = word.ToCharArray();
+                    Array.Sort(chars);
+                    StringBuilder sb = new StringBuilder();
+                    sb.Append(chars[0]);
+                    for (int i = 1; i < chars.Length; i++)
+                    {
+                        if (chars[i] != chars[i - 1])
+                        {
+                            sb.Append(chars[i]);
+                        }
+                    }
+                    if (sb.Length <= 7) // longer words are never valid
+                    {
+                        // insert into trie
+                        int node = 0;
+                        foreach (char letter in sb.ToString().ToCharArray())
+                        {
+                            int i = letter - 'a';
+                            if (trie[node][i] == 0) // push empty node
+                            {
+                                trie.Add(new int[SIZE]);
+                                count.Add(0);
+                                trie[node][i] = trie.Count - 1;
+                            }
+                            node = trie[node][i];
+                        }
+                        count[node]++;
+                    }
+                }
+                List<int> result = new List<int>();
+                foreach (string puzzle in puzzles)
+                {
+                    result.Add(Dfs(0, false, puzzle, trie, count));
+                }
+                return result;
+            }
+
+            // search for valid words
+            private int Dfs(
+                int node,
+                bool hasFirst,
+                string puzzle,
+                List<int[]> trie,
+                List<int> count
+            )
+            {
+                int total = hasFirst ? count[node] : 0;
+                foreach (char letter in puzzle.ToCharArray())
+                {
+                    int i = letter - 'a';
+                    if (trie[node][i] > 0)
+                    {
+                        total += Dfs(
+                            trie[node][i],
+                            hasFirst || (letter == puzzle[0]),
+                            puzzle,
+                            trie,
+                            count
+                        );
+                    }
+                }
+                return total;
+            }
+        }
+
+        /* 1203. Sort Items by Groups Respecting Dependencies
+        https://leetcode.com/problems/sort-items-by-groups-respecting-dependencies/description/
+         */
+        public class SortItemsByGroupsRespectingDepsSol
+        {
+            /*             Approach: Topological Sorting
+            Complexity Analysis
+            •	Time complexity: O(n^2)
+            To topological sort n items:
+            o	We build an adjacency list that contains all item dependencies. There are at most O(n^2) distinct item dependencies (prev, curr) stored in beforeItem, which takes O(n^2) time.
+            o	Next, we repeatedly visit each item with an in degree of zero and decrement the in degree of all items that have this item as a preceding item. In the worst-case scenario, we might visit every vertex in the graph and decrement every outgoing edge once, which takes O(n^2) time.
+            The maximum number of groups is n, so the time complexity of topological sorting the groups is also O(n^2).
+            •	Space complexity: O(n)
+            o	Both adjacency lists take O(n^2) space in the worst-case scenario.
+            o	Storing the in degree for each item or group requires O(n) space.
+            o	The stack can contain at most n items or n groups, which takes O(n) space.
+
+             */
+            public int[] UsingTopologicalSorting(
+                int itemCount,
+                int groupCount,
+                int[] group,
+                List<List<int>> beforeItems
+            )
+            {
+                // If an item belongs to zero group, assign it a unique group id.
+                int uniqueGroupId = groupCount;
+                for (int i = 0; i < itemCount; i++)
+                {
+                    if (group[i] == -1)
+                    {
+                        group[i] = uniqueGroupId;
+                        uniqueGroupId++;
+                    }
+                }
+
+                // Sort all items regardless of group dependencies.
+                Dictionary<int, List<int>> itemGraph = new Dictionary<int, List<int>>();
+                int[] itemIndegree = new int[itemCount];
+                for (int i = 0; i < itemCount; ++i)
+                {
+                    itemGraph[i] = new List<int>();
+                }
+
+                // Sort all groups regardless of item dependencies.
+                Dictionary<int, List<int>> groupGraph = new Dictionary<int, List<int>>();
+                int[] groupIndegree = new int[uniqueGroupId];
+                for (int i = 0; i < uniqueGroupId; ++i)
+                {
+                    groupGraph[i] = new List<int>();
+                }
+
+                for (int current = 0; current < itemCount; current++)
+                {
+                    foreach (int previous in beforeItems[current])
+                    {
+                        // Each (prev -> curr) represents an edge in the item graph.
+                        itemGraph[previous].Add(current);
+                        itemIndegree[current]++;
+
+                        // If they belong to different groups, add an edge in the group graph.
+                        if (group[current] != group[previous])
+                        {
+                            groupGraph[group[previous]].Add(group[current]);
+                            groupIndegree[group[current]]++;
+                        }
+                    }
+                }
+
+                // Topological sort nodes in the graph, return an empty array if a cycle exists.
+                List<int> itemOrder = TopologicalSort(itemGraph, itemIndegree);
+                List<int> groupOrder = TopologicalSort(groupGraph, groupIndegree);
+
+                if (itemOrder.Count == 0 || groupOrder.Count == 0)
+                {
+                    return new int[0];
+                }
+
+                // Items are sorted regardless of groups, we need to differentiate them by the groups they belong to.
+                Dictionary<int, List<int>> orderedGroups = new Dictionary<int, List<int>>();
+                foreach (int item in itemOrder)
+                {
+                    if (!orderedGroups.ContainsKey(group[item]))
+                    {
+                        orderedGroups[group[item]] = new List<int>();
+                    }
+                    orderedGroups[group[item]].Add(item);
+                }
+
+                // Concatenate sorted items in all sorted groups.
+                // [group 1, group 2, ... ] -> [(item 1, item 2, ...), (item 1, item 2, ...), ...]
+                List<int> answerList = new List<int>();
+                foreach (int groupIndex in groupOrder)
+                {
+                    answerList.AddRange(
+                        orderedGroups.GetValueOrDefault(groupIndex, new List<int>())
+                    );
+                }
+
+                return answerList.ToArray();
+            }
+
+            private List<int> TopologicalSort(Dictionary<int, List<int>> graph, int[] indegree)
+            {
+                List<int> visited = new List<int>();
+                Stack<int> stack = new Stack<int>();
+                foreach (int key in graph.Keys)
+                {
+                    if (indegree[key] == 0)
+                    {
+                        stack.Push(key);
+                    }
+                }
+
+                while (stack.Count > 0)
+                {
+                    int current = stack.Pop();
+                    visited.Add(current);
+
+                    foreach (int prev in graph[current])
+                    {
+                        indegree[prev]--;
+                        if (indegree[prev] == 0)
+                        {
+                            stack.Push(prev);
+                        }
+                    }
+                }
+
+                return visited.Count == graph.Count ? visited : new List<int>();
+            }
+        }
+
+        /* 1210. Minimum Moves to Reach Target with Rotations
+        https://leetcode.com/problems/minimum-moves-to-reach-target-with-rotations/description/
+         */
+        class MinimumMovesToReachTargetWithRotationsSol
+        {
+            // Class variables
+            private int size; // Size of the grid
+            private int[][] grid; // The given grid
+            private bool[][] visited; // Visited state for each cell and orientation
+            private Queue<int[]> queue = new Queue<int[]>(); // Queue for conducting BFS
+
+            /*
+            Time and Space Complexity
+            The given code is a breadth-first search (BFS) algorithm that operates on a grid to find the minimum number of moves to get from the starting position to the target position. The code takes into account the snake's orientation (either horizontal or vertical) within the grid.
+            Time Complexity:
+            The time complexity of the BFS approach to traversing the grid can be analyzed as follows:
+            •	The queue q can contain at most 2 * n * n possible positions for all combinations of (i1, j1, i2, j2) given the snake occupies two cells at each step and there are n * n cells in the grid.
+            •	For each position, we attempt up to 4 moves: right, down, clockwise rotation, and counter-clockwise rotation.
+            •	Therefore, in the worst case, each element will be inserted and removed from the queue once, leading to an operation count for each of the 2 * n * n positions.
+            •	As such, the computational complexity of the BFS exploration is O(4 * 2 * n^2), which simplifies to O(n^2).
+            Space Complexity:
+            The space complexity can be evaluated by considering the storage requirements:
+            •	The queue q can grow up to 2 * n * n elements storing distinct positions of the snake on the grid.
+            •	The vis set also stores unique states, which may have at most 2 * n * n entries.
+            •	There is a constant overhead for local variables and the BFS queue's inherent elements; however, this does not affect the overall degree of the polynomial space requirement.
+            •	This leads to a space complexity of O(2 * n^2), which simplifies to O(n^2).
+            Overall, the time complexity of the algorithm is O(n^2), and the space complexity is also O(n^2).
+
+             */
+            public int MinimumMoves(int[][] grid)
+            {
+                this.grid = grid;
+                size = grid.Length;
+                visited = new bool[size * size][]; // 2 for the two possible orientations
+                int[] target = { size * size - 2, size * size - 1 }; // The target state
+                queue.Enqueue(new int[] { 0, 1 }); // Starting state (head at 0 and tail at 1)
+                visited[0][0] = true; // Set the starting state as visited with a horizontal orientation
+
+                int steps = 0; // Number of steps to reach the target
+                // BFS to find the minimum moves required
+                while (queue.Count > 0)
+                {
+                    int currentLevelSize = queue.Count;
+                    for (int i = 0; i < currentLevelSize; ++i)
+                    {
+                        int[] position = queue.Dequeue(); // Get the current position
+
+                        // If the current position is the target, return the steps count
+                        if (position[0] == target[0] && position[1] == target[1])
+                        {
+                            return steps;
+                        }
+
+                        // Calculate coordinates from serialized positions
+                        int headRow = position[0] / size,
+                            headCol = position[0] % size;
+                        int tailRow = position[1] / size,
+                            tailCol = position[1] % size;
+
+                        // Try moving right and down for both head and tail
+                        MoveIfPossible(headRow, headCol + 1, tailRow, tailCol + 1);
+                        MoveIfPossible(headRow + 1, headCol, tailRow + 1, tailCol);
+
+                        // Rotate clockwise if there is space and snake is horizontal
+                        if (
+                            headRow == tailRow
+                            && headRow + 1 < size
+                            && grid[headRow + 1][tailCol] == 0
+                        )
+                        {
+                            MoveIfPossible(headRow, headCol, headRow + 1, headCol);
+                        }
+                        // Rotate counter-clockwise if there is space and snake is vertical
+                        if (
+                            headCol == tailCol
+                            && headCol + 1 < size
+                            && grid[tailRow][headCol + 1] == 0
+                        )
+                        {
+                            MoveIfPossible(headRow, headCol, headRow, headCol + 1);
+                        }
+                    }
+                    steps++; // Increment the step count after processing all positions at the current level
+                }
+
+                return -1; // If the target is not reachable return -1
+            }
+
+            // Function to attempt a move if possible
+            private void MoveIfPossible(int headRow, int headCol, int tailRow, int tailCol)
+            {
+                // Check if both the new head and tail are within the grid bounds
+                if (
+                    headRow >= 0
+                    && headRow < size
+                    && headCol >= 0
+                    && headCol < size
+                    && tailRow >= 0
+                    && tailRow < size
+                    && tailCol >= 0
+                    && tailCol < size
+                )
+                {
+                    int headPos = headRow * size + headCol;
+                    int tailPos = tailRow * size + tailCol;
+                    int orientation = headRow == tailRow ? 0 : 1; // Horizontal is 0, Vertical is 1
+
+                    // If the move is not visited and does not hit an obstacle
+                    if (
+                        !visited[headPos][orientation]
+                        && grid[headRow][headCol] == 0
+                        && grid[tailRow][tailCol] == 0
+                    )
+                    {
+                        queue.Enqueue(new int[] { headPos, tailPos }); // Enqueue the new move
+                        visited[headPos][orientation] = true; // Mark this move as visited
+                    }
+                }
+            }
+        }
+
+        /* 1349. Maximum Students Taking Exam
+        https://leetcode.com/problems/maximum-students-taking-exam/description/
+         */
+        class MaxStudentsTakingExamSolution
+        {
+            private int?[,] memo; // memoization table to store results for subproblems
+            private int numSeats; // number of seats in a row
+            private int[] validSeats; // array representing the valid seats in each row using bitmasks
+
+            // Main method to calculate the maximum number of students that can sit in the provided seats
+            public int MaxStudents(char[][] seats)
+            {
+                int rows = seats.Length; // number of rows
+                numSeats = seats[0].Length; // number of seats in a row
+                validSeats = new int[rows]; // create an array to represent the valid seats using bitmasks
+                memo = new int?[1 << numSeats, rows]; // initialize the memoization table
+                // Preprocess the seats and store the valid positions using bit manipulation
+                for (int i = 0; i < rows; ++i)
+                {
+                    for (int j = 0; j < numSeats; ++j)
+                    {
+                        if (seats[i][j] == '.')
+                        {
+                            validSeats[i] |= 1 << j; // use a bitmask to represent a valid seat position
+                        }
+                    }
+                }
+                // Start the depth-first search from the first row
+                return Dfs(validSeats[0], 0);
+            }
+
+            // DFS method to find the optimal sitting arrangement
+            private int Dfs(int seatRow, int rowIndex)
+            {
+                // If we have already computed this subproblem, return its result
+                if (memo[seatRow, rowIndex].HasValue)
+                {
+                    return memo[seatRow, rowIndex].Value;
+                }
+                int maxStudentsCount = 0; // initialize the current count of students to 0
+                // Iterate over all possible seat combinations for the current row
+                for (int mask = 0; mask < 1 << numSeats; ++mask)
+                {
+                    // Check if the mask is a subset of available seats and has no adjacent students
+                    if ((seatRow | mask) != seatRow || (mask & (mask << 1)) != 0)
+                    {
+                        continue; // skip this combination if it's not valid
+                    }
+                    int seatCount = CountBits(mask); // count the number of students seated
+                    // If we are at the last row, update the maxStudents if needed
+                    if (rowIndex == validSeats.Length - 1)
+                    {
+                        maxStudentsCount = Math.Max(maxStudentsCount, seatCount);
+                    }
+                    else
+                    {
+                        // Prepare the available seats for the next row
+                        int nextRow = validSeats[rowIndex + 1];
+                        nextRow &= ~(mask << 1); // remove seats left-diagonal to a seated student
+                        nextRow &= ~(mask >> 1); // remove seats right-diagonal to a seated student
+                        // Recursively call dfs for the next row and accumulate the result
+                        maxStudentsCount = Math.Max(
+                            maxStudentsCount,
+                            seatCount + Dfs(nextRow, rowIndex + 1)
+                        );
+                    }
+                }
+                // Memoize and return the result for the current state
+                return (int)(memo[seatRow, rowIndex] = maxStudentsCount);
+            }
+
+            // Helper method to count the number of bits set to 1 in an integer
+            private int CountBits(int number)
+            {
+                int count = 0;
+                while (number > 0)
+                {
+                    count += number & 1;
+                    number >>= 1;
+                }
+                return count;
+            }
+        }
+
+        /* 339. Nested List Weight Sum
+        https://leetcode.com/problems/nested-list-weight-sum/description/?envType=company&envId=facebook&favoriteSlug=facebook-all&difficulty=MEDIUM
+         */
+        class DepthSumSol
+        {
+            /* Approach 1: Depth-first Search
+            Complexity Analysis
+            Let N be the total number of nested elements in the input list. For example, the list [ [[[[1]]]], 2 ] contains 4 nested lists and 2 nested integers (1 and 2), so N=6 for that particular case.
+            •	Time complexity : O(N).
+            Recursive functions can be a bit tricky to analyze, particularly when their implementation includes a loop. A good strategy is to start by determining how many times the recursive function is called, and then how many times the loop will iterate across all calls to the recursive function.
+            The recursive function, dfs(...) is called exactly once for each nested list. As N also includes nested integers, we know that the number of recursive calls has to be less than N.
+            On each nested list, it iterates over all of the nested elements directly inside that list (in other words, not nested further). As each nested element can only be directly inside one list, we know that there must only be one loop iteration for each nested element. This is a total of N loop iterations.
+            So combined, we are performing at most 2⋅N recursive calls and loop iterations. We drop the 2 as it is a constant, leaving us with time complexity O(N).
+            •	Space complexity : O(N).
+            In terms of space, at most O(D) recursive calls are placed on the stack, where D is the maximum level of nesting in the input. For example, D=2 for the input [[1,1],2,[1,1]], and D=3 for the input [1,[4,[6]]].
+            In the worst case, D=N, (e.g. the list [[[[[[]]]]]]) so the worst-case space complexity is O(N).
+
+             */
+            public int UsingDFS(List<NestedInteger> nestedList)
+            {
+                return Dfs(nestedList, 1);
+            }
+
+            private int Dfs(List<NestedInteger> list, int depth)
+            {
+                int total = 0;
+                foreach (NestedInteger nested in list)
+                {
+                    if (nested.IsInteger())
+                    {
+                        total += nested.GetInteger() * depth;
+                    }
+                    else
+                    {
+                        total += Dfs(nested.GetList(), depth + 1);
+                    }
+                }
+                return total;
+            }
+
+            public class NestedInteger
+            {
+                internal int GetInteger()
+                {
+                    throw new NotImplementedException();
+                }
+
+                internal List<NestedInteger> GetList()
+                {
+                    throw new NotImplementedException();
+                }
+
+                internal bool IsInteger()
+                {
+                    throw new NotImplementedException();
+                }
+            }
+
+            /*             Approach 2: Breadth-first Search
+            Complexity Analysis
+            •	Time complexity : O(N).
+            Similar to the DFS approach. Each nested element is put on the queue and removed from the queue exactly once.
+            •	Space complexity : O(N).
+            The worst-case for space complexity in BFS occurs where most of the elements are in a single layer, for example, a flat list such as [1, 2, 3, 4, 5] as all of the elements must be put on the queue at the same time. Therefore, this approach also has a worst-case space complexity of O(N).
+
+             */
+            public int BFS(List<NestedInteger> nestedList)
+            {
+                Queue<NestedInteger> queue = new Queue<NestedInteger>();
+                foreach (var item in nestedList)
+                {
+                    queue.Enqueue(item);
+                }
+
+                int depth = 1;
+                int total = 0;
+
+                while (queue.Count > 0)
+                {
+                    int size = queue.Count;
+                    for (int i = 0; i < size; i++)
+                    {
+                        NestedInteger nested = queue.Dequeue();
+                        if (nested.IsInteger())
+                        {
+                            total += nested.GetInteger() * depth;
+                        }
+                        else
+                        {
+                            foreach (var item in nested.GetList())
+                            {
+                                queue.Enqueue(item);
+                            }
+                        }
+                    }
+                    depth++;
+                }
+                return total;
+            }
+        }
+
+        /* 670. Maximum Swap
+        https://leetcode.com/problems/maximum-swap/description/?envType=company&envId=facebook&favoriteSlug=facebook-all&difficulty=MEDIUM
+         */
+
+        class MaximumSwapSol
+        {
+            /* Approach 1: Brute Force
+            Complexity Analysis
+Let n be the number of digits in the input number.
+•	Time complexity: O(n^2)
+The outer loop iterates through each digit (from 0 to n−1), and for each digit, the inner loop also iterates through the remaining digits (from i+1 to n−1). This results in (n(n−1))/2 possible swaps, leading to quadratic time complexity. Each swap involves:
+o	Performing a swap operation (constant time).
+o	Converting the modified string back to an integer takes O(n) time due to the length of the string.
+Therefore, the total time complexity combines these two aspects, resulting in O(n^2⋅n)=O(n^3) for this specific implementation. However, since the main constraint is derived from the nested loops alone, the simplified consideration will generally focus on O(n^2).
+•	Space complexity: O(n)
+The space complexity arises from converting the integer to a string, which requires additional space proportional to the number of digits n in the number. No additional data structures that grow with input size are used, hence the overall space complexity is primarily determined by this string conversion. Thus, it is O(n).
+
+             */
+            public int Naive(int num)
+            {
+                String numStr = num.ToString(); // Convert num to string for easy manipulation
+                int n = numStr.Length;
+                int maxNum = num; // Track the maximum number found
+
+                // Try all possible swaps
+                for (int i = 0; i < n; ++i)
+                {
+                    for (int j = i + 1; j < n; ++j)
+                    {
+                        char[] numeral = numStr.ToCharArray(); // Convert string to char array for swapping
+
+                        // Swap digits at index i and j
+                        char temp = numeral[i];
+                        numeral[i] = numeral[j];
+                        numeral[j] = temp;
+
+                        int swappedNumber = int.Parse(new string(numeral)); // Convert the char array back to integer
+
+                        maxNum = Math.Max(maxNum, swappedNumber); // Update maxNum if the new number is larger
+                    }
+                }
+
+                return maxNum; // Return the largest number after all possible swaps
+            }
+
+            /*             Approach 2: Greedy Two-Pass
+            Complexity Analysis
+Let n be the number of digits in the input number.
+•	Time complexity: O(n)
+Converting the integer num to its string representation takes O(n).
+We iterate through the digits from right to left, making one comparison per digit. This pass takes O(n) time.
+We iterate from left to right, checking whether the current digit is smaller than the maximum digit to its right. This also takes O(n) time.
+Converting the modified string back to an integer takes O(n) time.
+Overall, each operation in the algorithm takes linear time, so the total time complexity is O(n).
+•	Space complexity: O(n)
+We store the string representation of the number, which requires O(n) space.
+We maintain an array maxRightIndex of size n, which also takes O(n) space.
+The space used by simple variables like num and loop counters is constant, i.e., O(1).
+Thus, the total space complexity is O(n).
+
+             */
+            public int GreedyTwoPass(int num)
+            {
+                char[] numArr = num.ToString().ToCharArray();
+                int n = numArr.Length;
+                int[] maxRightIndex = new int[n];
+
+                maxRightIndex[n - 1] = n - 1;
+                for (int i = n - 2; i >= 0; --i)
+                {
+                    maxRightIndex[i] =
+                        (numArr[i] > numArr[maxRightIndex[i + 1]]) ? i : maxRightIndex[i + 1];
+                }
+
+                for (int i = 0; i < n; ++i)
+                {
+                    if (numArr[i] < numArr[maxRightIndex[i]])
+                    {
+                        char temp = numArr[i];
+                        numArr[i] = numArr[maxRightIndex[i]];
+                        numArr[maxRightIndex[i]] = temp;
+                        return int.Parse(new String(numArr));
+                    }
+                }
+
+                return num;
+            } /* 
+            Approach 3: Greedy One-Pass
+            Complexity Analysis
+Let n be the number of digits in the input number.
+•	Time complexity: O(n)
+Converting the integer num to its string representation takes O(n).
+We loop through the string numStr to fill the lastSeen array, which takes O(n) time.
+The outer loop runs n times (once for each digit), and for each digit, the inner loop runs at most 9 times (since there are at most 9 different digits larger than the current one to check). Thus, the traversal and comparison step takes O(9n)=O(n) time.
+Converting the modified string back to an integer takes O(n) time.
+Overall, all steps are bounded by O(n), so the total time complexity is O(n).
+•	Space complexity: O(n)
+The string numStr requires O(n) space to store the digits of the integer num.
+The array lastSeen is of fixed size 10 (for digits 0 through 9), so it takes O(1) space.
+No other significant additional space is used.
+Thus, the overall space complexity is dominated by the space needed to store the string, which is O(n).
+
+             */
+
+            public int GreedyOnePass(int num)
+            {
+                String numStr = num.ToString();
+                int n = numStr.Length;
+                int[] lastSeen = new int[10]; // Store the last occurrence of each digit
+
+                // Record the last occurrence of each digit
+                for (int i = 0; i < n; ++i)
+                {
+                    lastSeen[numStr[i] - '0'] = i;
+                }
+
+                // Traverse the string to find the first digit that can be swapped with a larger one
+                for (int i = 0; i < n; ++i)
+                {
+                    for (int d = 9; d > numStr[i] - '0'; --d)
+                    {
+                        if (lastSeen[d] > i)
+                        {
+                            //Perform the swap
+                            char[] arr = numStr.ToCharArray();
+                            char temp = arr[i];
+                            arr[i] = arr[lastSeen[d]];
+                            arr[lastSeen[d]] = temp;
+                            numStr = new String(arr);
+
+                            return int.Parse(numStr); // Return the new number immediately after the swap
+                        }
+                    }
+                }
+
+                return num; // Return the original number if no swap can maximize it
+            }
+
+            /* Approach 4: Space Optimized Greedy
+            Complexity Analysis
+            Let n be the number of digits in the input number.
+            •	Time complexity: O(n)
+            Converting the integer num to its string representation takes O(n).
+            The loop iterates over the string once from right to left, performing constant-time operations for each character, making the loop cost O(n).
+            Swap runs in constant time O(1).
+            Converting the modified string back to an integer takes O(n) time.
+            Thus, the overall time complexity is dominated by the traversal and conversions, giving us O(n).
+            •	Space complexity: O(n)
+            The numStr variable is a string representation of the input number, which requires O(n) space to store.
+            The other variables (maxDigitIndex, swapIdx1, swapIdx2) require O(1) space since they are just integer indices.
+            Therefore, the overall space complexity is O(n), mainly due to the string representation of the number.
+            
+             */
+            public int GreedySpaceOptimal(int num)
+            {
+                char[] numStr = num.ToString().ToCharArray();
+                int n = numStr.Length;
+                int maxDigitIndex = -1,
+                    swapIdx1 = -1,
+                    swapIdx2 = -1;
+
+                // Traverse the string from right to left, tracking the max digit and
+                // potential swap
+                for (int i = n - 1; i >= 0; --i)
+                {
+                    if (maxDigitIndex == -1 || numStr[i] > numStr[maxDigitIndex])
+                    {
+                        maxDigitIndex = i; // Update the index of the max digit
+                    }
+                    else if (numStr[i] < numStr[maxDigitIndex])
+                    {
+                        swapIdx1 = i; // Mark the smaller digit for swapping
+                        swapIdx2 = maxDigitIndex; // Mark the larger digit for swapping
+                    }
+                }
+
+                // Perform the swap if a valid swap is found
+                if (swapIdx1 != -1 && swapIdx2 != -1)
+                {
+                    char temp = numStr[swapIdx1];
+                    numStr[swapIdx1] = numStr[swapIdx2];
+                    numStr[swapIdx2] = temp;
+                }
+
+                return int.Parse(new String(numStr)); // Return the new number or the original if no
+                // swap occurred
+            }
+        }
+
+        /*     636. Exclusive Time of Functions
+        https://leetcode.com/problems/exclusive-time-of-functions/description/?envType=company&envId=facebook&favoriteSlug=facebook-all&difficulty=MEDIUM
+         */
+        class ExclusiveTimeOfFunctionsSol
+        {
+            public int[] ExclusiveTime(int numFunctions, List<String> logs)
+            {
+                // This array holds the exclusive time for each function.
+                int[] exclusiveTimes = new int[numFunctions];
+                // Stack to keep track of the function calls.
+                Stack<int> functionStack = new();
+                // Previous timestamp to calculate the duration.
+                int prevTimestamp = -1;
+
+                // Iterate over each log entry.
+                foreach (string log in logs)
+                {
+                    // Split the log into parts: functionId, event type, and timestamp.
+                    String[] parts = log.Split(":");
+                    int functionId = int.Parse(parts[0]);
+                    int timestamp = int.Parse(parts[2]);
+
+                    // Check if the event type is start.
+                    if ("start".Equals(parts[1]))
+                    {
+                        // If the stack is not empty, update the exclusive time of the function on the top.
+                        if (functionStack.Count > 0)
+                        {
+                            exclusiveTimes[functionStack.Peek()] += timestamp - prevTimestamp;
+                        }
+                        // Push the current function to the stack.
+                        functionStack.Push(functionId);
+                        // Update the 'prevTimestamp' with the current timestamp.
+                        prevTimestamp = timestamp;
+                    }
+                    else
+                    { // The event type is end.
+                      // Pop the function from the stack as it ends.
+                        functionId = functionStack.Pop();
+                        // Update the exclusive time for the popped function.
+                        exclusiveTimes[functionId] += timestamp - prevTimestamp + 1;
+                        // Move to the next timestamp as this event marks the end of the function.
+                        prevTimestamp = timestamp + 1;
+                    }
+                }
+
+                // Return the computed exclusive times for all functions.
+                return exclusiveTimes;
+            }
+        }
+
+
+        /* 8. String to Integer (atoi)
+        https://leetcode.com/problems/string-to-integer-atoi/description/?envType=company&envId=facebook&favoriteSlug=facebook-all&difficulty=MEDIUM
+         */
+        public class MyAtoiSol
+        {
+            /*             Approach 1: Follow the Rules
+            Complexity Analysis
+            If N is the number of characters in the input string.
+            •	Time complexity: O(N)
+            We visit each character in the input at most once and for each character we spend a constant amount of time.
+            •	Space complexity: O(1)
+            We have used only constant space to store the sign and the result.
+
+             */
+            public int FollowTheRules(string s)
+            {
+                int sign = 1;
+                int result = 0;
+                int i = 0;
+
+                while (i < s.Length && s[i] == ' ')
+                {
+                    i++;
+                }
+
+                if (i < s.Length && s[i] == '+')
+                {
+                    sign = 1;
+                    i++;
+                }
+                else if (i < s.Length && s[i] == '-')
+                {
+                    sign = -1;
+                    i++;
+                }
+
+                while (i < s.Length && char.IsDigit(s[i]))
+                {
+                    if (result > int.MaxValue / 10 ||
+                        (result == int.MaxValue / 10 &&
+                         s[i] - '0' > int.MaxValue % 10))
+                    {
+                        return sign == 1 ? int.MaxValue : int.MinValue;
+                    }
+
+                    result = result * 10 + (s[i++] - '0');
+                }
+
+                return sign * result;
+            }
+            /*             Approach 2: Deterministic Finite Automaton (DFA)
+            Complexity Analysis
+            If N is the number of characters in the input string.
+            •	Time complexity: O(N)
+            We iterate over the input string exactly once, and each state transition only requires constant time.
+            •	Space complexity: O(1)
+            We have used only constant space to store the state, sign, and result.
+
+             */
+            public int DFA(string s)
+            {
+                StateMachine Q = new StateMachine();
+                for (int i = 0; i < s.Length && Q.GetState() != State.qd; ++i)
+                {
+                    Q.Transition(s[i]);
+                }
+
+                return Q.GetInteger();
+            }
+            public enum State { q0, q1, q2, qd }
+            public class StateMachine
+
+            {
+                private State currentState;
+                private long result;
+                private int sign;
+
+                public StateMachine()
+                {
+                    currentState = State.q0;
+                    result = 0;
+                    sign = 1;
+                }
+
+                private void ToStateQ1(char ch)
+                {
+                    sign = (ch == '-') ? -1 : 1;
+                    currentState = State.q1;
+                }
+
+                private void ToStateQ2(int digit)
+                {
+                    currentState = State.q2;
+                    AppendDigit(digit);
+                }
+
+                private void ToStateQd()
+                {
+                    currentState = State.qd;
+                }
+
+                public void AppendDigit(int digit)
+                {
+                    if ((result > int.MaxValue / 10) ||
+                        (result == int.MaxValue / 10 && digit > int.MaxValue % 10))
+                    {
+                        if (sign == 1)
+                        {
+                            result = int.MaxValue;
+                        }
+                        else
+                        {
+                            result = int.MinValue;
+                            sign = 1;
+                        }
+
+                        ToStateQd();
+                    }
+                    else
+                    {
+                        result = result * 10 + digit;
+                    }
+                }
+
+                public void Transition(char ch)
+                {
+                    if (currentState == State.q0)
+                    {
+                        if (ch == ' ')
+                        {
+                            return;
+                        }
+                        else if (ch == '-' || ch == '+')
+                        {
+                            ToStateQ1(ch);
+                        }
+                        else if (char.IsDigit(ch))
+                        {
+                            ToStateQ2(ch - '0');
+                        }
+                        else
+                        {
+                            ToStateQd();
+                        }
+                    }
+                    else if (currentState == State.q1 || currentState == State.q2)
+                    {
+                        if (char.IsDigit(ch))
+                        {
+                            ToStateQ2(ch - '0');
+                        }
+                        else
+                        {
+                            ToStateQd();
+                        }
+                    }
+                }
+
+                public int GetInteger()
+                {
+                    return (int)(sign * result);
+                }
+
+                public State GetState()
+                {
+                    return currentState;
+                }
+            }
 
 
         }
 
+    
 
 
 
@@ -22934,15 +30399,7 @@ In this implementation, only two arrays of length A are created: the freq array 
 
 
 
-
-
-
-
-
-
-
+    
 
     }
-
-
 }

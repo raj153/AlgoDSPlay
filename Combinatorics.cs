@@ -465,8 +465,8 @@ o	We allocate an array dp[i] to hold all the intermediate values, which amounts 
             return dp[target];
         }
 
-       
-     
+
+
 
 
         /*
@@ -524,7 +524,7 @@ Let n be the length of s1
 
             */
 
-            bool isPermuteIncluded= CheckPermuteInclusionNaive(s1, s2);
+            bool isPermuteIncluded = CheckPermuteInclusionNaive(s1, s2);
             /*
   Approach 2: Using sorting:          
    Complexity Analysis
@@ -533,7 +533,7 @@ Let l1 be the length of string s1 and l2 be the length of string s2.
 •	Space complexity: O(l1). t array is used.
          
             */
-                isPermuteIncluded= CheckPermuteInclusionSort(s1, s2);
+            isPermuteIncluded = CheckPermuteInclusionSort(s1, s2);
 
             /*
  Approach 3: Using Hashmap
@@ -544,7 +544,7 @@ Let l1 be the length of string s1 and l2 be the length of string s2.
          
             
             */
-            isPermuteIncluded= CheckPermuteInclusionHM(s1, s2);
+            isPermuteIncluded = CheckPermuteInclusionHM(s1, s2);
 
             /*
       Approach 4: Using Array [Accepted]           
@@ -554,7 +554,7 @@ Let l1 be the length of string s1 and l2 be the length of string s2.
      •	Space complexity: O(1). s1map and s2map of size 26 is used.
 
                  */
-            isPermuteIncluded= CheckPermuteInclusionArray(s1, s2);
+            isPermuteIncluded = CheckPermuteInclusionArray(s1, s2);
 
             /*
      Approach 5: Sliding Window [Accepted]: (SW)
@@ -564,7 +564,7 @@ Let l1 be the length of string s1 and l2 be the length of string s2.
      •	Space complexity: O(1). Constant space is used.
 
                  */
-            isPermuteIncluded= CheckPermuteInclusionSW(s1, s2);                 
+            isPermuteIncluded = CheckPermuteInclusionSW(s1, s2);
 
 
             /*
@@ -577,7 +577,7 @@ Let l1 be the length of string s1 and l2 be the length of string s2.
 
 
             */
-            isPermuteIncluded= CheckPermuteInclusionSWOptimal(s1, s2);
+            isPermuteIncluded = CheckPermuteInclusionSWOptimal(s1, s2);
 
             return isPermuteIncluded;
 
@@ -780,9 +780,136 @@ Let l1 be the length of string s1 and l2 be the length of string s2.
 
             return matchingCount == 26;
         }
-        
+
+        /* 1220. Count Vowels Permutation
+        https://leetcode.com/problems/count-vowels-permutation/description/
+         */
+        class CountVowelPermutationSol
+        {
+            /* Approach 1: Dynamic Programming (Bottom-up)	
+Complexity Analysis
+•	Time complexity: O(N) (N equals the input length n). This is because iterating from 1 to n will take O(N) time. The initializations take constant time. Putting them together gives us O(N) time.
+•	Space complexity: O(N). This is because we initialized and used five 1D arrays to store the intermediate results.
+
+             */
+            public int BottomUpDP(int n)
+            {
+
+                long[] aVowelPermutationCount = new long[n];
+                long[] eVowelPermutationCount = new long[n];
+                long[] iVowelPermutationCount = new long[n];
+                long[] oVowelPermutationCount = new long[n];
+                long[] uVowelPermutationCount = new long[n];
+
+                aVowelPermutationCount[0] = 1L;
+                eVowelPermutationCount[0] = 1L;
+                iVowelPermutationCount[0] = 1L;
+                oVowelPermutationCount[0] = 1L;
+                uVowelPermutationCount[0] = 1L;
+
+                int MOD = 1000000007;
 
 
+                for (int i = 1; i < n; i++)
+                {
+                    aVowelPermutationCount[i] = (eVowelPermutationCount[i - 1] + iVowelPermutationCount[i - 1] + uVowelPermutationCount[i - 1]) % MOD;
+                    eVowelPermutationCount[i] = (aVowelPermutationCount[i - 1] + iVowelPermutationCount[i - 1]) % MOD;
+                    iVowelPermutationCount[i] = (eVowelPermutationCount[i - 1] + oVowelPermutationCount[i - 1]) % MOD;
+                    oVowelPermutationCount[i] = iVowelPermutationCount[i - 1] % MOD;
+                    uVowelPermutationCount[i] = (iVowelPermutationCount[i - 1] + oVowelPermutationCount[i - 1]) % MOD;
+                }
+
+                long result = 0L;
+
+                result = (aVowelPermutationCount[n - 1] + eVowelPermutationCount[n - 1] + iVowelPermutationCount[n - 1] + oVowelPermutationCount[n - 1] + uVowelPermutationCount[n - 1]) % MOD;
+
+
+                return (int)result;
+            }
+
+            /* Approach 2: Dynamic Programming (Bottom-up) with Optimized Space
+            Complexity Analysis
+            •	Time complexity: O(N) (N equals the input length n). This is because iterating from 1 to n will take O(N) time. The initializations take constant time. Putting them together gives us O(N) time.
+            •	Space complexity: O(1). This is because we don't use any additional data structures to store data.
+
+             */
+            public int BottomUpDPWithSpaceOptimal(int n)
+            {
+                long aCount = 1, eCount = 1, iCount = 1, oCount = 1, uCount = 1;
+                int MOD = 1000000007;
+
+                for (int i = 1; i < n; i++)
+                {
+                    long aCountNew = (eCount + iCount + uCount) % MOD;
+                    long eCountNew = (aCount + iCount) % MOD;
+                    long iCountNew = (eCount + oCount) % MOD;
+                    long oCountNew = (iCount) % MOD;
+                    long uCountNew = (iCount + oCount) % MOD;
+                    aCount = aCountNew;
+                    eCount = eCountNew;
+                    iCount = iCountNew;
+                    oCount = oCountNew;
+                    uCount = uCountNew;
+                }
+                long result = (aCount + eCount + iCount + oCount + uCount) % MOD;
+                return (int)result;
+            }
+            /* 
+            Approach 3: Dynamic Programming (Top-down, Recursion)
+•	Time complexity: O(N). This is because there are N recursive calls to each vowel. Therefore, the total number of function calls to vowelPermutationCount is 5⋅N, which leads to time complexity of O(N). Initializations will take O(1) time. Putting them together, this solution takes O(N) time.
+•	Space complexity: O(N). This is because O(5⋅N) space is required for memoization. Furthermore, the size of the system stack used by recursion calls will be O(N). Putting them together, this solution uses O(N) space.
+
+             */
+            private long[][] memo;
+            private int MOD = 1000000007;
+            public int TopDownDPRec(int n)
+            {
+                // each row stands for the length of string
+                // each column indicates the vowels
+                // specifically, a: 0, e: 1, i: 2, o: 3, u: 4
+                memo = new long[n][];
+                long result = 0;
+                for (int i = 0; i < 5; i++)
+                {
+                    result = (result + VowelPermutationCountRec(n - 1, i)) % MOD;
+                }
+                return (int)result;
+            }
+
+            public long VowelPermutationCountRec(int i, int vowel)
+            {
+                if (memo[i][vowel] != 0) return memo[i][vowel];
+                if (i == 0)
+                {
+                    memo[i][vowel] = 1;
+                }
+                else
+                {
+                    if (vowel == 0)
+                    {
+                        memo[i][vowel] = (VowelPermutationCountRec(i - 1, 1) + VowelPermutationCountRec(i - 1, 2) + VowelPermutationCountRec(i - 1, 4)) % MOD;
+                    }
+                    else if (vowel == 1)
+                    {
+                        memo[i][vowel] = (VowelPermutationCountRec(i - 1, 0) + VowelPermutationCountRec(i - 1, 2)) % MOD;
+                    }
+                    else if (vowel == 2)
+                    {
+                        memo[i][vowel] = (VowelPermutationCountRec(i - 1, 1) + VowelPermutationCountRec(i - 1, 3)) % MOD;
+                    }
+                    else if (vowel == 3)
+                    {
+                        memo[i][vowel] = VowelPermutationCountRec(i - 1, 2);
+                    }
+                    else if (vowel == 4)
+                    {
+                        memo[i][vowel] = (VowelPermutationCountRec(i - 1, 2) + VowelPermutationCountRec(i - 1, 3)) % MOD;
+                    }
+                }
+                return memo[i][vowel];
+            }
+
+        }
 
 
 

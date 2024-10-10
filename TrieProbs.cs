@@ -287,7 +287,392 @@ namespace AlgoDSPlay
 
             return str.Substring(0, currentstringIdx + 1 - 0);
         }
+        /* 2416. Sum of Prefix Scores of Strings
+        https://leetcode.com/problems/sum-of-prefix-scores-of-strings/description/
+         */
 
-       
+
+        class SumPrefixScoresSol
+        {
+
+            // Initialize the root node of the trie.
+            TrieNode root = new TrieNode();
+
+            /* 
+            Approach: Tries
+            Complexity Analysis
+            Let N be the size of words array, and M be the average length of the strings in words.
+            •	Time complexity: O(N⋅M)
+            The insert operation takes O(length) time for a string of size length. The total time taken to perform the insert operations on the strings of the words array is given by O(N⋅M).
+            Similarly, the count operation takes O(length) time for a string of size length. The total time taken to perform the count operations on the strings of the words array is given by O(N⋅M).
+            Therefore, the total time complexity is given by O(N⋅M).
+            •	Space complexity: O(N⋅M)
+            The insert operation takes O(length) space for a string of size length. The total space taken to perform the insert operations on the strings of the words array is given by O(N⋅M).
+            The count operation does not use any additional space. Therefore, the total time complexity is given by O(N⋅M).
+             */
+            public int[] UsingTrie(String[] words)
+            {
+                int N = words.Length;
+                // Insert words in trie.
+                for (int i = 0; i < N; i++)
+                {
+                    Insert(words[i]);
+                }
+                int[] scores = new int[N];
+                for (int i = 0; i < N; i++)
+                {
+                    // Get the count of all prefixes of given string.
+                    scores[i] = Count(words[i]);
+                }
+                return scores;
+            }
+            // Insert function for the word.
+            void Insert(String word)
+            {
+                TrieNode node = root;
+                foreach (char c in word)
+                {
+                    // If new prefix, create a new trie node.
+                    if (node.next[c - 'a'] == null)
+                    {
+                        node.next[c - 'a'] = new TrieNode();
+                    }
+                    // Increment the count of the current prefix.
+                    node.next[c - 'a'].cnt++;
+                    node = node.next[c - 'a'];
+                }
+            }
+
+            // Calculate the prefix count using this function.
+            int Count(String s)
+            {
+                TrieNode node = root;
+                int ans = 0;
+                // The ans would store the total sum of counts.
+                foreach (char c in s)
+                {
+                    ans += node.next[c - 'a'].cnt;
+                    node = node.next[c - 'a'];
+                }
+                return ans;
+            }
+
+
+            class TrieNode
+            {
+
+                public TrieNode[] next = new TrieNode[26];
+                public int cnt = 0;
+            }
+        }
+
+
+        /* 745. Prefix and Suffix Search
+        https://leetcode.com/problems/prefix-and-suffix-search/description/
+         */
+        public class WordFilterSol
+        {
+            class TrieWithSetIntersection
+            {
+                TrieNode trie;
+                /* 
+                Approach #1: Trie + Set Intersection [Time Limit Exceeded] 
+                Complexity Analysis
+•	Time Complexity: O(NK+Q(N+K)) where N is the number of words, K is the maximum length of a word, and Q is the number of queries. If we use memoization in our solution, we could produce tighter bounds for this complexity, as the complex queries are somewhat disjoint.
+•	Space Complexity: O(NK), the size of the tries.
+
+                */
+                public TrieWithSetIntersection(string[] words)
+                {
+                    trie = new TrieNode();
+                    int weight = 0;
+                    foreach (string word in words)
+                    {
+                        TrieNode currentNode = trie;
+                        currentNode.Weight = weight;
+                        int length = word.Length;
+                        char[] characters = word.ToCharArray();
+                        for (int i = 0; i < length; ++i)
+                        {
+                            TrieNode temporaryNode = currentNode;
+                            for (int j = i; j < length; ++j)
+                            {
+                                int code = (characters[j] - '`') * 27;
+                                if (!temporaryNode.Children.ContainsKey(code))
+                                {
+                                    temporaryNode.Children[code] = new TrieNode();
+                                }
+                                temporaryNode = temporaryNode.Children[code];
+                                temporaryNode.Weight = weight;
+                            }
+
+                            temporaryNode = currentNode;
+                            for (int k = length - 1 - i; k >= 0; --k)
+                            {
+                                int code = (characters[k] - '`');
+                                if (!temporaryNode.Children.ContainsKey(code))
+                                {
+                                    temporaryNode.Children[code] = new TrieNode();
+                                }
+                                temporaryNode = temporaryNode.Children[code];
+                                temporaryNode.Weight = weight;
+                            }
+
+                            int combinedCode = (characters[i] - '`') * 27 + (characters[length - 1 - i] - '`');
+                            if (!currentNode.Children.ContainsKey(combinedCode))
+                            {
+                                currentNode.Children[combinedCode] = new TrieNode();
+                            }
+                            currentNode = currentNode.Children[combinedCode];
+                            currentNode.Weight = weight;
+                        }
+                        weight++;
+                    }
+                }
+
+                public int f(string prefix, string suffix)
+                {
+                    TrieNode currentNode = trie;
+                    int prefixIndex = 0, suffixIndex = suffix.Length - 1;
+                    while (prefixIndex < prefix.Length || suffixIndex >= 0)
+                    {
+                        char char1 = prefixIndex < prefix.Length ? prefix[prefixIndex] : '`';
+                        char char2 = suffixIndex >= 0 ? suffix[suffixIndex] : '`';
+                        int combinedCode = (char1 - '`') * 27 + (char2 - '`');
+                        currentNode = currentNode.Children.ContainsKey(combinedCode) ? currentNode.Children[combinedCode] : null;
+                        if (currentNode == null)
+                        {
+                            return -1;
+                        }
+                        prefixIndex++;
+                        suffixIndex--;
+                    }
+                    return currentNode.Weight;
+                }
+            }
+
+            class TrieNode
+            {
+                public Dictionary<int, TrieNode> Children { get; set; }
+                public int Weight { get; set; }
+
+                public TrieNode()
+                {
+                    Children = new Dictionary<int, TrieNode>();
+                    Weight = 0;
+                }
+            }
+            /*   Approach #2: Paired Trie [Accepted]
+            Complexity Analysis
+  •	Time Complexity: O(NK^2+QK) where N is the number of words, K is the maximum length of a word, and Q is the number of queries.
+  •	Space Complexity: O(NK^2), the size of the trie.
+
+   */
+            class PairedTrie
+            {
+                private TrieNode trie;
+
+                public PairedTrie(string[] words)
+                {
+                    trie = new TrieNode();
+                    int weight = 0;
+                    foreach (string word in words)
+                    {
+                        TrieNode currentNode = trie;
+                        currentNode.Weight = weight;
+                        int length = word.Length;
+                        char[] characters = word.ToCharArray();
+                        for (int i = 0; i < length; ++i)
+                        {
+                            TrieNode tempNode = currentNode;
+                            for (int j = i; j < length; ++j)
+                            {
+                                int code = (characters[j] - '`') * 27;
+                                if (!tempNode.Children.ContainsKey(code))
+                                {
+                                    tempNode.Children[code] = new TrieNode();
+                                }
+                                tempNode = tempNode.Children[code];
+                                tempNode.Weight = weight;
+                            }
+
+                            tempNode = currentNode;
+                            for (int k = length - 1 - i; k >= 0; --k)
+                            {
+                                int code = (characters[k] - '`');
+                                if (!tempNode.Children.ContainsKey(code))
+                                {
+                                    tempNode.Children[code] = new TrieNode();
+                                }
+                                tempNode = tempNode.Children[code];
+                                tempNode.Weight = weight;
+                            }
+
+                            int combinedCode = (characters[i] - '`') * 27 + (characters[length - 1 - i] - '`');
+                            if (!currentNode.Children.ContainsKey(combinedCode))
+                            {
+                                currentNode.Children[combinedCode] = new TrieNode();
+                            }
+                            currentNode = currentNode.Children[combinedCode];
+                            currentNode.Weight = weight;
+                        }
+                        weight++;
+                    }
+                }
+
+                public int f(string prefix, string suffix)
+                {
+                    TrieNode currentNode = trie;
+                    int prefixIndex = 0, suffixIndex = suffix.Length - 1;
+                    while (prefixIndex < prefix.Length || suffixIndex >= 0)
+                    {
+                        char charFromPrefix = prefixIndex < prefix.Length ? prefix[prefixIndex] : '`';
+                        char charFromSuffix = suffixIndex >= 0 ? suffix[suffixIndex] : '`';
+                        int combinedCode = (charFromPrefix - '`') * 27 + (charFromSuffix - '`');
+                        if (!currentNode.Children.TryGetValue(combinedCode, out currentNode))
+                        {
+                            return -1;
+                        }
+                        prefixIndex++;
+                        suffixIndex--;
+                    }
+                    return currentNode.Weight;
+                }
+            }
+            /* Approach #3: Trie of Suffix Wrapped Words [Accepted]
+            Complexity Analysis
+•	Time Complexity: O(NK^2+QK) where N is the number of words, K is the maximum length of a word, and Q is the number of queries.
+•	Space Complexity: O(NK^2), the size of the trie.
+
+             */
+            public class TrieOfSuffixWrappedWords
+            {
+                private TrieNodeExt trie;
+
+                public TrieOfSuffixWrappedWords(string[] words)
+                {
+                    trie = new TrieNodeExt();
+                    for (int weight = 0; weight < words.Length; ++weight)
+                    {
+                        string word = words[weight] + "{";
+                        for (int i = 0; i < word.Length; ++i)
+                        {
+                            TrieNodeExt currentNode = trie;
+                            currentNode.Weight = weight;
+                            for (int j = i; j < 2 * word.Length - 1; ++j)
+                            {
+                                int index = word[j % word.Length] - 'a';
+                                if (currentNode.Children[index] == null)
+                                {
+                                    currentNode.Children[index] = new TrieNodeExt();
+                                }
+                                currentNode = currentNode.Children[index];
+                                currentNode.Weight = weight;
+                            }
+                        }
+                    }
+                }
+
+                public int F(string prefix, string suffix)
+                {
+                    TrieNodeExt currentNode = trie;
+                    foreach (char letter in (suffix + '{' + prefix))
+                    {
+                        if (currentNode.Children[letter - 'a'] == null)
+                        {
+                            return -1;
+                        }
+                        currentNode = currentNode.Children[letter - 'a'];
+                    }
+                    return currentNode.Weight;
+                }
+            }
+
+            public class TrieNodeExt
+            {
+                public TrieNodeExt[] Children;
+                public int Weight;
+
+                public TrieNodeExt()
+                {
+                    Children = new TrieNodeExt[27];
+                    Weight = 0;
+                }
+            }
+
+        }
+
+        /* 1032. Stream of Characters
+        https://leetcode.com/problems/stream-of-characters/description/
+         */
+        class StreamCheckerSol
+        {
+            class TrieNode
+            {
+                public Dictionary<char, TrieNode> Children { get; set; } = new Dictionary<char, TrieNode>();
+                public bool IsWord { get; set; } = false;
+            }
+            /*
+            Approach 1: Trie
+ 
+            */
+            private TrieNode trie = new TrieNode();
+            private LinkedList<char> stream = new LinkedList<char>();
+            /* 
+                      Complexity Analysis
+            Let N be the number of input words, and M be the word length.
+            •	Time complexity: O(N⋅M).
+            We have N words to process. At each step, we either examine or create a node in the trie. That takes only M operations.
+            •	Space complexity: O(N⋅M).
+            In the worst case, the newly inserted key doesn't share a prefix with the keys already added in the trie. We have to add N⋅M new nodes, which takes O(N⋅M) space.
+              */
+            public StreamCheckerSol(string[] words)
+            {
+                foreach (string word in words)
+                {
+                    TrieNode node = trie;
+                    char[] reversedWordArray = word.ToCharArray();
+                    Array.Reverse(reversedWordArray);
+                    string reversedWord = new string(reversedWordArray);
+                    foreach (char ch in reversedWord)
+                    {
+                        if (!node.Children.ContainsKey(ch))
+                        {
+                            node.Children[ch] = new TrieNode();
+                        }
+                        node = node.Children[ch];
+                    }
+                    node.IsWord = true;
+                }
+            }
+
+            /* Let M be the maximum length of a word length. i.e. the depth of trie.
+            •	Time complexity: O(M)
+            •	Space complexity: O(M) to keep a stream of characters.
+            One could limit the size of the deque to be equal to the length of the longest input word.
+             */
+            public bool Query(char letter)
+            {
+                stream.AddFirst(letter);
+
+                TrieNode node = trie;
+                foreach (char ch in stream)
+                {
+                    if (node.IsWord)
+                    {
+                        return true;
+                    }
+                    if (!node.Children.ContainsKey(ch))
+                    {
+                        return false;
+                    }
+                    node = node.Children[ch];
+                }
+                return node.IsWord;
+            }
+        }
+
+
+
     }
 }

@@ -474,5 +474,252 @@ In the worst case we might end up visiting every element of string S twice, once
             return ans[0] == -1 ? "" : s.Substring(ans[1], ans[2] - ans[1] + 1);
         }
 
+
+        /* 1044. Longest Duplicate Substring
+      https://leetcode.com/problems/longest-duplicate-substring/description/
+       */
+
+        class LongestDupSubstringSol
+        {
+            /*
+              Rabin-Karp with polynomial rolling hash.
+              Search a substring of given length that occurs at least 2 times.
+              Return start position if the substring exists and -1 otherwise.
+            */
+            private string inputString;
+
+            /*
+             Approach 1: Binary Search + Rabin-Karp
+             Complexity Analysis
+            Let N be the length of input S.
+            •	Time complexity: O(NlogN).
+            Performing a binary search requires O(logN) iterations. At each iteration, we spend on average O(N) time for the Rabin-Karp algorithm. Note that the worst-case scenario for the Rabin-Karp algorithm is when every substring of length L has the same hash value and there are no duplicate substrings of length L. This would require O(L⋅(N−L)/2) time to compare each of the O(N−L) substrings to all previous substrings resulting in O(L⋅(N−L)^2).
+            However, because of the problem constraints, there can be at most 30,000 substrings and because we have 109+7 bins, the probability of a collision occurring between two different substrings is small. It is quite possible that there will be some collisions, but the probability of there being many collisions (on the order of N−L collisions) is extraordinarily small. So the average time complexity of the Rabin-Karp algorithm will be O(N−L) which simplifies to O(N).
+            •	Space complexity: O(N)
+            We use a hashmap seen to store the starting index and hash value for each substring. This will contain at most N key-value pairs.
+
+             */
+            public string BinarySearchAndRabinKarpAlgo(string s)
+            {
+                inputString = s;
+                int stringLength = inputString.Length;
+
+                // Convert string to array of integers to implement constant time slice
+                int[] nums = new int[stringLength];
+                for (int i = 0; i < stringLength; ++i)
+                {
+                    nums[i] = (int)inputString[i] - (int)'a';
+                }
+
+                // Base value for the rolling hash function
+                int baseValue = 26;
+
+                // modulus value for the rolling hash function to avoid overflow
+                int modulus = 1_000_000_007;
+
+                // Binary search, length = repeating string length
+                int left = 1, right = stringLength;
+                while (left <= right)
+                {
+                    int mid = left + (right - left) / 2;
+                    if (Search(mid, baseValue, modulus, stringLength, nums) != -1)
+                    {
+                        left = mid + 1;
+                    }
+                    else
+                    {
+                        right = mid - 1;
+                    }
+                }
+
+                int start = Search(left - 1, baseValue, modulus, stringLength, nums);
+                return inputString.Substring(start, left - 1);
+            }
+            private int Search(int length, int baseValue, long modulus, int stringLength, int[] nums)
+            {
+                // Compute the hash of string inputString[:length]
+                long hashValue = 0;
+                for (int i = 0; i < length; ++i)
+                {
+                    hashValue = (hashValue * baseValue + nums[i]) % modulus;
+                }
+
+                // Store the already seen hash values for substrings of length length.
+                Dictionary<long, List<int>> seenHashes = new Dictionary<long, List<int>>();
+
+                // Initialize the dictionary with the substring starting at index 0.
+                if (!seenHashes.ContainsKey(hashValue))
+                {
+                    seenHashes[hashValue] = new List<int>();
+                }
+                seenHashes[hashValue].Add(0);
+
+                // Const value to be used often : baseValue**length % modulus
+                long baseValueToLength = 1;
+                for (int i = 1; i <= length; ++i)
+                {
+                    baseValueToLength = (baseValueToLength * baseValue) % modulus;
+                }
+
+                for (int start = 1; start < stringLength - length + 1; ++start)
+                {
+                    // Compute rolling hash in O(1) time
+                    hashValue = (hashValue * baseValue - nums[start - 1] * baseValueToLength % modulus + modulus) % modulus;
+                    hashValue = (hashValue + nums[start + length - 1]) % modulus;
+                    if (seenHashes.TryGetValue(hashValue, out List<int> hits))
+                    {
+                        // Check if the current substring matches any of 
+                        // the previous substrings with hash hashValue.
+                        string currentSubstring = inputString.Substring(start, length);
+                        foreach (int index in hits)
+                        {
+                            string candidateSubstring = inputString.Substring(index, length);
+                            if (candidateSubstring.Equals(currentSubstring))
+                            {
+                                return index;
+                            }
+                        }
+                    }
+                    // Add the current substring's hash value and starting index to seen.
+                    if (!seenHashes.ContainsKey(hashValue))
+                    {
+                        seenHashes[hashValue] = new List<int>();
+                    }
+                    seenHashes[hashValue].Add(start);
+                }
+                return -1;
+            }
+
+
+        }
+
+
+        /* 1520. Maximum Number of Non-Overlapping Substrings
+        https://leetcode.com/problems/maximum-number-of-non-overlapping-substrings/description/
+         */
+        public class SubstringChecker
+        {
+/* Approach: Greedy O(n)	
+Complexity Analysis
+•	Time: O(n). In the worst case, we search for substring 26 times, and each search is O(n)
+•	Memory: O(1). We store left and right positions for 26 characters.
+o	For the complexity analysis purposes, we ignore memory required by inputs and outputs.
+
+ */
+            public List<string> MaxNumberOfSubstrings(string inputString)
+            {
+                int[] leftIndices = new int[26];
+                int[] rightIndices = new int[26];
+                Array.Fill(leftIndices, inputString.Length);
+                var result = new List<string>();
+
+                // Record the leftmost and rightmost index for each character.
+                for (int i = 0; i < inputString.Length; ++i)
+                {
+                    var characterIndex = inputString[i] - 'a';
+                    leftIndices[characterIndex] = Math.Min(leftIndices[characterIndex], i);
+                    rightIndices[characterIndex] = i;
+                }
+
+                int rightBoundary = -1;
+                
+                // check if it forms a valid solution.
+                for (int i = 0; i < inputString.Length; ++i)
+                {
+                    if (i == leftIndices[inputString[i] - 'a'])
+                    {
+                        int newRightBoundary = CheckSubstring(inputString, i, leftIndices, rightIndices);
+                        if (newRightBoundary != -1)
+                        {
+                            if (i > rightBoundary)
+                                result.Add("");
+                            rightBoundary = newRightBoundary;
+                            result[result.Count - 1] = inputString.Substring(i, rightBoundary - i + 1);
+                        }
+                    }
+                }
+                return result;
+            }
+            private int CheckSubstring(string inputString, int index, int[] leftIndices, int[] rightIndices)
+            {
+                int rightBoundary = rightIndices[inputString[index] - 'a'];
+                for (int j = index; j <= rightBoundary; ++j)
+                {
+                    if (leftIndices[inputString[j] - 'a'] < index)
+                        return -1;
+                    rightBoundary = Math.Max(rightBoundary, rightIndices[inputString[j] - 'a']);
+                }
+                return rightBoundary;
+            }
+
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     }
 }

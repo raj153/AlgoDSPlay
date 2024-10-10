@@ -368,7 +368,7 @@ height will be called on each node O(logn) times.
 
             */
 
-            public static bool TopDownRec(TreeNode root)
+            public static bool TopDownRec(DataStructures.TreeNode root)
             {
 
                 // An empty tree satisfies the definition of a balanced tree
@@ -383,7 +383,7 @@ height will be called on each node O(logn) times.
                        TopDownRec(root.Left) && TopDownRec(root.Right);
 
                 // Compute the tree's height via recursion
-                int Height(TreeNode root)
+                int Height(DataStructures.TreeNode root)
                 {
                     // An empty tree has height -1
                     if (root == null)
@@ -406,13 +406,13 @@ compare the height of its children.
 
             */
 
-            public static bool BottomUpRec(TreeNode root)
+            public static bool BottomUpRec(DataStructures.TreeNode root)
             {
                 return IsBalancedTreeHelper(root).IsBalanced;
 
                 // Returns whether the tree at root is balanced, along with the tree's
                 // height.
-                TreeInfo IsBalancedTreeHelper(TreeNode root)
+                TreeInfo IsBalancedTreeHelper(DataStructures.TreeNode root)
                 {
                     // An empty tree is both balanced and has a height -1.
                     if (root == null)
@@ -1088,10 +1088,10 @@ Complexity Analysis
 •	Space Complexity: O(N) which is occupied by the recursion stack. The problem statement doesn't mention anything about the tree being balanced or not and hence, the tree could be e.g. left skewed and in that case the longest branch (and hence the number of nodes in the recursion stack) would be N.
 
    */
-            public static void Rec(TreeNode root)
+            public static void Rec(DataStructures.TreeNode root)
             {
                 FlattenTree(root);
-                TreeNode FlattenTree(TreeNode node)
+                DataStructures.TreeNode FlattenTree(DataStructures.TreeNode node)
                 {
                     // Handle the null scenario
                     if (node == null)
@@ -1107,9 +1107,9 @@ Complexity Analysis
                     }
 
                     // Recursively flatten the left subtree
-                    TreeNode leftTail = FlattenTree(node.Left);
+                    DataStructures.TreeNode leftTail = FlattenTree(node.Left);
                     // Recursively flatten the right subtree
-                    TreeNode rightTail = FlattenTree(node.Right);
+                    DataStructures.TreeNode rightTail = FlattenTree(node.Right);
                     // If there was a left subtree, we shuffle the connections
                     // around so that there is nothing on the left side
                     // anymore.
@@ -1134,7 +1134,7 @@ Complexity Analysis
 •	Space Complexity: O(N) which is occupied by the stack. The problem statement doesn't mention anything about the tree being balanced or not and hence, the tree could be e.g. left skewed and in that case the longest branch (and hence the number of nodes in the recursion stack) would be N.
 
             */
-            public static void IterateUsingStack(TreeNode root)
+            public static void IterateUsingStack(DataStructures.TreeNode root)
             {
                 if (root == null)
                 {
@@ -1142,13 +1142,13 @@ Complexity Analysis
                 }
 
                 int START = 1, END = 2;
-                TreeNode tail = null;
+                DataStructures.TreeNode tail = null;
                 Stack<(TreeNode, int)> stack = new Stack<(TreeNode, int)>();
                 stack.Push(GetPair(root, START));
                 while (stack.Count > 0)
                 {
                     var nodeData = stack.Pop();
-                    TreeNode node = nodeData.Item1;
+                    DataStructures.TreeNode node = nodeData.Item1;
                     int state = nodeData.Item2;
                     if (node.Left == null && node.Right == null)
                     {
@@ -1170,7 +1170,7 @@ Complexity Analysis
                     }
                     else
                     {
-                        TreeNode rightNode = node.Right;
+                        DataStructures.TreeNode rightNode = node.Right;
                         if (tail != null)
                         {
                             tail.Right = node.Right;
@@ -1197,19 +1197,19 @@ Complexity Analysis
 •	Space Complexity: O(1) 
 
             */
-            public void IterateWithConstantSpace(TreeNode root)
+            public void IterateWithConstantSpace(DataStructures.TreeNode root)
             {
                 // Handle the null scenario
                 if (root == null)
                     return;
-                TreeNode node = root;
+                DataStructures.TreeNode node = root;
                 while (node != null)
                 {
                     // If the node has a left child
                     if (node.Left != null)
                     {
                         // Find the rightmost node
-                        TreeNode rightmost = node.Left;
+                        DataStructures.TreeNode rightmost = node.Left;
                         while (rightmost.Right != null)
                         {
                             rightmost = rightmost.Right;
@@ -2162,7 +2162,7 @@ Complexity Analysis
         112. Path Sum
         https://leetcode.com/problems/path-sum/description/	
         */
-        public bool HasPathSum(TreeNode root, int targetSum)
+        public bool HasPathSum(DataStructures.TreeNode root, int targetSum)
         {
             /*
 
@@ -2189,7 +2189,7 @@ Complexity Analysis
 
         }
 
-        public bool HasPathSumRec(TreeNode root, int sum)
+        public bool HasPathSumRec(DataStructures.TreeNode root, int sum)
         {
             if (root == null)
                 return false;
@@ -2198,17 +2198,17 @@ Complexity Analysis
                 return sum == 0;
             return HasPathSum(root.Left, sum) || HasPathSum(root.Right, sum);
         }
-        public bool HasPathSumIterative(TreeNode root, int sum)
+        public bool HasPathSumIterative(DataStructures.TreeNode root, int sum)
         {
             if (root == null)
                 return false;
-            Stack<TreeNode> nodeStack = new Stack<TreeNode>();
+            Stack<DataStructures.TreeNode> nodeStack = new Stack<DataStructures.TreeNode>();
             Stack<int> sumStack = new Stack<int>();
             nodeStack.Push(root);
             sumStack.Push(sum - root.Val);
             while (nodeStack.Count > 0)
             {
-                TreeNode node = nodeStack.Pop();
+                DataStructures.TreeNode node = nodeStack.Pop();
                 int currSum = sumStack.Pop();
                 if (node.Left == null && node.Right == null && currSum == 0)
                     return true;
@@ -2239,7 +2239,7 @@ Complexity Analysis
         We could include the space occupied by the new lists (and hence the output) in the space complexity and in that case the space would be O(N2). There's a great answer on Stack Overflow about whether to consider input and output space in the space complexity or not. I prefer not to include them.
 
         */
-        public IList<IList<int>> PathSum(TreeNode root, int targetSum)
+        public IList<IList<int>> PathSum(DataStructures.TreeNode root, int targetSum)
         {
             List<IList<int>> pathsList = new List<IList<int>>();
             List<int> pathNodes = new List<int>();
@@ -2247,7 +2247,7 @@ Complexity Analysis
             return pathsList;
 
         }
-        private void RecurseTree(TreeNode node, int remainingSum,
+        private void RecurseTree(DataStructures.TreeNode node, int remainingSum,
                              List<int> pathNodes, IList<IList<int>> pathsList)
         {
             if (node == null)
@@ -2289,7 +2289,7 @@ Complexity Analysis
         •	Space complexity: up to O(N) to keep the hashmap of prefix sums, where N is a number of nodes
 
         */
-        public int PathSumIII(TreeNode root, int targetSum)
+        public int PathSumIII(DataStructures.TreeNode root, int targetSum)
         {
             k = targetSum;
             Preorder(root, 0L);
@@ -2299,7 +2299,7 @@ Complexity Analysis
         int k;
         Dictionary<long, int> hashMap = new Dictionary<long, int>();
 
-        public void Preorder(TreeNode node, long currSum)
+        public void Preorder(DataStructures.TreeNode node, long currSum)
         {
             if (node == null)
                 return;
@@ -2491,7 +2491,7 @@ We perform exactly n insertion operations in the hashmap. For the breadth-first 
 
         */
         private int maxSum = int.MinValue;
-        public int BinaryTreeMaxPathSum(TreeNode root)
+        public int BinaryTreeMaxPathSum(DataStructures.TreeNode root)
         {
             GainFromSubtree(root);
             return maxSum;
@@ -2499,7 +2499,7 @@ We perform exactly n insertion operations in the hashmap. For the breadth-first 
         }
 
         // post order traversal of subtree rooted at `root`
-        private int GainFromSubtree(TreeNode root)
+        private int GainFromSubtree(DataStructures.TreeNode root)
         {
             if (root == null)
             {
@@ -2632,7 +2632,7 @@ https://leetcode.com/problems/maximum-depth-of-binary-tree/description/
         */
         public class MaxDepthOfBTSol
         {
-            public int MaxDepth(TreeNode root)
+            public int MaxDepth(DataStructures.TreeNode root)
             {
                 /*
 
@@ -2667,7 +2667,7 @@ https://leetcode.com/problems/maximum-depth-of-binary-tree/description/
 
             }
 
-            public int MaxDepthRec(TreeNode root)
+            public int MaxDepthRec(DataStructures.TreeNode root)
             {
                 if (root == null)
                 {
@@ -2680,8 +2680,8 @@ https://leetcode.com/problems/maximum-depth-of-binary-tree/description/
                     return 1 + Math.Max(left_height, right_height);
                 }
             }
-            private Queue<Tuple<TreeNode, int>> next_items =
-        new Queue<Tuple<TreeNode, int>>();
+            private Queue<Tuple<DataStructures.TreeNode, int>> next_items =
+        new Queue<Tuple<DataStructures.TreeNode, int>>();
 
             private int max_depth = 0;
 
@@ -2692,27 +2692,27 @@ https://leetcode.com/problems/maximum-depth-of-binary-tree/description/
                     return max_depth;
                 }
 
-                Tuple<TreeNode, int> next_item = next_items.Dequeue();
-                TreeNode next_node = next_item.Item1;
+                Tuple<DataStructures.TreeNode, int> next_item = next_items.Dequeue();
+                DataStructures.TreeNode next_node = next_item.Item1;
                 int next_level = next_item.Item2 + 1;
                 max_depth = Math.Max(max_depth, next_level);
                 // Add the nodes to visit in the following recursive calls.
                 if (next_node.Left != null)
                 {
                     next_items.Enqueue(
-                        new Tuple<TreeNode, int>(next_node.Left, next_level));
+                        new Tuple<DataStructures.TreeNode, int>(next_node.Left, next_level));
                 }
 
                 if (next_node.Right != null)
                 {
                     next_items.Enqueue(
-                        new Tuple<TreeNode, int>(next_node.Right, next_level));
+                        new Tuple<DataStructures.TreeNode, int>(next_node.Right, next_level));
                 }
 
                 return NextMaxDepth();
             }
 
-            public int MaxDepthBFSTC(TreeNode root)
+            public int MaxDepthBFSTC(DataStructures.TreeNode root)
             {
                 if (root == null)
                     return 0;
@@ -2720,11 +2720,11 @@ https://leetcode.com/problems/maximum-depth-of-binary-tree/description/
                 next_items.Clear();
                 max_depth = 0;
                 // Push the root node into the queue to kick off the next visit.
-                next_items.Enqueue(new Tuple<TreeNode, int>(root, 0));
+                next_items.Enqueue(new Tuple<DataStructures.TreeNode, int>(root, 0));
                 return NextMaxDepth();
             }
 
-            public int MaxDepthBFS(TreeNode root)
+            public int MaxDepthBFS(DataStructures.TreeNode root)
             {
                 if (root == null)
                 {
@@ -2771,11 +2771,11 @@ The only space required is the stack space; the maximum number of active stack c
 
             */
 
-            public int DFS(TreeNode root)
+            public int DFS(DataStructures.TreeNode root)
             {
                 return DFSRec(root);
 
-                int DFSRec(TreeNode root)
+                int DFSRec(DataStructures.TreeNode root)
                 {
                     if (root == null)
                     {
@@ -2801,14 +2801,14 @@ The only space required is the stack space; the maximum number of active stack c
 Approach 2: Breadth-First Search (BFS)
 
             */
-            public int BFS(TreeNode root)
+            public int BFS(DataStructures.TreeNode root)
             {
                 if (root == null)
                 {
                     return 0;
                 }
 
-                Queue<TreeNode> q = new Queue<TreeNode>();
+                Queue<DataStructures.TreeNode> q = new Queue<DataStructures.TreeNode>();
                 q.Enqueue(root);
                 int depth = 1;
                 while (q.Count != 0)
@@ -2816,7 +2816,7 @@ Approach 2: Breadth-First Search (BFS)
                     int qSize = q.Count;
                     for (int i = 0; i < qSize; i++)
                     {
-                        TreeNode node = q.Dequeue();
+                        DataStructures.TreeNode node = q.Dequeue();
                         // Since we added nodes without checking null, we need to skip
                         // them here.
                         if (node == null)
@@ -3230,7 +3230,7 @@ o	Therefore, the space complexity is O(n).
         */
         public class SumRootToLeafNumbersSol
         {
-            public int SumRootToLeafNumbers(TreeNode root)
+            public int SumRootToLeafNumbers(DataStructures.TreeNode root)
             {
                 /*
             Approach 1: Iterative Preorder Traversal. (IPT)   
@@ -3262,15 +3262,15 @@ o	Therefore, the space complexity is O(n).
 
 
             }
-            public int SumRootToLeafNumbersIPT(TreeNode root)
+            public int SumRootToLeafNumbersIPT(DataStructures.TreeNode root)
             {
                 int rootToLeaf = 0, currNumber = 0;
-                Stack<KeyValuePair<TreeNode, int>> stack =
-                    new Stack<KeyValuePair<TreeNode, int>>();
-                stack.Push(new KeyValuePair<TreeNode, int>(root, 0));
+                Stack<KeyValuePair<DataStructures.TreeNode, int>> stack =
+                    new Stack<KeyValuePair<DataStructures.TreeNode, int>>();
+                stack.Push(new KeyValuePair<DataStructures.TreeNode, int>(root, 0));
                 while (stack.Count > 0)
                 {
-                    KeyValuePair<TreeNode, int> p = stack.Pop();
+                    KeyValuePair<DataStructures.TreeNode, int> p = stack.Pop();
                     root = p.Key;
                     currNumber = p.Value;
                     if (root != null)
@@ -3283,10 +3283,10 @@ o	Therefore, the space complexity is O(n).
                         }
                         else
                         {
-                            stack.Push(new KeyValuePair<TreeNode, int>(root.Right,
+                            stack.Push(new KeyValuePair<DataStructures.TreeNode, int>(root.Right,
                                                                        currNumber));
                             stack.Push(
-                                new KeyValuePair<TreeNode, int>(root.Left, currNumber));
+                                new KeyValuePair<DataStructures.TreeNode, int>(root.Left, currNumber));
                         }
                     }
                 }
@@ -3295,7 +3295,7 @@ o	Therefore, the space complexity is O(n).
             }
             int rootToLeaf = 0;
 
-            public void Preorder(TreeNode r, int currNumber)
+            public void Preorder(DataStructures.TreeNode r, int currNumber)
             {
                 if (r != null)
                 {
@@ -3308,17 +3308,17 @@ o	Therefore, the space complexity is O(n).
                 }
             }
 
-            public int SumRootToLeafNumbersRPT(TreeNode root)
+            public int SumRootToLeafNumbersRPT(DataStructures.TreeNode root)
             {
                 Preorder(root, 0);
                 return rootToLeaf;
             }
 
-            public int SumRootToLeafNumbersMPT(TreeNode root)
+            public int SumRootToLeafNumbersMPT(DataStructures.TreeNode root)
             {
                 int rootToLeaf = 0, currNumber = 0;
                 int steps;
-                TreeNode predecessor;
+                DataStructures.TreeNode predecessor;
                 while (root != null)
                 {
                     if (root.Left != null)
@@ -3386,7 +3386,7 @@ each node exactly once.
 •	Space complexity : O(N) in the worst case of completely unbalanced tree, to keep a recursion stack
 
             */
-            public static bool Rec(TreeNode p, TreeNode q)
+            public static bool Rec(DataStructures.TreeNode p, DataStructures.TreeNode q)
             {
                 // p and q are both null
                 if (p == null && q == null)
@@ -3408,7 +3408,7 @@ exactly once.
 
        */
 
-            public static bool Iterative(TreeNode p, TreeNode q)
+            public static bool Iterative(DataStructures.TreeNode p, DataStructures.TreeNode q)
             {
                 Queue<(TreeNode, TreeNode)> deq = new Queue<(TreeNode, TreeNode)>();
                 deq.Enqueue((p, q));
@@ -3443,11 +3443,11 @@ exactly once.
 •	Space complexity: The number of recursive calls is bound by the height of the tree. In the worst case, the tree is linear and the height is in O(n). Therefore, space complexity due to recursive calls on the stack is O(n) in the worst case.
 
             */
-            public static bool Rec(TreeNode root)
+            public static bool Rec(DataStructures.TreeNode root)
             {
                 return IsMirror(root, root);
 
-                bool IsMirror(TreeNode t1, TreeNode t2)
+                bool IsMirror(DataStructures.TreeNode t1, DataStructures.TreeNode t2)
                 {
                     if (t1 == null && t2 == null)
                         return true;
@@ -3466,15 +3466,15 @@ Complexity Analysis
 •	Space complexity: There is additional space required for the search queue. In the worst case, we have to insert O(n) nodes in the queue. Therefore, space complexity is O(n).
 
             */
-            public static bool Iterate(TreeNode root)
+            public static bool Iterate(DataStructures.TreeNode root)
             {
-                Queue<TreeNode> q = new Queue<TreeNode>();
+                Queue<DataStructures.TreeNode> q = new Queue<DataStructures.TreeNode>();
                 q.Enqueue(root);
                 q.Enqueue(root);
                 while (q.Count != 0)
                 {
-                    TreeNode t1 = q.Dequeue();
-                    TreeNode t2 = q.Dequeue();
+                    DataStructures.TreeNode t1 = q.Dequeue();
+                    DataStructures.TreeNode t2 = q.Dequeue();
                     if (t1 == null && t2 == null)
                         continue;
                     if (t1 == null || t2 == null)
@@ -3507,7 +3507,7 @@ Complexity Analysis
 •	Space complexity: O(N) to keep the output structure which contains N node values.
 
             */
-            public static IList<IList<int>> Rec(TreeNode root)
+            public static IList<IList<int>> Rec(DataStructures.TreeNode root)
             {
                 IList<IList<int>> levels = new List<IList<int>>();
                 if (root == null)
@@ -3516,7 +3516,7 @@ Complexity Analysis
                 return levels;
 
 
-                void Helper(TreeNode node, int level)
+                void Helper(DataStructures.TreeNode node, int level)
                 {
                     if (levels.Count == level)
                         levels.Add(new List<int>());
@@ -3535,12 +3535,12 @@ Complexity Analysis
     •	Space complexity: O(N) to keep the output structure which contains N node values.
 
             */
-            public IList<IList<int>> Iterate(TreeNode root)
+            public IList<IList<int>> Iterate(DataStructures.TreeNode root)
             {
                 List<IList<int>> levels = new List<IList<int>>();
                 if (root == null)
                     return levels;
-                Queue<TreeNode> queue = new Queue<TreeNode>();
+                Queue<DataStructures.TreeNode> queue = new Queue<DataStructures.TreeNode>();
                 queue.Enqueue(root);
                 int level = 0;
                 while (queue.Count > 0)
@@ -3551,7 +3551,7 @@ Complexity Analysis
                     int level_length = queue.Count;
                     for (int i = 0; i < level_length; ++i)
                     {
-                        TreeNode node = queue.Dequeue();
+                        DataStructures.TreeNode node = queue.Dequeue();
                         // fulfill the current level
                         levels[level].Add(node.Val);
                         // add child nodes of the current level
@@ -3586,7 +3586,7 @@ Complexity Analysis
 •	Space complexity: O(N) to keep the output structure which contains N node values.
 
             */
-            public static IList<IList<int>> DFSReco(TreeNode root)
+            public static IList<IList<int>> DFSReco(DataStructures.TreeNode root)
             {
 
                 List<IList<int>> levels = new List<IList<int>>();
@@ -3596,7 +3596,7 @@ Complexity Analysis
                 levels.Reverse();
                 return levels;
 
-                void Helper(TreeNode node, int level)
+                void Helper(DataStructures.TreeNode node, int level)
                 {
                     if (levels.Count == level)
                         levels.Add(new List<int>());
@@ -3614,19 +3614,19 @@ Complexity Analysis
 •	Time complexity: O(N) since each node is processed exactly once.
 •	Space complexity: O(N) to keep the output structure which contains N node values.
             */
-            public IList<IList<int>> Iterate(TreeNode root)
+            public IList<IList<int>> Iterate(DataStructures.TreeNode root)
             {
                 IList<IList<int>> levels = new List<IList<int>>();
                 if (root == null)
                     return levels;
-                Queue<TreeNode> nextLevel = new Queue<TreeNode>();
+                Queue<DataStructures.TreeNode> nextLevel = new Queue<DataStructures.TreeNode>();
                 nextLevel.Enqueue(root);
                 while (nextLevel.Count > 0)
                 {
-                    Queue<TreeNode> currLevel = new Queue<TreeNode>(nextLevel);
+                    Queue<DataStructures.TreeNode> currLevel = new Queue<DataStructures.TreeNode>(nextLevel);
                     nextLevel.Clear();
                     levels.Add(new List<int>());
-                    foreach (TreeNode node in currLevel)
+                    foreach (DataStructures.TreeNode node in currLevel)
                     {
                         // append the current node value
                         levels[levels.Count - 1].Add(node.Val);
@@ -3660,19 +3660,19 @@ o	The main memory consumption of the algorithm is the node_queue that we use for
 o	As one can see, at any given moment, the node_queue would hold the nodes that are at most across two levels. Therefore, at most, the size of the queue would be no more than 2⋅L, assuming L is the maximum number of nodes that might reside on the same level. Since we have a binary tree, the level that contains the most nodes could occur to consist of all the leave nodes in a full binary tree, which is roughly L=2N. As a result, we have the space complexity of 2⋅2N=N in the worst case.
 
             */
-            public static IList<IList<int>> BFSIterate(TreeNode root)
+            public static IList<IList<int>> BFSIterate(DataStructures.TreeNode root)
             {
                 List<IList<int>> result = new List<IList<int>>();
                 if (root == null)
                     return result;
-                Queue<TreeNode> nodeQueue = new Queue<TreeNode>();
+                Queue<DataStructures.TreeNode> nodeQueue = new Queue<DataStructures.TreeNode>();
                 nodeQueue.Enqueue(root);
                 nodeQueue.Enqueue(null);
                 LinkedList<int> levelList = new LinkedList<int>();
                 bool isOrderLeft = true;
                 while (nodeQueue.Count > 0)
                 {
-                    TreeNode currentNode = nodeQueue.Dequeue();
+                    DataStructures.TreeNode currentNode = nodeQueue.Dequeue();
                     if (currentNode != null)
                     {
                         if (isOrderLeft)
@@ -3707,7 +3707,7 @@ o	However, the function recursion will incur additional memory consumption on th
 o	Note that if the tree were guaranteed to be balanced, then the maximum height of the tree would be logN which would result in a better space complexity than the BFS approach.
 
             */
-            public static IList<IList<int>> DFSReco(TreeNode root)
+            public static IList<IList<int>> DFSReco(DataStructures.TreeNode root)
             {
                 if (root == null)
                 {
@@ -3715,7 +3715,7 @@ o	Note that if the tree were guaranteed to be balanced, then the maximum height 
                 }
 
                 List<List<int>> results = new List<List<int>>();
-                Action<TreeNode, int> DFSReco = null;
+                Action<DataStructures.TreeNode, int> DFSReco = null;
                 DFSReco = (node, level) =>
                 {
                     if (level >= results.Count)
@@ -3761,7 +3761,7 @@ Lastly, we also need some space to hold the results, which is basically a reorde
 To sum up, the overall space complexity of our algorithm would be O(N).
 
             */
-            public static IList<IList<int>> BFSIterateWithSort(TreeNode root)
+            public static IList<IList<int>> BFSIterateWithSort(DataStructures.TreeNode root)
             {
 
                 IList<IList<int>> output = new List<IList<int>>();
@@ -3810,7 +3810,7 @@ Following the same analysis in the previous BFS approach, the only difference is
 •	Space Complexity: O(N) where N is the number of nodes in the tree. The analysis follows the same logic as in the previous BFS approach.
 
             */
-            public List<List<int>> BFSIterate(TreeNode root)
+            public List<List<int>> BFSIterate(DataStructures.TreeNode root)
             {
                 List<List<int>> output = new List<List<int>>();
                 if (root == null)
@@ -3820,16 +3820,16 @@ Following the same analysis in the previous BFS approach, the only difference is
 
                 Dictionary<int, List<int>> columnTable = new Dictionary<int, List<int>>();
                 // Pair of node and its column offset
-                Queue<KeyValuePair<TreeNode, int>> queue = new Queue<KeyValuePair<TreeNode, int>>();
+                Queue<KeyValuePair<DataStructures.TreeNode, int>> queue = new Queue<KeyValuePair<DataStructures.TreeNode, int>>();
                 int column = 0;
-                queue.Enqueue(new KeyValuePair<TreeNode, int>(root, column));
+                queue.Enqueue(new KeyValuePair<DataStructures.TreeNode, int>(root, column));
 
                 int minColumn = 0, maxColumn = 0;
 
                 while (queue.Count > 0)
                 {
-                    KeyValuePair<TreeNode, int> p = queue.Dequeue();
-                    TreeNode currentNode = p.Key;
+                    KeyValuePair<DataStructures.TreeNode, int> p = queue.Dequeue();
+                    DataStructures.TreeNode currentNode = p.Key;
                     column = p.Value;
 
                     if (currentNode != null)
@@ -3842,8 +3842,8 @@ Following the same analysis in the previous BFS approach, the only difference is
                         minColumn = Math.Min(minColumn, column);
                         maxColumn = Math.Max(maxColumn, column);
 
-                        queue.Enqueue(new KeyValuePair<TreeNode, int>(currentNode.Left, column - 1));
-                        queue.Enqueue(new KeyValuePair<TreeNode, int>(currentNode.Right, column + 1));
+                        queue.Enqueue(new KeyValuePair<DataStructures.TreeNode, int>(currentNode.Left, column - 1));
+                        queue.Enqueue(new KeyValuePair<DataStructures.TreeNode, int>(currentNode.Right, column + 1));
                     }
                 }
 
@@ -3881,7 +3881,7 @@ So in total, the overall space complexity of this algorithm remains O(N).
             private Dictionary<int, List<KeyValuePair<int, int>>> columnTable = new Dictionary<int, List<KeyValuePair<int, int>>>();
             private int minColumn = 0, maxColumn = 0;
 
-            public IList<IList<int>> DFSReco(TreeNode root)
+            public IList<IList<int>> DFSReco(DataStructures.TreeNode root)
             {
                 List<IList<int>> output = new List<IList<int>>();
                 if (root == null)
@@ -3906,7 +3906,7 @@ So in total, the overall space complexity of this algorithm remains O(N).
 
                 return output;
 
-                void DFSReco(TreeNode node, int row, int column)
+                void DFSReco(DataStructures.TreeNode node, int row, int column)
                 {
                     if (node == null)
                         return;
@@ -3945,7 +3945,7 @@ Let's look into one such scenario. When both Node x and Node y are the leaf node
 
             */
 
-            public static bool DFSRecWithBranchPruning(TreeNode root, int x, int y)
+            public static bool DFSRecWithBranchPruning(DataStructures.TreeNode root, int x, int y)
             {
 
                 bool isCousin = false;
@@ -3954,7 +3954,7 @@ Let's look into one such scenario. When both Node x and Node y are the leaf node
                 DFSReco(root, 0, x, y, isCousin, recordedDepth);
                 return isCousin;
 
-                bool DFSReco(TreeNode node, int depth, int x, int y, bool isCousin, int recordedDepth)
+                bool DFSReco(DataStructures.TreeNode node, int depth, int x, int y, bool isCousin, int recordedDepth)
                 {
 
                     if (node == null)
@@ -4000,11 +4000,11 @@ Complexity Analysis
 •	Space Complexity: O(N). In the worst case, we need to store all the nodes of the last level in the queue. The last level of a binary tree can have a maximum of N/2 nodes. Not to forget we would also need space for N/4 null markers, one for each pair of siblings. That results in a space complexity of O((3N)/4) = O(N) (You are right Big-O notation doesn't care about constants).
 
             */
-            public bool BFSWithEarlyStopping(TreeNode root, int x, int y)
+            public bool BFSWithEarlyStopping(DataStructures.TreeNode root, int x, int y)
             {
 
                 // Queue for BFS
-                Queue<TreeNode> queue = new Queue<TreeNode>();
+                Queue<DataStructures.TreeNode> queue = new Queue<DataStructures.TreeNode>();
                 queue.Enqueue(root);
 
                 while (queue.Count > 0)
@@ -4017,7 +4017,7 @@ Complexity Analysis
                     for (int i = 0; i < nodesAtDepth; i++)
                     {
                         // FIFO
-                        TreeNode node = queue.Dequeue();
+                        DataStructures.TreeNode node = queue.Dequeue();
 
                         // Encountered the marker.
                         // Siblings should be set to false as we are crossing the boundary.
@@ -4070,14 +4070,14 @@ Complexity Analysis
 •	Time complexity:O(N)
 •	Space complexity:O(LOGN)
             */
-            public static TreeNode DFSRec(TreeNode root)
+            public static DataStructures.TreeNode DFSRec(DataStructures.TreeNode root)
             {
                 GetSumOfNextLevel(root);
                 GetSumOfCousin(root);
                 UpdateValue(root);
                 return root;
 
-                int GetSumOfNextLevel(TreeNode root)
+                int GetSumOfNextLevel(DataStructures.TreeNode root)
                 {
                     if (root == null)
                         return 0;
@@ -4085,13 +4085,13 @@ Complexity Analysis
                     root.Val = GetSumOfNextLevel(root.Left) + GetSumOfNextLevel(root.Right);
                     return v;
                 }
-                void GetSumOfCousin(TreeNode root)
+                void GetSumOfCousin(DataStructures.TreeNode root)
                 {
-                    List<TreeNode> ns = new() { root };
+                    List<DataStructures.TreeNode> ns = new() { root };
 
                     while (ns.Count > 0)
                     {
-                        List<TreeNode> t = new();
+                        List<DataStructures.TreeNode> t = new();
                         int s = ns.Select(n => n.Val).Sum();
                         foreach (var n in ns)
                         {
@@ -4106,7 +4106,7 @@ Complexity Analysis
 
                 }
 
-                void UpdateValue(TreeNode root)
+                void UpdateValue(DataStructures.TreeNode root)
                 {
                     if (root == null) return;
                     if (root.Left != null)
@@ -4146,7 +4146,7 @@ Constructing the binary tree using BFS also takes O(n) time since each node is p
 The parentToChildren map can store up to n entries. The children and parents sets can each store up to n elements. The BFS queue can store up to n nodes in the worst case. Therefore, the overall space complexity is O(n).
 
             */
-            public TreeNode ConvertToGraphWithBFS(int[][] descriptions)
+            public DataStructures.TreeNode ConvertToGraphWithBFS(int[][] descriptions)
             {
                 // Sets to track unique children and parents
                 HashSet<int> uniqueChildren = new HashSet<int>(), uniqueParents = new HashSet<int>();
@@ -4172,22 +4172,22 @@ The parentToChildren map can store up to n entries. The children and parents set
                 {
                     uniqueParents.Remove(child);
                 }
-                TreeNode rootNode = new TreeNode(uniqueParents.GetEnumerator().Current);
+                DataStructures.TreeNode rootNode = new DataStructures.TreeNode(uniqueParents.GetEnumerator().Current);
 
                 // Starting from root, use BFS to construct binary tree
-                Queue<TreeNode> treeNodeQueue = new Queue<TreeNode>();
+                Queue<DataStructures.TreeNode> treeNodeQueue = new Queue<DataStructures.TreeNode>();
                 treeNodeQueue.Enqueue(rootNode);
 
                 while (treeNodeQueue.Count > 0)
                 {
-                    TreeNode parentNode = treeNodeQueue.Dequeue();
+                    DataStructures.TreeNode parentNode = treeNodeQueue.Dequeue();
                     // Iterate over children of current parent
                     if (parentToChildrenMap.TryGetValue(parentNode.Val, out List<int[]> childInfoList))
                     {
                         foreach (int[] childInfo in childInfoList)
                         {
                             int childValue = childInfo[0], isLeft = childInfo[1];
-                            TreeNode childNode = new TreeNode(childValue);
+                            DataStructures.TreeNode childNode = new DataStructures.TreeNode(childValue);
                             treeNodeQueue.Enqueue(childNode);
                             // Attach child node to its parent based on isLeft flag
                             if (isLeft == 1)
@@ -4215,7 +4215,7 @@ Constructing the binary tree using DFS also takes O(n) time since each node is p
 The parentToChildren map can store up to n entries. The allNodes and children sets can each store up to n elements. The recursive DFS stack can store up to n nodes in the worst case. Therefore, the overall space complexity is O(n).
 
             */
-            public static TreeNode ConvertToGraphWithDFS(int[][] descriptions)
+            public static DataStructures.TreeNode ConvertToGraphWithDFS(int[][] descriptions)
             {
                 // Step 1: Organize data
                 Dictionary<int, List<int[]>> parentToChildren = new Dictionary<int, List<int[]>>();
@@ -4254,10 +4254,10 @@ The parentToChildren map can store up to n entries. The allNodes and children se
                 return ConvertToGraphWithDFSRec(parentToChildren, rootVal);
 
                 // DFS function to recursively build binary tree
-                TreeNode ConvertToGraphWithDFSRec(Dictionary<int, List<int[]>> parentToChildren, int val)
+                DataStructures.TreeNode ConvertToGraphWithDFSRec(Dictionary<int, List<int[]>> parentToChildren, int val)
                 {
                     // Create new TreeNode for current value
-                    TreeNode node = new TreeNode(val);
+                    DataStructures.TreeNode node = new DataStructures.TreeNode(val);
 
                     // If current node has children, recursively build them
                     if (parentToChildren.ContainsKey(val))
@@ -4298,10 +4298,10 @@ The algorithm uses nodeMap to store references to all created nodes. In the wors
 Additional space is used for the TreeNode objects themselves, but that's accounted for within the O(n) space complexity due to the nodes being stored in nodeMap
 
             */
-            public TreeNode ConstructTreeFromDirectlyMapAndTreeNode(int[][] descriptions)
+            public DataStructures.TreeNode ConstructTreeFromDirectlyMapAndTreeNode(int[][] descriptions)
             {
                 // Maps values to TreeNode pointers
-                Dictionary<int, TreeNode> nodeDictionary = new Dictionary<int, TreeNode>();
+                Dictionary<int, DataStructures.TreeNode> nodeDictionary = new Dictionary<int, DataStructures.TreeNode>();
 
                 // Stores values which are children in the descriptions
                 HashSet<int> childrenSet = new HashSet<int>();
@@ -4318,11 +4318,11 @@ Additional space is used for the TreeNode objects themselves, but that's account
                     // Create parent and child nodes if not already created
                     if (!nodeDictionary.ContainsKey(parentValue))
                     {
-                        nodeDictionary[parentValue] = new TreeNode(parentValue);
+                        nodeDictionary[parentValue] = new DataStructures.TreeNode(parentValue);
                     }
                     if (!nodeDictionary.ContainsKey(childValue))
                     {
-                        nodeDictionary[childValue] = new TreeNode(childValue);
+                        nodeDictionary[childValue] = new DataStructures.TreeNode(childValue);
                     }
 
                     // Attach child node to parent's left or right branch
@@ -4340,7 +4340,7 @@ Additional space is used for the TreeNode objects themselves, but that's account
                 }
 
                 // Find and return the root node
-                foreach (TreeNode node in nodeDictionary.Values)
+                foreach (DataStructures.TreeNode node in nodeDictionary.Values)
                 {
                     if (!childrenSet.Contains(node.Val))
                     {
@@ -4734,23 +4734,938 @@ O(2^n * log(2^n))
         }
 
 
+        /* 987. Vertical Order Traversal of a Binary Tree
+        https://leetcode.com/problems/vertical-order-traversal-of-a-binary-tree/description/
+         */
+
+        class VerticalOrderTraverseOfBinaryTreeSol
+        {
+            List<Triplet<int, int, int>> nodeList = new List<Triplet<int, int, int>>();
+
+            /*
+            Approach 1: BFS with Global Sorting
+            Complexity Analysis
+            Let N be the number of nodes in the input tree.
+            •	Time Complexity: O(NlogN), which applies to both the BFS and DFS approaches.
+            o	In the first step of the algorithm, we traverse the input tree with either BFS or DFS, which would take O(N) time.
+            o	Secondly, we sort the obtained list of coordinates which contains N elements. The sorting operation would take O(NlogN) time.
+            o	Finally, we extract the results from the sorted list, which would take another O(N) time.
+            o	To summarize, the overall time complexity of the algorithm would be O(NlogN), which is dominated by the sorting operation in the second step.
+            •	Space Complexity: O(N). Again this applies to both the BFS and DFS approaches.
+            o	In the first step of the algorithm, we build a list that contains the coordinates of all the nodes. Hence, we need O(N) space for this list.
+            o	Additionally, for the BFS approach, we used a queue data structure to maintain the order of visits. At any given moment, the queue contains no more than two levels of nodes in the tree. The maximal number of nodes at one level is 2N, which is the number of the leaf nodes in a balanced binary tree. As a result, the space needed for the queue would be O(2N⋅2)=O(N).
+            o	Although we don't need the queue data structure for the DFS approach, the recursion in the DFS approach incurs some additional memory consumption on the function call stack. In the worst case, the input tree might be completely imbalanced, e.g. each node has only the left child node. In this case, the recursion would occur up to N times, which in turn would consume O(N) space in the function call stack.
+            o	To summarize, the space complexity for the BFS approach would be O(N)+O(N)=O(N). And the same applies to the DFS approach.
+
+            */
+            public List<List<int>> BFSWithGlobalSorting(DataStructures.TreeNode root)
+            {
+                List<List<int>> output = new List<List<int>>();
+                if (root == null)
+                {
+                    return output;
+                }
+
+                // step 1). BFS traversal
+                BFS(root);
+
+                // step 2). sort the global list by <column, row, value>
+                nodeList.Sort((t1, t2) =>
+                {
+                    if (t1.First.Equals(t2.First))
+                        if (t1.Second.Equals(t2.Second))
+                            return t1.Third.CompareTo(t2.Third);
+                        else
+                            return t1.Second.CompareTo(t2.Second);
+                    else
+                        return t1.First.CompareTo(t2.First);
+                });
+
+                // step 3). extract the values, partitioned by the column index.
+                List<int> currColumn = new List<int>();
+                int currColumnIndex = this.nodeList[0].First;
+
+                foreach (Triplet<int, int, int> triplet in this.nodeList)
+                {
+                    int column = triplet.First, value = triplet.Third;
+                    if (column == currColumnIndex)
+                    {
+                        currColumn.Add(value);
+                    }
+                    else
+                    {
+                        output.Add(currColumn);
+                        currColumnIndex = column;
+                        currColumn = new List<int>();
+                        currColumn.Add(value);
+                    }
+                }
+                output.Add(currColumn);
+
+                return output;
+            }
+            private void BFS(DataStructures.TreeNode root)
+            {
+                Queue<Triplet<DataStructures.TreeNode, int, int>> queue = new Queue<Triplet<DataStructures.TreeNode, int, int>>();
+                int row = 0, column = 0;
+                queue.Enqueue(new Triplet<DataStructures.TreeNode, int, int>(root, row, column));
+
+                while (queue.Count > 0)
+                {
+                    Triplet<DataStructures.TreeNode, int, int> triplet = queue.Dequeue();
+                    root = triplet.First;
+                    row = triplet.Second;
+                    column = triplet.Third;
+
+                    if (root != null)
+                    {
+                        this.nodeList.Add(new Triplet<int, int, int>(column, row, root.Val));
+                        queue.Enqueue(new Triplet<DataStructures.TreeNode, int, int>(root.Left, row + 1, column - 1));
+                        queue.Enqueue(new Triplet<DataStructures.TreeNode, int, int>(root.Right, row + 1, column + 1));
+                    }
+                }
+            }
+
+
+            class Triplet<F, S, T>
+            {
+                public readonly F First;
+                public readonly S Second;
+                public readonly T Third;
+
+                public Triplet(F first, S second, T third)
+                {
+                    First = first;
+                    Second = second;
+                    Third = third;
+                }
+            }
+            /*
+Approach 2s: DFS with Global Sorting
+Complexity Analysis
+Let N be the number of nodes in the input tree.
+•	Time Complexity: O(NlogN), which applies to both the BFS and DFS approaches.
+o	In the first step of the algorithm, we traverse the input tree with either BFS or DFS, which would take O(N) time.
+o	Secondly, we sort the obtained list of coordinates which contains N elements. The sorting operation would take O(NlogN) time.
+o	Finally, we extract the results from the sorted list, which would take another O(N) time.
+o	To summarize, the overall time complexity of the algorithm would be O(NlogN), which is dominated by the sorting operation in the second step.
+•	Space Complexity: O(N). Again this applies to both the BFS and DFS approaches.
+o	In the first step of the algorithm, we build a list that contains the coordinates of all the nodes. Hence, we need O(N) space for this list.
+o	Additionally, for the BFS approach, we used a queue data structure to maintain the order of visits. At any given moment, the queue contains no more than two levels of nodes in the tree. The maximal number of nodes at one level is 2N, which is the number of the leaf nodes in a balanced binary tree. As a result, the space needed for the queue would be O(2N⋅2)=O(N).
+o	Although we don't need the queue data structure for the DFS approach, the recursion in the DFS approach incurs some additional memory consumption on the function call stack. In the worst case, the input tree might be completely imbalanced, e.g. each node has only the left child node. In this case, the recursion would occur up to N times, which in turn would consume O(N) space in the function call stack.
+o	To summarize, the space complexity for the BFS approach would be O(N)+O(N)=O(N). And the same applies to the DFS approach.
+
+*/
+            private void DFS(DataStructures.TreeNode node, int row, int column)
+            {
+                if (node == null)
+                    return;
+
+                nodeList.Add(new Triplet<int, int, int>(column, row, node.Val));
+                // preorder DFS traversal
+                DFS(node.Left, row + 1, column - 1);
+                DFS(node.Right, row + 1, column + 1);
+            }
+
+            public List<List<int>> DFSWithGlobalSorting(DataStructures.TreeNode root)
+            {
+                List<List<int>> output = new List<List<int>>();
+                if (root == null)
+                {
+                    return output;
+                }
+
+                // step 1). DFS traversal
+                DFS(root, 0, 0);
+
+                // step 2). sort the list by <column, row, value>
+                nodeList.Sort((t1, t2) =>
+                {
+                    if (t1.First.Equals(t2.First))
+                    {
+                        if (t1.Second.Equals(t2.Second))
+                            return t1.Third.CompareTo(t2.Third);
+                        else
+                            return t1.Second.CompareTo(t2.Second);
+                    }
+                    else
+                        return t1.First.CompareTo(t2.First);
+                });
+
+                // step 3). extract the values, grouped by the column index.
+                List<int> currentColumn = new List<int>();
+                int currentColumnIndex = nodeList[0].First;
+
+                foreach (var triplet in nodeList)
+                {
+                    int column = triplet.First, value = triplet.Third;
+                    if (column == currentColumnIndex)
+                    {
+                        currentColumn.Add(value);
+                    }
+                    else
+                    {
+                        output.Add(currentColumn);
+                        currentColumnIndex = column;
+                        currentColumn = new List<int> { value };
+                    }
+                }
+                output.Add(currentColumn);
+
+                return output;
+            }
+
+            /* Approach 3: BFS with Partition Sorting 
+            Complexity Analysis
+Let N be the number of nodes in the tree.
+•	Time Complexity: O(NlogkN) where k is the width of the tree, i.e. k is also the number of columns in the result.
+o	In the first step, it takes O(N) time complexity for both the BFS and DFS traversal.
+o	In the second step, we need to sort the hashmap entry by entry. As we shown in the intuition section, the time complexity of sorting k equal-sized subgroups of with total N elements would be O(k⋅kNlogkN)=O(NlogkN). If we assume that the nodes are evenly aligned in the columns, then this would be the time complexity of sorting the obtained hashmap.
+o	Finally, it takes another O(N) time complexity to extract the results from the hashmap.
+o	As a result, the overall time complexity is O(NlogkN).
+o	Although the sorting operation in the second step still dominates, it is more optimized compared to the previous approach of sorting the entire coordinates.
+Let us look at one particular example. In the case where the tree is complete imbalanced (e.g. a node has only left node), the tree would be partitioned into exactly N groups. Each group contains a single element. It would take no time to sort each group. As a result, the overall time complexity of this approach becomes N⋅O(1)=O(N).
+While for the previous approach, its overall time complexity remains O(NlogN).
+•	Space Complexity: O(N). Again this applies to both the BFS and DFS approaches. The analysis is the same as the previous approach.
+
+            */
+            // key: column; value: <row, node_value>
+            Dictionary<int, List<KeyValuePair<int, int>>> columnTable = new Dictionary<int, List<KeyValuePair<int, int>>>();
+            int minColumn = 0, maxColumn = 0;
+
+
+            public List<List<int>> BFSWithPartitionSorting(DataStructures.TreeNode root)
+            {
+                List<List<int>> output = new List<List<int>>();
+                if (root == null)
+                {
+                    return output;
+                }
+
+                // step 1). BFS traversal
+                BFS(root);
+
+                // step 2). retrieve the value from the columnTable
+                for (int i = minColumn; i <= maxColumn; ++i)
+                {
+                    // order by both "row" and "value"
+                    columnTable[i].Sort((p1, p2) =>
+                    {
+                        if (p1.Key == p2.Key)
+                            return p1.Value.CompareTo(p2.Value);
+                        else
+                            return p1.Key.CompareTo(p2.Key);
+                    });
+
+                    List<int> sortedColumn = new List<int>();
+                    foreach (var p in columnTable[i])
+                    {
+                        sortedColumn.Add(p.Value);
+                    }
+                    output.Add(sortedColumn);
+                }
+
+                return output;
+                void BFS(DataStructures.TreeNode root)
+                {
+                    // tuples of <column, <row, value>>
+                    Queue<KeyValuePair<DataStructures.TreeNode, KeyValuePair<int, int>>> queue = new Queue<KeyValuePair<DataStructures.TreeNode, KeyValuePair<int, int>>>();
+                    int row = 0, column = 0;
+                    queue.Enqueue(new KeyValuePair<DataStructures.TreeNode, KeyValuePair<int, int>>(root, new KeyValuePair<int, int>(row, column)));
+
+                    while (queue.Count > 0)
+                    {
+                        KeyValuePair<DataStructures.TreeNode, KeyValuePair<int, int>> p = queue.Dequeue();
+                        root = p.Key;
+                        row = p.Value.Key;
+                        column = p.Value.Value;
+
+                        if (root != null)
+                        {
+                            if (!columnTable.ContainsKey(column))
+                            {
+                                columnTable[column] = new List<KeyValuePair<int, int>>();
+                            }
+                            columnTable[column].Add(new KeyValuePair<int, int>(row, root.Val));
+                            minColumn = Math.Min(minColumn, column);
+                            maxColumn = Math.Max(maxColumn, column);
+
+                            queue.Enqueue(new KeyValuePair<DataStructures.TreeNode, KeyValuePair<int, int>>(root.Left, new KeyValuePair<int, int>(row + 1, column - 1)));
+                            queue.Enqueue(new KeyValuePair<DataStructures.TreeNode, KeyValuePair<int, int>>(root.Right, new KeyValuePair<int, int>(row + 1, column + 1)));
+                        }
+                    }
+                }
+            }
+
+            /* Approach 4: DFS with Partition Sorting 
+          Complexity Analysis
+    Let N be the number of nodes in the tree.
+    •	Time Complexity: O(NlogkN) where k is the width of the tree, i.e. k is also the number of columns in the result.
+    o	In the first step, it takes O(N) time complexity for both the BFS and DFS traversal.
+    o	In the second step, we need to sort the hashmap entry by entry. As we shown in the intuition section, the time complexity of sorting k equal-sized subgroups of with total N elements would be O(k⋅kNlogkN)=O(NlogkN). If we assume that the nodes are evenly aligned in the columns, then this would be the time complexity of sorting the obtained hashmap.
+    o	Finally, it takes another O(N) time complexity to extract the results from the hashmap.
+    o	As a result, the overall time complexity is O(NlogkN).
+    o	Although the sorting operation in the second step still dominates, it is more optimized compared to the previous approach of sorting the entire coordinates.
+    Let us look at one particular example. In the case where the tree is complete imbalanced (e.g. a node has only left node), the tree would be partitioned into exactly N groups. Each group contains a single element. It would take no time to sort each group. As a result, the overall time complexity of this approach becomes N⋅O(1)=O(N).
+    While for the previous approach, its overall time complexity remains O(NlogN).
+    •	Space Complexity: O(N). Again this applies to both the BFS and DFS approaches. The analysis is the same as the previous approach.
+
+          */
+            public IList<IList<int>> DFSWithPartitionSorting(DataStructures.TreeNode root)
+            {
+                IList<IList<int>> output = new List<IList<int>>();
+                if (root == null)
+                {
+                    return output;
+                }
+
+                // step 1). DFS traversal
+                DFS(root, 0, 0);
+
+                // step 2). retrieve the value from the columnTable
+                for (int i = minColumn; i <= maxColumn; ++i)
+                {
+                    // order by both "row" and "value"
+                    columnTable[i].Sort((p1, p2) =>
+                    {
+                        if (p1.Key == p2.Key)
+                            return p1.Value.CompareTo(p2.Value);
+                        else
+                            return p1.Key.CompareTo(p2.Key);
+                    });
+
+                    List<int> sortedColumn = new List<int>();
+                    foreach (var p in columnTable[i])
+                    {
+                        sortedColumn.Add(p.Value);
+                    }
+                    output.Add(sortedColumn);
+                }
+
+                return output;
+                void DFS(DataStructures.TreeNode node, int row, int column)
+                {
+                    if (node == null)
+                        return;
+
+                    if (!columnTable.ContainsKey(column))
+                    {
+                        columnTable[column] = new List<KeyValuePair<int, int>>();
+                    }
+
+                    columnTable[column].Add(new KeyValuePair<int, int>(row, node.Val));
+                    minColumn = Math.Min(minColumn, column);
+                    maxColumn = Math.Max(maxColumn, column);
+                    // preorder DFS traversal
+                    DFS(node.Left, row + 1, column - 1);
+                    DFS(node.Right, row + 1, column + 1);
+                }
+
+            }
 
 
 
+        }
+
+
+        /* 3068. Find the Maximum Sum of Node Values
+        https://leetcode.com/problems/find-the-maximum-sum-of-node-values/description/
+         */
+        class FindMaxSumOfNodeValuesSol
+        {
+            /*             Approach 1: Top-Down Dynamic Programming - Memoization
+            Complexity Analysis
+            Let n be the number of nodes in the tree.
+            •	Time complexity: O(n)
+            The time complexity of the maxSumOfNodes function can be analyzed by considering the number of unique subproblems that need to be solved. There are at most n⋅2 unique subproblems, indexed by index and isEven values, because the number of possible values for index is n and isEven is 2 (parity).
+            Here, each subproblem is computed only once (due to memoization). So, the time complexity is bounded by the number of unique subproblems.
+            Therefore, the time complexity can be stated as O(n).
+            •	Space complexity: O(n)
+            The space complexity of the algorithm is primarily determined by two factors: the auxiliary space used for memoization and the recursion stack space. The memoization table, denoted as memo, consumes O(n) space due to its size being proportional to the length of the input node list.
+            Additionally, the recursion stack space can grow up to O(n) in the worst case, constrained by the length of the input node list, as each recursive call may add a frame to the stack.
+            Therefore, the overall space complexity is the sum of these two components, resulting in O(n)+O(n), which simplifies to O(n).
+
+             */
+            public long TopDownDPRecWithMemo(int[] nums, int k, int[][] edges)
+            {
+                long[][] memo = new long[nums.Length][];
+                for (int i = 0; i < memo.Length; i++)
+                {
+                    memo[i] = new long[2];
+                    Array.Fill(memo[i], -1);
+                }
+                return MaxSumOfNodes(0, 1, nums, k, memo);
+            }
+
+            private long MaxSumOfNodes(int index, int isEven, int[] nums, int k, long[][] memo)
+            {
+                if (index == nums.Length)
+                {
+                    // If the operation is performed on an odd number of elements return
+                    // INT_MIN
+                    return isEven == 1 ? 0 : int.MinValue;
+                }
+                if (memo[index][isEven] != -1)
+                {
+                    return memo[index][isEven];
+                }
+                // No operation performed on the element
+                long noXorDone = nums[index] + MaxSumOfNodes(index + 1, isEven, nums, k, memo);
+                // XOR operation is performed on the element
+                long xorDone = (nums[index] ^ k) + MaxSumOfNodes(index + 1, isEven ^ 1, nums, k, memo);
+
+                // Memoize and return the result
+                return memo[index][isEven] = Math.Max(xorDone, noXorDone);
+            }
+            /*             Approach 2: Bottom-up Dynamic Programming (Tabulation) 
+            Complexity Analysis
+            Let n be the number of elements in the node value list.
+            •	Time complexity: O(n)
+            We iterate through a nested loop where the total number of iterations is given by n⋅2. Inside the nested loops, we perform constant time operations. Therefore, time complexity is given by O(n).
+            •	Space complexity: O(n)
+            Since we create a new dp matrix of size n⋅2, the total additional space becomes n⋅2. So, the net space complexity is O(n).
+
+            */
+            public long BottomUpDPTabulation(int[] nums, int k, int[][] edges)
+            {
+                int n = nums.Length;
+                long[][] dp = new long[n + 1][];
+                dp[n][1] = 0;
+                dp[n][0] = int.MinValue;
+
+                for (int index = n - 1; index >= 0; index--)
+                {
+                    for (int isEven = 0; isEven <= 1; isEven++)
+                    {
+                        // Case 1: we perform the operation on this element.
+                        long performOperation = dp[index + 1][isEven ^ 1] + (nums[index] ^ k);
+                        // Case 2: we don't perform operation on this element.
+                        long dontPerformOperation = dp[index + 1][isEven] + nums[index];
+
+                        dp[index][isEven] = Math.Max(performOperation, dontPerformOperation);
+                    }
+                }
+
+                return dp[0][1];
+            }
+
+            /* Approach 3: Greedy (Sorting based approach)
+            Complexity Analysis
+            Let n be the number of elements in the node value list.
+            •	Time complexity: O(n⋅logn)
+            Other than the sort invocation, we perform simple linear operations on the list, so the runtime is dominated by the O(n⋅logn) complexity of sorting.
+            •	Space complexity: O(n)
+            Since we create a new netChange array of size n and sort it, the additional space becomes O(n) for netChange array and O(logn) or O(n) for sorting it (depending on the sorting algorithm used). So, the net space complexity is O(n).
+
+             */
+            public long WithGreedySorting(int[] nums, int k, int[][] edges)
+            {
+                int n = nums.Length;
+                int[] netChange = new int[n];
+                long nodeSum = 0;
+
+                for (int i = 0; i < n; i++)
+                {
+                    netChange[i] = (nums[i] ^ k) - nums[i];
+                    nodeSum += nums[i];
+                }
+
+                Array.Sort(netChange);
+                // Reverse the sorted array
+                for (int i = 0; i < n / 2; i++)
+                {
+                    int temp = netChange[i];
+                    netChange[i] = netChange[n - 1 - i];
+                    netChange[n - 1 - i] = temp;
+                }
+
+                for (int i = 0; i < n; i += 2)
+                {
+                    // If netChange contains odd number of elements break the loop
+                    if (i + 1 == n)
+                    {
+                        break;
+                    }
+                    long pairSum = netChange[i] + netChange[i + 1];
+                    // Include in nodeSum if pairSum is positive
+                    if (pairSum > 0)
+                    {
+                        nodeSum += pairSum;
+                    }
+                }
+                return nodeSum;
+            }
+
+
+            /* Approach 4: Greedy (Finding local maxima and minima)
+            Complexity Analysis
+            Let n be the number of elements in the node value list.
+            •	Time complexity: O(n)
+            We perform a single pass linear scan on the list which takes O(n) time. All other operations are performed in constant time. This makes the net time complexity as O(n).
+            •	Space complexity: O(1)
+            We do not allocate any additional auxiliary memory proportional to the size of the given node list. Therefore, overall space complexity is given by O(1).
+
+             */
+            public long WithGreedyLocalMaixmAndMinima(int[] nums, int k, int[][] edges)
+            {
+                long sum = 0;
+                int count = 0, positiveMinimum = (1 << 30), negativeMaximum = -1 * (1 << 30);
+
+                foreach (int nodeValue in nums)
+                {
+                    int operatedNodeValue = nodeValue ^ k;
+                    sum += nodeValue;
+                    int netChange = operatedNodeValue - nodeValue;
+                    if (netChange > 0)
+                    {
+                        positiveMinimum = Math.Min(positiveMinimum, netChange);
+                        sum += netChange;
+                        count++;
+                    }
+                    else
+                    {
+                        negativeMaximum = Math.Max(negativeMaximum, netChange);
+                    }
+                }
+
+                // If the number of positive netChange values is even, return the sum.
+                if (count % 2 == 0)
+                {
+                    return sum;
+                }
+
+                // Otherwise return the maximum of both discussed cases.
+                return Math.Max(sum - positiveMinimum, sum + negativeMaximum);
+            }
+
+        }
+
+        /* 236. Lowest Common Ancestor of a Binary Tree
+        https://leetcode.com/problems/lowest-common-ancestor-of-a-binary-tree/description/?envType=company&envId=facebook&favoriteSlug=facebook-all&difficulty=MEDIUM
+         */
+        public class LowestCommonAncestorSol
+        {
+            private DataStructures.TreeNode lowestCommonAncestorNode;
+
+            public LowestCommonAncestorSol()
+            {
+                // Variable to store LCA node.
+                this.lowestCommonAncestorNode = null;
+            }
+
+            private bool RecurseTree(DataStructures.TreeNode currentNode, DataStructures.TreeNode nodeP, DataStructures.TreeNode nodeQ)
+            {
+                // If reached the end of a branch, return false.
+                if (currentNode == null)
+                {
+                    return false;
+                }
+
+                // Left Recursion. If left recursion returns true, set left = 1 else 0
+                int leftFlag = RecurseTree(currentNode.Left, nodeP, nodeQ) ? 1 : 0;
+
+                // Right Recursion
+                int rightFlag = RecurseTree(currentNode.Right, nodeP, nodeQ) ? 1 : 0;
+
+                // If the current node is one of nodeP or nodeQ
+                int midFlag = (currentNode == nodeP || currentNode == nodeQ) ? 1 : 0;
+
+                // If any two of the flags left, right or mid become True
+                if (midFlag + leftFlag + rightFlag >= 2)
+                {
+                    this.lowestCommonAncestorNode = currentNode;
+                }
+
+                // Return true if any one of the three bool values is True.
+                return (midFlag + leftFlag + rightFlag > 0);
+            }
+            /* Approach 1: Recursive Approach
+            Complexity Analysis
+            •	Time Complexity: O(N), where N is the number of nodes in the binary tree. In the worst case we might be visiting all the nodes of the binary tree.
+            •	Space Complexity: O(N). This is because the maximum amount of space utilized by the recursion stack would be N since the height of a skewed binary tree could be N.
+
+             */
+            public DataStructures.TreeNode Recur(DataStructures.TreeNode root, DataStructures.TreeNode nodeP, DataStructures.TreeNode nodeQ)
+            {
+                // Traverse the tree
+                RecurseTree(root, nodeP, nodeQ);
+                return this.lowestCommonAncestorNode;
+            }
+            /* Approach 2: Iterative using parent pointers 
+            Complexity Analysis
+•	Time Complexity : O(N), where N is the number of nodes in the binary tree. In the worst case we might be visiting all the nodes of the binary tree.
+•	Space Complexity : O(N). In the worst case space utilized by the stack, the parent pointer dictionary and the ancestor set, would be N each, since the height of a skewed binary tree could be N.
+
+            */
+            public DataStructures.TreeNode IterativeUsingParentPointers(DataStructures.TreeNode root, DataStructures.TreeNode nodeP, DataStructures.TreeNode nodeQ)
+            {
+
+                // Stack for tree traversal
+                Stack<DataStructures.TreeNode> traversalStack = new Stack<DataStructures.TreeNode>();
+
+                // Dictionary for parent pointers
+                Dictionary<DataStructures.TreeNode, DataStructures.TreeNode> parentPointers = new Dictionary<DataStructures.TreeNode, DataStructures.TreeNode>();
+
+                parentPointers[root] = null;
+                traversalStack.Push(root);
+
+                // Iterate until we find both the nodes nodeP and nodeQ
+                while (!parentPointers.ContainsKey(nodeP) || !parentPointers.ContainsKey(nodeQ))
+                {
+
+                    DataStructures.TreeNode currentNode = traversalStack.Pop();
+
+                    // While traversing the tree, keep saving the parent pointers.
+                    if (currentNode.Left != null)
+                    {
+                        parentPointers[currentNode.Left] = currentNode;
+                        traversalStack.Push(currentNode.Left);
+                    }
+                    if (currentNode.Right != null)
+                    {
+                        parentPointers[currentNode.Right] = currentNode;
+                        traversalStack.Push(currentNode.Right);
+                    }
+                }
+
+                // Ancestors set for nodeP.
+                HashSet<DataStructures.TreeNode> ancestorSet = new HashSet<DataStructures.TreeNode>();
+
+                // Process all ancestors for nodeP using parent pointers.
+                while (nodeP != null)
+                {
+                    ancestorSet.Add(nodeP);
+                    nodeP = parentPointers[nodeP];
+                }
+
+                // The first ancestor of nodeQ which appears in
+                // nodeP's ancestor set is their lowest common ancestor.
+                while (!ancestorSet.Contains(nodeQ))
+                    nodeQ = parentPointers[nodeQ];
+                return nodeQ;
+            }
+            /* Approach 3: Iterative without parent pointers 
+            Complexity Analysis
+•	Time Complexity : O(N), where N is the number of nodes in the binary tree. In the worst case we might be visiting all the nodes of the binary tree. The advantage of this approach is that we can prune backtracking. We simply return once both the nodes are found.
+•	Space Complexity : O(N). In the worst case the space utilized by stack would be N since the height of a skewed binary tree could be N.
+
+            */
+            // Three static flags to keep track of post-order traversal.
+
+            // Both left and right traversal pending for a node.
+            // Indicates the nodes children are yet to be traversed.
+            private static int BOTH_PENDING = 2;
+
+            // Left traversal done.
+            private static int LEFT_DONE = 1;
+
+            // Both left and right traversal done for a node.
+            // Indicates the node can be popped off the stack.
+            private static int BOTH_DONE = 0;
+
+            public DataStructures.TreeNode IterativeWithoutParentPointers(DataStructures.TreeNode root, DataStructures.TreeNode p, DataStructures.TreeNode q)
+            {
+
+                Stack<KeyValuePair<DataStructures.TreeNode, int>> stack = new Stack<KeyValuePair<DataStructures.TreeNode, int>>();
+
+                // Initialize the stack with the root node.
+                stack.Push(new KeyValuePair<DataStructures.TreeNode, int>(root, BOTH_PENDING));
+
+                // This flag is set when either one of p or q is found.
+                bool oneNodeFound = false;
+
+                // This is used to keep track of the LCA.
+                DataStructures.TreeNode lowestCommonAncestor = null;
+
+                // Child node
+                DataStructures.TreeNode childNode = null;
+
+                // We do a post order traversal of the binary tree using stack
+                while (stack.Count > 0)
+                {
+
+                    KeyValuePair<DataStructures.TreeNode, int> top = stack.Peek();
+                    DataStructures.TreeNode parentNode = top.Key;
+                    int parentState = top.Value;
+
+                    // If the parentState is not equal to BOTH_DONE,
+                    // this means the parentNode can't be popped off yet.
+                    if (parentState != BOTH_DONE)
+                    {
+
+                        // If both child traversals are pending
+                        if (parentState == BOTH_PENDING)
+                        {
+
+                            // Check if the current parentNode is either p or q.
+                            if (parentNode == p || parentNode == q)
+                            {
+
+                                // If oneNodeFound was set already, this means we have found
+                                // both the nodes.
+                                if (oneNodeFound)
+                                {
+                                    return lowestCommonAncestor;
+                                }
+                                else
+                                {
+                                    // Otherwise, set oneNodeFound to true,
+                                    // to mark one of p and q is found.
+                                    oneNodeFound = true;
+
+                                    // Save the current top element of stack as the LCA.
+                                    lowestCommonAncestor = stack.Peek().Key;
+                                }
+                            }
+
+                            // If both pending, traverse the left child first
+                            childNode = parentNode.Left;
+                        }
+                        else
+                        {
+                            // traverse right child
+                            childNode = parentNode.Right;
+                        }
+
+                        // Update the node state at the top of the stack
+                        // Since we have visited one more child.
+                        stack.Pop();
+                        stack.Push(new KeyValuePair<DataStructures.TreeNode, int>(parentNode, parentState - 1));
+
+                        // Add the child node to the stack for traversal.
+                        if (childNode != null)
+                        {
+                            stack.Push(new KeyValuePair<DataStructures.TreeNode, int>(childNode, BOTH_PENDING));
+                        }
+                    }
+                    else
+                    {
+
+                        // If the parentState of the node is both done,
+                        // the top node could be popped off the stack.
+                        // Update the LCA node to be the next top node.
+                        if (lowestCommonAncestor == stack.Pop().Key && oneNodeFound)
+                        {
+                            lowestCommonAncestor = stack.Peek().Key;
+                        }
+
+                    }
+                }
+
+                return null;
+            }
+
+        }
+
+
+        /* 1650. Lowest Common Ancestor of a Binary Tree III
+        https://leetcode.com/problems/lowest-common-ancestor-of-a-binary-tree-iii/description/?envType=company&envId=facebook&favoriteSlug=facebook-all&difficulty=MEDIUM
+        https://algo.monster/liteproblems/1650
+         */
+
+        class LowestCommonAncestorOfBinaryTreeIIISol
+        {
+            /*Time and Space Complexity
+The given Python function finds the lowest common ancestor (LCA) of two nodes in a binary tree where nodes have a pointer to their parent.
+Time Complexity:
+The time complexity of the code is O(h) where h is the height of the tree. This is because, in the worst case, both nodes p and q could be at the bottom of the tree, and we would traverse from each node up to the root before finding the LCA. Since we are moving at most up to the height of the tree for both p and q, the time complexity remains O(h).
+Space Complexity:
+The space complexity of the code is O(1). This is due to the fact that we are only using a fixed number of pointers (a and b) regardless of the size of the input tree, and no additional data structures or recursive stack space are used.
+  */
+            // This method finds the lowest common ancestor (LCA) of two nodes in a binary tree where nodes have parent pointers.
+            public Node LowestCommonAncestor(Node firstNode, Node secondNode)
+            {
+                // Initialize two pointers for traversing the ancestors of the given nodes.
+                Node pointerA = firstNode;
+                Node pointerB = secondNode;
+
+                // Traverse the ancestor chain of both nodes until they meet.
+                while (pointerA != pointerB)
+                {
+                    // If pointerA has reached the root (parent is null), start it at secondNode,
+                    // otherwise, move it to its parent.
+                    pointerA = pointerA.parent == null ? secondNode : pointerA.parent;
+
+                    // If pointerB has reached the root (parent is null), start it at firstNode,
+                    // otherwise, move it to its parent.
+                    pointerB = pointerB.parent == null ? firstNode : pointerB.parent;
+                }
+
+                // When pointerA and pointerB meet, we have found the LCA.
+                return pointerA;
+            }
+            public class Node
+            {
+                public int val;
+                public Node left;
+                public Node right;
+                public Node parent;
+            }
+        }
+
+
+        /* 199. Binary Tree Right Side View
+        https://leetcode.com/problems/binary-tree-right-side-view/description/?envType=company&envId=facebook&favoriteSlug=facebook-all&difficulty=MEDIUM
+         */
+        public class RightSideViewOfBinaryTreeSol
+        {
+
+            /* Approach 1: BFS: Two Queues
+            Complexity Analysis
+            •	Time complexity: O(N) since one has to visit each node.
+            •	Space complexity: O(D) to keep the queues, where D is a tree diameter. Let's use the last level to estimate the queue size. This level could contain up to N/2 tree nodes in the case of complete binary tree.
+
+             */
+            public IList<int> BFSWithTwoQueues(DataStructures.TreeNode root)
+            {
+                if (root == null) return new List<int>();
+
+                Queue<DataStructures.TreeNode> nextLevel = new Queue<DataStructures.TreeNode>();
+                nextLevel.Enqueue(root);
+                Queue<DataStructures.TreeNode> currLevel = new Queue<DataStructures.TreeNode>();
+                List<int> rightSide = new List<int>();
+
+                DataStructures.TreeNode node = null;
+                while (nextLevel.Count > 0)
+                {
+                    // prepare for the next level
+                    currLevel = new Queue<DataStructures.TreeNode>(nextLevel);
+                    nextLevel.Clear();
+
+                    while (currLevel.Count > 0)
+                    {
+                        node = currLevel.Dequeue();
+
+                        // add child nodes of the current level
+                        // in the queue for the next level
+                        if (node.Left != null) nextLevel.Enqueue(node.Left);
+                        if (node.Right != null) nextLevel.Enqueue(node.Right);
+                    }
+
+                    // The current level is finished.
+                    // Its last element is the rightmost one.
+                    if (currLevel.Count == 0) rightSide.Add(node.Val);
+                }
+                return rightSide;
+            }/* 
+Approach 2: BFS: One Queue + Sentinel
+Complexity Analysis
+•	Time complexity: O(N) since one has to visit each node.
+•	Space complexity: O(D) to keep the queues, where D is a tree diameter. Let's use the last level to estimate the queue size. This level could contain up to N/2 tree nodes in the case of complete binary tree.
+
+ */
+            public List<int> BFSWithOneQueueAndSentinelNode(DataStructures.TreeNode root)
+            {
+                if (root == null) return new List<int>();
+
+                Queue<DataStructures.TreeNode> treeNodeQueue = new Queue<DataStructures.TreeNode>();
+                treeNodeQueue.Enqueue(root);
+                treeNodeQueue.Enqueue(null);
+
+                DataStructures.TreeNode previousNode = null;
+                DataStructures.TreeNode currentNode = root;
+                List<int> rightSideViewList = new List<int>();
+
+                while (treeNodeQueue.Count > 0)
+                {
+                    previousNode = currentNode;
+                    currentNode = treeNodeQueue.Dequeue();
+
+                    while (currentNode != null)
+                    {
+                        // add child nodes in the queue
+                        if (currentNode.Left != null)
+                        {
+                            treeNodeQueue.Enqueue(currentNode.Left);
+                        }
+                        if (currentNode.Right != null)
+                        {
+                            treeNodeQueue.Enqueue(currentNode.Right);
+                        }
+
+                        previousNode = currentNode;
+                        currentNode = treeNodeQueue.Dequeue();
+                    }
+
+                    // the current level is finished
+                    // and previousNode is its rightmost element
+                    rightSideViewList.Add(previousNode.Val);
+
+                    // add a sentinel to mark the end
+                    // of the next level
+                    if (treeNodeQueue.Count > 0) treeNodeQueue.Enqueue(null);
+                }
+
+                return rightSideViewList;
+            }
+            /* Approach 3: BFS: One Queue + Level Size Measurements 
+            Complexity Analysis
+•	Time complexity: O(N) since one has to visit each node.
+•	Space complexity: O(D) to keep the queues, where D is a tree diameter. Let's use the last level to estimate the queue size. This level could contain up to N/2 tree nodes in the case of complete binary tree.
+
+            */
+            public IList<int> BFSWithOneQueueAndLevelSizeMeasure(DataStructures.TreeNode root)
+            {
+                if (root == null) return new List<int>();
+
+                Queue<DataStructures.TreeNode> queue = new Queue<DataStructures.TreeNode>();
+                queue.Enqueue(root);
+                List<int> rightSide = new List<int>();
+
+                while (queue.Count > 0)
+                {
+                    int levelLength = queue.Count;
+
+                    for (int i = 0; i < levelLength; ++i)
+                    {
+                        DataStructures.TreeNode currentNode = queue.Dequeue();
+
+                        // if it's the rightmost element
+                        if (i == levelLength - 1)
+                        {
+                            rightSide.Add(currentNode.Val);
+                        }
+
+                        // add child nodes in the queue
+                        if (currentNode.Left != null)
+                        {
+                            queue.Enqueue(currentNode.Left);
+                        }
+                        if (currentNode.Right != null)
+                        {
+                            queue.Enqueue(currentNode.Right);
+                        }
+                    }
+                }
+                return rightSide;
+            }
+            /* Approach 4: Recursive DFS
+Complexity Analysis
+•	Time complexity: O(N) since one has to visit each node.
+•	Space complexity: O(H) to keep the recursion stack, where H is a tree height. The worst-case situation is a skewed tree when H=N.
+
+             */
+            List<int> rightside = new();
+            public List<int> DFSRec(DataStructures.TreeNode root)
+            {
+                if (root == null) return rightside;
+
+                Helper(root, 0);
+                return rightside;
+            }
+            private void Helper(DataStructures.TreeNode node, int level)
+            {
+                if (level == rightside.Count) rightside.Add(node.Val);
+
+                if (node.Right != null) Helper(node.Right, level + 1);
+                if (node.Left != null) Helper(node.Left, level + 1);
+            }
 
 
 
+        }
 
-
-
-
-
-
-
-
-
-
-
+   
 
 
     }

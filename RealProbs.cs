@@ -12469,7 +12469,7 @@ The trie data structure itself can have a maximum of (2^n) nodes in the worst ca
             }
 
         }
-      
+
         /*
         2534. Time Taken to Cross the Door
         https://leetcode.com/problems/time-taken-to-cross-the-door/description/
@@ -15049,6 +15049,66 @@ The Queue will have N senators initially. The number can only decrease but can n
         }
 
 
+        /* 398. Random Pick Index
+        https://leetcode.com/problems/random-pick-index/description/?envType=company&envId=facebook&favoriteSlug=facebook-all&difficulty=MEDIUM
+        https://algo.monster/liteproblems/398
+         */
+        class RandomPickIndexSol
+        {
+            private int[] nums; // This array holds the original array of numbers.
+            private Random random = new Random(); // Random object to generate random numbers.
+
+            // Constructor that receives an array of numbers.
+            public RandomPickIndexSol(int[] nums)
+            {
+                this.nums = nums; // Initialize the nums array with the given input array.
+            }
+
+            /* Time and Space Complexity
+        Time Complexity
+        The time complexity of the pick method is O(N), where N is the total number of elements in nums. This is because, in the worst case, we have to iterate over all the elements in nums to find all occurrences of target and decide whether to pick each occurrence or not.
+
+        During each iteration, we perform the following operations:
+
+        Compare the current value v with target.
+        If they match, we increment n.
+        Generate a random number x with random.randint(1, n), which has constant time complexity O(1).
+        Compare x to n and possibly update ans.
+        These operations are within the single pass loop through nums, hence maintaining the overall time complexity of O(N).
+
+        Space Complexity
+        The space complexity of the pick method is O(1). The additional space required for the method execution does not depend on the size of the input array but only on a fixed set of variables (n, ans, i, and v), which use a constant amount of space.
+
+        The class Solution itself has space complexity O(N), where N is the number of elements in nums, since it stores the entire list of numbers.
+
+        However, when analyzing the space complexity of the pick method, we consider only the extra space used by the method excluding the space used to store the input, which in this case remains constant.
+
+         */        // Method to pick a random index where the target value is found in the nums array.
+            public int Pick(int target)
+            {
+                int count = 0; // Counter to track how many times we've seen the target so far.
+                int result = 0; // Variable to keep the result index.
+
+                // Iterating over the array to find target.
+                for (int i = 0; i < nums.Length; ++i)
+                {
+                    if (nums[i] == target)
+                    { // Check if current element is the target.
+                        count++; // Increment the count since we have found the target.
+                                 // Generate a random number between 1 and the number of times target has been seen inclusively.
+                        int randomNumber = 1 + random.Next(count);
+
+                        // If the random number equals to the count (probability 1/n),
+                        // set the result to current index i.
+                        if (randomNumber == count)
+                        {
+                            result = i;
+                        }
+                    }
+                }
+                return result; // Return the index of target chosen uniformly at random.
+            }
+        }
 
         /*
         528. Random Pick with Weight
@@ -17305,6 +17365,69 @@ We store only a few integer variables and the string representation of groupLeng
                     index += groupLength;
                 }
                 return result;
+            }
+        }
+
+        /*     1531. String Compression II
+        https://leetcode.com/problems/string-compression-ii/description/
+         */
+        public class GetLengthOfOptimalCompressionSol
+        {
+            private Dictionary<int, int> memo = new Dictionary<int, int>();
+            private HashSet<int> add = new HashSet<int> { 1, 9, 99 };
+
+            /* Approach 1: Dynamic Programming
+            Complexity Analysis
+            •	Time complexity: O(nk^2).
+            Each recursive call will require only constant time, so we can calculate our time complexity as O(1) times the number of recursive calls made. Since we are using memoization, the number of recursive calls will be proportional to the number of DP states.
+            Each DP state is defined as (idx, last, cnt, k), so we can calculate the number of DP states as the product of the number of possible values for each parameter. There will be n possible values for idx, A possible values for last, where A=26 is the size of the alphabet, n possible values for cnt, and k possible values for k. Thus, there are O(An^2k) possible DP states.
+            However we can tighten our upper bound and get rid of A in our complexity. Let us look at pairs (last, cnt) and check how many of them we have. Consider the case aaababbbcc. Then for letter a we can have states (a, 1), (a, 2), (a, 3) and (a, 4), because we have only 4 letters a in our string and after deletions we can not have more. We have states (b, 1), (b, 2), (b, 3), (b, 4), (c, 1), (c, 2). Notice that some of these states can not be reached, because we do not have enough deletions. But what we know for sure is that the total number of pairs (last, cnt) is not more than n. Now we can adjust our analysis and we have:
+            1.	When we consider our states, we have n options to choose index
+            2.	We have n options in total to choose a pair (l, lc), because for each letter the maximum length is the frequency of this letter.
+            3.	We have k+1 options to choose how many elements we need to delete: it can be (0, ..., k).
+            Also we have at most 2 transitions from one state to another and it makes total time complexity O(nk^2).
+            •	Space complexity: O(nk^2).
+            We already found the number of states when we calculated time complexity, here is the same reasoning.
+
+             */
+            public int UsingDP(string s, int k)
+            {
+                return Dp(s, 0, (char)('a' + 26), 0, k);
+            }
+
+            private int Dp(string s, int idx, char lastChar, int lastCharCount, int k)
+            {
+                if (k < 0)
+                {
+                    return int.MaxValue / 2;
+                }
+
+                if (idx == s.Length)
+                {
+                    return 0;
+                }
+
+                int key = idx * 101 * 27 * 101 + (lastChar - 'a') * 101 * 101 + lastCharCount * 101 + k;
+
+                if (memo.ContainsKey(key))
+                {
+                    return memo[key];
+                }
+
+                int keepChar;
+                int deleteChar = Dp(s, idx + 1, lastChar, lastCharCount, k - 1);
+                if (s[idx] == lastChar)
+                {
+                    keepChar = Dp(s, idx + 1, lastChar, lastCharCount + 1, k) + (add.Contains(lastCharCount) ? 1 : 0);
+                }
+                else
+                {
+                    keepChar = Dp(s, idx + 1, s[idx], 1, k) + 1;
+                }
+                int res = Math.Min(keepChar, deleteChar);
+                memo[key] = res;
+
+                return res;
             }
         }
         /*

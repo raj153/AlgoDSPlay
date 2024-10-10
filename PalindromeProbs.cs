@@ -601,8 +601,214 @@ Each iteration runs linear in time (since each character operation completes in 
 
         }
 
+        /* 680. Valid Palindrome II
+        https://leetcode.com/problems/valid-palindrome-ii/
+         */
+        public class IsValidPalindromeIISol
+        {
+
+            /* Approach: Two Pointers
+            Complexity Analysis
+            Given N as the length of s,
+            •	Time complexity: O(N).
+            The main while loop we use can iterate up to N / 2 times, since each iteration represents a pair of characters. On any given iteration, we may find a mismatch and call checkPalindrome twice. checkPalindrome can also iterate up to N / 2 times, in the worst case where the first and last character of s do not match.
+            Because we are only allowed up to one deletion, the algorithm only considers one mismatch. This means that checkPalindrome will never be called more than twice.
+            As such, we have a time complexity of O(N).
+            •	Space complexity: O(1).
+            The only extra space used is by the two pointers i and j, which can be considered constant relative to the input size
+
+             */
+            public bool ValidPalindrome(string inputString)
+            {
+                int startIndex = 0;
+                int endIndex = inputString.Length - 1;
+
+                while (startIndex < endIndex)
+                {
+                    // Found a mismatched pair - try both deletions
+                    if (inputString[startIndex] != inputString[endIndex])
+                    {
+                        return CheckPalindrome(inputString, startIndex, endIndex - 1) || CheckPalindrome(inputString, startIndex + 1, endIndex);
+                    }
+
+                    startIndex++;
+                    endIndex--;
+                }
+
+                return true;
+            }
+            private bool CheckPalindrome(string inputString, int startIndex, int endIndex)
+            {
+                while (startIndex < endIndex)
+                {
+                    if (inputString[startIndex] != inputString[endIndex])
+                    {
+                        return false;
+                    }
+
+                    startIndex++;
+                    endIndex--;
+                }
+
+                return true;
+            }
+
+
+        }
+        /* 1216. Valid Palindrome III
+        https://leetcode.com/problems/valid-palindrome-iii/description/
+         */
+        public class IsValidPalindromeIIISol
+        {
+            private int?[,] memo;
+
+            /* Approach 1: Top-Down DP (2D)
+            Complexity Analysis
+            •	Time complexity : O(n^2). Where n is the length of string s. This is due to the fact that we try to find result for all combinations of i and j where i and j range from 0 to n, to compute a combination we perform an O(1) operation thus the final complexity is O(n^2).
+            •	Space complexity : O(n^2). Where n is the length of string s. This is due to caching all the results in memo table. The recursion stack depth can reach at max O(n) depth. Thus the complexity is dominated by the space required for memo.
+
+             */
+            public bool TopDown2DDP(string s, int k)
+            {
+                memo = new int?[s.Length, s.Length];
+
+                // Return true if the minimum cost to create a palindrome by only deleting the letters
+                // is less than or equal to `k`.
+                return IsValidPalindrome(s, 0, s.Length - 1) <= k;
+            }
+            private int IsValidPalindrome(string s, int i, int j)
+            {
+                // Base case, only 1 letter remaining.
+                if (i == j)
+                    return 0;
+
+                // Base case 2, only 2 letters remaining.
+                if (i == j - 1)
+                    return s[i] != s[j] ? 1 : 0;
+
+                // Return the precomputed value if exists.
+                if (memo[i, j] != null)
+                    return memo[i, j].Value;
+
+                // Case 1: Character at `i` equals character at `j`
+                if (s[i] == s[j])
+                    return (int)(memo[i, j] = IsValidPalindrome(s, i + 1, j - 1));
+
+                // Case 2: Character at `i` does not equal character at `j`.
+                // Either delete character at `i` or delete character at `j`
+                // and try to match the two pointers using recursion.
+                // We need to take the minimum of the two results and add 1
+                // representing the cost of deletion.
+                return (int)(memo[i, j] = 1 + Math.Min(IsValidPalindrome(s, i + 1, j), IsValidPalindrome(s, i, j - 1)));
+            }
+
+            /* Approach 2: Bottom-Up DP (2D)
+            Complexity Analysis
+•	Time complexity : O(n^2). Where n is the length of string s. This is due to the fact that we try to find result for all combinations of i and j where i and j range from 0 to n, to compute a combination we perform an O(1) operation thus the final complexity is O(n^2).
+•	Space complexity : O(n^2). Where n is the length of string s. This is due to the memo table which is completely filled in this case.
+
+             */
+            public bool BottomUp2DDP(string inputString, int maxDeletions)
+            {
+                int[,] memoizationArray = new int[inputString.Length, inputString.Length];
+
+                // Generate all combinations of `i` and `j` in the correct order.
+                for (int start = inputString.Length - 2; start >= 0; start--)
+                {
+                    for (int end = start + 1; end < inputString.Length; end++)
+                    {
+                        // Case 1: Character at `start` equals character at `end`
+                        if (inputString[start] == inputString[end])
+                            memoizationArray[start, end] = memoizationArray[start + 1, end - 1];
+
+                        // Case 2: Character at `start` does not equal character at `end`.
+                        // Either delete character at `start` or delete character at `end`
+                        // and try to match the two pointers using recursion.
+                        // We need to take the minimum of the two results and add 1
+                        // representing the cost of deletion.
+                        else
+                            memoizationArray[start, end] = 1 + Math.Min(memoizationArray[start + 1, end], memoizationArray[start, end - 1]);
+                    }
+                }
+
+                // Return true if the minimum cost to create a palindrome by only deleting the letters
+                // is less than or equal to `maxDeletions`.
+                return memoizationArray[0, inputString.Length - 1] <= maxDeletions;
+            }
+
+            /* Approach 3: Bottom-Up DP (1D)
+            Complexity Analysis
+            •	Time complexity : O(n^2). Where n is the length of string s. This is due to the fact that we try to find result for all combinations of i and j where i and j range from 0 to n, to compute a combination we perform an O(1) operation thus the final complexity is O(n^2).
+            •	Space complexity : O(n). Where n is the length of string s. This is due to the memo table which stores result for only one row/i and all it's combination columns/j.
+
+             */
+            public bool BottomUp1DDP(string inputString, int allowedDeletions)
+            {
+                int[] memoizationArray = new int[inputString.Length];
+
+                // To store the previous required values from memoizationArray.
+                int tempValue, previousValue;
+
+                // Generate all combinations of `i` and `j` in the correct order.
+                for (int i = inputString.Length - 2; i >= 0; i--)
+                {
+                    // 'previousValue' stores the value at memoizationArray[i+1][j-1];
+                    previousValue = 0;
+                    for (int j = i + 1; j < inputString.Length; j++)
+                    {
+                        // Store the value of memoizationArray[i+1][j] temporarily.
+                        tempValue = memoizationArray[j];
+
+                        // Case 1: Character at `i` equals character at `j`
+                        if (inputString[i] == inputString[j])
+                            memoizationArray[j] = previousValue;
+
+                        // Case 2: Character at `i` does not equal character at `j`.
+                        // Either delete character at `i` or delete character at `j`
+                        // and try to match the two pointers using recursion.
+                        // We need to take the minimum of the two results and add 1
+                        // representing the cost of deletion.
+                        else
+                            // memoizationArray[j] will contain the value for memoizationArray[i+1][j]
+                            // memoizationArray[j-1] will contain the value for memoizationArray[i][j-1]
+                            memoizationArray[j] = 1 + Math.Min(memoizationArray[j], memoizationArray[j - 1]);
+
+                        // Copy the value of memoizationArray[i+1][j] to `previousValue`
+                        // For the next iteration when j=j+1
+                        // `previousValue` will hold the value memoizationArray[i+1][j-1];
+                        previousValue = tempValue;
+                    }
+                }
+
+                // Return true if the minimum cost to create a palindrome by only deleting the letters
+                // is less than or equal to `allowedDeletions`.
+                return memoizationArray[inputString.Length - 1] <= allowedDeletions;
+            }
+
+        }
+
+        /* 2330. Valid Palindrome IV
+        https://leetcode.com/problems/valid-palindrome-iv/description/
+         */
+        class ValidPalindromeIVSol
+        {
+            /*
+            Approach 1: Two Pointers
+            */
+            public bool MakePalindrome(String s)
+            {
+                int i = 0, j = s.Length - 1, miss = 0;
+                while (i < j && (s[i] == s[j] || ++miss < 3))
+                {
+                    i++;
+                    j--;
+                }
+                return miss < 3;
+            }
+        }
+
         /* 
-        5. Longest Palindromic Substring
+        5.Longest Palindromic Substring
         https://leetcode.com/problems/longest-palindromic-substring/description
 
         //https://www.algoexpert.io/questions/longest-palindromic-substring
@@ -3287,6 +3493,630 @@ For Python: ''.join(s_list) - Creates a new string from the list, requiring O(n)
                 return new string(charArray);
             }
         }
+
+
+        /* 1312. Minimum Insertion Steps to Make a String Palindrome
+        https://leetcode.com/problems/minimum-insertion-steps-to-make-a-string-palindrome/description/
+         */
+
+        class MinInsertionsToMakeStringPalindromeSol
+        {
+
+            /*
+             Approach 1: Recursive Dynamic Programming
+Complexity Analysis
+Here, n is the length of s.
+•	Time complexity: O(n^2)
+o	Initializing the memo array takes O(n^2) time.
+o	Since there are O(n2) states that we need to iterate over, the recursive function is called O(n^2) times.
+•	Space complexity: O(n^2)
+o	The memo array consumes O(n^2) space.
+o	The recursion stack used in the solution can grow to a maximum size of O(n). When we try to form the recursion tree, we see that there are maximum of two branches that can be formed at each level (when s[m - 1] != s[n - 1]). The recursion stack would only have one call out of the two branches. The height of such a tree will be O(n) because at each level we are decrementing the length of the strings under consideration by 1. As a result, the recursion tree that will be formed will have O(n) height. Hence, the recursion stack will have a maximum of O(n) elements.
+
+             */
+            public int DPRec(String s)
+            {
+                int n = s.Length;
+                String sReverse = s.Reverse().ToString();
+                int[][] memo = new int[n + 1][];
+
+                for (int i = 0; i <= n; i++)
+                {
+                    for (int j = 0; j <= n; j++)
+                    {
+                        memo[i][j] = -1;
+                    }
+                }
+
+                return n - Lcs(s, sReverse, n, n, memo);
+            }
+            private int Lcs(String s1, String s2, int m, int n, int[][] memo)
+            {
+                if (m == 0 || n == 0)
+                {
+                    return 0;
+                }
+                if (memo[m][n] != -1)
+                {
+                    return memo[m][n];
+                }
+                if (s1[m - 1] == s2[n - 1])
+                {
+                    return memo[m][n] = 1 + Lcs(s1, s2, m - 1, n - 1, memo);
+                }
+                return memo[m][n] = Math.Max(Lcs(s1, s2, m - 1, n, memo), Lcs(s1, s2, m, n - 1, memo));
+            }
+
+
+
+
+            /* 
+            Approach 2: Iterative Dynamic Programming 
+    Complexity Analysis
+    Here, n is the length of s.
+    •	Time complexity: O(n^2)
+    o	Initializing the dp array takes O(n^2) time.
+    o	We fill the dp array which takes O(n^2) time.
+    •	Space complexity: O(n^2)
+    o	The dp array consumes O(n^2) space.
+
+            */
+            public int DPIterative(String s)
+            {
+                int n = s.Length;
+                String sReverse = s.Reverse().ToString();
+
+                return n - lcs(s, sReverse, n, n);
+            }
+            private int lcs(String s1, String s2, int m, int n)
+            {
+                int[][] dp = new int[m + 1][];
+
+                for (int i = 0; i <= m; i++)
+                {
+                    for (int j = 0; j <= n; j++)
+                    {
+                        if (i == 0 || j == 0)
+                        {
+                            // One of the two strings is empty.
+                            dp[i][j] = 0;
+                        }
+                        else if (s1[i - 1] == s2[j - 1])
+                        {
+                            dp[i][j] = 1 + dp[i - 1][j - 1];
+                        }
+                        else
+                        {
+                            dp[i][j] = Math.Max(dp[i - 1][j], dp[i][j - 1]);
+                        }
+                    }
+                }
+
+                return dp[m][n];
+            }
+            /*  
+                       Approach 3: Dynamic Programming with Space Optimization 
+                       Complexity Analysis
+            Here, n is the length of s.
+            •	Time complexity: O(n^2)
+            o	Initializing the dp and dpPrev arrays take O(n) time.
+            o	To get the answer, we use two loops that take O(n^2) time.
+            •	Space complexity: O(n)
+            o	The dp and dpPrev arrays take O(n) space each.
+
+                       */
+            public int DPIterativeWithSpaceOptiaml(String s)
+            {
+                int n = s.Length;
+                String sReverse = s.Reverse().ToString();
+
+                return n - LcsExt(s, sReverse, n, n);
+            }
+            private int LcsExt(String s1, String s2, int m, int n)
+            {
+                int[] dp = new int[n + 1];
+                int[] dpPrev = new int[n + 1];
+
+                for (int i = 0; i <= m; i++)
+                {
+                    for (int j = 0; j <= n; j++)
+                    {
+                        if (i == 0 || j == 0)
+                        {
+                            // One of the two strings is empty.
+                            dp[j] = 0;
+                        }
+                        else if (s1[i - 1] == s2[j - 1])
+                        {
+                            dp[j] = 1 + dpPrev[j - 1];
+                        }
+                        else
+                        {
+                            dp[j] = Math.Max(dpPrev[j], dp[j - 1]);
+                        }
+                    }
+                    dpPrev = (int[])dp.Clone();
+                }
+
+                return dp[n];
+            }
+
+        }
+
+        /* 906. Super Palindromes
+        https://leetcode.com/problems/super-palindromes/description/
+         */
+
+        public class CountSuperpalindromesInRangeSol
+        {
+
+            /* 
+            Approach 1: Mathematical
+            Complexity Analysis
+            •	Time Complexity: O((W^(1/4))∗logW), where W=10^18 is our upper limit for R. The logW term comes from checking whether each candidate is the root of a palindrome.
+            •	Space Complexity: O(logW), the space used to create the candidate palindrome.
+
+             */
+
+            public int UsingMaths(string startRange, string endRange)
+            {
+                long lowerBound = long.Parse(startRange);
+                long upperBound = long.Parse(endRange);
+                int magicNumber = 100000;
+                int count = 0;
+
+                // count odd length;
+                for (int k = 1; k < magicNumber; ++k)
+                {
+                    StringBuilder stringBuilder = new StringBuilder(k.ToString());
+                    for (int i = stringBuilder.Length - 2; i >= 0; --i)
+                        stringBuilder.Append(stringBuilder[i]);
+                    long palindromeValue = long.Parse(stringBuilder.ToString());
+                    palindromeValue *= palindromeValue;
+                    if (palindromeValue > upperBound) break;
+                    if (palindromeValue >= lowerBound && IsPalindrome(palindromeValue)) count++;
+                }
+
+                // count even length;
+                for (int k = 1; k < magicNumber; ++k)
+                {
+                    StringBuilder stringBuilder = new StringBuilder(k.ToString());
+                    for (int i = stringBuilder.Length - 1; i >= 0; --i)
+                        stringBuilder.Append(stringBuilder[i]);
+                    long palindromeValue = long.Parse(stringBuilder.ToString());
+                    palindromeValue *= palindromeValue;
+                    if (palindromeValue > upperBound) break;
+                    if (palindromeValue >= lowerBound && IsPalindrome(palindromeValue)) count++;
+                }
+
+                return count;
+            }
+
+            private bool IsPalindrome(long number)
+            {
+                return number == Reverse(number);
+            }
+
+            private long Reverse(long number)
+            {
+                long reversedNumber = 0;
+                while (number > 0)
+                {
+                    reversedNumber = 10 * reversedNumber + number % 10;
+                    number /= 10;
+                }
+
+                return reversedNumber;
+            }
+        }
+
+        /* 1632. Rank Transform of a Matrix
+        https://leetcode.com/problems/rank-transform-of-a-matrix/description/
+         */
+        public class MatrixRankTransformSol
+        {
+            /* 
+            Approach 1: Sorting + BFS
+            Complexity Analysis
+Let M be the number of rows in matrix and N be the number of columns in matrix.
+•	Time Complexity: O(NM log(NM)).
+o	We need O(NM) to iterate matrix to build graphs.
+o	We need O(NM) to iterate matrix to build value2index. We only visit points at most twice, since we skip points visited in BFS.
+o	We need O(NMlog(NM)) to sort the keys in value2index, since there are at most O(NM) different keys.
+o	We need O(NM) to iterate value2index to build answer.
+o	Adding together, the time we needed is O(NM log(NM)).
+•	Space Complexity: O(NM).
+o	For graphs, we store O(NM) edges (viewing each point as an edge).
+o	For value2index, we store O(NM) points.
+o	For rowMax and columnMax, they have size of O(M) and O(N), respectively.
+o	In total, the size we needed is O(NM).
+
+             */
+            public int[][] SortingWithBFS(int[][] matrix)
+            {
+                int rowCount = matrix.Length;
+                int columnCount = matrix[0].Length;
+
+                // link row to col, and link col to row
+                Dictionary<int, Dictionary<int, List<int>>> graphs = new Dictionary<int, Dictionary<int, List<int>>>();
+                // graphs[v]: the connection graph of value v
+                for (int row = 0; row < rowCount; row++)
+                {
+                    for (int col = 0; col < columnCount; col++)
+                    {
+                        int value = matrix[row][col];
+                        // if not initialized, initialize it
+                        if (!graphs.ContainsKey(value))
+                        {
+                            graphs[value] = new Dictionary<int, List<int>>();
+                        }
+                        Dictionary<int, List<int>> graph = graphs[value];
+                        if (!graph.ContainsKey(row))
+                        {
+                            graph[row] = new List<int>();
+                        }
+                        if (!graph.ContainsKey(~col))
+                        {
+                            graph[~col] = new List<int>();
+                        }
+                        // link row to col, and link col to row
+                        graph[row].Add(~col);
+                        graph[~col].Add(row);
+                    }
+                }
+
+                // put points into `value2index` dict, grouped by connection
+                // use SortedDictionary to help us sort the key automatically
+                SortedDictionary<int, List<List<int[]>>> valueToIndex = new SortedDictionary<int, List<List<int[]>>>();
+                int[][] seen = new int[rowCount][];
+                for (int i = 0; i < rowCount; i++)
+                {
+                    seen[i] = new int[columnCount];
+                } // mark whether put into `valueToIndex` or not
+                for (int row = 0; row < rowCount; row++)
+                {
+                    for (int col = 0; col < columnCount; col++)
+                    {
+                        if (seen[row][col] == 1)
+                        {
+                            continue;
+                        }
+                        seen[row][col] = 1;
+                        int value = matrix[row][col];
+                        Dictionary<int, List<int>> graph = graphs[value];
+                        // store visited row and col
+                        HashSet<int> rowCols = new HashSet<int>();
+                        rowCols.Add(row);
+                        rowCols.Add(~col);
+                        // start bfs
+                        Queue<int> queue = new Queue<int>();
+                        queue.Enqueue(row);
+                        queue.Enqueue(~col);
+                        while (queue.Count > 0)
+                        {
+                            int node = queue.Dequeue();
+                            foreach (int rowCol in graph[node])
+                            {
+                                if (!rowCols.Contains(rowCol))
+                                {
+                                    rowCols.Add(rowCol);
+                                    queue.Enqueue(rowCol);
+                                }
+                            }
+                        }
+                        // transform rowCols into points
+                        List<int[]> points = new List<int[]>();
+                        foreach (int rowCol in rowCols)
+                        {
+                            foreach (int k in graph[rowCol])
+                            {
+                                if (k >= 0)
+                                {
+                                    points.Add(new int[] { k, ~rowCol });
+                                    seen[k][~rowCol] = 1;
+                                }
+                                else
+                                {
+                                    points.Add(new int[] { rowCol, ~k });
+                                    seen[rowCol][~k] = 1;
+                                }
+                            }
+                        }
+                        if (!valueToIndex.ContainsKey(value))
+                        {
+                            valueToIndex[value] = new List<List<int[]>>();
+                        }
+                        valueToIndex[value].Add(points);
+                    }
+                }
+                int[][] answer = new int[rowCount][];
+                for (int i = 0; i < rowCount; i++)
+                {
+                    answer[i] = new int[columnCount];
+                } // the required rank matrix
+                int[] rowMax = new int[rowCount]; // rowMax[i]: the max rank in i row
+                int[] colMax = new int[columnCount]; // colMax[j]: the max rank in j col
+                foreach (int value in valueToIndex.Keys)
+                {
+                    // update by connected points with same value
+                    foreach (List<int[]> points in valueToIndex[value])
+                    {
+                        int rank = 1;
+                        foreach (int[] point in points)
+                        {
+                            rank = Math.Max(rank, Math.Max(rowMax[point[0]], colMax[point[1]]) + 1);
+                        }
+                        foreach (int[] point in points)
+                        {
+                            answer[point[0]][point[1]] = rank;
+                            // update rowMax and colMax
+                            rowMax[point[0]] = Math.Max(rowMax[point[0]], rank);
+                            colMax[point[1]] = Math.Max(colMax[point[1]], rank);
+                        }
+                    }
+                }
+                return answer;
+            }
+            /* 
+            Approach 2: Sorting + DFS 
+Complexity Analysis
+Let M be the number of rows in matrix and N be the number of columns in matrix.
+•	Time Complexity: O(NM log(NM)).
+o	We need O(NM) to iterate matrix to build graphs.
+o	We need O(NM) to iterate matrix to build value2index. We only visit points at most twice, since we skip points visited in DFS.
+o	We need O(NMlog(NM)) to sort the keys in value2index, since there are at most O(NM) different keys.
+o	We need O(NM) to iterate value2index to build answer.
+o	Adding together, the time we needed is O(NMlog(NM)).
+•	Space Complexity: O(NM).
+o	For graphs, we store O(NM) edges (viewing each point as an edge).
+o	For value2index, we store O(NM) points.
+o	For rowMax and columnMax, they have size of O(M) and O(N), respectively.
+o	In total, the size we needed is O(NM).
+
+            */
+            public int[][] SortingWithDFS(int[][] matrix)
+            {
+                int rowCount = matrix.Length;
+                int columnCount = matrix[0].Length;
+
+                // link row to col, and link col to row
+                Dictionary<int, Dictionary<int, List<int>>> graphs = new Dictionary<int, Dictionary<int, List<int>>>();
+                // graphs[v]: the connection graph of value v
+                for (int i = 0; i < rowCount; i++)
+                {
+                    for (int j = 0; j < columnCount; j++)
+                    {
+                        int value = matrix[i][j];
+                        // if not initialized, initial it
+                        if (!graphs.ContainsKey(value))
+                        {
+                            graphs[value] = new Dictionary<int, List<int>>();
+                        }
+                        Dictionary<int, List<int>> graph = graphs[value];
+                        if (!graph.ContainsKey(i))
+                        {
+                            graph[i] = new List<int>();
+                        }
+                        if (!graph.ContainsKey(~j))
+                        {
+                            graph[~j] = new List<int>();
+                        }
+                        // link i to j, and link j to i
+                        graph[i].Add(~j);
+                        graph[~j].Add(i);
+                    }
+                }
+
+                // put points into `valueToIndex` dict, grouped by connection
+                // use SortedDictionary to help us sort the key automatically
+                SortedDictionary<int, List<List<int[]>>> valueToIndex = new SortedDictionary<int, List<List<int[]>>>();
+                int[][] seen = new int[rowCount][];
+                for (int i = 0; i < rowCount; i++)
+                {
+                    seen[i] = new int[columnCount];
+                }
+                // mark whether put into `valueToIndex` or not
+                for (int i = 0; i < rowCount; i++)
+                {
+                    for (int j = 0; j < columnCount; j++)
+                    {
+                        if (seen[i][j] == 1)
+                        {
+                            continue;
+                        }
+                        seen[i][j] = 1;
+                        int value = matrix[i][j];
+                        Dictionary<int, List<int>> graph = graphs[value];
+                        // use dfs to find the connected parts
+                        HashSet<int> rowCols = new HashSet<int>();
+                        DepthFirstSearch(i, graph, rowCols);
+                        DepthFirstSearch(~j, graph, rowCols);
+                        // transform rowCols into points
+                        List<int[]> points = new List<int[]>();
+                        foreach (int rowCol in rowCols)
+                        {
+                            foreach (int k in graph[rowCol])
+                            {
+                                if (k >= 0)
+                                {
+                                    points.Add(new int[] { k, ~rowCol });
+                                    seen[k][~rowCol] = 1;
+                                }
+                                else
+                                {
+                                    points.Add(new int[] { rowCol, ~k });
+                                    seen[rowCol][~k] = 1;
+                                }
+                            }
+                        }
+                        if (!valueToIndex.ContainsKey(value))
+                        {
+                            valueToIndex[value] = new List<List<int[]>>();
+                        }
+                        valueToIndex[value].Add(points);
+                    }
+                }
+                int[][] answer = new int[rowCount][];
+                for (int i = 0; i < rowCount; i++)
+                {
+                    answer[i] = new int[columnCount];
+                }
+                // the required rank matrix
+                int[] rowMax = new int[rowCount]; // rowMax[i]: the max rank in i row
+                int[] colMax = new int[columnCount]; // colMax[j]: the max rank in j col
+                foreach (int value in valueToIndex.Keys)
+                {
+                    // update by connected points with same value
+                    foreach (List<int[]> points in valueToIndex[value])
+                    {
+                        int rank = 1;
+                        foreach (int[] point in points)
+                        {
+                            rank = Math.Max(rank, Math.Max(rowMax[point[0]], colMax[point[1]]) + 1);
+                        }
+                        foreach (int[] point in points)
+                        {
+                            answer[point[0]][point[1]] = rank;
+                            // update rowMax and colMax
+                            rowMax[point[0]] = Math.Max(rowMax[point[0]], rank);
+                            colMax[point[1]] = Math.Max(colMax[point[1]], rank);
+                        }
+                    }
+                }
+                return answer;
+            }
+            private void DepthFirstSearch(int node, Dictionary<int, List<int>> graph, HashSet<int> rowCols)
+            {
+                // the dfs function to find connected parts
+                rowCols.Add(node);
+                foreach (int rowCol in graph[node])
+                {
+                    if (!rowCols.Contains(rowCol))
+                    {
+                        DepthFirstSearch(rowCol, graph, rowCols);
+                    }
+                }
+            }
+
+            /* 
+            Approach 3: Sorting + Union-Find 
+            Complexity Analysis
+Let M be the number of rows in matrix and N be the number of columns in matrix.
+•	Time Complexity: O(NMlog(NM)).
+o	We need O(NMlog(NM)) to iterate matrix to build UFs. However, with both union by rank and path compression, we can achieve O(NMα(NM)), where function α(n) is inverse Ackermann function, which is much smaller than log(n) and approximately constant.
+o	We need O(NM) to iterate matrix to build value2index.
+o	We need O(NMlog(NM)) to sort the keys in value2index, since there are at most O(NM) different keys.
+o	We need O(NM) to iterate value2index to build answer.
+o	Adding together, the time we needed is O(NMlog(NM)).
+•	Space Complexity: O(NM).
+o	For UFs, we store O(NM) edges (viewing each point as an edge).
+o	For value2index, we store O(NM) points.
+o	For rowMax and columnMax, they have size of O(M) and O(N), respectively.
+o	In total, the size we needed is O(NM).
+
+            */
+            public int[,] SortingWithUnionFind(int[,] matrix)
+            {
+                int rowCount = matrix.GetLength(0);
+                int columnCount = matrix.GetLength(1);
+
+                // link row and col together
+                Dictionary<int, Dictionary<int, int>> unionFinds = new Dictionary<int, Dictionary<int, int>>();
+                // unionFinds[v]: the Union-Find of value v
+                for (int row = 0; row < rowCount; row++)
+                {
+                    for (int column = 0; column < columnCount; column++)
+                    {
+                        int value = matrix[row, column];
+                        if (!unionFinds.ContainsKey(value))
+                        {
+                            unionFinds[value] = new Dictionary<int, int>();
+                        }
+                        // union row to column
+                        Union(unionFinds[value], row, ~column);
+                    }
+                }
+
+                // put points into `valueToIndex` dict, grouped by connection
+                // use SortedDictionary to help us sort the key automatically
+                SortedDictionary<int, Dictionary<int, List<int[]>>> valueToIndex = new SortedDictionary<int, Dictionary<int, List<int[]>>>();
+                for (int row = 0; row < rowCount; row++)
+                {
+                    for (int column = 0; column < columnCount; column++)
+                    {
+                        int value = matrix[row, column];
+                        if (!valueToIndex.ContainsKey(value))
+                        {
+                            valueToIndex[value] = new Dictionary<int, List<int[]>>();
+                        }
+                        Dictionary<int, List<int[]>> indexes = valueToIndex[value];
+                        int findResult = Find(unionFinds[value], row);
+                        if (!indexes.ContainsKey(findResult))
+                        {
+                            indexes[findResult] = new List<int[]>();
+                        }
+                        indexes[findResult].Add(new int[] { row, column });
+                    }
+                }
+
+                int[,] answer = new int[rowCount, columnCount]; // the required rank matrix
+                int[] rowMax = new int[rowCount]; // rowMax[i]: the max rank in i row
+                int[] columnMax = new int[columnCount]; // columnMax[j]: the max rank in j column
+                foreach (int value in valueToIndex.Keys)
+                {
+                    // update by connected points with same value
+                    foreach (List<int[]> points in valueToIndex[value].Values)
+                    {
+                        int rank = 1;
+                        foreach (int[] point in points)
+                        {
+                            rank = Math.Max(rank, Math.Max(rowMax[point[0]], columnMax[point[1]]) + 1);
+                        }
+                        foreach (int[] point in points)
+                        {
+                            answer[point[0], point[1]] = rank;
+                            // update rowMax and columnMax
+                            rowMax[point[0]] = Math.Max(rowMax[point[0]], rank);
+                            columnMax[point[1]] = Math.Max(columnMax[point[1]], rank);
+                        }
+                    }
+                }
+                return answer;
+            }
+            // implement find and union
+            private int Find(Dictionary<int, int> unionFind, int element)
+            {
+                if (element != unionFind[element])
+                {
+                    unionFind[element] = Find(unionFind, unionFind[element]);
+                }
+                return unionFind[element];
+            }
+
+            private void Union(Dictionary<int, int> unionFind, int elementX, int elementY)
+            {
+                if (!unionFind.ContainsKey(elementX))
+                {
+                    unionFind[elementX] = elementX;
+                }
+                if (!unionFind.ContainsKey(elementY))
+                {
+                    unionFind[elementY] = elementY;
+                }
+                unionFind[Find(unionFind, elementX)] = Find(unionFind, elementY);
+            }
+
+        }
+
+
+
+
+
+
+
+
+
+
 
 
 

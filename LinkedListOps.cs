@@ -541,7 +541,7 @@ The extra space comes from implicit stack space due to recursion. The recursion 
             listTail.Next = head;
             return newHead;
         }
-        
+
 
         /*
         19. Remove Nth Node From End of List
@@ -1209,7 +1209,6 @@ have not used any extra space as such.
         92. Reverse Linked List II
         https://leetcode.com/problems/reverse-linked-list-ii/description/
         */
-
         public class ReverseListBetweenSol
         {
             /*
@@ -1306,17 +1305,281 @@ have not used any extra space as such.
 
         }
 
+        /* 138. Copy List with Random Pointer
+        https://leetcode.com/problems/copy-list-with-random-pointer/description/?envType=company&envId=facebook&favoriteSlug=facebook-all&difficulty=MEDIUM
+         */
+        public class CopyListWithRandomPointerSol
+        {
+            // Dictionary which holds old nodes as keys and new nodes as its values.
+            private Dictionary<Node, Node> visited = new Dictionary<Node, Node>();
+
+            /* Approach 1: Recursive
+            Complexity Analysis
+            •	Time Complexity: O(N) where N is the number of nodes in the linked list.
+            •	Space Complexity: O(N). If we look closely, we have the recursion stack and we also have the space complexity to keep track of nodes already cloned i.e. using the visited dictionary. But asymptotically, the complexity is O(N).
+
+             */
+            public Node CopyRandomListRec(Node head)
+            {
+                if (head == null)
+                {
+                    return null;
+                }
+
+                // If we have already processed the current node, then we simply return
+                // the cloned version of it.
+                if (this.visited.ContainsKey(head))
+                {
+                    return this.visited[head];
+                }
+
+                // Create a new node with the value same as old node. (i.e., copy the
+                // node)
+                Node node = new Node(head.val, null, null);
+                // Save this value in the hash map. This is needed since there might be
+                // loops during traversal due to randomness of random pointers and this
+                // would help us avoid them.
+                this.visited[head] = node;
+                // Recursively copy the remaining linked list starting once from the
+                // next pointer and then from the random pointer. Thus we have two
+                // independent recursive calls. Finally we update the next and random
+                // pointers for the new node created.
+                node.next = this.CopyRandomListRec(head.next);
+                node.random = this.CopyRandomListRec(head.random);
+                return node;
+            }
+            public class Node
+            {
+                public int val;
+                public Node next;
+                public Node random;
+                public Node(int _val, Node _next, Node _random)
+                {
+                    val = _val;
+                    next = _next;
+                    random = _random;
+                }
+                public Node(int _val)
+                {
+                    val = _val;
+                    next = null;
+                    random = null;
+                }
+            }
+            /* Approach 2: Iterative with O(N) Space
+            Complexity Analysis
+•	Time Complexity : O(N) because we make one pass over the original linked list.
+•	Space Complexity : O(N) as we have a dictionary containing mapping from old list nodes to new list nodes. Since there are N nodes, we have O(N) space complexity.
+
+             */
+            public Node CopyRandomListIterative(Node head)
+            {
+                if (head == null)
+                {
+                    return null;
+                }
+
+                Node oldNode = head;
+                Node newNode = new Node(oldNode.val, null, null);
+                visited[oldNode] = newNode;
+                while (oldNode != null)
+                {
+                    newNode.random = this.GetClonedNode(oldNode.random);
+                    newNode.next = this.GetClonedNode(oldNode.next);
+                    oldNode = oldNode.next;
+                    newNode = newNode.next;
+                }
+
+                return visited[head];
+            }
+            public Node GetClonedNode(Node node)
+            {
+                if (node != null)
+                {
+                    if (visited.ContainsKey(node))
+                    {
+                        return visited[node];
+                    }
+                    else
+                    {
+                        visited[node] = new Node(node.val, null, null);
+                        return visited[node];
+                    }
+                }
+
+                return null;
+            }
+            /* Approach 3: Iterative with O(1) Space
+            Complexity Analysis
+•	Time Complexity : O(N)
+•	Space Complexity : O(1)
+
+             */
+            public Node CopyRandomListIterativeWithConstanceSpace(Node head)
+            {
+                if (head == null)
+                {
+                    return null;
+                }
+
+                // Creating a new weaved list of original and copied nodes.
+                Node ptr = head;
+                while (ptr != null)
+                {
+                    // Cloned node
+                    Node newNode = new Node(ptr.val);
+
+                    // Inserting the cloned node just next to the original node.
+                    // If A->B->C is the original linked list,
+                    // Linked list after weaving cloned nodes would be
+                    // A->A'->B->B'->C->C'
+                    newNode.next = ptr.next;
+                    ptr.next = newNode;
+                    ptr = newNode.next;
+                }
+
+                ptr = head;
+
+                // Now link the random pointers of the new nodes created.
+                // Iterate the newly created list and use the original nodes' random
+                // pointers, to assign references to random pointers for cloned nodes.
+                while (ptr != null)
+                {
+                    ptr.next.random = (ptr.random != null) ? ptr.random.next : null;
+                    ptr = ptr.next.next;
+                }
+
+                // Unweave the linked list to get back the original linked list and the
+                // cloned list. i.e. A->A'->B->B'->C->C' would be broken to A->B->C and
+                // A'->B'->C'
+                Node ptr_old_list = head;       // A->B->C
+                Node ptr_new_list = head.next;  // A'->B'->C'
+                Node head_old = head.next;
+                while (ptr_old_list != null)
+                {
+                    ptr_old_list.next = ptr_old_list.next.next;
+                    ptr_new_list.next =
+                        (ptr_new_list.next != null) ? ptr_new_list.next.next : null;
+                    ptr_old_list = ptr_old_list.next;
+                    ptr_new_list = ptr_new_list.next;
+                }
+
+                return head_old;
+            }
+
+        }
 
 
+        /* 708. Insert into a Sorted Circular Linked List
+        https://leetcode.com/problems/insert-into-a-sorted-circular-linked-list/description/?envType=company&envId=facebook&favoriteSlug=facebook-all&difficulty=MEDIUM
+         */
+
+        class InsertIntoSortedCircularLinkedListSol
+        {
+            /*             Approach 1: Two-Pointers Iteration
+            Complexity Analysis
+            •	Time Complexity: O(N) where N is the size of list. In the worst case, we would iterate through the entire list.
+            •	Space Complexity: O(1). It is a constant space solution.
+
+             */
+            public Node Insert(Node head, int insertVal)
+            {
+                if (head == null)
+                {
+                    Node newNode = new Node(insertVal);
+                    newNode.next = newNode;
+                    return newNode;
+                }
+
+                Node prev = head;
+                Node curr = head.next;
+                bool toInsert = false;
+
+                do
+                {
+                    if (prev.val <= insertVal && insertVal <= curr.val)
+                    {
+                        // Case 1).
+                        toInsert = true;
+                    }
+                    else if (prev.val > curr.val)
+                    {
+                        // Case 2).
+                        if (insertVal >= prev.val || insertVal <= curr.val)
+                            toInsert = true;
+                    }
+
+                    if (toInsert)
+                    {
+                        prev.next = new Node(insertVal, curr);
+                        return head;
+                    }
+
+                    prev = curr;
+                    curr = curr.next;
+                } while (prev != head);
+
+                // Case 3).
+                prev.next = new Node(insertVal, curr);
+                return head;
+            }
+        }
 
 
+        /* 2. Add Two Numbers
+        https://leetcode.com/problems/add-two-numbers/description/?envType=company&envId=facebook&favoriteSlug=facebook-all&difficulty=MEDIUM
+         */
+        public class AddTwoNumbersSol
+        {
+/*             Approach 1: Elementary Math
+Complexity Analysis
+•	Time complexity : O(max(m,n)). Assume that m and n represents the length of l1 and l2 respectively, the algorithm above iterates at most max(m,n) times.
+•	Space complexity : O(1). The length of the new list is at most max(m,n)+1 However, we don't count the answer as part of the space complexity.
 
+ */
+            public ListNode AddTwoNumbers(ListNode l1, ListNode l2)
+            {
+                ListNode dummyHead = new ListNode(0);
+                ListNode curr = dummyHead;
+                int carry = 0;
+                while (l1 != null || l2 != null || carry != 0)
+                {
+                    int x = (l1 != null) ? l1.Val : 0;
+                    int y = (l2 != null) ? l2.Val : 0;
+                    int sum = carry + x + y;
+                    carry = sum / 10;
+                    curr.Next = new ListNode(sum % 10);
+                    curr = curr.Next;
+                    if (l1 != null)
+                        l1 = l1.Next;
+                    if (l2 != null)
+                        l2 = l2.Next;
+                }
 
+                return dummyHead.Next;
+            }
+        }
 
-
-
-
-
-
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
     }
 }

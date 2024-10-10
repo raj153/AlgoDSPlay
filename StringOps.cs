@@ -645,9 +645,9 @@ Complexity Analysis
         }
 
 
-    
 
-    
+
+
         //https://www.algoexpert.io/questions/one-edit
         // O(n + m) time | O(n + m) space - where n is the length of stringOne, and
         // m is the length of stringTwo
@@ -730,7 +730,7 @@ Complexity Analysis
 
 
 
-   
+
 
         /*
         6. Zigzag Conversion
@@ -1175,8 +1175,8 @@ Complexity Analysis
                 return true;
             }
         }
-     
-    
+
+
 
         /*
         10. Regular Expression Matching
@@ -1518,7 +1518,7 @@ Space complexity: O(1) since it's a constant space solution.
             return Helper(0, 0);
         }
 
- 
+
 
         /*
         28. Find the Index of the First Occurrence in a String
@@ -3084,6 +3084,939 @@ The total space complexity is therefore equal to O(NK).
                 }
             }
         }
+
+
+        /* 943. Find the Shortest Superstring
+        https://leetcode.com/problems/find-the-shortest-superstring/description/
+         */
+        public class ShortestSuperstringSol
+        {
+            /*
+            
+Approach 1: Dynamic Programming + Bit Masking
+
+            Complexity Analysis
+•	Time Complexity: O(N^2(2^N+W)), where N is the number of words, and W is the maximum length of each word.
+•	Space Complexity: O(N(2^N+W)).
+
+            */
+            public string DPWithBitMasking(string[] strings)
+            {
+                int numberOfStrings = strings.Length;
+
+                // Populate overlaps
+                int[][] overlaps = new int[numberOfStrings][];
+                for (int i = 0; i < numberOfStrings; ++i)
+                    overlaps[i] = new int[numberOfStrings];
+
+                for (int i = 0; i < numberOfStrings; ++i)
+                    for (int j = 0; j < numberOfStrings; ++j)
+                    {
+                        if (i != j)
+                        {
+                            int minLength = Math.Min(strings[i].Length, strings[j].Length);
+                            for (int k = minLength; k >= 0; --k)
+                            {
+                                if (strings[i].EndsWith(strings[j].Substring(0, k)))
+                                {
+                                    overlaps[i][j] = k;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+
+                // dp[mask][i] = most overlap with mask, ending with ith element
+                int[][] dp = new int[1 << numberOfStrings][];
+                int[][] parent = new int[1 << numberOfStrings][];
+                for (int mask = 0; mask < (1 << numberOfStrings); ++mask)
+                {
+                    dp[mask] = new int[numberOfStrings];
+                    parent[mask] = new int[numberOfStrings];
+                    Array.Fill(parent[mask], -1);
+
+                    for (int bit = 0; bit < numberOfStrings; ++bit)
+                    {
+                        if (((mask >> bit) & 1) > 0)
+                        {
+                            // Let's try to find dp[mask][bit].  Previously, we had
+                            // a collection of items represented by pmask.
+                            int previousMask = mask ^ (1 << bit);
+                            if (previousMask == 0) continue;
+                            for (int i = 0; i < numberOfStrings; ++i)
+                            {
+                                if (((previousMask >> i) & 1) > 0)
+                                {
+                                    // For each bit i in previousMask, calculate the value
+                                    // if we ended with word i, then added word 'bit'.
+                                    int value = dp[previousMask][i] + overlaps[i][bit];
+                                    if (value > dp[mask][bit])
+                                    {
+                                        dp[mask][bit] = value;
+                                        parent[mask][bit] = i;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
+                // # Answer will have length sum(len(strings[i]) for i) - max(dp[-1])
+                // Reconstruct answer, first as a sequence 'perm' representing
+                // the indices of each word from left to right.
+
+                int[] permutation = new int[numberOfStrings];
+                bool[] seen = new bool[numberOfStrings];
+                int currentIndex = 0;
+                int currentMask = (1 << numberOfStrings) - 1;
+
+                // p: the last element of permutation (last word written left to right)
+                int p = 0;
+                for (int j = 0; j < numberOfStrings; ++j)
+                {
+                    if (dp[(1 << numberOfStrings) - 1][j] > dp[(1 << numberOfStrings) - 1][p])
+                        p = j;
+                }
+
+                // Follow parents down backwards path that retains maximum overlap
+                while (p != -1)
+                {
+                    permutation[currentIndex++] = p;
+                    seen[p] = true;
+                    int previousP = parent[currentMask][p];
+                    currentMask ^= 1 << p;
+                    p = previousP;
+                }
+
+                // Reverse permutation
+                for (int i = 0; i < currentIndex / 2; ++i)
+                {
+                    int temp = permutation[i];
+                    permutation[i] = permutation[currentIndex - 1 - i];
+                    permutation[currentIndex - 1 - i] = temp;
+                }
+
+                // Fill in remaining words not yet added
+                for (int i = 0; i < numberOfStrings; ++i)
+                {
+                    if (!seen[i])
+                        permutation[currentIndex++] = i;
+                }
+
+                // Reconstruct final answer given permutation
+                System.Text.StringBuilder result = new System.Text.StringBuilder(strings[permutation[0]]);
+                for (int i = 1; i < numberOfStrings; ++i)
+                {
+                    int overlap = overlaps[permutation[i - 1]][permutation[i]];
+                    result.Append(strings[permutation[i]].Substring(overlap));
+                }
+
+                return result.ToString();
+            }
+        }
+
+
+        /*   358. Rearrange String k Distance Apart
+        https://leetcode.com/problems/rearrange-string-k-distance-apart/description/
+         */
+
+        public class RearrangeStringKDistanceApartSol
+        {
+            /* 
+            Approach 1: Priority Queue - MaxHeap
+Complexity Analysis
+Here, N is the length of the string S, and K is the number of unique characters in the string S.
+•	Time complexity: O((N+K)logK)
+Creating a freq map will take O(K) time, and initializing the heap free will take O(KlogK). The main loop runs N times, and for each character, the operations are of O(K) as the heap size can be K at max. Hence this would need O(NlogK) time. Therefore, the total time complexity is equal to O((N+K)logK), but considering the problem constraints, the value of K can be 26 in the worst case; this can be simplified to O(N) as well.
+•	Space complexity: O(K)
+The size of map freq, heap free and the queue busy can be, at worst equal to K. Since the space to store the output is generally not considered part of space complexity, the total space complexity equals O(K).
+
+             */
+            public string UsingMaxHeapPQ(string inputString, int k)
+            {
+                Dictionary<char, int> characterFrequency = new Dictionary<char, int>();
+                // Store the frequency for each character.
+                foreach (char character in inputString.ToCharArray())
+                {
+                    if (characterFrequency.ContainsKey(character))
+                    {
+                        characterFrequency[character]++;
+                    }
+                    else
+                    {
+                        characterFrequency[character] = 1;
+                    }
+                }
+                //TODO: Check below PQ logic wherther it acts as a MaxHeap based on Char frequency
+                PriorityQueue<(int Frequency, char Character), int> availableCharacters =
+                    new PriorityQueue<(int, char), int>(Comparer<int>.Create((x, y) => y.CompareTo(x)));
+
+                // Insert the characters with their frequencies in the max heap.
+                foreach (var entry in characterFrequency)
+                {
+                    availableCharacters.Enqueue((entry.Value, entry.Key), entry.Value);
+                }
+
+                System.Text.StringBuilder resultString = new System.Text.StringBuilder();
+                // This queue stores the characters that cannot be used now.
+                Queue<(int Index, char Character)> unavailableCharacters = new Queue<(int, char)>();
+
+                while (resultString.Length != inputString.Length)
+                {
+                    int currentIndex = resultString.Length;
+
+                    // Insert the character that could be used now into the available heap.
+                    if (unavailableCharacters.Count > 0 && (currentIndex - unavailableCharacters.Peek().Index) >= k)
+                    {
+                        var characterToReinsert = unavailableCharacters.Dequeue();
+                        availableCharacters.Enqueue((characterFrequency[characterToReinsert.Character], characterToReinsert.Character), characterFrequency[characterToReinsert.Character]);
+                    }
+
+                    // If the available heap is empty, it implies no character can be used at this index.
+                    if (availableCharacters.Count == 0)
+                    {
+                        return "";
+                    }
+
+                    char currentCharacter = availableCharacters.Peek().Character;
+                    availableCharacters.Dequeue();
+                    resultString.Append(currentCharacter);
+
+                    // Insert the used character into unavailable queue with the current index.
+                    characterFrequency[currentCharacter]--;
+                    if (characterFrequency[currentCharacter] > 0)
+                    {
+                        unavailableCharacters.Enqueue((currentIndex, currentCharacter));
+                    }
+                }
+
+                return resultString.ToString();
+            }
+            /*
+             Approach 2: Greedy
+             Complexity Analysis
+            Here, N is the length of the string S, and K is the number of unique characters in the string S.
+            •	Time complexity: O(N)
+            Creating map freqs and the hashset mostChars and secondChars can take at-max O(N) time. Iterate over the characters and insert their instances over the different segments; this will again cannot take more than O(N) time as the characters in mostChars and secondChars will be skipped. Hence, the total time complexity is O(N).
+            •	Space complexity: O(K)
+            The map freqs and the hashset mostChars and secondChars will take O(K) space. The rest of the space in the algorithm is used to store the output, which is not generally considered part of space complexity, and hence the space complexity is equal to O(K).
+
+             */
+            public string WithGreedy(string inputString, int k)
+            {
+                Dictionary<char, int> characterFrequencies = new Dictionary<char, int>();
+                int maximumFrequency = 0;
+                // Store the frequency, and find the highest frequency.
+                foreach (char character in inputString.ToCharArray())
+                {
+                    if (characterFrequencies.ContainsKey(character))
+                    {
+                        characterFrequencies[character]++;
+                    }
+                    else
+                    {
+                        characterFrequencies[character] = 1;
+                    }
+                    maximumFrequency = Math.Max(maximumFrequency, characterFrequencies[character]);
+                }
+
+                HashSet<char> highestFrequencyChars = new HashSet<char>();
+                HashSet<char> secondHighestFrequencyChars = new HashSet<char>();
+                // Store all the characters with the highest and second-highest frequency - 1.
+                foreach (var pair in characterFrequencies)
+                {
+                    if (pair.Value == maximumFrequency)
+                    {
+                        highestFrequencyChars.Add(pair.Key);
+                    }
+                    else if (pair.Value == maximumFrequency - 1)
+                    {
+                        secondHighestFrequencyChars.Add(pair.Key);
+                    }
+                }
+
+                // Create maximumFrequency number of different strings.
+                StringBuilder[] stringSegments = new StringBuilder[maximumFrequency];
+                // Insert one instance of characters with frequency maxFreq & maxFreq - 1 in each segment.
+                for (int index = 0; index < maximumFrequency; index++)
+                {
+                    stringSegments[index] = new StringBuilder();
+
+                    foreach (char character in highestFrequencyChars)
+                    {
+                        stringSegments[index].Append(character);
+                    }
+
+                    // Skip the last segment as the frequency is only maximumFrequency - 1.
+                    if (index < maximumFrequency - 1)
+                    {
+                        foreach (char character in secondHighestFrequencyChars)
+                        {
+                            stringSegments[index].Append(character);
+                        }
+                    }
+                }
+
+                int segmentIndex = 0;
+                // Iterate over the remaining characters, and for each, distribute the instances over the segments.
+                foreach (var pair in characterFrequencies)
+                {
+                    char character = pair.Key;
+                    int frequency = pair.Value;
+
+                    // Skip characters with maximumFrequency or maximumFrequency - 1 
+                    // frequency as they have already been inserted.
+                    if (highestFrequencyChars.Contains(character) || secondHighestFrequencyChars.Contains(character))
+                    {
+                        continue;
+                    }
+
+                    // Distribute the instances of these characters over the segments in a round-robin manner.
+                    for (int count = frequency; count > 0; count--)
+                    {
+                        stringSegments[segmentIndex].Append(character);
+                        segmentIndex = (segmentIndex + 1) % (maximumFrequency - 1);
+                    }
+                }
+
+                // Each segment except the last should have exactly K elements; else, return "".
+                for (int index = 0; index < maximumFrequency - 1; index++)
+                {
+                    if (stringSegments[index].Length < k)
+                    {
+                        return "";
+                    }
+                }
+
+                // Join all the segments and return them.
+                return string.Join("", stringSegments.AsEnumerable());
+            }
+
+        }
+
+
+        /* 1153. String Transforms Into Another String
+        https://leetcode.com/problems/string-transforms-into-another-string/description/
+         */
+        public class CanConvertSol
+        {
+            /* 
+            Approach 1: Greedy + Hashing 
+            Complexity Analysis
+Here N is the length of string str1 or str2 and K is the maximum number of distinct characters in str1 or str2.
+•	Time complexity: O(N)
+We iterate over string str1. Then, we search or insert a key in a map that is O(1) for each character. Also, adding character to HashSet takes O(1). Hence the time complexity is O(N).
+•	Space complexity: O(K)
+The maximum possible number of mappings stored in the map is K. Additionally, HashSet will contain at most K characters. Since the maximum value of K is fixed at 26, we could consider the space complexity to be constant for this problem.
+
+            */
+
+            public bool CanConvert(string sourceString, string targetString)
+            {
+                if (sourceString.Equals(targetString))
+                {
+                    return true;
+                }
+
+                Dictionary<char, char> conversionMappings = new Dictionary<char, char>();
+                HashSet<char> uniqueCharactersInTargetString = new HashSet<char>();
+
+                // Make sure that no character in sourceString is mapped to multiple characters in targetString.
+                for (int index = 0; index < sourceString.Length; index++)
+                {
+                    if (!conversionMappings.ContainsKey(sourceString[index]))
+                    {
+                        conversionMappings[sourceString[index]] = targetString[index];
+                        uniqueCharactersInTargetString.Add(targetString[index]);
+                    }
+                    else if (conversionMappings[sourceString[index]] != targetString[index])
+                    {
+                        // this letter maps to 2 different characters, so sourceString cannot transform into targetString.
+                        return false;
+                    }
+                }
+
+                // No character in sourceString maps to 2 or more different characters in targetString and there
+                // is at least one temporary character that can be used to break any loops.
+                if (uniqueCharactersInTargetString.Count < 26)
+                {
+                    return true;
+                }
+
+                // The conversion mapping forms one or more cycles and there are no temporary 
+                // characters that we can use to break the loops, so sourceString cannot transform into targetString.
+                return false;
+            }
+        }
+
+        /* 2759. Convert JSON String to Object
+        https://leetcode.com/problems/convert-json-string-to-object/description/
+         */
+
+
+        /* 936. Stamping The Sequence
+        https://leetcode.com/problems/stamping-the-sequence/description/
+         */
+        class MovesToStampSol
+        {
+            /* Approach 1: Work Backwards
+            Complexity Analysis
+•	Time Complexity: O(N(N−M)), where M,N are the lengths of stamp, target.
+•	Space Complexity: O(N(N−M)).
+
+             */
+            public int[] UsingWorkBackwards(string stamp, string target)
+            {
+                int stampLength = stamp.Length, targetLength = target.Length;
+                Queue<int> queue = new Queue<int>();
+                bool[] isDone = new bool[targetLength];
+                Stack<int> resultStack = new Stack<int>();
+                List<Node> nodeList = new List<Node>();
+
+                for (int i = 0; i <= targetLength - stampLength; ++i)
+                {
+                    // For each window [i, i+M), nodeList[i] will contain
+                    // info on what needs to change before we can
+                    // reverse stamp at this window.
+
+                    HashSet<int> madeSet = new HashSet<int>();
+                    HashSet<int> todoSet = new HashSet<int>();
+                    for (int j = 0; j < stampLength; ++j)
+                    {
+                        if (target[i + j] == stamp[j])
+                            madeSet.Add(i + j);
+                        else
+                            todoSet.Add(i + j);
+                    }
+
+                    nodeList.Add(new Node(madeSet, todoSet));
+
+                    // If we can reverse stamp at i immediately,
+                    // enqueue letters from this window.
+                    if (todoSet.Count == 0)
+                    {
+                        resultStack.Push(i);
+                        for (int j = i; j < i + stampLength; ++j)
+                        {
+                            if (!isDone[j])
+                            {
+                                queue.Enqueue(j);
+                                isDone[j] = true;
+                            }
+                        }
+                    }
+                }
+
+                // For each enqueued letter (position),
+                while (queue.Count > 0)
+                {
+                    int currentIndex = queue.Dequeue();
+
+                    // For each window that is potentially affected,
+                    // j: start of window
+                    for (int j = Math.Max(0, currentIndex - stampLength + 1); j <= Math.Min(targetLength - stampLength, currentIndex); ++j)
+                    {
+                        if (nodeList[j].Todo.Contains(currentIndex))
+                        {  // This window is affected
+                            nodeList[j].Todo.Remove(currentIndex);
+                            if (nodeList[j].Todo.Count == 0)
+                            {
+                                resultStack.Push(j);
+                                foreach (int m in nodeList[j].Made)
+                                {
+                                    if (!isDone[m])
+                                    {
+                                        queue.Enqueue(m);
+                                        isDone[m] = true;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
+                for (int b = 0; b < isDone.Length; b++)
+                {
+                    if (!isDone[b]) return new int[0];
+                }
+
+                int[] resultArray = new int[resultStack.Count];
+                int index = 0;
+                while (resultStack.Count > 0)
+                    resultArray[index++] = resultStack.Pop();
+
+                return resultArray;
+            }
+            class Node
+            {
+                public HashSet<int> Made { get; set; }
+                public HashSet<int> Todo { get; set; }
+
+                public Node(HashSet<int> made, HashSet<int> todo)
+                {
+                    Made = made;
+                    Todo = todo;
+                }
+            }
+        }
+
+
+
+        /* 899. Orderly Queue
+        https://leetcode.com/problems/orderly-queue/description/
+         */
+        class OrderlyQueueSol
+        {
+
+            /* Approach 1: Mathematical
+            Complexity Analysis
+•	Time Complexity: O(N2), where N is the length of s.
+o	If k = 1, we need O(N) time to build each new string and O(N) time to check whether it's the lexicographically smallest string among the strings generated so far. In total, there are N such different strings to build and check. Therefore, the time complexity for this case is O(N2).
+o	If k > 1, we need to convert our given string to an array of characters (this costs O(N) time), then sort the newly obtained array (sorting takes O(NlogN) time), and build the output string from the sorted array which takes O(N) time.
+o	Thus, the worst-case scenario is when k is 1, so the overall time complexity of the solution is O(N2).
+•	Space Complexity: O(N).
+o	If k = 1, we need the space to store only two strings: the lexicographically smallest string found so far and a newly built string, that will be compared to the lexicographically smallest string. This requires O(N) space.
+o	If k > 1, we need O(N) space to store the character array. Other than that, sorting the array requires O(logN) additional space for Java and O(N) additional space for Python.
+o	Therefore, the overall space complexity of the solution is O(N).
+
+             */
+            public String UsingMaths(String s, int k)
+            {
+                if (k == 1)
+                {
+                    String ans = s;
+                    for (int i = 0; i < s.Length; ++i)
+                    {
+                        String temp = s.Substring(i) + s.Substring(0, i);
+                        if (temp.CompareTo(ans) < 0)
+                        {
+                            ans = temp;
+                        }
+                    }
+                    return ans;
+                }
+                else
+                {
+                    char[] chars = s.ToCharArray();
+                    Array.Sort(chars);
+                    return new String(chars);
+                }
+            }
+        }
+
+        /* 839. Similar String Groups________________________________________
+        https://leetcode.com/problems/similar-string-groups/description/
+         */
+        class CountSimilarGroupsSol
+        {
+            /* Approach 1: Depth First Search
+            Complexity Analysis
+            Here n is the size of strs and m is length of each word in strs.
+            •	Time complexity: O(n^2⋅m).
+            o	To iterate over all the pairs of words that can be formed using strs, we need O(n^2) time. We also need O(m) time to determine whether the chosen two words are similar or not, which results in O(n^2⋅m) operations to check all the pairs.
+            o	The dfs function visits each node once, which takes O(n) time because there are n nodes in total. We can have up to O(n^2) edges between n nodes (assume every word is similar to every other word). Because we have undirected edges, each edge can only be iterated twice (by nodes at the end), resulting in O(n^2) operations total in the worst-case scenario while visiting all nodes.
+            •	Space complexity: O(n^2).
+            o	As there can be a maximum of O(n^2) edges, building the adjacency list takes O(n^2) space.
+            o	The visit array takes O(n) space.
+            o	The recursion call stack used by dfs can have no more than n elements in the worst-case scenario. It would take up O(n) space in that case.
+
+             */
+            public int DFS(string[] stringArray)
+            {
+                int arrayLength = stringArray.Length;
+                Dictionary<int, List<int>> adjacencyList = new Dictionary<int, List<int>>();
+                // Form the required graph from the given strings array.
+                for (int outerIndex = 0; outerIndex < arrayLength; outerIndex++)
+                {
+                    for (int innerIndex = outerIndex + 1; innerIndex < arrayLength; innerIndex++)
+                    {
+                        if (AreStringsSimilar(stringArray[outerIndex], stringArray[innerIndex]))
+                        {
+                            if (!adjacencyList.ContainsKey(outerIndex))
+                            {
+                                adjacencyList[outerIndex] = new List<int>();
+                            }
+                            adjacencyList[outerIndex].Add(innerIndex);
+
+                            if (!adjacencyList.ContainsKey(innerIndex))
+                            {
+                                adjacencyList[innerIndex] = new List<int>();
+                            }
+                            adjacencyList[innerIndex].Add(outerIndex);
+                        }
+                    }
+                }
+
+                bool[] visitedNodes = new bool[arrayLength];
+                int connectedComponentsCount = 0;
+                // Count the number of connected components.
+                for (int index = 0; index < arrayLength; index++)
+                {
+                    if (!visitedNodes[index])
+                    {
+                        DepthFirstSearch(index, adjacencyList, visitedNodes);
+                        connectedComponentsCount++;
+                    }
+                }
+
+                return connectedComponentsCount;
+            }
+            private void DepthFirstSearch(int node, Dictionary<int, List<int>> adjacencyList, bool[] visitedNodes)
+            {
+                visitedNodes[node] = true;
+                if (!adjacencyList.ContainsKey(node))
+                {
+                    return;
+                }
+                foreach (int neighbor in adjacencyList[node])
+                {
+                    if (!visitedNodes[neighbor])
+                    {
+                        visitedNodes[neighbor] = true;
+                        DepthFirstSearch(neighbor, adjacencyList, visitedNodes);
+                    }
+                }
+            }
+
+            private bool AreStringsSimilar(string stringA, string stringB)
+            {
+                int differingCharactersCount = 0;
+                for (int index = 0; index < stringA.Length; index++)
+                {
+                    if (stringA[index] != stringB[index])
+                    {
+                        differingCharactersCount++;
+                    }
+                }
+                return differingCharactersCount == 0 || differingCharactersCount == 2;
+            }
+
+            /* Approach 2: Breadth First Search
+            Complexity Analysis
+            Here n is the size of strs and m is length of each word in strs.
+            •	Time complexity: O(n^2⋅m).
+            o	We need O(n^2) time to iterate over all the pairs of words that can be formed using strs. We further need O(m) time to check whether the chosen two words are similar or not, resulting in O(n^2⋅m) operations to check all the pairs.
+            o	Each queue operation in the BFS algorithm takes O(1) time, and a single node can only be pushed once, leading to O(n) operations for n nodes. As discussed above, we can have up to O(^n2) edges between n nodes (assume every word is similar to every other word). Because we have undirected edges, each edge can only be iterated twice (by nodes at the end), resulting in O(n2) operations total in the worst-case scenario while visiting all nodes.
+            •	Space complexity: O(n^2).
+            o	As there can be a maximum of O(n^2). edges, building the adjacency list takes O(n^2). space in the worst case.
+            o	The BFS queue takes O(n) because each node is added at most once.
+            o	The visit array takes O(n) space as well. 
+
+             */
+            public int BFS(string[] strings)
+            {
+                int numberOfStrings = strings.Length;
+                Dictionary<int, List<int>> adjacencyList = new Dictionary<int, List<int>>();
+                // Form the required graph from the given strings array.
+                for (int i = 0; i < numberOfStrings; i++)
+                {
+                    for (int j = i + 1; j < numberOfStrings; j++)
+                    {
+                        if (IsSimilar(strings[i], strings[j]))
+                        {
+                            if (!adjacencyList.ContainsKey(i))
+                            {
+                                adjacencyList[i] = new List<int>();
+                            }
+                            adjacencyList[i].Add(j);
+                            if (!adjacencyList.ContainsKey(j))
+                            {
+                                adjacencyList[j] = new List<int>();
+                            }
+                            adjacencyList[j].Add(i);
+                        }
+                    }
+                }
+
+                bool[] visited = new bool[numberOfStrings];
+                int connectedComponentsCount = 0;
+                // Count the number of connected components.
+                for (int i = 0; i < numberOfStrings; i++)
+                {
+                    if (!visited[i])
+                    {
+                        Bfs(i, adjacencyList, visited);
+                        connectedComponentsCount++;
+                    }
+                }
+
+                return connectedComponentsCount;
+            }
+            private void Bfs(int node, Dictionary<int, List<int>> adjacencyList, bool[] visited)
+            {
+                Queue<int> queue = new Queue<int>();
+                queue.Enqueue(node);
+                visited[node] = true;
+                while (queue.Count > 0)
+                {
+                    node = queue.Dequeue();
+                    if (!adjacencyList.ContainsKey(node))
+                    {
+                        continue;
+                    }
+                    foreach (int neighbor in adjacencyList[node])
+                    {
+                        if (!visited[neighbor])
+                        {
+                            visited[neighbor] = true;
+                            queue.Enqueue(neighbor);
+                        }
+                    }
+                }
+            }
+
+            private bool IsSimilar(string a, string b)
+            {
+                int differenceCount = 0;
+                for (int i = 0; i < a.Length; i++)
+                {
+                    if (a[i] != b[i])
+                    {
+                        differenceCount++;
+                    }
+                }
+                return differenceCount == 0 || differenceCount == 2;
+            }
+
+            /* Approach 3: Union-find
+            Complexity Analysis
+            Here n is the size of strs and m is length of each word in strs.
+            •	Time complexity: O(n^2⋅m).
+            o	We need O(n^2) time to iterate over all the pairs of words that can be formed using strs. We further need O(m) time to check whether the chosen two words are similar or not, resulting in O(n^2⋅m) operations to check all the pairs.
+            o	For T operations, the amortized time complexity of the union-find algorithm (using path compression with union by rank) is O(alpha(T)). Here, α(T) is the inverse Ackermann function that grows so slowly, that it doesn't exceed 4 for all reasonable T (approximately T<10600). You can read more about the complexity of union-find here. Because the function grows so slowly, we consider it to be O(1).
+            o	Initializing UnionFind takes O(n) time beacuse we are initializing the parent and rank arrays of size n each.
+            o	We iterate through every edge and use the find operation to find the component of nodes connected by each edge. It takes O(1) per operation and takes O(e) time for all the e edges. As discussed above, we can have a maximum of O(n^2) edges in between n nodes, so it would take O(n^2) time. If nodes from different components are connected by an edge, we also perform union of the nodes, which takes O(1) time per operation. In the worst-case scenario, it may be called O(n) times to connect all the components to form a connected graph with only one component.
+            •	Space complexity: O(n).
+            o	We are using the parent and rank arrays, both of which require O(n) space each.
+
+             */
+            public int NumSimilarGroups(string[] strs)
+            {
+                int numberOfStrings = strs.Length;
+                UnionFind disjointSetUnion = new UnionFind(numberOfStrings);
+                int groupCount = numberOfStrings;
+                // Form the required graph from the given strings array.
+                for (int i = 0; i < numberOfStrings; i++)
+                {
+                    for (int j = i + 1; j < numberOfStrings; j++)
+                    {
+                        if (IsSimilar(strs[i], strs[j]) && disjointSetUnion.Find(i) != disjointSetUnion.Find(j))
+                        {
+                            groupCount--;
+                            disjointSetUnion.UnionSet(i, j);
+                        }
+                    }
+                }
+
+                return groupCount;
+            }
+            public class UnionFind
+            {
+                private int[] parent;
+                private int[] rank;
+
+                public UnionFind(int size)
+                {
+                    parent = new int[size];
+                    for (int i = 0; i < size; i++)
+                        parent[i] = i;
+                    rank = new int[size];
+                }
+
+                public int Find(int x)
+                {
+                    if (parent[x] != x)
+                        parent[x] = Find(parent[x]);
+                    return parent[x];
+                }
+
+                public void UnionSet(int x, int y)
+                {
+                    int xSet = Find(x), ySet = Find(y);
+                    if (xSet == ySet)
+                    {
+                        return;
+                    }
+                    else if (rank[xSet] < rank[ySet])
+                    {
+                        parent[xSet] = ySet;
+                    }
+                    else if (rank[xSet] > rank[ySet])
+                    {
+                        parent[ySet] = xSet;
+                    }
+                    else
+                    {
+                        parent[ySet] = xSet;
+                        rank[xSet]++;
+                    }
+                }
+            }
+
+        }
+
+
+        /* 791. Custom Sort String
+        https://leetcode.com/problems/custom-sort-string/description/?envType=company&envId=facebook&favoriteSlug=facebook-all&difficulty=MEDIUM
+         */
+        public class CustomSortStringSol
+        {
+            /* Approach 1: Custom Comparator
+            Complexity Analysis
+Here, we define N as the length of string s, and K as the length of string order.
+•	Time Complexity: O(NlogN)
+Sorting an array of length N requires O(NlogN) time, and the indices of order have to be retrieved for each distinct letter, which results in an O(NlogN+K) complexity. K is at most 26, the number of unique English letters, so we can simplify the time complexity to O(NlogN).
+•	Space Complexity: O(N) or O(log⁡N)
+Note that some extra space is used when we sort arrays in place. The space complexity of the sorting algorithm depends on the programming language.
+o	In Java, Arrays.sort() is implemented using a variant of the Quick Sort algorithm, which has a space complexity of O(logN) for sorting two arrays. The Java solution also uses an auxiliary array of length N. This is the dominating term for the Java solution.
+o	In C++, the sort() function is implemented as a hybrid of Quick Sort, Heap Sort, and Insertion Sort, with a worse-case space complexity of O(log⁡N). This is the main space used by the C++ solution.
+
+             */
+            public string WithCustomComparator(string order, string inputString)
+            {
+                // Create char array for editing
+                int length = inputString.Length;
+                char[] result = new char[length];
+                for (int i = 0; i < length; i++)
+                {
+                    result[i] = inputString[i];
+                }
+
+                // Define the custom comparator
+                Array.Sort(result, (c1, c2) =>
+                {
+                    // The index of the character in order determines the value to be sorted by
+                    return order.IndexOf(c1) - order.IndexOf(c2);
+                });
+
+                // Return the result
+                string resultString = string.Empty;
+                foreach (char c in result)
+                {
+                    resultString += c;
+                }
+                return resultString;
+            }
+            /* Approach 2: Frequency Table and Counting
+            Complexity Analysis
+Here, we define N as the length of string s, and K as the length of string order.
+•	Time Complexity: O(N)
+It takes O(N) time to populate the frequency table, and all other hashmap operations performed take O(1) time in the average case. Building the result string also takes O(N) time because each letter from s is appended to the result in the custom order, making the overall time complexity O(N).
+•	Space Complexity: O(N)
+A hash map and a result string are created, which results in an additional space complexity of O(N).
+
+             */
+            public string FreqTableAndCounting(string order, string s)
+            {
+                // Create a frequency table
+                Dictionary<char, int> frequencyTable = new Dictionary<char, int>();
+
+                // Initialize frequencies of letters
+                // frequencyTable[c] = frequency of char c in s
+                int stringLength = s.Length;
+                for (int i = 0; i < stringLength; i++)
+                {
+                    char letter = s[i];
+                    if (frequencyTable.ContainsKey(letter))
+                    {
+                        frequencyTable[letter]++;
+                    }
+                    else
+                    {
+                        frequencyTable[letter] = 1;
+                    }
+                }
+
+                // Iterate order string to append to result
+                int orderLength = order.Length;
+                StringBuilder resultBuilder = new StringBuilder();
+                for (int i = 0; i < orderLength; i++)
+                {
+                    char letter = order[i];
+                    while (frequencyTable.ContainsKey(letter) && frequencyTable[letter] > 0)
+                    {
+                        resultBuilder.Append(letter);
+                        frequencyTable[letter]--;
+                    }
+                }
+
+                // Iterate through frequencyTable and append remaining letters
+                // This is necessary because some letters may not appear in `order`
+                foreach (var kvp in frequencyTable)
+                {
+                    char letter = kvp.Key;
+                    int count = kvp.Value;
+                    while (count > 0)
+                    {
+                        resultBuilder.Append(letter);
+                        count--;
+                    }
+                }
+
+                // Return the result
+                return resultBuilder.ToString();
+            }
+        }
+
+        /* 249. Group Shifted Strings
+        https://leetcode.com/problems/group-shifted-strings/description/?envType=company&envId=facebook&favoriteSlug=facebook-all&difficulty=MEDIUM
+         */
+        public class GroupShiftedStringsSol
+        {/* 
+            Approach 1: Hashing
+            Complexity Analysis
+Let N be the length of strings and K be the maximum length of a string in strings.
+•	Time complexity: O(N∗K)
+We iterate over all N strings and for each string, we iterate over all the characters to generate the Hash value, which takes O(K) time. To sum up, the overall time complexity is O(N∗K).
+•	Space complexity: O(N∗K)
+We need to store all the strings plus their Hash values in mapHashToList. In the worst scenario, when each string in the given list belongs to a different Hash value, the maximum number of strings stored in mapHashToList is 2∗N. Each string takes at most O(K) space. Hence the overall space complexity is O(N∗K).
+Note: The time and space complexity for both solutions are same because the getHash() function has the same time and space complexity, O(K).
+
+             */
+            // Create a hash value
+            private string GetHash(string inputString)
+            {
+                char[] characterArray = inputString.ToCharArray();
+                StringBuilder hashKeyBuilder = new StringBuilder();
+
+                for (int index = 1; index < characterArray.Length; index++)
+                {
+                    hashKeyBuilder.Append((char)((characterArray[index] - characterArray[index - 1] + 26) % 26 + 'a'));
+                }
+
+                return hashKeyBuilder.ToString();
+            }
+
+            public IList<IList<string>> GroupStrings(string[] inputStrings)
+            {
+                Dictionary<string, List<string>> hashToListMap = new Dictionary<string, List<string>>();
+
+                // Create a hash_value (hashKey) for each string and append the string
+                // to the list of hash values i.e. hashToListMap["cd"] = ["acf", "gil", "xzc"]
+                foreach (string currentString in inputStrings)
+                {
+                    string hashKey = GetHash(currentString);
+                    if (!hashToListMap.ContainsKey(hashKey))
+                    {
+                        hashToListMap[hashKey] = new List<string>();
+                    }
+                    hashToListMap[hashKey].Add(currentString);
+                }
+
+                // Iterate over the map, and add the values to groups
+                List<IList<string>> groupedStrings = new List<IList<string>>();
+                foreach (List<string> group in hashToListMap.Values)
+                {
+                    groupedStrings.Add(group);
+                }
+
+                // Return a list of all of the grouped strings
+                return groupedStrings;
+            }
+        }
+
+
+
 
 
 
