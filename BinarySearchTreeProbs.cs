@@ -43,27 +43,27 @@ keep all the intermediate solutions, therefore O(N).
                 return G[n];
 
             }
-        }
-        /*
-        
-Approach 2: Mathematical Deduction (MD)
-Complexity Analysis
-•	Time complexity : O(N), as one can see, there is one single loop in the algorithm.
-•	Space complexity : O(1), we use only one variable to store all the intermediate results and the final one.
 
-        */
-        public int NumUniqueBSTMD(int n)
-        {
-            // Note: we should use long here instead of int, otherwise overflow
-            long C = 1;
-            for (int i = 0; i < n; ++i)
+            /*
+
+    Approach 2: Mathematical Deduction (MD)
+    Complexity Analysis
+    •	Time complexity : O(N), as one can see, there is one single loop in the algorithm.
+    •	Space complexity : O(1), we use only one variable to store all the intermediate results and the final one.
+
+            */
+            public int NumUniqueBSTMD(int n)
             {
-                C = C * 2 * (2 * i + 1) / (i + 2);
+                // Note: we should use long here instead of int, otherwise overflow
+                long C = 1;
+                for (int i = 0; i < n; ++i)
+                {
+                    C = C * 2 * (2 * i + 1) / (i + 2);
+                }
+
+                return (int)C;
             }
-
-            return (int)C;
         }
-
 
         /*
 95. Unique Binary Search Trees II
@@ -1382,6 +1382,457 @@ Thus, the amortized (average) time complexity for this function would still be O
                 }
             }
         }
+
+        /* 235. Lowest Common Ancestor of a Binary Search Tree
+        https://leetcode.com/problems/lowest-common-ancestor-of-a-binary-search-tree/description/?envType=company&envId=facebook&favoriteSlug=facebook-all&difficulty=MEDIUM
+         */
+        class LowestCommonAncestorSol
+        {
+            /*             Approach 1: Recursive Approach
+            Complexity Analysis
+            •	Time Complexity: O(N), where N is the number of nodes in the BST. In the worst case we might be visiting all the nodes of the BST.
+            •	Space Complexity: O(N). This is because the maximum amount of space utilized by the recursion stack would be N since the height of a skewed BST could be N.
+
+             */
+            public TreeNode UsingRecursion(TreeNode root, TreeNode p, TreeNode q)
+            {
+
+                // Value of current node or parent node.
+                int parentVal = root.Val;
+
+                // Value of p
+                int pVal = p.Val;
+
+                // Value of q;
+                int qVal = q.Val;
+
+                if (pVal > parentVal && qVal > parentVal)
+                {
+                    // If both p and q are greater than parent
+                    return UsingRecursion(root.Right, p, q);
+                }
+                else if (pVal < parentVal && qVal < parentVal)
+                {
+                    // If both p and q are lesser than parent
+                    return UsingRecursion(root.Left, p, q);
+                }
+                else
+                {
+                    // We have found the split point, i.e. the LCA node.
+                    return root;
+                }
+            }
+            /*             Approach 2: Iterative Approach
+            Complexity Analysis
+            •	Time Complexity : O(N), where N is the number of nodes in the BST. In the worst case we might be visiting all the nodes of the BST.
+            •	Space Complexity : O(1).
+
+             */
+            public TreeNode UsingIterative(TreeNode root, TreeNode p, TreeNode q)
+            {
+
+                // Value of p
+                int pVal = p.Val;
+
+                // Value of q;
+                int qVal = q.Val;
+
+                // Start from the root node of the tree
+                TreeNode node = root;
+
+                // Traverse the tree
+                while (node != null)
+                {
+
+                    // Value of ancestor/parent node.
+                    int parentVal = node.Val;
+
+                    if (pVal > parentVal && qVal > parentVal)
+                    {
+                        // If both p and q are greater than parent
+                        node = node.Right;
+                    }
+                    else if (pVal < parentVal && qVal < parentVal)
+                    {
+                        // If both p and q are lesser than parent
+                        node = node.Left;
+                    }
+                    else
+                    {
+                        // We have found the split point, i.e. the LCA node.
+                        return node;
+                    }
+                }
+                return null;
+            }
+        }
+
+        /* 1382. Balance a Binary Search Tree
+        https://leetcode.com/problems/balance-a-binary-search-tree/description/
+         */
+        class BalanceBSTSol
+        {
+            /* Approach 1: Inorder Traversal + Recursive 
+            Complexity Analysis
+            Let n be the number of nodes in the BST.
+            •	Time Complexity: O(n)
+            The inorderTraversal function visits each node exactly once, resulting in a time complexity of O(n).
+            Constructing the balanced BST with the createBalancedBST function also involves visiting each node exactly once, resulting in a time complexity of O(n).
+            Therefore, the overall time complexity is O(n).
+            •	Space Complexity: O(n)
+            The inorderTraversal function uses an additional array to store the inorder traversal, which requires O(n) space.
+            The recursive calls in the inorderTraversal and createBalancedBST functions contribute to the space complexity. In the worst case, the recursion stack can grow to O(n) for a skewed tree.
+            Therefore, the overall space complexity is O(n).
+
+             */
+            public TreeNode UsingInorderTraveralWithRecursion(TreeNode root)
+            {
+                // Create a list to store the inorder traversal of the BST
+                List<int> inorder = new();
+                InorderTraversal(root, inorder);
+
+                // Construct and return the balanced BST
+                return CreateBalancedBST(inorder, 0, inorder.Count - 1);
+            }
+
+            private void InorderTraversal(TreeNode root, List<int> inorder)
+            {
+                // Perform an inorder traversal to store the elements in sorted order
+                if (root == null) return;
+                InorderTraversal(root.Left, inorder);
+                inorder.Add(root.Val);
+                InorderTraversal(root.Right, inorder);
+            }
+
+            private TreeNode CreateBalancedBST(
+                List<int> inorder,
+                int start,
+                int end
+            )
+            {
+                // Base case: if the start index is greater than the end index, return null
+                if (start > end) return null;
+
+                // Find the middle element of the current range
+                int mid = start + (end - start) / 2;
+
+                // Recursively construct the left and right subtrees
+                TreeNode leftSubtree = CreateBalancedBST(inorder, start, mid - 1);
+                TreeNode rightSubtree = CreateBalancedBST(inorder, mid + 1, end);
+
+                // Create a new node with the middle element and attach the subtrees
+                TreeNode node = new TreeNode(
+                    inorder[mid],
+                    leftSubtree,
+                    rightSubtree
+                );
+                return node;
+            }
+            /* Approach 2: Day-Stout-Warren Algorithm / In-Place Balancing
+            Complexity Analysis
+Let n be the number of nodes in the BST at root.
+•	Time Complexity: O(n)
+The loop that creates the vine visits each node exactly once, and each right rotation is O(1), resulting in O(n) time.
+Counting nodes in the vine involves a single traversal of the vine, which is O(n).
+The makeRotations function performs a series of left rotations. Each rotation is O(1), and the total number of rotations across all iterations is O(n). Although the number of rotations is bounded by a logarithmic factor due to iteratively halving m, the overall complexity remains O(n) due to the linear traversal and rotation steps.
+Therefore, the overall time complexity is O(n).
+•	Space Complexity: O(n)
+The algorithm primarily uses a temporary pointer structure and the original nodes, contributing to O(1) additional space. The vine structure uses the existing nodes in-place, without requiring extra memory.
+However, the depth of the recursion stack in the worst case can reach O(n) if the tree is skewed.
+Therefore, the overall space complexity is O(n).	
+
+             */
+            public TreeNode DayStoutWarrenAlgo(TreeNode root)
+            {
+                if (root == null) return null;
+
+                // Step 1: Create the backbone (vine)
+                // Temporary dummy node
+                TreeNode vineHead = new TreeNode(0);
+                vineHead.Right = root;
+                TreeNode current = vineHead;
+                while (current.Right != null)
+                {
+                    if (current.Right.Left != null)
+                    {
+                        RightRotate(current, current.Right);
+                    }
+                    else
+                    {
+                        current = current.Right;
+                    }
+                }
+
+                // Step 2: Count the nodes
+                int nodeCount = 0;
+                current = vineHead.Right;
+                while (current != null)
+                {
+                    ++nodeCount;
+                    current = current.Right;
+                }
+
+                // Step 3: Create a balanced BST
+                int m =
+                    (int)Math.Pow(
+                        2,
+                        Math.Floor(Math.Log(nodeCount + 1) / Math.Log(2))
+                    ) -
+                    1;
+                MakeRotations(vineHead, nodeCount - m);
+                while (m > 1)
+                {
+                    m /= 2;
+                    MakeRotations(vineHead, m);
+                }
+
+                TreeNode balancedRoot = vineHead.Right;
+                return balancedRoot;
+            }
+
+            // Function to perform a right rotation
+            private void RightRotate(TreeNode parent, TreeNode node)
+            {
+                TreeNode tmp = node.Left;
+                node.Left = tmp.Right;
+                tmp.Right = node;
+                parent.Right = tmp;
+            }
+
+            // Function to perform a left rotation
+            private void LeftRotate(TreeNode parent, TreeNode node)
+            {
+                TreeNode tmp = node.Right;
+                node.Right = tmp.Left;
+                tmp.Left = node;
+                parent.Right = tmp;
+            }
+
+            // Function to perform a series of left rotations to balance the vine
+            private void MakeRotations(TreeNode vineHead, int count)
+            {
+                TreeNode current = vineHead;
+                for (int i = 0; i < count; ++i)
+                {
+                    TreeNode tmp = current.Right;
+                    LeftRotate(current, tmp);
+                    current = current.Right;
+                }
+            }
+        }
+
+        /* 1038. Binary Search Tree to Greater Sum Tree
+        https://leetcode.com/problems/binary-search-tree-to-greater-sum-tree/description/
+         */
+        class BSTToGSTSolution
+        {
+
+            /* Approach 1: In-order Traversal (Brute-Force)
+            Complexity Analysis
+Let n be the number of nodes in the tree rooted at root.
+•	Time complexity: O(n^2)
+The inorder function traverses all the nodes exactly once. All other operations in inorder are constant time. Therefore, the time complexity for this function is O(n).
+The replaceValues function iterates all the values in inorderTraversal of size n in each iteration. It iterates all the nodes exactly once. Therefore, the time complexity for this function is O(n^2).
+The time complexity for the main function is given by O(n^2).
+•	Space complexity: O(n)
+While traversing the tree, the recursion stack in both functions stores exactly n nodes in the worst case. Also, the size of the inorderTraversal array is n. Therefore, the space complexity is O(n).
+
+             */
+            public TreeNode BstToGst(TreeNode root)
+            {
+                // Store the inorder traversal in an array.
+                List<int> inorderTraversal = new();
+                Inorder(root, inorderTraversal);
+
+                // Reverse the array to get descending order.
+                inorderTraversal.Reverse();
+
+                // Modify the values in the tree.
+                ReplaceValues(root, inorderTraversal);
+                return root;
+            }
+
+            // Perform any traversal of your choice to store node values.
+            private void Inorder(TreeNode root, List<int> inorderTraversal)
+            {
+                if (root == null)
+                {
+                    return;
+                }
+                Inorder(root.Left, inorderTraversal);
+                inorderTraversal.Add(root.Val);
+                Inorder(root.Right, inorderTraversal);
+            }
+
+            // Function to modify the values in the tree.
+            private void ReplaceValues(TreeNode root, List<int> inorderTraversal)
+            {
+                if (root == null)
+                {
+                    return;
+                }
+                ReplaceValues(root.Left, inorderTraversal);
+                ReplaceValues(root.Right, inorderTraversal);
+
+                int nodeSum = 0;
+                // Replace node with values greater than the current value.
+                foreach (int i in inorderTraversal)
+                {
+                    if (i > root.Val)
+                    {
+                        nodeSum += i;
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+
+                root.Val += nodeSum;
+            }
+            /* Approach 2: Reverse In-order Traversal
+            Complexity Analysis
+Let n be the number of nodes in the tree rooted at root.
+•	Time complexity: O(n)
+The recursive function is called for every node exactly once. All the operations performed in the bstToGst function are constant time. Therefore, the time complexity is O(n).
+•	Space complexity: O(n)
+The recursive function is called exactly n times. In the worst case where the binary search tree is skewed such that all the nodes only have the right children, the call stack size will grow up to n. Therefore, the space complexity is O(n).
+
+             */
+            public TreeNode UsingReverseInOrderTraversalRec(TreeNode root)
+            {
+                int[] nodeSum = new int[1];
+                BstToGstHelper(root, nodeSum);
+                return root;
+            }
+
+            private void BstToGstHelper(TreeNode root, int[] nodeSum)
+            {
+                // If root is null, make no changes.
+                if (root == null)
+                {
+                    return;
+                }
+
+                BstToGstHelper(root.Right, nodeSum);
+                nodeSum[0] += root.Val;
+                // Update the value of root.
+                root.Val = nodeSum[0];
+                BstToGstHelper(root.Left, nodeSum);
+            }
+
+            /* Approach 3: Iterative Reverse In-order Traversal
+            Complexity Analysis
+Let n be the number of nodes in the tree rooted at root.
+•	Time complexity: O(n)
+Every node is pushed into the stack and popped from the stack exactly once. All the other operations performed in the loop are constant time. Therefore, the time complexity is O(n).
+•	Space complexity: O(n)
+The recursive function is called exactly n times. In the worst case where the binary search tree is skewed such that all the nodes only have the right children, the call stack size will grow up to n. Therefore, the space complexity is O(n).
+
+             */
+            public TreeNode UsingReverseInOrderTraversalIterative(TreeNode root)
+            {
+                int nodeSum = 0;
+                Stack<TreeNode> st = new();
+                TreeNode node = root;
+
+                while (st.Count > 0 || node != null)
+                {
+                    while (node != null)
+                    {
+                        st.Push(node);
+                        node = node.Right;
+                    }
+
+                    // Store the top value of stack in node and pop it.
+                    node = st.Pop();
+
+                    // Update value of node.
+                    nodeSum += node.Val;
+                    node.Val = nodeSum;
+
+                    // Move to the left child of node.
+                    node = node.Left;
+                }
+                return root;
+            }
+            /* Approach 4: Morris Traversal
+Complexity Analysis
+Let n be the number of nodes in the tree rooted at root.
+•	Time complexity: O(n)
+Note that getSuccessor is called at most twice per node. On the first invocation, the temporary link back to the node in question is created, and on the second invocation, the temporary link is erased.
+Then, the algorithm steps into the left subtree with no way to return to the node. Therefore, each edge can only be traversed 3 times: once when we move the node pointer, and once for each of the two calls to getSuccessor.
+Therefore, the time complexity is O(n).
+•	Space complexity: O(1)
+Because we only manipulate pointers that already exist, the Morris traversal uses constant space.
+
+             */
+            public TreeNode UsingMorrisTraversal(TreeNode root)
+            {
+                int sum = 0;
+                TreeNode node = root;
+
+                while (node != null)
+                {
+                    // If there is no right subtree, then we can visit this node and
+                    // continue traversing left.
+                    if (node.Right == null)
+                    {
+                        sum += node.Val;
+                        node.Val = sum;
+                        node = node.Left;
+                    }
+                    //  If there is a right subtree, then there is at least one node that
+                    //  has a greater value than the current one. therefore, we must
+                    //  traverse that subtree first.
+                    else
+                    {
+                        TreeNode succ = GetSuccessor(node);
+                        //If the left subtree is null, then we have never been here before.
+                        if (succ.Left == null)
+                        {
+                            succ.Left = node;
+                            node = node.Right;
+                        }
+                        //If there is a left subtree, it is a link that we created on a
+                        //previous pass, so we should unlink it and visit this node.
+                        else
+                        {
+                            succ.Left = null;
+                            sum += node.Val;
+                            node.Val = sum;
+                            node = node.Left;
+                        }
+                    }
+                }
+
+                return root;
+            }
+
+            // Get the node with the smallest value greater than this one.
+            private TreeNode GetSuccessor(TreeNode node)
+            {
+                TreeNode succ = node.Right;
+                while (succ.Left != null && succ.Left != node)
+                {
+                    succ = succ.Left;
+                }
+                return succ;
+            }
+
+
+        }
+
+
+
+
+
+
+
+
+
+
+
 
 
 

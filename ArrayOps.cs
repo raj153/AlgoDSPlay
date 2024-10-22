@@ -12,6 +12,7 @@ using System.Text;
 using System.Threading.Tasks;
 using AlgoDSPlay.Combinatoric.Enumeration;
 using AlgoDSPlay.DataStructures;
+using AlgoDSPlay.Design;
 
 namespace AlgoDSPlay
 {
@@ -1203,6 +1204,74 @@ o	Please refer to Tail Call for more information on tail call optimization.
             return answer;
         }
 
+        /* 229. Majority Element II
+        https://leetcode.com/problems/majority-element-ii/description/
+         */
+        class MjorityElementIISol
+        {
+            /*
+            Approach 1: Boyer-Moore Voting Algorithm
+                        Complexity Analysis
+            •	Time complexity : O(N) where N is the size of nums. We first go through nums looking for first and second potential candidates. We then count the number of occurrences for these two potential candidates in nums. Therefore, our runtime is O(N)+O(N)=O(2N)≈O(N).
+            •	Space complexity : O(1) since we only have four variables for holding two potential candidates and two counters. Even the returning array is at most 2 elements.
+             */
+            public List<int> UsingBoyerMooreVotingAlgo(int[] nums)
+            {
+
+                // 1st pass
+                int count1 = 0;
+                int count2 = 0;
+
+                int? candidate1 = null;
+                int? candidate2 = null;
+
+                foreach (int n1 in nums)
+                {
+                    if (candidate1 != null && candidate1 == n1)
+                    {
+                        count1++;
+                    }
+                    else if (candidate2 != null && candidate2 == n1)
+                    {
+                        count2++;
+                    }
+                    else if (count1 == 0)
+                    {
+                        candidate1 = n1;
+                        count1++;
+                    }
+                    else if (count2 == 0)
+                    {
+                        candidate2 = n1;
+                        count2++;
+                    }
+                    else
+                    {
+                        count1--;
+                        count2--;
+                    }
+                }
+
+                // 2nd pass
+                List<int> result = new();
+
+                count1 = 0;
+                count2 = 0;
+
+                foreach (int n1 in nums)
+                {
+                    if (candidate1 != null && n1 == candidate1) count1++;
+                    if (candidate2 != null && n1 == candidate2) count2++;
+                }
+
+                int n = nums.Length;
+                if (count1 > n / 3) result.Add((int)candidate1);
+                if (count2 > n / 3) result.Add((int)candidate2);
+
+                return result;
+            }
+        }
+
         //https://www.algoexpert.io/questions/quickselect
         //kth smalles/ laragest element
         public static int FindKthSmallest(int[] array, int k)
@@ -1574,6 +1643,185 @@ o	Please refer to Tail Call for more information on tail call optimization.
 
             return result;
         }
+
+        /*         503. Next Greater Element II
+        https://leetcode.com/problems/next-greater-element-ii/description/ 
+         */
+        public class NextGreaterElementIISol
+        {
+            /* 
+            Approach 1: Brute Force (using Double Length Array) [Time Limit Exceeded
+            Complexity Analysis
+            •	Time complexity : O(n^2). The complete doublenums array(of size 2n) is scanned for all the elements of nums in the worst case.
+            •	Space complexity : O(n). doublenums array of size 2n is used. res array of size n is used.
+             */
+            public int[] Naive(int[] nums)
+            {
+                int[] res = new int[nums.Length];
+                int[] doublenums = new int[nums.Length * 2];
+                Array.Copy(nums, 0, doublenums, 0, nums.Length);
+                Array.Copy(nums, 0, doublenums, nums.Length, nums.Length);
+                for (int i = 0; i < nums.Length; i++)
+                {
+                    res[i] = -1;
+                    for (int j = i + 1; j < doublenums.Length; j++)
+                    {
+                        if (doublenums[j] > doublenums[i])
+                        {
+                            res[i] = doublenums[j];
+                            break;
+                        }
+                    }
+                }
+                return res;
+            }
+            /* Approach 2: Better Brute Force [Accepted]	
+Complexity Analysis
+•	Time complexity : O(n^2). The complete nums array of size n is scanned for all the elements of nums in the worst case.
+•	Space complexity : O(n). res array of size n is used.
+             */
+            public int[] NaiveOptimal(int[] nums)
+            {
+                int[] res = new int[nums.Length];
+                for (int i = 0; i < nums.Length; i++)
+                {
+                    res[i] = -1;
+                    for (int j = 1; j < nums.Length; j++)
+                    {
+                        if (nums[(i + j) % nums.Length] > nums[i])
+                        {
+                            res[i] = nums[(i + j) % nums.Length];
+                            break;
+                        }
+                    }
+                }
+                return res;
+            }
+            /* Approach 3: Using Stack [Accepted] 
+        Complexity Analysis
+•	Time complexity : O(n). Only two traversals of the nums array are done. Further, at most 2n elements are pushed and popped from the stack.
+•	Space complexity : O(n). A stack of size n is used. res array of size n is used.
+            */
+            public int[] UsingStack(int[] nums)
+            {
+                int[] res = new int[nums.Length];
+                Stack<int> stack = new Stack<int>();
+                for (int i = 2 * nums.Length - 1; i >= 0; --i)
+                {
+                    while (stack.Count > 0 && nums[stack.Peek()] <= nums[i % nums.Length])
+                    {
+                        stack.Pop();
+                    }
+                    res[i % nums.Length] = stack.Count == 0 ? -1 : nums[stack.Peek()];
+                    stack.Push(i % nums.Length);
+                }
+                return res;
+            }
+
+        }
+
+        /*    556. Next Greater Element III 
+        https://leetcode.com/problems/next-greater-element-iii/
+         */
+        public class NextGreaterElementIIISol
+        {
+
+            /* Approach #1 Brute Force
+            Complexity Analysis
+•	Time complexity : O(n!). A total of n! permutations are possible for a number consisting of n digits.
+•	Space complexity : O(n!). A total of n! permutations are possible for a number consisting of n digits, with each permutation consisting of n digits.
+
+             */
+            public int Naive(int n)
+            {
+                String s = "" + n;
+                Permute(s, 0, s.Length - 1);
+                list.Sort();
+                int i;
+                for (i = list.Count - 1; i >= 0; i--)
+                {
+                    if (list[i].Equals("" + n))
+                        break;
+                }
+                return i == list.Count - 1 ? -1 : int.Parse(list[i + 1]);
+            }
+            private String Swap(String s, int i0, int i1)
+            {
+                if (i0 == i1)
+                    return s;
+                String s1 = s.Substring(0, i0);
+                String s2 = s.Substring(i0 + 1, i1);
+                String s3 = s.Substring(i1 + 1);
+                return s1 + s[i1] + s2 + s[i0] + s3;
+            }
+            List<String> list = new();
+            private void Permute(String a, int l, int r)
+            {
+                int i;
+                if (l == r)
+                    list.Add(a);
+                else
+                {
+                    for (i = l; i <= r; i++)
+                    {
+                        a = Swap(a, l, i);
+                        Permute(a, l + 1, r);
+                        a = Swap(a, l, i);
+                    }
+                }
+            }
+            /* Approach #2 Linear Solution
+            Complexity Analysis
+    •	Time complexity : O(n). In worst case, only two scans of the whole array are needed. Here, n refers to the number of digits in the given number.
+    •	Space complexity : O(n). An array a of size n is used, where n is the number of digits in the given number.
+
+             */
+            public int UsingLinearSolution(int n)
+            {
+                char[] a = ("" + n).ToCharArray();
+                int i = a.Length - 2;
+                while (i >= 0 && a[i + 1] <= a[i])
+                {
+                    i--;
+                }
+                if (i < 0)
+                    return -1;
+                int j = a.Length - 1;
+                while (j >= 0 && a[j] <= a[i])
+                {
+                    j--;
+                }
+                Swap(a, i, j);
+                Reverse(a, i + 1);
+                try
+                {
+                    return int.Parse(new String(a));
+                }
+                catch (Exception e)
+                {
+                    return -1;
+                }
+            }
+            private void Reverse(char[] a, int start)
+            {
+                int i = start, j = a.Length - 1;
+                while (i < j)
+                {
+                    Swap(a, i, j);
+                    i++;
+                    j--;
+                }
+            }
+            private void Swap(char[] a, int i, int j)
+            {
+                char temp = a[i];
+                a[i] = a[j];
+                a[j] = temp;
+            }
+
+        }
+
+
         //https://www.algoexpert.io/questions/sorted-squared-
         // O(nlogn) time | O(n) space - where n is the length of the input array
         public int[] SortedSquaredArrayNaive(int[] array)
@@ -8622,7 +8870,7 @@ Therefore, the total space complexity of the given code would be O(n + m).
             Complexity Analysis
 Given N as the length of arr,
 •	Time complexity: O(N⋅log(N)+k⋅log(k)).
-To build sortedArr, we need to sort every element in the array by a new criteria: x - num. This costs O(N⋅log(N)). Then, we have to sort sortedArr again to get the output in ascending order. This costs O(k⋅log(k)) time since sortedArr.length is only k.
+To build sortedArr, we need to sort every element in the array by a new criteria: x - num. This costs O(N⋅log(N)). Then, we have to sort sortedArr again to get the output in ascending order. This costs O(k⋅log(k)) time since sortedArr.Length is only k.
 •	Space complexity: O(N).
 Before we slice sortedArr to contain only k elements, it contains every element from arr, which requires O(N) extra space. Note that we can use less space if we sort the input in place.
 
@@ -8897,11 +9145,4325 @@ The memo array contains t⋅n elements.
 
         }
 
+        /* 540. Single Element in a Sorted Array
+        https://leetcode.com/problems/single-element-in-a-sorted-array/description/?envType=company&envId=facebook&favoriteSlug=facebook-all&difficulty=MEDIUM
+         */
+
+        class SingleNonDuplicateSol
+        {
+            /* Approach 1: Brute Force
+            Complexity Analysis
+•	Time complexity : O(n). For linear search, we are looking at every element in the array once.
+•	Space complexity : O(1). We are only using constant extra space.
+While this approach will work, the question tells us we need a O(logn) solution. Therefore, this solution isn't good enough.
+
+             */
+            public int Naive(int[] nums)
+            {
+                for (int i = 0; i < nums.Length - 1; i += 2)
+                {
+                    if (nums[i] != nums[i + 1])
+                    {
+                        return nums[i];
+                    }
+                }
+                return nums[nums.Length - 1];
+            }
+            /* Approach 2: Binary Search
+Complexity Analysis
+•	Time complexity : O(logn). On each iteration of the loop, we're halving the number of items we still need to search.
+•	Space complexity : O(1). We are only using constant space to keep track of where we are in the search.
+
+             */
+            public int UsingBinarySearch(int[] nums)
+            {
+                int lo = 0;
+                int hi = nums.Length - 1;
+                while (lo < hi)
+                {
+                    int mid = lo + (hi - lo) / 2;
+                    bool halvesAreEven = (hi - mid) % 2 == 0;
+                    if (nums[mid + 1] == nums[mid])
+                    {
+                        if (halvesAreEven)
+                        {
+                            lo = mid + 2;
+                        }
+                        else
+                        {
+                            hi = mid - 1;
+                        }
+                    }
+                    else if (nums[mid - 1] == nums[mid])
+                    {
+                        if (halvesAreEven)
+                        {
+                            hi = mid - 2;
+                        }
+                        else
+                        {
+                            lo = mid + 1;
+                        }
+                    }
+                    else
+                    {
+                        return nums[mid];
+                    }
+                }
+                return nums[lo];
+            }
+            /*             Approach 3: Binary Search on Evens Indexes Only
+            Complexity Analysis
+            •	Time complexity : O(log2n)=O(logn). Same as the binary search above, except we are only binary searching half the elements, rather than all of them.
+            •	Space complexity : O(1). Same as the other approaches. We are only using constant space to keep track of where we are in the search.
+
+             */
+            public int UsingBinarySearchOnEvenIndexesOnly(int[] nums)
+            {
+                int lo = 0;
+                int hi = nums.Length - 1;
+                while (lo < hi)
+                {
+                    int mid = lo + (hi - lo) / 2;
+                    if (mid % 2 == 1) mid--;
+                    if (nums[mid] == nums[mid + 1])
+                    {
+                        lo = mid + 2;
+                    }
+                    else
+                    {
+                        hi = mid;
+                    }
+                }
+                return nums[lo];
+            }
+        }
+
+
+        /* 1060. Missing Element in Sorted Array
+        https://leetcode.com/problems/missing-element-in-sorted-array/description/?envType=company&envId=facebook&favoriteSlug=facebook-all&difficulty=MEDIUM
+         */
+        class MissingElementInSortedArraySol
+        {
+
+            /* Approach 1: Iteration
+            Complexity Analysis
+            Let n be the length of the input array nums.
+            •	Time complexity: O(n)
+            o	The algorithm requires iterating over the entire array at most once to calculate the number of missing elements between each adjacent pair of numbers.
+            •	Space complexity: O(1)
+            o	We only use a constant amount of extra space for variables missed_in_gap and i.
+
+             */
+            public int UsingIterative(int[] nums, int k)
+            {
+                int n = nums.Length;
+
+                for (int i = 1; i < n; ++i)
+                {
+                    int missedInGap = nums[i] - nums[i - 1] - 1;
+                    if (missedInGap >= k)
+                    {
+                        return nums[i - 1] + k;
+                    }
+                    k -= missedInGap;
+                }
+
+                return nums[n - 1] + k;
+            }
+            /* Approach 2: Binary Search
+            Complexity Analysis
+            LLet n be the length of the input array nums.
+            •	Time complexity: O(logn)
+            o	The algorithm repeatedly divides the search space in half using binary search until it finds the kth missing element.
+            •	Space complexity: O(1)
+            o	The algorithm only uses a constant amount of extra space for variables left, right, and mid.
+
+             */
+            public int UsingBinarySearch(int[] nums, int k)
+            {
+                int n = nums.Length;
+                int left = 0, right = n - 1;
+
+                while (left < right)
+                {
+                    int mid = right - (right - left) / 2;
+                    if (nums[mid] - nums[0] - mid < k)
+                    {
+                        left = mid;
+                    }
+                    else
+                    {
+                        right = mid - 1;
+                    }
+                }
+
+                return nums[0] + k + left;
+            }
+
+        }
+
+
+        /* 1043. Partition Array for Maximum Sum
+        https://leetcode.com/problems/partition-array-for-maximum-sum/description/?envType=company&envId=facebook&favoriteSlug=facebook-all&difficulty=MEDIUM
+         */
+        class MaxSumAfterPartitioningSol
+        {
+            /* Approach 1: Top-Down Dynamic Programming
+            Complexity Analysis
+Let N be the number of elements in the array, and K is the maximum length of a subarray.
+•	Time complexity: O(N⋅K)
+The time complexity for the recursion with memoization is equal to the number of times maxSum() is called times the average time of maxSum(). The number of calls to maxSum() is N because each non-memoized call will call maxSum() only once. Each memoized call will take O(1) time, while for the non-memoized call, we iterate over most K elements ahead of it. Hence, the total time complexity equals O(N⋅K).
+•	Space complexity: O(N)
+The result for each start index will be stored in dp, and start can have the values from 0 to N; thus, the space required is O(N). Also, the stack space needed for recursion is equal to the maximum number of active function calls which will be N, one for each index. Hence, the space complexity will equal O(N).
+
+             */
+            public int TopDownDP(int[] arr, int k)
+            {
+                int[] dp = new int[arr.Length];
+                Array.Fill(dp, -1);
+
+                return MaxSum(arr, k, dp, 0);
+            }
+            private int MaxSum(int[] arr, int k, int[] dp, int start)
+            {
+                int N = arr.Length;
+
+                if (start >= N)
+                {
+                    return 0;
+                }
+
+                // Return the already calculated answer.
+                if (dp[start] != -1)
+                {
+                    return dp[start];
+                }
+
+                int currMax = 0, ans = 0;
+                int end = Math.Min(N, start + k);
+                for (int i = start; i < end; i++)
+                {
+                    currMax = Math.Max(currMax, arr[i]);
+                    // Store the maximum of all options for the current subarray.
+                    ans = Math.Max(ans, currMax * (i - start + 1) + MaxSum(arr, k, dp, i + 1));
+                }
+
+                // Store the answer to be reused.
+                return dp[start] = ans;
+            }
+            /* Approach 2: Bottom-Up Dynamic Programming
+Complexity Analysis
+Let N be the number of elements in the array, and K is the maximum length of a subarray.
+•	Time complexity: O(N⋅K)
+We iterate over all elements from N - 1 to 0, and, for each of them, iterate over at most K elements so the time complexity is equal to O(N⋅K).
+•	Space complexity: O(N)
+The result for each start index will be stored in dp, and start can have the values from 0 to N; thus, the space required is O(N).
+
+
+             */
+            public int BottomUpDP(int[] arr, int k)
+            {
+                int N = arr.Length;
+
+                int[] dp = new int[N + 1];
+                Array.Fill(dp, 0);
+
+                for (int start = N - 1; start >= 0; start--)
+                {
+                    int currMax = 0;
+                    int end = Math.Min(N, start + k);
+
+                    for (int i = start; i < end; i++)
+                    {
+                        currMax = Math.Max(currMax, arr[i]);
+                        // Store the maximum of all options for the current subarray.
+                        dp[start] = Math.Max(dp[start], dp[i + 1] + currMax * (i - start + 1));
+                    }
+                }
+                return dp[0];
+            }
+
+            /* Note: If we observe closely the above approach we need only the last K previously calculated answers to find the 
+            answer for the current index start. This is because the length of the subarray cannot be more than K, even though we have stored all N answers in the array dp. We can change the size of array dp to store only the last K results and then use them to calculate the answers. This will reduce the space complexity to O(K), which is a significant reduction when K is small. At worst, when K is equal to N, the space complexity will still be O(N). The time complexity of this approach is O(N⋅K). The following code is written using this approach: */
+            public int BottomUpDPWithKElementStoreOnly(int[] arr, int k)
+            {
+                int N = arr.Length;
+                int K = k + 1;
+
+                int[] dp = new int[K];
+                Array.Fill(dp, 0);
+
+                for (int start = N - 1; start >= 0; start--)
+                {
+                    int currMax = 0;
+                    int end = Math.Min(N, start + k);
+
+                    for (int i = start; i < end; i++)
+                    {
+                        currMax = Math.Max(currMax, arr[i]);
+                        dp[start % K] = Math.Max(dp[start % K], dp[(i + 1) % K] + currMax * (i - start + 1));
+                    }
+                }
+                return dp[0];
+            }
+
+
+        }
+
+        /*  287. Find the Duplicate Number
+        https://leetcode.com/problems/find-the-duplicate-number/description/?envType=company&envId=facebook&favoriteSlug=facebook-all&difficulty=MEDIUM
+         */
+        class FindDuplicateSol
+        {
+
+            /* Approach 1: Sort
+            Complexity Analysis
+            •	Time Complexity: O(nlogn)
+            Sorting takes O(nlogn) time. This is followed by a linear scan, resulting in a total of O(nlogn) + O(n) = O(nlogn) time.
+            •	Space Complexity: O(logn) or O(n)
+            The space complexity of the sorting algorithm depends on the implementation of each programming language:
+            o	In Java, Arrays.sort() for primitives is implemented using a variant of the Quick Sort algorithm, which has a space complexity of O(logn)
+            o	In C++, the sort() function provided by STL uses a hybrid of Quick Sort, Heap Sort and Insertion Sort, with a worst case space complexity of O(logn)
+            o	In Python, the sort() function is implemented using the Timsort algorithm, which has a worst-case space complexity of O(n)
+
+             */
+            public int UsingSort(int[] nums)
+            {
+                Array.Sort(nums);
+                for (int i = 1; i < nums.Length; i++)
+                {
+                    if (nums[i] == nums[i - 1])
+                        return nums[i];
+                }
+
+                return -1;
+            }
+
+            /* Approach 2: Set
+            Note: This approach does not use constant space, and hence does not meet the problem constraints. However, it utilizes a fundamental concept that can help solve similar problems.
+
+
+            Complexity Analysis
+•	Time Complexity: O(n)
+HashSet insertions and lookups have amortized constant time complexities. Hence, this algorithm requires linear time, since it consists of a single for loop that iterates over each element, looking up the element and inserting it into the set at most once.
+•	Space Complexity: O(n)
+We use a set that may need to store at most n elements, leading to a linear space complexity of O(n).
+
+             */
+            public int UsingHashSet(int[] nums)
+            {
+                HashSet<int> seen = new();
+                foreach (int num in nums)
+                {
+                    if (seen.Contains(num))
+                        return num;
+                    seen.Add(num);
+                }
+                return -1;
+            }
+            /* Approach 3: Negative Marking
+Complexity Analysis
+•	Time Complexity: O(n)
+Each element is visited at most twice (once in the first loop to find the duplicate and once in the second loop to restore the numbers).
+•	Space Complexity: O(1)
+All manipulation is done in place, so no additional storage (barring one variable) is needed.
+
+             */
+            public int UsingNegativeMarking(int[] nums)
+            {
+                int duplicate = -1;
+                for (int i = 0; i < nums.Length; i++)
+                {
+                    int cur = Math.Abs(nums[i]);
+                    if (nums[cur] < 0)
+                    {
+                        duplicate = cur;
+                        break;
+                    }
+                    nums[cur] *= -1;
+                }
+
+                // Restore numbers
+                for (int i = 0; i < nums.Length; i++)
+                    nums[i] = Math.Abs(nums[i]);
+
+                return duplicate;
+            }
+            /* Approach 4.1: Array as HashMap (Recursion)
+            Complexity Analysis
+•	Time Complexity: O(n)
+The function (store) makes a single recursive call at every instance. Each index is visited at most once, resulting in O(n) time complexity.
+•	Space Complexity: O(n)
+Since this is a recursive function with up to n self-invocations (i.e. depth of the recursive function = n), the space complexity is O(n) as there can be up to n function calls in memory at some point. Note that due to the recursive nature of the solution, there is some additional overhead on each invocation (such as the function variables and a return function pointer that are stored on the system executable stack).
+
+             */
+            public int UsingArrayAsDictRec(int[] nums)
+            {
+                return Store(nums, 0);
+            }
+            public int Store(int[] nums, int cur)
+            {
+                if (cur == nums[cur])
+                    return cur;
+                int nxt = nums[cur];
+                nums[cur] = cur;
+                return Store(nums, nxt);
+            }
+            /*             Approach 4.2: Array as HashMap (Iterative)
+Complexity Analysis
+•	Time Complexity: O(n)
+Each number needs to be swapped at most once before it is placed in its desired position.
+•	Space Complexity: O(1)
+No additional storage is needed (barring the temporary variables used for swapping).
+
+             */
+            public int UsingArrayAsDictIterative(int[] nums)
+            {
+                while (nums[0] != nums[nums[0]])
+                {
+                    int nxt = nums[nums[0]];
+                    nums[nums[0]] = nums[0];
+                    nums[0] = nxt;
+                }
+                return nums[0];
+            }
+
+            /* Approach 5: Binary Search
+            Complexity Analysis
+            •	Time Complexity: O(nlogn)
+            The outer loop uses binary search to identify a candidate - this runs in O(logn) time. For each candidate, we iterate over the entire array which takes O(n) time, resulting in a total of O(nlogn) time.
+            •	Space Complexity: O(1)
+            No additional storage is needed (barring a few variables), resulting in a constant O(1) space complexity.
+
+             */
+            public int UsingBinarySearch(int[] nums)
+            {
+                // 'low' and 'high' represent the range of values of the target        
+                int low = 1, high = nums.Length - 1;
+                int duplicate = -1;
+
+                while (low <= high)
+                {
+                    int cur = (low + high) / 2;
+
+                    // Count how many numbers in 'nums' are less than or equal to 'cur'
+                    int count = 0;
+                    foreach (int num in nums)
+                    {
+                        if (num <= cur)
+                            count++;
+                    }
+
+                    if (count > cur)
+                    {
+                        duplicate = cur;
+                        high = cur - 1;
+                    }
+                    else
+                    {
+                        low = cur + 1;
+                    }
+                }
+                return duplicate;
+            }
+            /* Approach 6: Sum of Set Bits
+            Complexity Analysis
+            Let n be the length of nums and m be the bit-length of n.
+            •	Time Complexity: O(nlogn)
+            The outer loop runs a maximum of m times (once for each bit in n). The inner loop goes over all n elements in nums, resulting in a total time complexity of O(m⋅n).
+            It is a common misconception to treat m as a constant because it is small and thus consider this to be a linear time complexity algorithm. Setting the problem constraints aside, the value of m depends on n. More specifically, m is the bit-length of n which is approximately equal to log2(n). Thus this algorithm has linearithmic time complexity.
+            •	Space Complexity: O(1)
+            No additional storage is needed (barring a few variables), resulting in a constant O(1) space complexity.
+
+             */
+            public int UsingSumOfSetBits(int[] nums)
+            {
+                int duplicate = 0;
+                int n = nums.Length - 1;
+                int max_num = FindMaxNum(nums);
+                int max_bit = CalcMaxBit(max_num);
+
+                // Iterate over each bit        
+                for (int bit = 0; bit < max_bit; bit++)
+                {
+                    int mask = (1 << bit);
+                    int base_count = 0, nums_count = 0;
+
+                    for (int i = 0; i <= n; i++)
+                    {
+                        // If bit is set in number (i) then add 1 to base_count                
+                        if ((i & mask) > 0)
+                        {
+                            base_count++;
+                        }
+                        // If bit is set in nums[i] then add 1 to nums_count
+                        if ((nums[i] & mask) > 0)
+                        {
+                            nums_count++;
+                        }
+                    }
+
+                    // If the current bit is more frequently set in nums than it is in 
+                    // the range [1, 2, ..., n] then it must also be set in the duplicate number
+                    if (nums_count > base_count)
+                    {
+                        duplicate |= mask;
+                    }
+                }
+                return duplicate;
+            }
+            // Find the position of the Most Significant Bit in num    
+            int CalcMaxBit(int num)
+            {
+                int bits = 0;
+                while (num > 0)
+                {
+                    num /= 2;
+                    bits++;
+                }
+                return bits;
+            }
+
+            // Find the largest number in nums
+            int FindMaxNum(int[] nums)
+            {
+                int max_num = 0;
+                for (int i = 0; i < nums.Length; i++)
+                    max_num = Math.Max(max_num, nums[i]);
+                return max_num;
+            }
+
+            /* Approach 7: Floyd's Tortoise and Hare (Cycle Detection)
+            Complexity Analysis
+•	Time Complexity: O(n)
+•	Space Complexity: O(1)
+
+             */
+            public int UsingFloydsTortoiseAndHare(int[] nums)
+            {
+
+                // Find the intersection point of the two runners.
+                int tortoise = nums[0];
+                int hare = nums[0];
+
+                do
+                {
+                    tortoise = nums[tortoise];
+                    hare = nums[nums[hare]];
+                } while (tortoise != hare);
+
+                // Find the "entrance" to the cycle.
+                tortoise = nums[0];
+
+                while (tortoise != hare)
+                {
+                    tortoise = nums[tortoise];
+                    hare = nums[hare];
+                }
+
+                return hare;
+            }
+
+        }
+
+        /* 1509. Minimum Difference Between Largest and Smallest Value in Three Moves
+        https://leetcode.com/problems/minimum-difference-between-largest-and-smallest-value-in-three-moves/description/
+         */
+        class MinDifferenceBetweenLargestAndSmallestValueInThreeMovesSol
+        {
+
+            /* Approach 1: Sort + Greedy Deletion
+            Complexity Analysis
+            Let n be the length of the array nums.
+            •	Time Complexity: O(n⋅logn)
+            Sorting the array nums takes O(nlogn) time. The for loop runs a fixed number of 4 iterations, taking O(1) time. Thus, the overall time complexity is O(nlogn).
+            •	Space Complexity: O(n) or O(logn)
+            When we sort the nums array, some extra space is used. The space complexity of the sorting algorithm depends on the programming language.
+            In Python, the sort method sorts a list using the Timsort algorithm, which combines Merge Sort and Insertion Sort and has O(n) additional space.
+            In Java, Arrays.sort() is implemented using a variant of the Quick Sort algorithm, with a space complexity of O(logn) for sorting two arrays.
+            In C++, the sort() function is implemented as a hybrid of Quick Sort, Heap Sort, and Insertion Sort, with a worse-case space complexity of O(logn).
+
+             */
+            public int UsingSortAndGreedyDeletion(int[] nums)
+            {
+                int numsSize = nums.Length;
+
+                // If the array has 4 or fewer elements, return 0
+                if (numsSize <= 4) return 0;
+
+                Array.Sort(nums);
+
+                int minDiff = int.MaxValue;
+
+                // Four scenarios to compute the minimum difference
+                for (int left = 0, right = numsSize - 4; left < 4; left++, right++)
+                {
+                    minDiff = Math.Min(minDiff, nums[right] - nums[left]);
+                }
+
+                return minDiff;
+            }
+            /* Approach 2: Partial Sort + Greedy Deletion	
+Complexity Analysis
+Let n be the length of the array nums.
+•	Time Complexity: O(n)
+o	Java and Python:
+o	Finding the 4 smallest elements using a max heap takes O(n) time because maintaining a fixed-size heap of 4 elements results in O(n⋅log4)=O(n).
+o	Sorting the 4 smallest elements takes O(1) time because sorting a constant number of elements is constant time.
+o	Finding the 4 largest elements using a min heap also takes O(n) time because maintaining a fixed-size heap of 4 elements results in O(n⋅log4)=O(n).
+o	Sorting the 4 largest elements takes O(1) time.
+o	C++:
+o	The partial_sort function runs in O(n⋅log4)=O(n) time as it sorts only the first four elements and ensures the smallest four elements are in place.
+o	The nth_element function, which partitions the array around the 4th largest element, also runs in O(n) time.
+o	The sort function, which sorts the last four elements, runs in O(4⋅log4)=O(1) time because sorting a constant number of elements is constant time.
+The for loop that runs a fixed number of 4 iterations takes O(1) time.
+Therefore, the total time complexity is O(n).
+•	Space Complexity: O(1)
+o	Java and Python: The algorithm uses constant space to store the heaps and intermediate results, which do not grow with the input size. This includes space for the heaps (each with a maximum size of 4) and any additional variables.
+o	C++: The algorithm uses constant space regardless of the input size, as it only requires a few variables for indexing and storing intermediate results.
+Therefore, the total space complexity is O(1).
+
+             */
+            public int UsingPartialSortAndGreedyDeletion(int[] nums)
+            {
+                int numsSize = nums.Length;
+                if (numsSize <= 4)
+                {
+                    return 0;
+                }
+
+                // Find the four smallest elements using a fixed-size max 
+                //TODO:Test below MaxHeap Comparision
+                PriorityQueue<int, int> maxHeap = new PriorityQueue<int, int>(Comparer<int>.Create((a, b) => b.CompareTo(a)));
+                foreach (int num in nums)
+                {
+                    maxHeap.Enqueue(num, num);
+                    if (maxHeap.Count > 4)
+                    {
+                        maxHeap.Dequeue();
+                    }
+                }
+                List<int> smallestFour = new List<int>();
+                while (maxHeap.Count > 0)
+                {
+                    smallestFour.Add(maxHeap.Dequeue());
+                }
+
+                smallestFour.Sort();
+
+                // Find the four largest elements using a fixed-size min heap
+                PriorityQueue<int, int> minHeap = new PriorityQueue<int, int>();
+                foreach (int num in nums)
+                {
+                    minHeap.Enqueue(num, num);
+                    if (minHeap.Count > 4)
+                    {
+                        minHeap.Dequeue();
+                    }
+                }
+                List<int> largestFour = new List<int>();
+                while (minHeap.Count > 0)
+                {
+                    largestFour.Add(minHeap.Dequeue());
+                }
+                largestFour.Sort();
+
+                int minDiff = int.MaxValue;
+                // Four scenarios to compute the minimum difference
+                for (int i = 0; i < 4; i++)
+                {
+                    minDiff = Math.Min(
+                        minDiff,
+                        largestFour[i] - smallestFour[i]
+                    );
+                }
+
+                return minDiff;
+            }
 
 
 
+        }
+
+        /* 945. Minimum Increment to Make Array Unique
+        https://leetcode.com/problems/minimum-increment-to-make-array-unique/description/
+         */
+
+        class MinIncrementToMakeArrayUniqueSol
+        {
+
+            /* Approach 1: Sorting
+            Complexity Analysis
+            Let n be the length of the array nums.
+            •	Time complexity: O(n⋅logn)
+            Sorting the array requires O(n⋅logn) time and a single traversal over the entire array takes O(n) time. This leads to an overall time complexity of O(n⋅logn)+O(n), which simplifies to a O(n⋅logn) time complexity.
+            •	Space complexity: O(n) or O(logn)
+            Sorting arrays in place requires some additional space. The space complexity of sorting algorithms varies depending on the programming language being used:
+            o	Python's sort method employs the Tim Sort algorithm, which is a combination of Merge Sort and Insertion Sort. This algorithm has a space complexity of O(n).
+            o	In C++, the sort() function is a hybrid implementation that incorporates Quick Sort, Heap Sort, and Insertion Sort. Its worst-case space complexity is O(log n).
+            o	Java's Arrays.sort() method uses a variation of the Quick Sort algorithm. When sorting two arrays, it has a space complexity of O(log n).
+
+             */
+            public int UsingSort(int[] nums)
+            {
+                int minIncrements = 0;
+
+                Array.Sort(nums);
+
+                for (int i = 1; i < nums.Length; i++)
+                {
+                    // Ensure each element is greater than its previous
+                    if (nums[i] <= nums[i - 1])
+                    {
+                        // Add the required increment to minIncrements
+                        int increment = nums[i - 1] + 1 - nums[i];
+                        minIncrements += increment;
+
+                        // Set the element to be greater than its previous
+                        nums[i] = nums[i - 1] + 1;
+                    }
+                }
+
+                return minIncrements;
+            }
+            /* Approach 2: Counting
+Complexity Analysis
+Let n be the length of nums and max be the maximum element in nums.
+•	Time complexity: O(n+max)
+The algorithm initially iterates over nums twice, each iteration taking O(n) time. To find the number of increments, it then loops over the frequencyCount array, which has a time complexity of O(n+max). Thus, the total time complexity is 2⋅O(n)+O(n+max), simplifying to O(n+max).
+•	Space complexity: O(n+max)
+The only additional space used by the algorithm is the frequencyCount array, which has a size of n+max. Therefore, the space complexity is O(n+max).
+
+             */
+            public int UsingCounting(int[] nums)
+            {
+                int n = nums.Length;
+                int max = 0;
+                int minIncrements = 0;
+
+                // Find maximum value in array to determine range of frequencyCount array
+                foreach (int val in nums)
+                {
+                    max = Math.Max(max, val);
+                }
+
+                // Create a frequencyCount array to store the frequency of each value in nums
+                int[] frequencyCount = new int[n + max];
+
+                // Populate frequencyCount array with the frequency of each value in nums
+                foreach (int val in nums)
+                {
+                    frequencyCount[val]++;
+                }
+
+                // Iterate over the frequencyCount array to make all values unique
+                for (int i = 0; i < frequencyCount.Length; i++)
+                {
+                    if (frequencyCount[i] <= 1) continue;
+
+                    // Determine excess occurrences, carry them over to the next value,
+                    // ensure single occurrence for current value, and update minIncrements.
+                    int duplicates = frequencyCount[i] - 1;
+                    frequencyCount[i + 1] += duplicates;
+                    frequencyCount[i] = 1;
+                    minIncrements += duplicates;
+                }
+
+                return minIncrements;
+            }
+
+        }
+
+        /* 1151. Minimum Swaps to Group All 1's Together
+        https://leetcode.com/problems/minimum-swaps-to-group-all-1s-together/description/
+         */
+        class MinimumSwapsToGroupAll1sTogetherISol
+        {
+            /*             Approach 1: Sliding Window with Two Pointers
+            Complexity Analysis
+•	Time complexity: O(n), when n is the length of the array.
+•	Space complexity: O(1).
+
+             */
+            public int UsingSlidingWindowWithTwoPointers(int[] data)
+            {
+                int ones = data.Sum();
+                int cnt_one = 0, max_one = 0;
+                int left = 0, right = 0;
+
+                while (right < data.Length)
+                {
+                    // updating the number of 1's by adding the new element
+                    cnt_one += data[right++];
+                    // maintain the length of the window to ones
+                    if (right - left > ones)
+                    {
+                        // updating the number of 1's by removing the oldest element
+                        cnt_one -= data[left++];
+                    }
+                    // record the maximum number of 1's in the window
+                    max_one = Math.Max(max_one, cnt_one);
+                }
+                return ones - max_one;
+            }
+
+            /* Approach 2: Sliding Window with Deque (Double-ended Queue) 
+            Complexity Analysis
+•	Time complexity: O(n), when n is the length of the array.
+Note that the time complexities of adding the element to deque's right end and popping the element from its left end are both O(1).
+•	Space complexity: O(n), when n is the length of the array. This is because we need a Deque of size ones.
+
+            */
+            public int UsingSlidingWindowWithDeque(int[] data)
+            {
+                int ones = data.Sum();
+                int cnt_one = 0, max_one = 0;
+                // maintain a deque with the size = ones
+                LinkedList<int> deque = new();
+
+                for (int i = 0; i < data.Length; i++)
+                {
+
+                    // we would always add the new element into the deque
+                    deque.AddLast(data[i]);
+                    cnt_one += data[i];
+
+                    // when there are more than ones elements in the deque,
+                    // remove the leftmost one
+                    if (deque.Count > ones)
+                    {
+                        cnt_one -= deque.First();
+                        deque.RemoveFirst();
+                    }
+                    max_one = Math.Max(max_one, cnt_one);
+                }
+                return ones - max_one;
+
+            }
+        }
+
+        /* 2134. Minimum Swaps to Group All 1's Together II
+        https://leetcode.com/problems/minimum-swaps-to-group-all-1s-together-ii/description/
+         */
+
+        class MinimumSwapsToGroupAll1sTogetherIISol
+        {
 
 
+            /* Approach 1: Using Suffix Sum
+            Complexity Analysis
+            Let n be the length of the array.
+            •	Time complexity: O(n)
+            The main operations (constructing the rightSuffixSum and calculating minimum swaps) involve single passes through the array.
+            •	Space complexity: O(n)
+            O(n), due to the rightSuffixSum array, which stores the count for each position in the input array.
+
+             */
+            public int UsingSuffixSum(int[] nums)
+            {
+                // Calculate the minimum swaps needed to group all 1s or all 0s together
+                int op1 = MinSwapsHelper(nums, 0); // Grouping all 0s together
+                int op2 = MinSwapsHelper(nums, 1); // Grouping all 1s together
+                return Math.Min(op1, op2);
+            }
+
+            // Helper function to calculate the minimum swaps required to group all `val` together
+            private int MinSwapsHelper(int[] data, int val)
+            {
+                int length = data.Length;
+                int[] rightSuffixSum = new int[length + 1];
+
+                // Construct the suffix sum array for counting opposite values (val ^ 1)
+                for (int i = length - 1; i >= 0; i--)
+                {
+                    rightSuffixSum[i] = rightSuffixSum[i + 1];
+                    if (data[i] == (val ^ 1)) rightSuffixSum[i]++;
+                }
+                // Total zeros in the array if `val` is 1 (or vice versa)
+                int totalSwapsNeeded = rightSuffixSum[0];
+                // Track current number of required swaps in the current segment
+                int currentSwapCount = 0;
+                int minimumSwaps =
+                    totalSwapsNeeded - rightSuffixSum[length - totalSwapsNeeded];
+
+                // Iterate to find the minimum swaps by sliding the potential block of grouped `val`
+                for (int i = 0; i < totalSwapsNeeded; i++)
+                {
+                    if (data[i] == (val ^ 1)) currentSwapCount++;
+                    int remaining = (totalSwapsNeeded - i - 1);
+                    int requiredSwaps =
+                        ((i + 1) - currentSwapCount) +
+                        (remaining - rightSuffixSum[length - remaining]);
+                    minimumSwaps = Math.Min(minimumSwaps, requiredSwaps);
+                }
+                return minimumSwaps;
+            }
+            /* Approach 2: Using Sliding Window
+            Complexity Analysis
+Let n be the length of the array.
+•	Time complexity: O(n)
+We perform a single pass to count val and then a single pass with the sliding window.
+•	Space complexity: O(1)
+O(1), since we are using a constant amount of extra space, regardless of the input size.	
+
+             */
+            public int UsingSlidingWindow(int[] nums)
+            {
+                // Calculate the minimum swaps needed to group all 1s or all 0s together
+                int op1 = MinSwapsHelper(nums, 0); // Grouping all 0s together
+                int op2 = MinSwapsHelper(nums, 1); // Grouping all 1s together
+                return Math.Min(op1, op2);
+                // Helper function to calculate the minimum swaps required
+                // to group all `val` together
+                int MinSwapsHelper(int[] data, int val)
+                {
+                    int length = data.Length;
+                    int totalValCount = 0;
+
+                    // Count the total number of `val` in the array
+                    for (int i = length - 1; i >= 0; i--)
+                    {
+                        if (data[i] == val) totalValCount++;
+                    }
+
+                    // If there is no `val` or the array is full of `val`,
+                    // no swaps are needed
+                    if (totalValCount == 0 || totalValCount == length) return 0;
+
+                    int start = 0, end = 0;
+                    int maxValInWindow = 0, currentValInWindow = 0;
+
+                    // Initial window setup: count the number of `val` in
+                    // the first window of size `totalValCount`
+                    while (end < totalValCount)
+                    {
+                        if (data[end++] == val) currentValInWindow++;
+                    }
+                    maxValInWindow = Math.Max(maxValInWindow, currentValInWindow);
+
+                    // Slide the window across the array to find the
+                    // maximum number of `val` in any window
+                    while (end < length)
+                    {
+                        if (data[start++] == val) currentValInWindow--;
+                        if (data[end++] == val) currentValInWindow++;
+                        maxValInWindow = Math.Max(maxValInWindow, currentValInWindow);
+                    }
+
+                    // Minimum swaps are the total `val` minus
+                    // the maximum found in any window
+                    return totalValCount - maxValInWindow;
+                }
+            }
+            /* Approach 3: Cleaner and More Intuitive Sliding Window
+            Complexity Analysis
+Let n be the length of the array.
+•	Time complexity: O(n)
+The algorithm processes each element of the array once while expanding and sliding the window. Therefore, the time complexity is linear with respect to the number of elements in the array.
+•	Space complexity: O(1)
+The algorithm uses a constant amount of extra space for variables regardless of the size of the input array. Therefore, the space complexity is constant.
+
+             */
+            public int UsingSlidingWindowOptimal(int[] nums)
+            {
+                // Initialize minimum swaps to a large value
+                int minimumSwaps = int.MaxValue;
+
+                // Calculate the total number of 1s in the array
+                int totalOnes = 0;
+                foreach (int num in nums)
+                {
+                    totalOnes += num;
+                }
+
+                // Initialize the count of 1s in the current window
+                int onesCount = nums[0];
+                int end = 0;
+
+                // Slide the window across the array
+                for (int start = 0; start < nums.Length; ++start)
+                {
+                    // Adjust onesCount by removing the element that is sliding out of
+                    // the window
+                    if (start != 0)
+                    {
+                        onesCount -= nums[start - 1];
+                    }
+
+                    // Expand the window to the right until it reaches the desired size
+                    while (end - start + 1 < totalOnes)
+                    {
+                        end++;
+                        onesCount += nums[end % nums.Length];
+                    }
+
+                    // Update the minimum number of swaps needed
+                    minimumSwaps = Math.Min(minimumSwaps, totalOnes - onesCount);
+                }
+
+                return minimumSwaps;
+            }
+
+
+
+        }
+
+
+        /* 2340. Minimum Adjacent Swaps to Make a Valid Array
+        https://leetcode.com/problems/minimum-adjacent-swaps-to-make-a-valid-array/description/
+        https://algo.monster/liteproblems/2340.
+         */
+        class MinimumAdjacentSwapsToMakeAValidArraySol
+        {
+            /*             Time and Space Complexity
+            Time Complexity
+            The time complexity of the provided code is primarily determined by the single loop that iterates through the array nums. Since the loop runs for each element in the array, the time complexity is O(n), where n is the length of the array nums.
+            Space Complexity
+            The space complexity of the code is O(1) because it uses a fixed amount of extra space regardless of the size of the input array. The extra space is used for the variables i, j, k, and v, whose storage does not scale with the size of the input array.
+             */
+            // Function to find the minimum number of swaps required to make the given array sorted
+            public int MinimumSwaps(int[] nums)
+            {
+                int n = nums.Length; // Length of the given array
+                int minIndex = 0, maxIndex = 0; // Initialize indices for minimum and maximum elements
+
+                // Loop through the array to find the indices for the minimum and maximum elements
+                for (int k = 0; k < n; ++k)
+                {
+                    // Update the index of the minimum element found so far
+                    if (nums[k] < nums[minIndex] || (nums[k] == nums[minIndex] && k < minIndex))
+                    {
+                        minIndex = k;
+                    }
+                    // Update the index of the maximum element found so far
+                    if (nums[k] > nums[maxIndex] || (nums[k] == nums[maxIndex] && k > maxIndex))
+                    {
+                        maxIndex = k;
+                    }
+                }
+
+                // If the minimum and maximum elements are at the same position, no swaps are needed
+                if (minIndex == maxIndex)
+                {
+                    return 0;
+                }
+
+                // Calculate the number of swaps required
+                // The calculation is done by considering the positions of the minimum and maximum elements 
+                // and adjusting the swap count depending on their relative positions
+                int swaps = minIndex + n - 1 - maxIndex - (minIndex > maxIndex ? 1 : 0);
+
+                // Return the number of swaps
+                return swaps;
+            }
+        }
+
+        /* 786. K-th Smallest Prime Fraction
+        https://leetcode.com/problems/k-th-smallest-prime-fraction/description/
+         */
+        class KthSmallestPrimeFractionSol
+        {
+            /* Approach 1: Binary Search
+            Complexity Analysis
+Let n be the size of the input array and m be the maximum value in the array.
+•	Time complexity: O(n⋅log(m))
+The algorithm uses binary search. Within each iteration of the binary search, we perform a linear scan through the array to count the number of fractions smaller than the current mid value. Since the array is sorted, this linear scan takes O(n) time.
+Binary search takes O(logx) where x is the number of elements in the search space because each iteration reduces the size of the search space by half. We will stop generating fractions and terminate the search when the total number of smaller fractions equals k. This will happen when the size of the search space becomes smaller than the smallest possible difference between two fractions, which is m21.
+This means the size of the search space can be up to m2. Therefore, the total time complexity is O(n⋅log(m2)), which simplifies to O(n⋅log(m)).
+•	Space complexity: O(1)
+The algorithm uses constant space becuase we only use a constant amount of extra space for storing variables regardless of the input size. We don't use any additional data structures whose size depends on the input size.
+
+             */
+            public int[] UsingBinarySearch(int[] arr, int k)
+            {
+                int n = arr.Length;
+                double left = 0, right = 1.0;
+
+                // Binary search for finding the kth smallest prime fraction
+                while (left < right)
+                {
+                    // Calculate the middle value
+                    double mid = (left + right) / 2;
+
+                    // Initialize variables to keep track of maximum fraction and indices
+                    double maxFraction = 0.0;
+                    int totalSmallerFractions = 0, numeratorIdx = 0, denominatorIdx = 0;
+                    int j = 1;
+
+                    // Iterate through the array to find fractions smaller than mid
+                    for (int i = 0; i < n - 1; i++)
+                    {
+                        while (j < n && arr[i] >= mid * arr[j])
+                        {
+                            j++;
+                        }
+
+                        // Count smaller fractions
+                        totalSmallerFractions += (n - j);
+
+                        // If we have exhausted the array, break
+                        if (j == n) break;
+
+                        // Calculate the fraction
+                        double fraction = (double)arr[i] / arr[j];
+
+                        // Update maxFraction and indices if necessary
+                        if (fraction > maxFraction)
+                        {
+                            numeratorIdx = i;
+                            denominatorIdx = j;
+                            maxFraction = fraction;
+                        }
+                    }
+
+                    // Check if we have found the kth smallest prime fraction
+                    if (totalSmallerFractions == k)
+                    {
+                        return new int[] { arr[numeratorIdx], arr[denominatorIdx] };
+                    }
+                    else if (totalSmallerFractions > k)
+                    {
+                        right = mid; // Adjust the range for binary search
+                    }
+                    else
+                    {
+                        left = mid; // Adjust the range for binary search
+                    }
+                }
+                return new int[] { }; // Return empty array if kth smallest prime fraction not found
+            }
+
+            /* Approach 2: Priority Queue
+            Complexity Analysis
+Let n be the size of the input array and k be the integer k.
+•	Time complexity: O((n+k)⋅logn)
+Pushing the initial fractions into the priority queue takes O(nlogn).
+Iteratively removing and replacing fractions takes O(klogn) and retrieving the kth smallest fraction takes O(logn).
+Thus the overall time complexity of the algorithm is O(nlogn+klogn), which can write as O((n+k)⋅logn)
+•	Space complexity: O(n)
+The space required by the priority queue to store fractions is O(n) since it can potentially hold all fractions formed by dividing each element by the largest element.
+The additional space used by other variables like cur, numeratorIndex, denominatorIndex, etc., is constant and doesn't depend on the size of the input array.
+Thus the overall space complexity of the algorithm is O(n).
+
+             */
+            public int[] UsingMaxHeap(int[] arr, int k)
+            {
+                // Create a priority queue to store pairs of fractions
+                PriorityQueue<double[], double[]> maxHeap = new PriorityQueue<double[], double[]>(
+                    Comparer<double[]>.Create((a, b) => b[0].CompareTo(a[0])));
+
+                // Push the fractions formed by dividing each element by
+                // the largest element into the priority queue
+                for (int i = 0; i < arr.Length - 1; i++)
+                {
+                    maxHeap.Enqueue(new double[] {
+                -1.0 * arr[i] / arr[arr.Length - 1],
+                i,
+                arr.Length - 1
+            }, new double[] {
+                -1.0 * arr[i] / arr[arr.Length - 1],
+                i,
+                arr.Length - 1
+            });
+                }
+
+                // Iteratively remove the top element (smallest fraction) 
+                // and replace it with the next smallest fraction
+                while (--k > 0)
+                {
+                    double[] cur = maxHeap.Dequeue();
+                    int numeratorIndex = (int)cur[1];
+                    int denominatorIndex = (int)cur[2] - 1;
+                    if (denominatorIndex > numeratorIndex)
+                    {
+                        maxHeap.Enqueue(new double[] {
+                        -1.0 * arr[numeratorIndex] / arr[denominatorIndex],
+                        numeratorIndex,
+                        denominatorIndex
+                }, new double[] {
+                        -1.0 * arr[numeratorIndex] / arr[denominatorIndex],
+                        numeratorIndex,
+                        denominatorIndex
+                });
+                    }
+                }
+
+                // Retrieve the kth smallest fraction from 
+                // the top of the priority queue
+                double[] result = maxHeap.Dequeue();
+                return new int[] { arr[(int)result[1]], arr[(int)result[2]] };
+            }
+        }
+
+        /* 912. Sort an Array
+        https://leetcode.com/problems/sort-an-array/description/
+         */
+        class SortArraySol
+        {/* 
+            Approach 1: Merge Sort
+Complexity Analysis
+Here, n is the number of elements in the nums array.
+•	Time complexity: O(nlogn)
+o	We divide the nums array into two halves till there is only one element in the array, which will lead to O(logn) steps.
+n→n/2→n/4→...→1 (k steps)
+n/2(k−1)=1⟹ k≈logn
+o	And after each division, we merge those respective halves which will take O(n) time each.
+o	Thus, overall it takes O(nlogn) time.
+•	Space complexity: O(n)
+o	The recursive stack will take O(logn) space and we used an additional array temporaryArray of size n.
+o	Thus, overall we use O(logn+n)=O(n) space.
+             */
+            public int[] UsingMergeSort(int[] nums)
+            {
+                int[] temporaryArray = new int[nums.Length];
+                MergeSort(nums, 0, nums.Length - 1, temporaryArray);
+                return nums;
+            }
+            // Function to merge two sub-arrays in sorted order.
+            private void Merge(int[] arr, int left, int mid, int right, int[] tempArr)
+            {
+                // Calculate the start and sizes of two halves.
+                int start1 = left;
+                int start2 = mid + 1;
+                int n1 = mid - left + 1;
+                int n2 = right - mid;
+
+                // Copy elements of both halves into a temporary array.
+                for (int idx = 0; idx < n1; idx++)
+                {
+                    tempArr[start1 + idx] = arr[start1 + idx];
+                }
+                for (int idx = 0; idx < n2; idx++)
+                {
+                    tempArr[start2 + idx] = arr[start2 + idx];
+                }
+
+                // Merge the sub-arrays 'in tempArray' back into the original array 'arr' in sorted order.
+                int i = 0, j = 0, k = left;
+                while (i < n1 && j < n2)
+                {
+                    if (tempArr[start1 + i] <= tempArr[start2 + j])
+                    {
+                        arr[k] = tempArr[start1 + i];
+                        i += 1;
+                    }
+                    else
+                    {
+                        arr[k] = tempArr[start2 + j];
+                        j += 1;
+                    }
+                    k += 1;
+                }
+
+                // Copy remaining elements
+                while (i < n1)
+                {
+                    arr[k] = tempArr[start1 + i];
+                    i += 1;
+                    k += 1;
+                }
+                while (j < n2)
+                {
+                    arr[k] = tempArr[start2 + j];
+                    j += 1;
+                    k += 1;
+                }
+            }
+
+            // Recursive function to sort an array using merge sort
+            private void MergeSort(int[] arr, int left, int right, int[] tempArr)
+            {
+                if (left >= right)
+                {
+                    return;
+                }
+                int mid = (left + right) / 2;
+                // Sort first and second halves recursively.
+                MergeSort(arr, left, mid, tempArr);
+                MergeSort(arr, mid + 1, right, tempArr);
+                // Merge the sorted halves.
+                Merge(arr, left, mid, right, tempArr);
+            }
+
+            /* Approach 2: Heap Sort
+            Complexity Analysis
+Here, n is the number of elements in the nums array.
+•	Time complexity: O(nlogn)
+o	While heapifying the nums array we traverse the height of the complete binary tree made using n elements, which leads to O(logn) time operations, and the heapify is done n times, once for each element.
+o	Thus, overall it takes O(nlogn) time.
+•	Space complexity: O(logn)
+o	The recursive stack will take O(logn) space, the sorting happens in place and we don't use any other additional memory.
+
+             */
+            public int[] UsingHeapSort(int[] nums)
+            {
+                HeapSort(nums);
+                return nums;
+            }
+            private void Swap(int[] arr, int index1, int index2)
+            {
+                int temp = arr[index1];
+                arr[index1] = arr[index2];
+                arr[index2] = temp;
+            }
+
+            // Function to heapify a subtree (in top-down order) rooted at index i.
+            private void Heapify(int[] arr, int n, int i)
+            {
+                // Initialize largest as root 'i'.
+                int largest = i;
+                int left = 2 * i + 1;
+                int right = 2 * i + 2;
+
+                // If left child is larger than root.
+                if (left < n && arr[left] > arr[largest])
+                {
+                    largest = left;
+                }
+
+                // If right child is larger than largest so far.
+                if (right < n && arr[right] > arr[largest])
+                {
+                    largest = right;
+                }
+
+                // If largest is not root swap root with largest element
+                // Recursively heapify the affected sub-tree (i.e. move down).
+                if (largest != i)
+                {
+                    Swap(arr, i, largest);
+                    Heapify(arr, n, largest);
+                }
+            }
+
+            private void HeapSort(int[] arr)
+            {
+                int n = arr.Length;
+                // Build heap; heapify (top-down) all elements except leaf nodes.
+                for (int i = n / 2 - 1; i >= 0; i--)
+                {
+                    Heapify(arr, n, i);
+                }
+
+                // Traverse elements one by one, to move current root to end, and
+                for (int i = n - 1; i >= 0; i--)
+                {
+                    Swap(arr, 0, i);
+                    // call max heapify on the reduced heap.
+                    Heapify(arr, i, 0);
+                }
+            }
+            /* Approach 3: Counting Sort
+            Complexity Analysis
+            Here, n is the number of elements in the nums array, and k is the range of value of its elements (minimum value to maximum value).
+            •	Time complexity: O(n+k)
+            o	We iterate on the array elements while counting the frequency and finding minimum and maximum values, thus taking O(n) time.
+            o	Then we iterate on the input array's element's range which will take O(k) time.
+            o	Thus, overall it takes O(n+k) time.
+            •	Space complexity: O(n)
+            o	We use a hash map counts which might store all O(n) elements of the input array in worst-case.
+
+             */
+            public int[] UsingCountingSort(int[] nums)
+            {
+                CountingSort(nums);
+                return nums;
+            }
+            private void CountingSort(int[] arr)
+            {
+                // Create the counting hash map.
+                Dictionary<int, int> counts = new();
+                int minVal = arr[0], maxVal = arr[0];
+
+                // Find the minimum and maximum values in the array,
+                // and update it's count in the hash map.
+                for (int i = 0; i < arr.Length; i++)
+                {
+                    minVal = Math.Min(minVal, arr[i]);
+                    maxVal = Math.Max(maxVal, arr[i]);
+                    counts[arr[i]] = counts.GetValueOrDefault(arr[i], 0) + 1;
+                }
+
+                int index = 0;
+                // Place each element in its correct position in the array.
+                for (int val = minVal; val <= maxVal; ++val)
+                {
+                    // Append all 'val's together if they exist.
+                    while (counts.GetValueOrDefault(val, 0) > 0)
+                    {
+                        arr[index] = val;
+                        index += 1;
+                        counts[val] = counts[val] - 1;
+                    }
+                }
+            }
+
+            /* Approach 4: Radix Sort
+Complexity Analysis
+Here, n is the number of elements in the nums array, d is the maximum number of digits and b is the size of the bucket used.
+•	Time complexity: O(d⋅(n+b))
+o	We iterate on the array elements to find the maximum number and then find the count of its digits, thus taking O(n+d) time.
+o	Then we sort the array for each integer place which will take O(n+b) time, thus for all d places it will take O(d⋅(n+b)) time.
+o	At the end, we seperate out positive and negative numbers and reverse the negatives, which overall will take O(n) time.
+o	Thus, overall it takes O((n+d)+d⋅(n+b)+n)=O(d⋅(n+b)) time.
+•	Space complexity: O(n+b)
+o	We use additional arrays negatives and positives which use O(n) space and buckets which use O(n+b) space.
+
+             */
+            // Bucket sort function for each place value digit.
+            public int[] UsingRadixSort(int[] numbers)
+            {
+                RadixSort(numbers);
+                return numbers;
+            }
+            private void BucketSort(int[] array, int placeValue)
+            {
+                List<List<int>> buckets = new List<List<int>>(10);
+                for (int digit = 0; digit < 10; ++digit)
+                {
+                    buckets.Add(new List<int>());
+                }
+
+                // Store the respective number based on its digit.
+                foreach (int value in array)
+                {
+                    int digit = Math.Abs(value) / placeValue;
+                    digit = digit % 10;
+                    buckets[digit].Add(value);
+                }
+
+                // Overwrite 'array' in sorted order of current place digits.
+                int index = 0;
+                for (int digit = 0; digit < 10; ++digit)
+                {
+                    foreach (int value in buckets[digit])
+                    {
+                        array[index] = value;
+                        index++;
+                    }
+                }
+            }
+
+            // Radix sort function.
+            private void RadixSort(int[] array)
+            {
+                // Find the absolute maximum element to find max number of digits.
+                int maxElement = array[0];
+                foreach (int value in array)
+                {
+                    maxElement = Math.Max(Math.Abs(value), maxElement);
+                }
+                int maxDigits = 0;
+                while (maxElement > 0)
+                {
+                    maxDigits += 1;
+                    maxElement /= 10;
+                }
+
+                // Radix sort, least significant digit place to most significant.
+                int placeValue = 1;
+                for (int digit = 0; digit < maxDigits; ++digit)
+                {
+                    BucketSort(array, placeValue);
+                    placeValue *= 10;
+                }
+
+                // Separate out negatives and reverse them. 
+                List<int> negatives = new List<int>();
+                List<int> positives = new List<int>();
+                foreach (int value in array)
+                {
+                    if (value < 0)
+                    {
+                        negatives.Add(value);
+                    }
+                    else
+                    {
+                        positives.Add(value);
+                    }
+                }
+                negatives.Reverse();
+
+                // Final 'answer' will be 'negative' elements, then 'positive' elements.
+                int index = 0;
+                foreach (int value in negatives)
+                {
+                    array[index] = value;
+                    index++;
+                }
+                foreach (int value in positives)
+                {
+                    array[index] = value;
+                    index++;
+                }
+            }
+
+
+        }
+
+        /* 1442. Count Triplets That Can Form Two Arrays of Equal XOR
+        https://leetcode.com/problems/count-triplets-that-can-form-two-arrays-of-equal-xor/description/
+         */
+
+        class CountTripletsThatFormTwoArraysOfEqualXORSol
+        {
+
+            /* Approach 1: Brute Force With Prefix
+            Complexity Analysis
+            Let n be the size of the input array.
+            •	Time complexity: O(n^3)
+            There are three nested loops, each iterating over the entire array, resulting in a time complexity of O(n⋅n⋅n)=O(n^3).
+            •	Space complexity: O(1)
+            We only use a few variables (count, xorA, xorB) to store intermediate results, which take constant space.
+
+             */
+            public int NaiveWithPrefix(int[] arr)
+            {
+                int count = 0;
+
+                // Iterate over each possible starting index i
+                for (int start = 0; start < arr.Length - 1; ++start)
+                {
+                    // Initialize XOR value for the subarray from start to mid-1
+                    int xorA = 0;
+
+                    // Iterate over each possible middle index j
+                    for (int mid = start + 1; mid < arr.Length; ++mid)
+                    {
+                        // Update xorA to include arr[mid - 1]
+                        xorA ^= arr[mid - 1];
+
+                        // Initialize XOR value for the subarray from mid to end
+                        int xorB = 0;
+
+                        // Iterate over each possible ending index k (starting from mid)
+                        for (int end = mid; end < arr.Length; ++end)
+                        {
+                            // Update xorB to include arr[end]
+                            xorB ^= arr[end];
+
+                            // found a valid triplet (start, mid, end)
+                            if (xorA == xorB)
+                            {
+                                ++count;
+                            }
+                        }
+                    }
+                }
+
+                return count;
+            }
+            /*             Approach 2: Nested Prefix XOR
+            Complexity Analysis
+            Let n be the size of the input array.
+            •	Time complexity: O(n^2)
+            There are two nested loops, each iterating over the array, resulting in a time complexity of O(n⋅n)=O(n^2).
+            •	Space complexity: O(n)
+            We create a new array prefixXOR of the same size as the input array, taking O(n) space.
+            Note: This approach could be implemented with O(1) space by modifying the original array.
+
+             */
+            public int UsingNestedPrefixXOR(int[] arr)
+            {
+                int[] prefixXOR = new int[arr.Length + 1];
+                prefixXOR[0] = 0;
+                Array.Copy(arr, 0, prefixXOR, 1, arr.Length);
+                int size = prefixXOR.Length;
+
+                // Perform XOR on consecutive elements in the modified array
+                for (int i = 1; i < size; i++)
+                {
+                    prefixXOR[i] ^= prefixXOR[i - 1];
+                }
+
+                int count = 0;
+
+                // Iterate through the modified array to count triplets
+                for (int start = 0; start < size; start++)
+                {
+                    for (int end = start + 1; end < size; end++)
+                    {
+                        if (prefixXOR[start] == prefixXOR[end])
+                        {
+                            // Increment the result by the count of valid triplets
+                            count += end - start - 1;
+                        }
+                    }
+                }
+
+                return count;
+            }
+            /* Approach 3: Two Pass Prefix XOR
+            Complexity Analysis
+Let n be the size of the input array.
+•	Time complexity: O(n)
+There are two different loops iterating over the array, resulting in a time complexity of O(2⋅n), which can be simplified to O(n).
+•	Space complexity: O(n)
+In the worst case, each element in the array can have a unique XOR value, requiring O(n) space to store the counts and totals in the maps.	
+
+             */
+            public int UsingTwoPassPrefixXOR(int[] arr)
+            {
+                int[] prefixXOR = new int[arr.Length + 1];
+                prefixXOR[0] = 0;
+                Array.Copy(arr, 0, prefixXOR, 1, arr.Length);
+                int size = prefixXOR.Length;
+                int count = 0;
+
+                // Performing XOR operation on the array elements
+                for (int i = 1; i < size; ++i) prefixXOR[i] ^= prefixXOR[i - 1];
+
+                // Maps to store counts and totals of XOR values encountered
+                Dictionary<int, int> countMap = new();
+                Dictionary<int, int> totalMap = new();
+
+                // Iterating through the array
+                for (int i = 0; i < size; ++i)
+                {
+                    // Calculating contribution of current element to the result
+                    count +=
+                    countMap.GetValueOrDefault(prefixXOR[i], 0) * (i - 1) -
+                    totalMap.GetValueOrDefault(prefixXOR[i], 0);
+
+                    // Updating total count of current XOR value
+                    totalMap[
+                        prefixXOR[i]] =
+                        totalMap.GetValueOrDefault(prefixXOR[i], 0) + i
+                    ;
+                    countMap[prefixXOR[i]] =
+                        countMap.GetValueOrDefault(prefixXOR[i], 0) + 1
+                    ;
+                }
+
+                return count;
+            }
+            /* Approach 4: One Pass Prefix XOR
+Complexity Analysis
+Let n be the size of the input array.
+•	Time complexity: O(n)
+There is only a single loop iterating over the array, resulting in a time complexity of O(n).
+•	Space complexity: O(n)
+In the worst case, each element in the array can have a unique XOR value, requiring O(n) space to store the counts and totals in the maps.
+
+             */
+            public int UsingOnePassPrefixXOR(int[] arr)
+            {
+                int size = arr.Length;
+                int count = 0;
+                int prefix = 0;
+
+                // Maps to store counts and totals of XOR values encountered
+                Dictionary<int, int> countMap = new();
+                countMap[0] = 1;
+                Dictionary<int, int> totalMap = new();
+
+                // Iterating through the array
+                for (int i = 0; i < size; ++i)
+                {
+                    // Calculating XOR prefix
+                    prefix ^= arr[i];
+
+                    // Calculating contribution of current element to the result
+                    count +=
+                    countMap.GetValueOrDefault(prefix, 0) * i -
+                    totalMap.GetValueOrDefault(prefix, 0);
+
+                    // Updating total count of current XOR value
+                    totalMap[prefix] = totalMap.GetValueOrDefault(prefix, 0) + i + 1;
+                    countMap[prefix] = countMap.GetValueOrDefault(prefix, 0) + 1;
+                }
+
+                return count;
+            }
+
+        }
+
+
+        /* 1838. Frequency of the Most Frequent Element
+        https://leetcode.com/problems/frequency-of-the-most-frequent-element/description/
+         */
+        class FrequencyOfMostFrequentElementSol
+        {
+
+            /* Approach 1: Sliding Window
+            Complexity Analysis
+            Given n as the length of nums,
+            •	Time complexity: O(n⋅logn)
+            Despite the while loop, each iteration of the for loop is amortized O(1). The while loop only runs O(n) times across all iterations. This is because each iteration of the while loop increments left. As left can only increase and cannot exceed n, the while loop never performs more than n iterations total. This means the sliding window process runs in O(n).
+            However, we need to sort the array, which costs O(n⋅logn).
+            •	Space Complexity: O(logn) or O(n)
+            We only use a few integer variables, but some space is used to sort.
+            The space complexity of the sorting algorithm depends on the implementation of each programming language:
+            o	In Java, Arrays.sort() for primitives is implemented using a variant of the Quick Sort algorithm, which has a space complexity of O(logn)
+            o	In C++, the sort() function provided by STL uses a hybrid of Quick Sort, Heap Sort and Insertion Sort, with a worst case space complexity of O(logn)
+            o	In Python, the sort() function is implemented using the Timsort algorithm, which has a worst-case space complexity of O(n)
+
+             */
+            public int UsingSlidingWindow(int[] nums, int k)
+            {
+                Array.Sort(nums);
+                int left = 0;
+                int ans = 0;
+                long curr = 0;
+
+                for (int right = 0; right < nums.Length; right++)
+                {
+                    long target = nums[right];
+                    curr += target;
+
+                    while ((right - left + 1) * target - curr > k)
+                    {
+                        curr -= nums[left];
+                        left++;
+                    }
+
+                    ans = Math.Max(ans, right - left + 1);
+                }
+
+                return ans;
+            }
+
+            /* Approach 2: Advanced Sliding Window
+            Complexity Analysis
+            Given n as the length of nums,
+            •	Time complexity: O(n⋅logn)
+            Each iteration of the for loop costs O(1). This means the sliding window process runs in O(n).
+            However, we need to sort the array, which costs O(n⋅logn).
+            •	Space Complexity: O(logn) or O(n)
+            We only use a few integer variables, but some space is used to sort.
+            The space complexity of the sorting algorithm depends on the implementation of each programming language:
+            o	In Java, Arrays.sort() for primitives is implemented using a variant of the Quick Sort algorithm, which has a space complexity of O(logn)
+            o	In C++, the sort() function provided by STL uses a hybrid of Quick Sort, Heap Sort and Insertion Sort, with a worst case space complexity of O(logn)
+            o	In Python, the sort() function is implemented using the Timsort algorithm, which has a worst-case space complexity of O(n)
+
+             */
+            public int UsingSlidingWindowAdavanced(int[] nums, int k)
+            {
+                Array.Sort(nums);
+                int left = 0;
+                long curr = 0;
+
+                for (int right = 0; right < nums.Length; right++)
+                {
+                    long target = nums[right];
+                    curr += target;
+
+                    if ((right - left + 1) * target - curr > k)
+                    {
+                        curr -= nums[left];
+                        left++;
+                    }
+                }
+
+                return nums.Length - left;
+            }
+            /* Approach 3: Binary Search 
+Complexity Analysis
+Given n as the length of nums,
+•	Time complexity: O(n⋅logn)
+First, we sort nums which costs O(n⋅logn).
+Next, we iterate over the indices of nums. For each of the O(n) indices, we call check, which costs up to O(logn) as its a binary search over the array's elements. The total cost is O(n⋅logn).
+•	Space complexity: O(n)
+The prefix array uses O(n) space.	
+
+            */
+            public int UsingBinarySearch(int[] nums, int k)
+            {
+                Array.Sort(nums);
+                long[] prefix = new long[nums.Length];
+                prefix[0] = nums[0];
+
+                for (int i = 1; i < nums.Length; i++)
+                {
+                    prefix[i] = nums[i] + prefix[i - 1];
+                }
+
+                int ans = 0;
+                for (int i = 0; i < nums.Length; i++)
+                {
+                    ans = Math.Max(ans, Check(i, k, nums, prefix));
+                }
+
+                return ans;
+
+            }
+            public int Check(int i, int k, int[] nums, long[] prefix)
+            {
+                int target = nums[i];
+                int left = 0;
+                int right = i;
+                int best = i;
+
+                while (left <= right)
+                {
+                    int mid = (left + right) / 2;
+                    long count = i - mid + 1;
+                    long finalSum = count * target;
+                    long originalSum = prefix[i] - prefix[mid] + nums[mid];
+                    long operationsRequired = finalSum - originalSum;
+
+                    if (operationsRequired > k)
+                    {
+                        left = mid + 1;
+                    }
+                    else
+                    {
+                        best = mid;
+                        right = mid - 1;
+                    }
+                }
+
+                return i - best + 1;
+            }
+
+
+
+        }
+
+        /* 2191. Sort the Jumbled Numbers
+        https://leetcode.com/problems/sort-the-jumbled-numbers/description/
+         */
+        class SortJumbledSol
+        {
+            /* Approach 1: Conversion using strings and Sorting 
+Complexity Analysis
+Let n be the size of the nums array.
+•	Time complexity: O(n⋅logn)
+For every integer in nums, we convert it to a string and perform constant operations over its length. The time taken for converting an integer to a string, and vice versa, is O(lengthofinteger) time, which is proportional to the logarithmic value of n. Therefore, the time complexity for these operations is given by O(n⋅logn).
+Sorting the array of pairs takes O(n⋅logn) time. All other operations are linear or constant time.
+Therefore, the total time complexity is given by O(n⋅logn).
+•	Space complexity: O(n)
+We create two new arrays of size n. Apart from this, some extra space is used when we sort arrays in place. The space complexity of the sorting algorithm depends on the programming language.
+o	In Python, the sort method sorts a list using the Timsort algorithm which is a combination of Merge Sort and Insertion Sort and has O(n) additional space.
+o	In Java, Arrays.sort() is implemented using a variant of the Quick Sort algorithm which has a space complexity of O(logn) for sorting two arrays.
+o	In C++, the sort() function is implemented as a hybrid of Quick Sort, Heap Sort, and Insertion Sort, with a worse-case space complexity of O(logn).
+Therefore, the total space complexity is given by O(n).
+
+            */
+            public int[] UsingConversionWithStringsAndSorting(int[] mapping, int[] nums)
+            {
+                List<int[]> storePairs = new List<int[]>();
+
+                for (int i = 0; i < nums.Length; ++i)
+                {
+                    // Convert current value to string
+                    string number = nums[i].ToString();
+                    string formed = "";
+                    for (int j = 0; j < number.Length; ++j)
+                    {
+                        formed += mapping[number[j] - '0'].ToString();
+                    }
+                    // Store the mapped value.
+                    int mappedValue = int.Parse(formed);
+                    // Push a pair consisting of mapped value and original value's index.
+                    storePairs.Add(new int[] { mappedValue, i });
+                }
+
+                // Sort the array in non-decreasing order by the first value (default).
+                storePairs.Sort((o1, o2) => o1[0].CompareTo(o2[0]));
+
+                int[] answer = new int[nums.Length];
+                for (int i = 0; i < storePairs.Count; i++)
+                {
+                    answer[i] = nums[storePairs[i][1]];
+                }
+                return answer;
+            }
+
+            /* Approach 2: Conversion without using strings and Sorting
+Complexity Analysis
+Let n be the size of the nums array.
+•	Time complexity: O(n⋅logn)
+For every integer in nums, we convert it to the mapped integer. The time taken for this operation is O(lengthofinteger) time, which is proportional to the logarithmic value of n. Therefore, the time complexity for these operations on nums is given by O(n⋅logn).
+Sorting the array of pairs takes O(n⋅logn) time. All other operations are linear or constant time.
+Therefore, the total time complexity is given by O(n⋅logn).
+•	Space complexity: O(n)
+We create two new arrays of size n. Apart from this, some extra space is used when we sort arrays in place. The space complexity of the sorting algorithm depends on the programming language.
+o	In Python, the sort method sorts a list using the Timsort algorithm which is a combination of Merge Sort and Insertion Sort and has O(n) additional space.
+o	In Java, Arrays.sort() is implemented using a variant of the Quick Sort algorithm which has a space complexity of O(logn) for sorting two arrays.
+o	In C++, the sort() function is implemented as a hybrid of Quick Sort, Heap Sort, and Insertion Sort, with a worse-case space complexity of O(logn).
+Therefore, the total space complexity is given by O(n).
+
+             */
+            public int[] UsingConversionWithoutStringsAndSorting(int[] mapping, int[] nums)
+            {
+                List<int[]> storePairs = new();
+
+                for (int i = 0; i < nums.Length; i++)
+                {
+                    int mappedValue = 0;
+                    int temp = nums[i];
+                    int place = 1;
+
+                    if (temp == 0)
+                    {
+                        storePairs.Add(new int[] { mapping[0], i });
+                        continue;
+                    }
+                    while (temp != 0)
+                    {
+                        mappedValue = place * mapping[temp % 10] + mappedValue;
+                        place *= 10;
+                        temp /= 10;
+                    }
+                    storePairs.Add(new int[] { mappedValue, i });
+                }
+
+                storePairs.Sort((a, b) => a[0] - b[0]);
+
+                int[] answer = new int[nums.Length];
+                for (int i = 0; i < storePairs.Count; i++)
+                {
+                    answer[i] = nums[storePairs[i][1]];
+                }
+
+                return answer;
+            }
+
+        }
+
+        /* 
+        2602. Minimum Operations to Make All Array Elements Equal
+        https://leetcode.com/problems/minimum-operations-to-make-all-array-elements-equal/description/	
+        https://algo.monster/liteproblems/2602
+         */
+        class MinOperationsToMakeAllArrayElementsEqualSol
+        {
+            /* 
+Time and Space Complexity
+The given algorithm involves sorting the array nums and performing binary searches for each query in queries.
+Time Complexity
+1.	Sorting the nums array has a time complexity of O(n \log n) where n is the length of the nums array.
+2.	The accumulate function is linear, contributing O(n) to the time complexity.
+3.	For each query, a binary search is performed twice using bisect_left, which has a time complexity of O(\log n). Since there are q queries, the total complexity for this part is O(q \log n).
+The total time complexity combines these contributions, resulting in O(n \log n) + O(n) + O(q \log n). Since O(n \log n) dominates O(n), and the number of queries q could vary independently of n, the overall time complexity is O((n + q) \log n).
+However, since the reference answer only specifies O(n \log n), it implies that n is the dominant term, and q is expected to be not significantly larger than n.
+Space Complexity
+1.	The sorted array is a modification in place, so it does not add to the space complexity.
+2.	The s variable is a list storing the cumulative sum, contributing O(n) to the space complexity.
+3.	A constant amount of extra space is used for variables i, t, and the iterative variables, which does not depend on the size of the input.
+Thus, the overall space complexity is O(n).	
+
+             */
+            public List<long> MinOperations(int[] nums, int[] queries)
+            {
+                // Sort the array of numbers in non-decreasing order
+                Array.Sort(nums);
+
+                int numberOfElements = nums.Length; // Number of elements in nums
+                                                    // Create a prefix sum array with an extra space for ease of calculations
+                long[] prefixSum = new long[numberOfElements + 1];
+
+                // Calculate the prefix sum
+                for (int i = 0; i < numberOfElements; ++i)
+                {
+                    prefixSum[i + 1] = prefixSum[i] + nums[i];
+                }
+
+                // Initialize the answer list
+                List<long> answerList = new List<long>();
+
+                // Process each query
+                foreach (int query in queries)
+                {
+                    // Search for the first element in nums that is greater than or equal to query + 1
+                    int index = BinarySearch(nums, query + 1);
+                    // Calculate the total sum needed to reduce elements larger or equal to query + 1 to query
+                    long totalOperations = prefixSum[numberOfElements] - prefixSum[index] - 1L * (numberOfElements - index) * query;
+
+                    // Search for the first element in nums that is greater than or equal to query
+                    index = BinarySearch(nums, query);
+                    // Add the total sum needed to increase elements smaller than query to query
+                    totalOperations += 1L * query * index - prefixSum[index];
+
+                    // Add the calculated operations for the current query to the answer list
+                    answerList.Add(totalOperations);
+                }
+
+                return answerList; // Return the answer list
+            }
+
+            // Helper method to perform binary search
+            private int BinarySearch(int[] nums, int x)
+            {
+                int left = 0;
+                int right = nums.Length;
+                // Binary search to find the index of the first number greater or equal to x
+                while (left < right)
+                {
+                    int mid = (left + right) >> 1; // Middle position
+                    if (nums[mid] >= x)
+                    {
+                        right = mid;
+                    }
+                    else
+                    {
+                        left = mid + 1;
+                    }
+                }
+                return left; // Return the first index where nums[index] >= x
+            }
+        }
+
+        /* 624. Maximum Distance in Arrays
+        https://leetcode.com/problems/maximum-distance-in-arrays/description/
+         */
+        class MaxDistanceInArraysSol
+        {
+            /* 
+            Approach #1 Brute Force [Time Limit Exceeded]
+Complexity Analysis
+•	Time complexity: O((n∗x)^2). We traverse over all the arrays in arrays for every element of every array considered. Here, n refers to the number of arrays in arrays and x refers to the average number of elements in each array in arrays.
+•	Space complexity: O(1). Constant extra space is used.
+
+             */
+            public int Naive(List<List<int>> arrays)
+            {
+                int res = 0;
+                int n = arrays.Count;
+                for (int i = 0; i < n - 1; i++)
+                {
+                    for (int j = 0; j < arrays[i].Count; j++)
+                    {
+                        for (int k = i + 1; k < n; k++)
+                        {
+                            for (int l = 0; l < arrays[k].Count; l++)
+                            {
+                                res = Math.Max(res, Math.Abs(arrays[i][j] - arrays[k][l]));
+                            }
+                        }
+                    }
+                }
+                return res;
+            }
+            /* Approach #2 Better Brute Force [Time Limit Exceeded]
+Complexity Analysis
+•	Time complexity: O(n^2). We consider only max and min values directly for every array currenty considered. Here, n refers to the number of arrays in arrays.
+•	Space complexity: O(1). Constant extra space is used.
+
+             */
+            public int NaiveOptimal(List<List<int>> arrays)
+            {
+                List<int> array1, array2;
+                int res = 0;
+                int n = arrays.Count;
+                for (int i = 0; i < n - 1; i++)
+                {
+                    for (int j = i + 1; j < n; j++)
+                    {
+                        array1 = arrays[i];
+                        array2 = arrays[j];
+                        res = Math.Max(res, Math.Abs(array1[0] - array2[array2.Count - 1]));
+                        res = Math.Max(res, Math.Abs(array2[0] - array1[array1.Capacity - 1]));
+                    }
+                }
+                return res;
+            }
+            /* Approach #3 Single Scan [Accepted]
+Complexity Analysis
+•	Time complexity: O(n). We traverse over arrays of length n once only.
+•	Space complexity: O(1). Constant extra space is used.
+            */
+            public int UsingSingleScan(List<List<int>> arrays)
+            {
+                int res = 0;
+                int n = arrays[0].Count;
+                int min_val = arrays[0][0];
+                int max_val = arrays[0][arrays[0].Count - 1];
+                for (int i = 1; i < arrays.Count; i++)
+                {
+                    n = arrays[i].Count;
+                    res = Math.Max(res, Math.Max(Math.Abs(arrays[i][n - 1] - min_val),
+                                                 Math.Abs(max_val - arrays[i][0])));
+                    min_val = Math.Min(min_val, arrays[i][0]);
+                    max_val = Math.Max(max_val, arrays[i][n - 1]);
+                }
+                return res;
+            }
+        }
+
+
+        /* 852. Peak Index in a Mountain Array
+        https://leetcode.com/problems/peak-index-in-a-mountain-array/description/
+         */
+
+        class PeakIndexInMountainArraySol
+        {
+            /* Approach 1: Linear Scan
+Complexity Analysis
+Here n is the length of arr.
+•	Time complexity: O(n).
+o	We are doing a linear scan and comparing adjacent elements until we get the peak of the mountain over the arr array. In the worst-case situation, the peak of the mountain could correspond to the second last element of arr, in which case we would take O(n) time.
+•	Space complexity: O(1).
+o	We are not using any extra space other than an integer i, which takes up constant space.
+
+             */
+            public int UsingLinearScan(int[] arr)
+            {
+                int i = 0;
+                while (arr[i] < arr[i + 1])
+                {
+                    i++;
+                }
+                return i;
+            }
+            /* Approach 2: Binary Search
+Complexity Analysis
+Here n is the length of arr.
+•	Time complexity: O(logn).
+o	We perform O(logn) iterations using the binary search algorithm as the problem set is divided into half in each iteration.
+•	Space complexity: O(1).
+o	Except for a few variables l, r, and mid which take constant space each, we do not consume any other space.
+
+             */
+            public int UsingBinarySearch(int[] arr)
+            {
+                int l = 0, r = arr.Length - 1, mid;
+                while (l < r)
+                {
+                    mid = (l + r) / 2;
+                    if (arr[mid] < arr[mid + 1])
+                        l = mid + 1;
+                    else
+                        r = mid;
+                }
+                return l;
+            }
+        }
+
+        /* 932. Beautiful Array	
+        https://leetcode.com/problems/beautiful-array/description/
+         */
+
+        class BeautifulArraySol
+        {
+
+            /*
+            Approach 1: Divide and Conquer
+                     Complexity Analysis
+            •	Time Complexity: O(NlogN). The function f is called only O(logN) times, and each time does O(N) work.
+            •	Space Complexity: O(NlogN).
+             */
+            Dictionary<int, int[]> memo;
+            public int[] UsingDivideAndConquer(int N)
+            {
+                memo = new();
+                return f(N);
+            }
+
+            public int[] f(int N)
+            {
+                if (memo.ContainsKey(N))
+                    return memo[N];
+
+                int[] ans = new int[N];
+                if (N == 1)
+                {
+                    ans[0] = 1;
+                }
+                else
+                {
+                    int t = 0;
+                    foreach (int x in f((N + 1) / 2))  // odds
+                        ans[t++] = 2 * x - 1;
+                    foreach (int x in f(N / 2))  // evens
+                        ans[t++] = 2 * x;
+                }
+                memo[N] = ans;
+                return ans;
+            }
+        }
+
+        /* 137. Single Number II
+        https://leetcode.com/problems/single-number-ii/description/
+         */
+        public class SingleNumberIISol
+        {
+            /* Approach 1: Sorting
+Complexity Analysis
+Let N be the length of nums
+•	Time complexity: O(NlogN)
+Sorting can be optimally done in O(NlogN) time.
+After sorting, we are traversing the array once. It may take O(N) time.
+Thus, the overall time complexity is O(N+NlogN) which is O(NlogN).
+•	Space complexity: O(N).
+It depends on the sorting algorithm. Depending on the programming language, sorting algorithms may need O(N) or O(logN) space.
+
+             */
+            public int UsingSorting(int[] nums)
+            {
+                Array.Sort(nums);
+                for (int i = 0; i < nums.Length - 1; i += 3)
+                {
+                    if (nums[i] == nums[i + 1])
+                    {
+                        continue;
+                    }
+                    else
+                    {
+                        return nums[i];
+                    }
+                }
+
+                return nums[nums.Length - 1];
+            }
+
+
+            /* Approach 2: Hash Map
+Complexity Analysis
+Let N be the length of nums
+•	Time complexity: O(N)
+Building counter from nums can be done in O(N) time.
+Iterating over the counter can be done in O(N) time.
+Thus, overall time complexity is O(N+N) which is O(N).
+•	Space complexity: O(N).
+We are using a counter to store the frequency of integers. There will be approximately 3N such integers. So, the space complexity is O(3N) which is O(N).
+
+             */
+            public int UsingDict(int[] nums)
+            {
+                Dictionary<int, int> freq = new Dictionary<int, int>();
+                foreach (int num in nums)
+                {
+                    if (!freq.ContainsKey(num))
+                    {
+                        freq[num] = 1;
+                    }
+                    else
+                    {
+                        freq[num]++;
+                    }
+                }
+
+                int loner = 0;
+                foreach (KeyValuePair<int, int> entry in freq)
+                {
+                    if (entry.Value == 1)
+                    {
+                        loner = entry.Key;
+                        break;
+                    }
+                }
+
+                return loner;
+            }
+            /* Approach 3: Mathematics
+Complexity Analysis
+Let N be the length of nums
+•	Time complexity: O(N)
+Building a set from nums can be done in O(N) time.
+Iterating over the set can be done in O(N) time.
+Thus, overall time complexity is O(N+N) which is O(N).
+•	Space complexity: O(N).
+We are using a set to store the integers. There will be approximately 3N such integers. So, the space complexity is O(3N) which is O(N).
+
+             */
+            public int UsingMaths(int[] nums)
+            {
+                long sumNums = 0;
+                HashSet<long> numsSet = new HashSet<long>();
+                foreach (int num in nums)
+                {
+                    numsSet.Add((long)num);
+                    sumNums += num;
+                }
+
+                long sumSet = 0;
+                foreach (long num in numsSet)
+                {
+                    sumSet += num;
+                }
+
+                return (int)((3 * sumSet - sumNums) / 2);
+            }
+
+            /* Approach 4: Bit Manipulation
+            Complexity Analysis
+Let N be the length of nums
+•	Time complexity: O(N)
+We iterate over all integers in nums once, and for each integer, we iterate over all 32 bits. So, the time complexity is O(32N), which is O(N).
+•	Space complexity: O(1)
+We use constant extra space, with fixed-size variables. So, the space complexity is O(1).
+Note: Reader may comment that time complexity is O(NlogN) because we are iterating the number of times equal to the number of bits in an integer. However, our code is designed in such a way that it will iterate only 32 times, which is constant. So, the time complexity is O(N). The logN factor will not be counted because of our design. We were able to design it because of some pre-knowledge of the problem.
+
+             */
+            public int UsingBitManip(int[] nums)
+            {
+                // Loner
+                int loner = 0;
+                // Iterate over all bits
+                for (int shift = 0; shift < 32; shift++)
+                {
+                    int bitSum = 0;
+                    // For this bit, iterate over all integers
+                    foreach (int num in nums)
+                    {
+                        // Compute the bit of num, and add it to bitSum
+                        bitSum += (num >> shift) & 1;
+                    }
+
+                    // Compute the bit of loner and place it
+                    int lonerBit = bitSum % 3;
+                    loner = loner | (lonerBit << shift);
+                }
+
+                return loner;
+            }
+            /* Approach 5: Equation for Bitmask
+            Complexity Analysis
+Let N be the length of nums
+•	Time complexity: O(N)
+o	We iterate through nums once.
+o	For each integer, we update seenOnce and seenTwice using derived equations. This takes constant time.
+Thus, for one num, we take constant time. For N nums, we take O(N) time.
+•	Space complexity: O(1)
+We use constant extra space for seenOnce and seenTwice.
+
+             */
+            public int UsingBitMasking(int[] nums)
+            {
+                // Initialize seenOnce and seenTwice to 0
+                int seenOnce = 0, seenTwice = 0;
+
+                // Iterate through nums
+                foreach (int num in nums)
+                {
+                    // Update using derived equations
+                    seenOnce = (seenOnce ^ num) & (~seenTwice);
+                    seenTwice = (seenTwice ^ num) & (~seenOnce);
+                }
+
+                // Return integer which appears exactly once
+                return seenOnce;
+            }
+            /*             Approach 6: Boolean Algebra and Karnaugh Map
+Complexity Analysis
+Let N be the length of nums
+•	Time complexity: O(N)
+We iterate over all num in nums once. During each iteration, we do constant time operations of updating msb and lsb. So, the total time complexity is O(N)
+•	Space complexity: O(1)
+We use constant space for msb and lsb to store count. So, total space complexity is O(1)
+
+             */
+            public int UsingBooleanAlgegraAndKarnaughMap(int[] nums)
+            {
+                // Count (modulo 3) bits
+                int msb = 0, lsb = 0;
+                // Process Every Num and update count bits
+                foreach (int num in nums)
+                {
+                    int new_lsb = (~msb & ~lsb & num) | (lsb & ~num);
+                    int new_msb = (lsb & num) | (msb & ~num);
+                    lsb = new_lsb;
+                    msb = new_msb;
+                }
+
+                // Return lsb as the answer
+                return lsb;
+            }
+
+
+        }
+
+        /* 260. Single Number III
+        https://leetcode.com/problems/single-number-iii/description/
+         */
+        class SingleNumberIIISol
+        {
+            /*             Approach 1: Hashmap
+            Complexity Analysis
+            •	Time complexity : O(N) to iterate over the input array.
+            •	Space complexity : O(N) to keep the hashmap of N elements.
+
+             */
+            public int[] UsingDict(int[] nums)
+            {
+                Dictionary<int, int> hashmap = new();
+                foreach (int n in nums)
+                    hashmap[n] = hashmap.GetValueOrDefault(n, 0) + 1;
+
+                int[] output = new int[2];
+                int idx = 0;
+                foreach (var item in hashmap)
+                    if (item.Value == 1) output[idx++] = item.Key;
+
+                return output;
+            }
+            /* Approach 2: Two bitmasks 
+            Complexity Analysis
+•	Time complexity : O(N) to iterate over the input array.
+•	Space complexity : O(1), it's a constant space solution.
+
+            */
+            public int[] UsingTwoBitMasks(int[] nums)
+            {
+                // difference between two numbers (x and y) which were seen only once
+                int bitmask = 0;
+                foreach (int num in nums) bitmask ^= num;
+
+                // rightmost 1-bit diff between x and y
+                int diff = bitmask & (-bitmask);
+
+                int x = 0;
+                // bitmask which will contain only x
+                foreach (int num in nums) if ((num & diff) != 0) x ^= num;
+
+                return new int[] { x, bitmask ^ x };
+            }
+
+        }
+
+
+        /* 416. Partition Equal Subset Sum
+        https://leetcode.com/problems/partition-equal-subset-sum/description/
+         */
+        class CanPartitionSol
+        {
+            /*             
+            Approach 1: Brute Force	
+            Complexity Analysis
+            •	Time Complexity : O(2^n), where n is equal to number of array elements.
+            The recursive solution takes the form of a binary tree where there are 2 possibilities for every array element and the maximum depth of the tree could be n. The time complexity is exponential, hence this approach is exhaustive and results in Time Limit Exceeded (TLE).
+            •	Space Complexity: O(N) This space will be used to store the recursion stack. We can’t have more than n recursive calls on the call stack at any time.
+             */
+            public bool Naive(int[] nums)
+            {
+                int totalSum = 0;
+                // find sum of all array elements
+                foreach (int num in nums)
+                {
+                    totalSum += num;
+                }
+                // if totalSum is odd,it cannot be partitioned into equal sum subset
+                if (totalSum % 2 != 0) return false;
+                int subSetSum = totalSum / 2;
+                int n = nums.Length;
+                return Dfs(nums, n - 1, subSetSum);
+            }
+
+            private bool Dfs(int[] nums, int n, int subSetSum)
+            {
+                // Base Cases
+                if (subSetSum == 0)
+                    return true;
+                if (n == 0 || subSetSum < 0)
+                    return false;
+                return Dfs(nums, n - 1, subSetSum - nums[n - 1]) || Dfs(nums, n - 1, subSetSum);
+            }
+            /* Approach 2: Top Down Dynamic Programming - Memoization
+Complexity Analysis
+Let n be the number of array elements and m be the subSetSum.
+•	Time Complexity : O(m⋅n).
+o	In the worst case where there is no overlapping calculation, the maximum number of entries in the memo would be m⋅n. For each entry, overall we could consider that it takes constant time, i.e. each invocation of dfs() at most emits one entry in the memo.
+o	The overall computation is proportional to the number of entries in memo. Hence, the overall time complexity is O(m⋅n).
+•	Space Complexity: O(m⋅n). We are using a 2 dimensional array memo of size (m⋅n) and O(n) space to store the recursive call stack. This gives us the space complexity as O(n) + O(m⋅n) = O(m⋅n)
+
+             */
+            public bool TopDownDPWithMemo(int[] nums)
+            {
+                int totalSum = 0;
+                // find sum of all array elements
+                foreach (int num in nums)
+                {
+                    totalSum += num;
+                }
+                // if totalSum is odd, it cannot be partitioned into equal sum subset
+                if (totalSum % 2 != 0) return false;
+                int subSetSum = totalSum / 2;
+                int n = nums.Length;
+                Boolean[][] memo = new Boolean[n + 1][];
+                return Dfs(nums, n - 1, subSetSum, memo);
+            }
+
+            public bool Dfs(int[] nums, int n, int subSetSum, Boolean[][] memo)
+            {
+                // Base Cases
+                if (subSetSum == 0)
+                    return true;
+                if (n == 0 || subSetSum < 0)
+                    return false;
+                // check if subSetSum for given n is already computed and stored in memo
+                if (memo[n][subSetSum] != null)
+                    return memo[n][subSetSum];
+                bool result = Dfs(nums, n - 1, subSetSum - nums[n - 1], memo) ||
+                        Dfs(nums, n - 1, subSetSum, memo);
+                // store the result in memo
+                memo[n][subSetSum] = result;
+                return result;
+            }
+            /* Approach 3: Bottom Up Dynamic Programming
+Complexity Analysis
+•	Time Complexity : O(m⋅n), where m is the subSetSum, and n is the number of array elements. We iteratively fill the array of size m⋅n.
+•	Space Complexity : O(m⋅n) , where n is the number of array elements and m is the subSetSum. We are using a 2 dimensional array dp of size m⋅n
+
+             */
+            public bool BottomUpDP(int[] nums)
+            {
+                int totalSum = 0;
+                // find sum of all array elements
+                foreach (int num in nums)
+                {
+                    totalSum += num;
+                }
+                // if totalSum is odd, it cannot be partitioned into equal sum subset
+                if (totalSum % 2 != 0) return false;
+                int subSetSum = totalSum / 2;
+                int n = nums.Length;
+                bool[][] dp = new bool[n + 1][];
+                dp[0][0] = true;
+                for (int i = 1; i <= n; i++)
+                {
+                    int curr = nums[i - 1];
+                    for (int j = 0; j <= subSetSum; j++)
+                    {
+                        if (j < curr)
+                            dp[i][j] = dp[i - 1][j];
+                        else
+                            dp[i][j] = dp[i - 1][j] || (dp[i - 1][j - curr]);
+                    }
+                }
+                return dp[n][subSetSum];
+            }
+
+            /* Approach 4: Optimised Dynamic Programming - Using 1D Array
+Complexity Analysis
+•	Time Complexity : O(m⋅n), where m is the subSetSum, and n is the number of array elements. The time complexity is the same as Approach 3.
+•	Space Complexity: O(m), As we use an array of size m to store the result of subproblems
+
+             */
+            public bool BottomUp1DDP(int[] nums)
+            {
+                if (nums.Length == 0)
+                    return false;
+                int totalSum = 0;
+                // find sum of all array elements
+                foreach (int num in nums)
+                {
+                    totalSum += num;
+                }
+                // if totalSum is odd, it cannot be partitioned into equal sum subset
+                if (totalSum % 2 != 0) return false;
+                int subSetSum = totalSum / 2;
+                bool[] dp = new bool[subSetSum + 1];
+                dp[0] = true;
+                foreach (int curr in nums)
+                {
+                    for (int j = subSetSum; j >= curr; j--)
+                    {
+                        dp[j] |= dp[j - curr];
+                    }
+                }
+                return dp[subSetSum];
+            }
+
+        }
+
+        /* 698. Partition to K Equal Sum Subsets
+        https://leetcode.com/problems/partition-to-k-equal-sum-subsets/description/
+         */
+        class CanPartitionKSubsetsSol
+        {
+            /*             Approach 1: Naive Backtracking
+            Complexity Analysis
+            Let N denote the number of elements in the array.
+            •	Time complexity: O(N⋅N!).
+            The idea is that for each recursive call, we will iterate over N elements and make another recursive call. Assume we picked one element, then we iterate over the array and make recursive calls for the next N−1 elements and so on.
+            Therefore, in the worst-case scenario, the total number of recursive calls will be N⋅(N−1)⋅(N−2)⋅...⋅2⋅1=N! and in each recursive call we perform an O(N) time operation.
+            Another way is to visualize all possible states by drawing a recursion tree. From root node we have N recursive calls. The first level, therefore, has N nodes. For each of the nodes in the first level, we have (N−1) similar choices. As a result, the second level has N∗(N−1) nodes, and so on. The last level must have N⋅(N−1)⋅(N−2)⋅(N−3)⋅...⋅2⋅1 nodes.
+            •	Space complexity: O(N).
+            We have used an extra array of size N to mark the picked elements.
+            And the maximum depth of the recursive tree is at most N, so the recursive stack also takes O(N) space.
+             */
+            public bool UsingNaiveBacktracking(int[] arr, int k)
+            {
+                int totalArraySum = 0;
+                int n = arr.Length;
+
+                for (int i = 0; i < n; ++i)
+                {
+                    totalArraySum += arr[i];
+                }
+
+                // If total sum not divisible by k, we can't make subsets.
+                if (totalArraySum % k != 0)
+                {
+                    return false;
+                }
+
+                int targetSum = totalArraySum / k;
+                bool[] taken = new bool[n];
+
+                return Backtrack(arr, 0, 0, k, targetSum, taken);
+            }
+            private bool Backtrack(int[] arr, int count, int currSum, int k, int targetSum, bool[] taken)
+            {
+                int n = arr.Length;
+
+                // We made k - 1 subsets with target sum and last subset will also have target sum.
+                if (count == k - 1)
+                {
+                    return true;
+                }
+
+                // Current subset sum exceeds target sum, no need to proceed further.
+                if (currSum > targetSum)
+                {
+                    return false;
+                }
+
+                // When current subset sum reaches target sum then one subset is made.
+                // Increment count and reset current subset sum to 0.
+                if (currSum == targetSum)
+                {
+                    return Backtrack(arr, count + 1, 0, k, targetSum, taken);
+                }
+
+                // Try not picked elements to make some combinations.
+                for (int j = 0; j < n; ++j)
+                {
+                    if (!taken[j])
+                    {
+                        // Include this element in current subset.
+                        taken[j] = true;
+
+                        // If using current jth element in this subset leads to make all valid subsets.
+                        if (Backtrack(arr, count, currSum + arr[j], k, targetSum, taken))
+                        {
+                            return true;
+                        }
+
+                        // Backtrack step.
+                        taken[j] = false;
+                    }
+                }
+
+                // We were not able to make a valid combination after picking each element from the array,
+                // hence we can't make k subsets.
+                return false;
+            }
+            /* Approach 2: Optimized Backtracking 
+Complexity Analysis
+Let N be the number of elements in the array and k be the number of subsets.
+•	Time complexity: O(k⋅2^N).
+We are traversing the entire array for each subset (once we are done with one subset, for the next subset we are starting again with index 0). So for each subset, we are choosing the suitable elements from the array (basically iterate over nums and for each element either use it or skip it, which is O(2^N) operation).
+Once the first subset is found, we go on to find the second, which would take 2^N operations roughly (because some numbers have been marked as visited). So T=2^N+2^N+2^N+...=k⋅2^N.
+Also, one point to note that some might think if we take 2N time in finding one subset and we find k such subsets, then it will lead to 2^N⋅2^N⋅...(ktimes)..⋅2^N=2(N⋅k) time complexity. However, this is a misconception, as we iterate over array k times to get k subsets, hence total time is k⋅(timetogetonesubset)=k⋅2^N.
+•	Space complexity: O(N).
+We have used an extra array of size N to mark the already used elements.
+And the recursive tree makes at most N calls at one time, so the recursive stack also takes O(N) space.
+
+            */
+            public bool UsingOptimalBacktracking(int[] arr, int k)
+            {
+                int totalArraySum = 0;
+                int n = arr.Length;
+
+                for (int i = 0; i < n; ++i)
+                {
+                    totalArraySum += arr[i];
+                }
+
+                // If total sum not divisible by k, we can't make subsets.
+                if (totalArraySum % k != 0)
+                {
+                    return false;
+                }
+
+                // Sort in decreasing order.
+                Array.Sort(arr);
+                Reverse(arr);
+
+                int targetSum = totalArraySum / k;
+                bool[] taken = new bool[n];
+
+                return Backtrack(arr, 0, 0, 0, k, targetSum, taken);
+            }
+            private bool Backtrack(int[] arr, int index, int count, int currSum, int k,
+                          int targetSum, bool[] taken)
+            {
+
+                int n = arr.Length;
+
+                // We made k - 1 subsets with target sum and last subset will also have target sum.
+                if (count == k - 1)
+                {
+                    return true;
+                }
+
+                // No need to proceed further.
+                if (currSum > targetSum)
+                {
+                    return false;
+                }
+
+                // When curr sum reaches target then one subset is made.
+                // Increment count and reset current sum.
+                if (currSum == targetSum)
+                {
+                    return Backtrack(arr, 0, count + 1, 0, k, targetSum, taken);
+                }
+
+                // Try not picked elements to make some combinations.
+                for (int j = index; j < n; ++j)
+                {
+                    if (!taken[j])
+                    {
+                        // Include this element in current subset.
+                        taken[j] = true;
+
+                        // If using current jth element in this subset leads to make all valid subsets.
+                        if (Backtrack(arr, j + 1, count, currSum + arr[j], k, targetSum, taken))
+                        {
+                            return true;
+                        }
+
+                        // Backtrack step.
+                        taken[j] = false;
+                    }
+                }
+
+                // We were not able to make a valid combination after picking each element from the array,
+                // hence we can't make k subsets.
+                return false;
+            }
+
+            void Reverse(int[] arr)
+            {
+                for (int i = 0, j = arr.Length - 1; i < j; i++, j--)
+                {
+                    int temp = arr[i];
+                    arr[i] = arr[j];
+                    arr[j] = temp;
+                }
+            }
+
+
+            /* Approach 3: Backtracking plus Memoization
+Complexity Analysis
+Let N denote the number of elements in the array.
+•	Time complexity: O(N⋅2^N).
+There will be 2^N unique combinations of the taken string, in which every combination of the given array will be linearly iterated. And if a combination occurs again then we just return the stored answer for it.
+
+
+•	Space complexity: O(N⋅2^N).
+There will be 2^N unique combinations of the taken string, and each string of size N will be stored in the map. Also, the recursive stack will use at most O(N) space at any time.
+
+             */
+            public bool UsingBacktrackingWithMemo(int[] array, int k)
+            {
+                int totalArraySum = 0;
+                int n = array.Length;
+
+                for (int i = 0; i < n; ++i)
+                {
+                    totalArraySum += array[i];
+                }
+
+                // If total sum not divisible by k, we can't make subsets.
+                if (totalArraySum % k != 0)
+                {
+                    return false;
+                }
+
+                // Sort in decreasing order.
+                Array.Sort(array);
+                Reverse(array);
+
+                int targetSum = totalArraySum / k;
+
+                char[] taken = new char[n];
+                for (int i = 0; i < n; ++i)
+                {
+                    taken[i] = '0';
+                }
+
+                // Memoize the answer using taken element's string as key.
+                Dictionary<string, bool> memo = new Dictionary<string, bool>();
+
+                return Backtrack(array, 0, 0, 0, k, targetSum, taken, memo);
+            }
+            private bool Backtrack(int[] array, int index, int count, int currentSum, int k,
+                       int targetSum, char[] taken, Dictionary<string, bool> memo)
+            {
+
+                int n = array.Length;
+
+                // We made k - 1 subsets with target sum and last subset will also have target sum.
+                if (count == k - 1)
+                {
+                    return true;
+                }
+
+                // No need to proceed further.
+                if (currentSum > targetSum)
+                {
+                    return false;
+                }
+
+                string takenStr = new string(taken);
+
+                // If we have already computed the current combination.
+                if (memo.ContainsKey(takenStr))
+                {
+                    return memo[takenStr];
+                }
+
+                // When current sum reaches target then one subset is made.
+                // Increment count and reset current sum.
+                if (currentSum == targetSum)
+                {
+                    bool answer = Backtrack(array, 0, count + 1, 0, k, targetSum, taken, memo);
+                    memo[takenStr] = answer;
+                    return answer;
+                }
+
+                // Try not picked elements to make some combinations.
+                for (int j = index; j < n; ++j)
+                {
+                    if (taken[j] == '0')
+                    {
+                        // Include this element in current subset.
+                        taken[j] = '1';
+
+                        // If using current jth element in this subset leads to make all valid subsets.
+                        if (Backtrack(array, j + 1, count, currentSum + array[j], k, targetSum, taken, memo))
+                        {
+                            return true;
+                        }
+
+                        // Backtrack step.
+                        taken[j] = '0';
+                    }
+                }
+
+                // We were not able to make a valid combination after picking each element from array,
+                // hence we can't make k subsets.
+                memo[takenStr] = false;
+                return false;
+
+            }
+            /* Approach 4: Backtracking plus Memoization with Bitmasking
+Complexity Analysis
+Let N denote the number of elements in the array.
+•	Time complexity: O(N⋅2^N).
+There will be 2^N unique combinations of building a subset from the array of length N, in every combination the given array will be linearly iterated. And if a combination occurs again, then we just return the stored answer for it.
+
+
+•	Space complexity: O(2^N).
+There will be 2^N unique combinations of the integer mask which will be stored in the map. And recursive stack will require at most O(N) space.
+
+             */
+            public bool UsingBacktrackingWithMemoAndBitmasking(int[] arr, int k)
+            {
+                int totalArraySum = 0;
+                int n = arr.Length;
+
+                for (int i = 0; i < n; ++i)
+                {
+                    totalArraySum += arr[i];
+                }
+
+                // If total sum not divisible by k, we can't make subsets.
+                if (totalArraySum % k != 0)
+                {
+                    return false;
+                }
+
+                // Sort in decreasing order.
+                Array.Sort(arr);
+                Reverse(arr);
+
+                int targetSum = totalArraySum / k;
+                int mask = 0;
+
+                // Memoize the ans using taken element's string as key.
+                Dictionary<int, bool> memo = new Dictionary<int, bool>();
+
+                return Backtrack(arr, 0, 0, 0, k, targetSum, mask, memo);
+            }
+            private bool Backtrack(int[] arr, int index, int count, int currSum, int k,
+                        int targetSum, int mask, Dictionary<int, bool> memo)
+            {
+                int n = arr.Length;
+
+                // We made k - 1 subsets with target sum and last subset will also have target sum.
+                if (count == k - 1)
+                {
+                    return true;
+                }
+
+                // No need to proceed further.
+                if (currSum > targetSum)
+                {
+                    return false;
+                }
+
+                // If we have already computed the current combination.
+                if (memo.ContainsKey(mask))
+                {
+                    return memo[mask];
+                }
+
+                // When curr sum reaches target then one subset is made.
+                // Increment count and reset current sum.
+                if (currSum == targetSum)
+                {
+                    bool ans = Backtrack(arr, 0, count + 1, 0, k, targetSum, mask, memo);
+                    memo[mask] = ans;
+                    return ans;
+                }
+
+                // Try not picked elements to make some combinations.
+                for (int j = index; j < n; ++j)
+                {
+                    if (((mask >> j) & 1) == 0)
+                    {
+                        // Include this element in current subset.
+                        mask |= (1 << j);
+
+                        // If using current jth element in this subset leads to make all valid subsets.
+                        if (Backtrack(arr, j + 1, count, currSum + arr[j], k, targetSum, mask, memo))
+                        {
+                            return true;
+                        }
+
+                        // Backtrack step.
+                        mask ^= (1 << j);
+                    }
+                }
+
+                // We were not able to make a valid combination after picking each element from the array,
+                // hence we can't make k subsets.
+                memo[mask] = false;
+                return false;
+            }
+            /* Approach 5: Tabulation plus Bitmasking
+Complexity Analysis
+Assume N denotes the number of elements in the array.
+•	Time complexity: O(N⋅2^N).
+There will be 2^N unique states of the mask and in each state, we iterate over the whole array.
+
+
+•	Space complexity: O(2^N).
+There will be 2^N unique states of the mask which will be stored in the subsetSum array.
+
+             */
+            public bool UsingTabulationAndBitmasking(int[] arr, int k)
+            {
+                int totalArraySum = 0;
+                int n = arr.Length;
+
+                for (int i = 0; i < n; ++i)
+                {
+                    totalArraySum += arr[i];
+                }
+
+                // If total sum not divisible by k, we can't make subsets.
+                if (totalArraySum % k != 0)
+                {
+                    return false;
+                }
+
+                int targetSum = totalArraySum / k;
+
+                int[] subsetSum = new int[(1 << n)];
+                for (int i = 0; i < (1 << n); ++i)
+                {
+                    subsetSum[i] = -1;
+                }
+                // Initially only one state is valid, i.e don't pick anything.
+                subsetSum[0] = 0;
+
+                for (int mask = 0; mask < (1 << n); mask++)
+                {
+                    // If the current state has not been reached earlier.
+                    if (subsetSum[mask] == -1)
+                    {
+                        continue;
+                    }
+
+                    for (int i = 0; i < n; i++)
+                    {
+                        // If the number arr[i] was not picked earlier, and arr[i] + subsetSum[mask]
+                        // is not greater than the targetSum then add arr[i] to the subset
+                        // sum at subsetSum[mask] and store the result at subsetSum[mask | (1 << i)].
+                        if ((mask & (1 << i)) == 0 && subsetSum[mask] + arr[i] <= targetSum)
+                        {
+                            subsetSum[mask | (1 << i)] = (subsetSum[mask] + arr[i]) % targetSum;
+                        }
+                    }
+
+                    if (subsetSum[(1 << n) - 1] == 0)
+                    {
+                        return true;
+                    }
+                }
+
+                return subsetSum[(1 << n) - 1] == 0;
+            }
+
+
+
+        }
+
+        /* 1146. Snapshot Array
+        https://leetcode.com/problems/snapshot-array/description/
+         */
+        class SnapshotArray
+        {
+            int snapId = 0;
+            SortedDictionary<int, int>[] historyRecords;
+
+            /* Approach: Binary Search
+            Complexity Analysis
+Let n be the maximum number of calls and k = length.
+•	Time complexity: O(nlogn+k)
+o	We initialize historyRecords with size k.
+o	In the worst-case scenario, the number of calls to get, set, and snap are all O(n).
+o	For each call to get(index, snap_id), we will perform a binary search over the list of records of nums[index]. Since a list contains at most O(n) records, a binary search takes O(logn) time on average. Thus it requires O(nlogn) time.
+o	Each call to snap takes O(1) time.
+o	Each call to set(index, snap_id) appends a pair to the historical record of nums[index], which takes O(1) time, or O(logn) in Java as we are using TreeMap.
+•	Space complexity: O(n+k)
+o	We initialize historyRecords with size k.
+o	We add one pair (snap_id, val) for each call to set, thus there are at most n pairs saved in history_record.
+
+             */
+            public SnapshotArray(int length)
+            {
+                historyRecords = new SortedDictionary<int, int>[length];
+                for (int i = 0; i < length; i++)
+                {
+                    historyRecords[i] = new SortedDictionary<int, int>();
+                    historyRecords[i].Add(0, 0);
+                }
+            }
+
+            public void Set(int index, int val)
+            {
+                historyRecords[index][snapId] = val;
+            }
+
+            public int Snap()
+            {
+                return snapId++;
+            }
+
+            public int Get(int index, int snapId)
+            {
+                return historyRecords[index].FloorEntry(snapId).Value;
+            }
+        }
+
+        /* 451. Sort Characters By Frequency
+        https://leetcode.com/problems/sort-characters-by-frequency/description/
+         */
+        public class FrequencySortSol
+        {
+
+            /* Approach 1: Arrays and Sorting	
+            Complexity Analysis
+Let n be the length of the input String.
+•	Time Complexity : O(nlogn).
+The first part of the algorithm, converting the String to a List of characters, has a cost of O(n), because we are adding n characters to the end of a List.
+The second part of the algorithm, sorting the List of characters, has a cost of O(nlogn).
+The third part of the algorithm, grouping the characters into Strings of similar characters, has a cost of O(n) because each character is being inserted once into a StringBuilder and once converted into a String.
+Finally, the fourth part of the algorithm, sorting the Strings by length, has a worst case cost of O(n), which occurs when all the characters in the input String are unique.
+Because we drop constants and insignificant terms, we get O(nlogn)+3⋅O(n)=O(nlogn).
+Be careful with your own implementation—if you didn't do the string building process in a sensible way, then your solution could potentially be O(n2).
+•	Space Complexity : O(n).
+It is impossible to do better with the space complexity, because Strings are immutable. The List of characters, List of Strings, and the final output String, are all of length n, so we have a space complexity of O(n).
+
+             */
+            public string UsingArraysAndSort(string inputString)
+            {
+                if (string.IsNullOrEmpty(inputString)) return inputString;
+
+                // Create a sorted array of characters.
+                char[] characters = inputString.ToCharArray();
+                Array.Sort(characters);
+
+                // Convert identical characters into single strings.
+                List<string> characterStrings = new List<string>();
+                StringBuilder currentString = new StringBuilder();
+                currentString.Append(characters[0]);
+                for (int index = 1; index < characters.Length; index++)
+                {
+                    if (characters[index] != characters[index - 1])
+                    {
+                        characterStrings.Add(currentString.ToString());
+                        currentString = new StringBuilder();
+                    }
+                    currentString.Append(characters[index]);
+                }
+                characterStrings.Add(currentString.ToString());
+
+                // Our comparator is (a, b) => b.Length - a.Length.
+                // If a is longer than b, then a negative number will be returned
+                // telling the sort algorithm to place a first. Otherwise, a positive
+                // number will be returned, telling it to place a second.
+                // This results in a longest to shortest sorted list of the strings.
+                characterStrings.Sort((a, b) => b.Length - a.Length);
+
+                // Use StringBuilder to build the string to return.
+                StringBuilder resultStringBuilder = new StringBuilder();
+                foreach (string str in characterStrings) resultStringBuilder.Append(str);
+                return resultStringBuilder.ToString();
+            }
+
+
+            /* Approach 2: HashMap/Dict and Sort
+Complexity Analysis
+Let n be the length of the input String and k be the number of unique characters in the String.
+We know that k≤n, because there can't be more unique characters than there are characters in the String. We also know that k is somewhat bounded by the fact that there's only a finite number of characters in Unicode (or ASCII, which I suspect is all we need to worry about for this question).
+There are two ways of approaching the complexity analysis for this question.
+1.	We can disregard k, and consider that in the worst case, k = n.
+2.	We can consider k, recognising that the number of unique characters is not infinite. This is more accurate for real world purposes.
+I've provided analysis for both ways of approaching it. I choose not to bring it up for the previous approach, because it made no difference there.
+•	Time Complexity : O(nlogn) OR O(n+klogk).
+Putting the characterss into the HashMap has a cost of O(n), because each of the n characterss must be put in, and putting each in is an O(1) operation.
+Sorting the HashMap keys has a cost of O(klogk), because there are k keys, and this is the standard cost for sorting. If only using n, then it's O(nlogn). For the previous question, the sort was carried out on n items, not k, so was possibly a lot worse.
+Traversing over the sorted keys and building the String has a cost of O(n), as n characters must be inserted.
+Therefore, if we're only considering n, then the final cost is O(nlogn).
+Considering k as well gives us O(n+klogk), because we don't know which is largest out of n and klogk. We do, however, know that in total this is less than or equal to O(nlogn).
+•	Space Complexity : O(n).
+The HashMap uses O(k) space.
+However, the StringBuilder at the end dominates the space complexity, pushing it up to O(n), as every character from the input String must go into it. Like was said above, it's impossible to do better with the space complexity here.
+What's interesting here is that if we only consider n, the time complexity is the same as the previous approach. But by considering k, we can see that the difference is potentially substantial.
+
+             */
+            public string UsingDictAndSort(string inputString)
+            {
+                // Count up the occurrences.
+                Dictionary<char, int> characterCounts = new Dictionary<char, int>();
+                foreach (char character in inputString.ToCharArray())
+                {
+                    if (characterCounts.ContainsKey(character))
+                    {
+                        characterCounts[character]++;
+                    }
+                    else
+                    {
+                        characterCounts[character] = 1;
+                    }
+                }
+
+                // Make a list of the keys, sorted by frequency.
+                List<char> characters = characterCounts.Keys.ToList();
+                characters.Sort((a, b) => characterCounts[b].CompareTo(characterCounts[a]));
+
+                // Convert the counts into a string with a StringBuilder.
+                StringBuilder stringBuilder = new StringBuilder();
+                foreach (char character in characters)
+                {
+                    int copies = characterCounts[character];
+                    for (int i = 0; i < copies; i++)
+                    {
+                        stringBuilder.Append(character);
+                    }
+                }
+                return stringBuilder.ToString();
+            }
+            /* Approach 3: Multiset and Bucket Sort
+Complexity Analysis
+Let n be the length of the input String. The k (number of unique characters in the input String that we considered for the last approach makes no difference this time).
+•	Time Complexity : O(n).
+Like before, the HashMap building has a cost of O(n).
+The bucket sorting is O(n), because inserting items has a cost of O(k) (each entry from the HashMap), and building the buckets initially has a worst case of O(n) (which occurs when k=1). Because k≤n, we're left with O(n).
+So in total, we have O(n).
+It'd be impossible to do better than this, because we need to look at each of the n characters in the input String at least once.
+•	Space Complexity : O(n).
+Same as above. The bucket Array also uses O(n) space, because its length is at most n, and there are k items across all the buckets.
+
+             */
+            public string UsingMultiSetAndBucketSort(string inputString)
+            {
+
+                if (string.IsNullOrEmpty(inputString)) return inputString;
+
+                // Count up the occurrences.
+                Dictionary<char, int> characterCounts = new Dictionary<char, int>();
+                foreach (char character in inputString)
+                {
+                    if (characterCounts.ContainsKey(character))
+                    {
+                        characterCounts[character]++;
+                    }
+                    else
+                    {
+                        characterCounts[character] = 1;
+                    }
+                }
+
+                int maximumFrequency = characterCounts.Values.Max();
+
+                // Make the list of buckets and apply bucket sort.
+                List<List<char>> buckets = new List<List<char>>();
+                for (int i = 0; i <= maximumFrequency; i++)
+                {
+                    buckets.Add(new List<char>());
+                }
+                foreach (char key in characterCounts.Keys)
+                {
+                    int frequency = characterCounts[key];
+                    buckets[frequency].Add(key);
+                }
+
+                // Build up the string. 
+                StringBuilder stringBuilder = new StringBuilder();
+                for (int i = buckets.Count - 1; i >= 1; i--)
+                {
+                    foreach (char character in buckets[i])
+                    {
+                        for (int j = 0; j < i; j++)
+                        {
+                            stringBuilder.Append(character);
+                        }
+                    }
+                }
+                return stringBuilder.ToString();
+            }
+        }
+
+        /* 442. Find All Duplicates in an Array	
+        https://leetcode.com/problems/find-all-duplicates-in-an-array/description/
+         */
+        class FindAllDuplicatesInArraySol
+        {
+            /* Approach 1: Brute Force 
+            Complexity Analysis
+            •	Time complexity: O(n^2).
+            For each element in the array, we search for another occurrence in the rest of the array. Hence, for the ith element in the array, we might end up looking through all n−i remaining elements in the worst case. So, we can end up going through about n^2 elements in the worst case.
+            n−1+n−2+n−3+....+1+0 = ∑1n(n−i) ≃ n^2
+            •	Space complexity: O(1)
+            No extra space is required, other than the space for the output list.
+            */
+            public List<int> Naive(int[] nums)
+            {
+                List<int> ans = new();
+
+                for (int i = 0; i < nums.Length; i++)
+                {
+                    for (int j = i + 1; j < nums.Length; j++)
+                    {
+                        if (nums[j] == nums[i])
+                        {
+                            ans.Add(nums[i]);
+                            break;
+                        }
+                    }
+                }
+
+                return ans;
+            }
+            /* Approach 2: Sort and Compare Adjacent Elements 
+            Complexity Analysis
+•	Time complexity: O(nlogn)+O(n)≃O(nlogn).
+o	A performant comparison-based sorting algorithm will run in O(nlogn) time. Note that this can be reduced to O(n) using a special sorting algorithm like Radix Sort.
+o	Traversing the array after sorting takes linear time i.e. O(n).
+•	Space complexity: O(logn)
+Note that some extra space is used when we sort an array in place. The space complexity of the sorting algorithm depends on the programming language.
+o	In Java, Arrays.sort() is implemented using a variant of the Quick Sort algorithm which has a space complexity of O(logn) for sorting an array.
+o	In C++, the sort() function is implemented as a hybrid of Quick Sort, Heap Sort, and Insertion Sort, with a worse-case space complexity of O(logn).
+The space used by the output list ans is not counted in the space complexity.
+
+            */
+            public List<int> UsingSortAndCompareAdjacentElements(int[] nums)
+            {
+                List<int> ans = new();
+
+                Array.Sort(nums);
+
+                for (int i = 1; i < nums.Length; i++)
+                {
+                    if (nums[i] == nums[i - 1])
+                    {
+                        ans.Add(nums[i]);
+                        i++;        // skip over next element
+                    }
+                }
+
+                return ans;
+            }
+            /* Approach 3: Store Seen Elements in a Set / Map
+            Complexity Analysis
+•	Time complexity: O(n) average case. O(n) worst case.
+o	It takes a linear amount of time to iterate through the array.
+o	Lookups in a hash set are constant time on average, however, those can degrade to linear time in the worst case. Note that an alternative is to use tree-based sets, which give logarithmic time lookups always.
+•	Space complexity: Up to O(n) extra space required for the set.
+o	If you are tight on space, you can significantly reduce your physical space requirements by using bitsets 1 instead of sets. This data structure requires just one bit per element, so you can be done in just n bits of data for elements that go up to n. Of course, this doesn't reduce your space complexity: bitsets still grow linearly with the range of values that the elements can take.
+
+             */
+            public List<int> UsingStoreSeenElementsInASet(int[] nums)
+            {
+                List<int> ans = new();
+                HashSet<int> seen = new();
+
+                foreach (int num in nums)
+                {
+                    if (seen.Contains(num))
+                    {
+                        ans.Add(num);
+                    }
+                    else
+                    {
+                        seen.Add(num);
+                    }
+                }
+
+                return ans;
+            }
+            /* Approach 4: Cycle Sort
+                Complexity Analysis
+Let n be the length of nums.
+•	Time complexity: O(n)
+We loop through the elements in nums, swapping elements to sort the array. Swapping takes constant time. Sorting nums using cycle sort takes O(n) time.
+Iterating through the sorted array and finding the duplicates can take up to O(n).
+The total time complexity is O(2n), which simplifies to O(n).
+•	Space complexity: O(n)
+We modify the array nums and use it to determine the answer, so the space complexity is O(n).
+The space used by the output list duplicates is not counted in the space complexity.
+nums is the input array, so the auxiliary space used is O(1).
+
+             */
+            public List<int> UsingCycleSort(int[] nums)
+            {
+                int n = nums.Length;
+
+                // Use cycle sort to place elements
+                // at corresponding index to value
+                int i = 0;
+                while (i < n)
+                {
+                    int correctIdx = nums[i] - 1;
+                    if (nums[i] != nums[correctIdx])
+                    {
+                        Swap(nums, i, correctIdx);
+                    }
+                    else
+                    {
+                        i++;
+                    }
+                }
+
+                // Any elements not at the index that corresponds to their value are duplicates
+                List<int> duplicates = new();
+                for (i = 0; i < n; i++)
+                {
+                    if (nums[i] != i + 1)
+                    {
+                        duplicates.Add(nums[i]);
+                    }
+                }
+
+                return duplicates;
+            }
+
+            // Swaps two elements in nums
+            private void Swap(int[] nums, int index1, int index2)
+            {
+                int temp = nums[index1];
+                nums[index1] = nums[index2];
+                nums[index2] = temp;
+            }
+            /*             
+            Approach 5: Mark Visited Elements in the Input Array Itself
+Complexity Analysis
+•	Time complexity: O(n)
+We iterate over the array twice. Each negation operation occurs in constant time.
+•	Space complexity: O(n)
+We modify the array nums and use it to determine the answer, so the space complexity is O(n).
+The space used by the output list ans is not counted in the space complexity.
+nums is the input array, so the auxiliary space used is O(1).
+
+
+             */
+            public List<int> UsingMarkVisitedElementsInInputArrayItself(int[] nums)
+            {
+                List<int> ans = new();
+
+                foreach (int num in nums)
+                {
+                    nums[Math.Abs(num) - 1] *= -1;
+                }
+
+                foreach (int num in nums)
+                {
+                    if (nums[Math.Abs(num) - 1] > 0)
+                    {
+                        ans.Add(Math.Abs(num));
+                        nums[Math.Abs(num) - 1] *= -1;
+                    }
+                }
+
+                return ans;
+            }
+
+        }
+
+
+        /* 3152. Special Array II
+        https://leetcode.com/problems/special-array-ii/description/
+         */
+        class SpecialArrayIISol
+        {
+            /*             Complexity
+            Time complexity:
+            O(n + q)
+            Space complexity:
+            O(n)
+
+             */
+            public bool[] isArraySpecial(int[] nums, int[][] queries)
+            {
+                bool[] ans = new bool[queries.Length];
+                int[] ps = new int[nums.Length];
+                for (int i = 1; i < nums.Length; i++)
+                {
+                    ps[i] = ps[i - 1];
+                    if (nums[i - 1] % 2 == nums[i] % 2)
+                    {
+                        ps[i]++;
+                    }
+                }
+                for (int i = 0; i < queries.Length; i++)
+                {
+                    int from = queries[i][0], to = queries[i][1];
+                    int cnt = ps[to] - ps[from];
+                    ans[i] = cnt > 0 ? false : true;
+                }
+                return ans;
+            }
+        }
+
+
+        /* 950. Reveal Cards In Increasing Order
+        https://leetcode.com/problems/reveal-cards-in-increasing-order/description/
+         */
+        class DeckRevealedIncreasingSol
+        {
+            /* 
+            Approach 1: Two Pointers
+            Complexity Analysis
+Let n be the length of the deck.
+•	Time complexity: O(nlogn)
+Sorting the deck takes O(nlogn).
+The loop to place cards at the correct index in result runs O(nlogn) times. Each pass through the result array takes O(n), and with each pass, half as many indices still need to be filled.
+Therefore, the overall time complexity is O(nlogn)
+•	Space complexity: O(n) or O(logn).
+result is only used to store the result, so it is not counted in the space complexity.
+Some extra space is used when we sort the deck in place. The space complexity of the sorting algorithms depends on the programming language.
+o	In Python, the sort method sorts a list using the Timesort algorithm which is a combination of Merge Sort and Insertion Sort and has O(n) additional space.
+o	In C++, the sort() function is implemented as a hybrid of Quick Sort, Heap Sort, and Insertion Sort, with a worse-case space complexity of O(logn).
+o	In Java, Arrays.sort() is implemented using a variant of the Quick Sort algorithm which has a space complexity of O(logn) for sorting two arrays.
+
+
+             */
+            public int[] UsingTwoPointers(int[] deck)
+            {
+                int N = deck.Length;
+                int[] result = new int[N];
+                bool skip = false;
+                int indexInDeck = 0;
+                int indexInResult = 0;
+
+                Array.Sort(deck);
+
+                while (indexInDeck < N)
+                {
+                    // There is an available gap in result
+                    if (result[indexInResult] == 0)
+                    {
+
+                        // Add a card to result
+                        if (!skip)
+                        {
+                            result[indexInResult] = deck[indexInDeck];
+                            indexInDeck++;
+                        }
+
+                        // Toggle skip to alternate between adding and skipping cards
+                        skip = !skip;
+                    }
+                    // Progress to next index of result array
+                    indexInResult = (indexInResult + 1) % N;
+                }
+                return result;
+            }
+
+            /* Approach 2: Simulation with Queue
+Complexity Analysis
+Let n be the length of the deck.
+•	Time complexity: O(nlogn)
+Sorting the deck takes O(nlogn).
+It takes O(n) time to build the queue. Then, it takes O(n) time to add the cards to the result array in the correct order.
+The time used for sorting is the dominating term, so the overall time complexity is O(nlogn)
+•	Space complexity: O(n)
+We use a queue of size n, so the space complexity is O(n).
+Some extra space is used when we sort the deck in place. The space complexity of the sorting algorithms depends on the programming language.
+o	In Python, the sort method sorts a list using the Timesort algorithm which is a combination of Merge Sort and Insertion Sort and has O(n) additional space.
+o	In C++, the sort() function is implemented as a hybrid of Quick Sort, Heap Sort, and Insertion Sort, with a worse-case space complexity of O(logn).
+o	In Java, Arrays.sort() is implemented using a variant of the Quick Sort algorithm which has a space complexity of O(logn) for sorting two arrays.
+As the dominating term is O(n), the overall space complexity is O(n).
+
+             */
+            public int[] UsingSimulationWithQueue(int[] deck)
+            {
+                int N = deck.Length;
+                Queue<int> queue = new();
+
+                // Create a queue of indexes
+                for (int i = 0; i < N; i++)
+                {
+                    queue.Enqueue(i);
+                }
+
+                Array.Sort(deck);
+
+                // Put cards at correct index in result
+                int[] result = new int[N];
+                for (int i = 0; i < N; i++)
+                {
+                    // Reveal Card and place in result
+                    result[queue.Dequeue()] = deck[i];
+
+                    // Move next card to bottom
+                    queue.Enqueue(queue.Dequeue());
+                }
+                return result;
+            }
+        }
+
+        /* 2149. Rearrange Array Elements by Sign
+        https://leetcode.com/problems/rearrange-array-elements-by-sign/description/
+         */
+
+        class RearrangeArrayElenebtsBySignSol
+        {
+            /*Approach: Two Pointers
+
+            Complexity Analysis
+Let n be the length of nums
+
+•	Time complexity: O(n)
+o	We traverse nums once and populate ans. Since both these arrays have size n, this results in a time complexity of O(n).
+
+•	Space complexity: O(n)
+o	We create an auxiliary array ans of size n.
+
+ */
+            public int[] UsingTwoPointers(int[] nums)
+            {
+                int n = nums.Length;
+
+                // Initializing an answer array of size n
+                int[] ans = new int[n];
+
+                // Initializing two pointers to track even and 
+                // odd indices for positive and negative integers respectively
+                int posIndex = 0, negIndex = 1;
+
+                for (int i = 0; i < n; i++)
+                {
+                    if (nums[i] > 0)
+                    {
+                        // Placing the positive integer at the 
+                        // desired index in ans and incrementing posIndex by 2
+                        ans[posIndex] = nums[i];
+                        posIndex += 2;
+                    }
+                    else
+                    {
+                        // Placing the negative integer at the 
+                        // desired index in ans and incrementing negIndex by 2
+                        ans[negIndex] = nums[i];
+                        negIndex += 2;
+                    }
+                }
+
+                return ans;
+            }
+        }
+
+
+        /* 532. K-diff Pairs in an Array
+        https://leetcode.com/problems/k-diff-pairs-in-an-array/description/
+         */
+        public class KDiffPairsInArraySol
+        {
+
+            /* Approach 1: Brute Force 
+Complexity Analysis
+•	Time complexity : O(N^2) where N is the size of nums. The time complexity for sorting is O(NlogN) while the time complexity for going through ever pair in the nums is O(N^2). Therefore, the final time complexity is O(NlogN)+O(N^2)≈O(N^2).
+•	Space complexity : O(N) where N is the size of nums. This space complexity is incurred by the sorting algorithm. Space complexity is bound to change depending on the sorting algorithm you use. There is no additional space required for the part with two for loops, apart from a single variable result. Therefore, the final space complexity is O(N)+O(1)≈O(N).
+Addendum: We can also approach this problem using brute force without sorting nums. First, we have to create a hash set which will record pairs of numbers whose difference is k. Then, we look for every possible pair. As soon as we find a pair (say i and j) whose difference is k, we add (i, j) and (j, i) to the hash set and increment our placeholder result variable. Whenever we encounter another pair which is already in the hash set, we simply ignore that pair. By doing so we have a better practical runtime (since we are eliminating the sorting step) even though the time complexity is still O(N^2) where N is the size of nums.
+
+            */
+            public int Naive(int[] nums, int k)
+            {
+
+                Array.Sort(nums);
+
+                int result = 0;
+
+                for (int i = 0; i < nums.Length; i++)
+                {
+                    if (i > 0 && nums[i] == nums[i - 1])
+                        continue;
+                    for (int j = i + 1; j < nums.Length; j++)
+                    {
+                        if (j > i + 1 && nums[j] == nums[j - 1])
+                            continue;
+
+                        if (Math.Abs(nums[j] - nums[i]) == k)
+                            result++;
+                    }
+                }
+
+                return result;
+            }
+            /* Approach 2: Two Pointers
+            Complexity Analysis
+•	Time complexity : O(NlogN) where N is the size of nums. The time complexity for sorting is O(NlogN) while the time complexity for going through nums is O(N). One might mistakenly think that it should be O(N^2) since there is another while loop inside the first while loop. The while loop inside is just incrementing the pointer to skip numbers which are the same as the previous number. The animation should explain this behavior clearer. Therefore, the final time complexity is O(NlogN)+O(N)≈O(NlogN).
+•	Space complexity : O(N) where N is the size of nums. Similar to approach 1, this space complexity is incurred by the sorting algorithm. Space complexity is bound to change depending on the sorting algorithm you use. There is no additional space required for the part where two pointers are being incremented, apart from a single variable result. Therefore, the final space complexity is O(N)+O(1)≈O(N).
+
+             */
+            public int UsingTwoPointers(int[] nums, int k)
+            {
+
+                Array.Sort(nums);
+
+                int left = 0, right = 1;
+                int result = 0;
+
+                while (left < nums.Length && right < nums.Length)
+                {
+                    if (left == right || nums[right] - nums[left] < k)
+                    {
+                        // List item 1 in the text
+                        right++;
+                    }
+                    else if (nums[right] - nums[left] > k)
+                    {
+                        // List item 2 in the text
+                        left++;
+                    }
+                    else
+                    {
+                        // List item 3 in the text
+                        left++;
+                        result++;
+                        while (left < nums.Length && nums[left] == nums[left - 1])
+                            left++;
+                    }
+                }
+                return result;
+            }
+
+            /* Approach 3: Hashmap
+Complexity Analysis
+Let N be the number of elements in the input list.
+•	Time complexity : O(N).
+o	It takes O(N) to create an initial frequency hash map and another O(N) to traverse the keys of that hash map. One thing to note about is the hash key lookup. The time complexity for hash key lookup is O(1) but if there are hash key collisions, the time complexity will become O(N). However those cases are rare and thus, the amortized time complexity is O(2N)≈O(N).
+•	Space complexity : O(N)
+o	We keep a table to count the frequency of each unique number in the input. In the worst case, all numbers are unique in the array.
+As a result, the maximum size of our table would be O(N).
+
+             */
+            public int FindPairs(int[] numbers, int difference)
+            {
+                int resultCount = 0;
+
+                Dictionary<int, int> frequencyCounter = new Dictionary<int, int>();
+                foreach (int number in numbers)
+                {
+                    if (frequencyCounter.ContainsKey(number))
+                    {
+                        frequencyCounter[number]++;
+                    }
+                    else
+                    {
+                        frequencyCounter[number] = 1;
+                    }
+                }
+
+                foreach (KeyValuePair<int, int> entry in frequencyCounter)
+                {
+                    int currentNumber = entry.Key;
+                    int frequency = entry.Value;
+                    if (difference > 0 && frequencyCounter.ContainsKey(currentNumber + difference))
+                    {
+                        resultCount++;
+                    }
+                    else if (difference == 0 && frequency > 1)
+                    {
+                        resultCount++;
+                    }
+                }
+                return resultCount;
+            }
+        }
+
+        /* 2918. Minimum Equal Sum of Two Arrays After Replacing Zeros
+        https://leetcode.com/problems/minimum-equal-sum-of-two-arrays-after-replacing-zeros/description/
+        https://algo.monster/liteproblems/2918
+         */
+
+        class MinEqualSumOfTwoArraysAfterReplacingZerosSol
+        {
+
+            /* Time and Space Complexity
+            Time Complexity
+            The time complexity of the code can be broken down as follows:
+            •	Calculating sum of nums1 and nums2 requires traversing both arrays, which costs O(n) and O(m) respectively, where n is the length of nums1 and m is the length of nums2.
+            •	Counting the zeroes in nums1 and nums2 with nums1.count(0) and nums2.count(0) also takes O(n) and O(m) time respectively.
+            •	The recursive call self.minSum(nums2, nums1) only happens if s1 > s2. If multiple invocations occur, the process will still not exceed O(n + m) because the sum and count operations are repeated once for each list.
+            •	The if comparisons are constant time operations, O(1).
+            Aggregating all these costs, the total time complexity is O(n + m) because we are summing separate linear terms associated with each list.
+            Space Complexity
+            •	The space complexity is O(1) as no additional space that grows with the input size is used. Variables s1 and s2 use constant space, and the recursive call does not exceed a single level of stack space since it's a direct swap with no further recursion.
+             */
+            /**
+             * Computes the minimum sum possible between two given arrays after making sure
+             * that none of the elements in the arrays are less than one.
+             * It returns -1 if it is impossible to make both sums equal without the use of zeros.
+             *
+             * @param nums1 the first array of integers
+             * @param nums2 the second array of integers
+             * @return the minimum sum possible or -1 if it can't be done
+             */
+            public long MinSum(int[] nums1, int[] nums2)
+            {
+                long sum1 = 0; // Initialize sum for the first array
+                long sum2 = 0; // Initialize sum for the second array
+                bool hasZero = false; // Flag to check for presence of zero in nums1
+
+                // Iterate over the first array
+                foreach (int value in nums1)
+                {
+                    hasZero |= value == 0; // Set the flag if zero is found
+                    sum1 += Math.Max(value, 1); // Ensure that each value contributes at least 1 to the sum
+                }
+
+                // Iterate over the second array
+                foreach (int value in nums2)
+                {
+                    sum2 += Math.Max(value, 1); // Ensure that each value contributes at least 1 to the sum
+                }
+
+                // If the sum of the first array is greater, call the function again with reversed parameters
+                if (sum1 > sum2)
+                {
+                    return MinSum(nums2, nums1);
+                }
+
+                // If the sums are equal, return the sum of the first array
+                if (sum1 == sum2)
+                {
+                    return sum1;
+                }
+
+                // If there is a zero in the first array and the sums are not equal, returning the sum of the
+                // second array is valid; otherwise, return -1 as it is impossible to make sums equal.
+                return hasZero ? sum2 : -1;
+            }
+        }
+
+        /* 2592. Maximize Greatness of an Array
+        https://leetcode.com/problems/maximize-greatness-of-an-array/description/
+        https://algo.monster/liteproblems/2592
+         */
+
+        class MaximizeGreatnessSol
+        {
+            /* Time and Space Complexity
+            Time Complexity
+            The time complexity of the given function maximizeGreatness is primarily dominated by the nums.sort() operation. Sorting an array is typically done using the Timsort algorithm in Python, which has a time complexity of O(n log n), where n is the length of the array nums. The for-loop that follows the sort operation has a time complexity of O(n) since it iterates over each element in the sorted list exactly once.
+            Therefore, when combining these two operations, the total time complexity remains O(n log n) as the sorting operation is the most significant factor.
+            Space Complexity
+            The space complexity of the sort operation in Python is O(n), but this uses the internal buffer for sorting which does not count towards the additional space required by the algorithm. However, due to the recursive stack calls made during sorting, the worst-case space complexity is O(log n). No additional data structures that are dependent on the size of the input array are used in the function, keeping the space complexity to O(log n) for this function.
+             */
+            // Method to determine the maximum level of greatness that can be achieved
+            public int MaximizeGreatness(int[] nums)
+            {
+                // Sort the array in non-decreasing order
+                Array.Sort(nums);
+
+                // Initialize the count of greatness to 0
+                int greatnessCount = 0;
+
+                // Iterate over the sorted array
+                foreach (int num in nums)
+                {
+                    // If the current element is greater than the element at the current greatness count index
+                    if (num > nums[greatnessCount])
+                    {
+                        // Increment the greatness count
+                        greatnessCount++;
+                    }
+                }
+
+                // Return the total count of greatness achieved
+                return greatnessCount;
+            }
+        }
+
+        /* 526. Beautiful Arrangement
+        https://leetcode.com/problems/beautiful-arrangement/description/
+         */
+
+        public class CountArrangementSol
+        {
+            int count = 0;
+            /* Approach #1 Brute Force [Time Limit Exceeded]	 
+            Complexity Analysis
+•	Time complexity : O(n!). A total of n! permutations will be generated for an array of length n.
+•	Space complexity : O(n). The depth of the recursion tree can go upto n. nums array of size n is used.
+
+            */
+            public int Naive(int N)
+            {
+                int[] nums = new int[N];
+                for (int i = 1; i <= N; i++)
+                    nums[i - 1] = i;
+                Permute(nums, 0);
+                return count;
+            }
+            public void Permute(int[] nums, int l)
+            {
+                if (l == nums.Length - 1)
+                {
+                    int i;
+                    for (i = 1; i <= nums.Length; i++)
+                    {
+                        if (nums[i - 1] % i != 0 && i % nums[i - 1] != 0)
+                            break;
+                    }
+                    if (i == nums.Length + 1)
+                    {
+                        count++;
+                    }
+                }
+                for (int i = l; i < nums.Length; i++)
+                {
+                    Swap(nums, i, l);
+                    Permute(nums, l + 1);
+                    Swap(nums, i, l);
+                }
+            }
+            public void Swap(int[] nums, int x, int y)
+            {
+                int temp = nums[x];
+                nums[x] = nums[y];
+                nums[y] = temp;
+            }
+
+
+            /* Approach #2 Better Brute Force [Accepted]
+Complexity Analysis
+•	Time complexity : O(k). k refers to the number of valid permutations.
+•	Space complexity : O(n). The depth of recursion tree can go upto n. Further, nums array of size n is used, where, n is the given number.
+
+             */
+            public int countArrangement(int N)
+            {
+                int[] nums = new int[N];
+                for (int i = 1; i <= N; i++)
+                    nums[i - 1] = i;
+                Permute(nums, 0);
+                return count;
+
+                void Permute(int[] nums, int l)
+                {
+                    if (l == nums.Length)
+                    {
+                        count++;
+                    }
+                    for (int i = l; i < nums.Length; i++)
+                    {
+                        Swap(nums, i, l);
+                        if (nums[l] % (l + 1) == 0 || (l + 1) % nums[l] == 0)
+                            Permute(nums, l + 1);
+                        Swap(nums, i, l);
+                    }
+                }
+            }
+            /* Approach #3 Backtracking [Accepted]
+            **Complexity Analysis**
+•	Time complexity : O(k). k refers to the number of valid permutations.
+•	Space complexity : O(n). visited array of size n is used. The depth of recursion tree will also go upto n. Here, n refers to the given integer n.
+
+             */
+            public int UsingBacktracking(int N)
+            {
+                bool[] visited = new bool[N + 1];
+                Calculate(N, 1, visited);
+                return count;
+            }
+            public void Calculate(int N, int pos, bool[] visited)
+            {
+                if (pos > N)
+                    count++;
+                for (int i = 1; i <= N; i++)
+                {
+                    if (!visited[i] && (pos % i == 0 || i % pos == 0))
+                    {
+                        visited[i] = true;
+                        Calculate(N, pos + 1, visited);
+                        visited[i] = false;
+                    }
+                }
+            }
+
+        }
+
+        /* 713. Subarray Product Less Than K
+        https://leetcode.com/problems/subarray-product-less-than-k/description/
+         */
+
+        class NumSubarrayProductLessThanKSol
+        {
+
+            /* Approach 1: Using Sliding Window
+Complexity Analysis
+Let n be the length of nums.
+•	Time complexity: O(n)
+The algorithm iterates through the input array nums using a single for loop. Inside the loop, there are nested operations for shrinking the window, but since left is incremented a total number of n times during the whole array traversal, each element in the array is visited at most twice.
+The nested loop terminates when the product becomes less than k, and this can only happen at most n times total (once for each element). Therefore, the overall time complexity is 2n, which we describe as O(n).
+•	Space complexity: O(1)
+The algorithm uses a constant amount of extra space for variables like totalCount, product, left, and right. These variables do not depend on the size of the input array. Therefore, the space complexity is considered constant, denoted as O(1).
+________________________________________
+Note: The below approach is generally not anticipated in an interview setting, as many individuals might not be familiar with logarithmic functions, having either forgotten them or not utilized them extensively. So, it's tough for them to come up with this idea on the spot. Moreover, the sliding window approach remains the optimal solution to this problem.
+
+             */
+            public int NumSubarrayProductLessThanK(int[] nums, int k)
+            {
+                // Handle edge cases where k is 0 or 1 (no subarrays possible)
+                if (k <= 1) return 0;
+
+                int totalCount = 0;
+                int product = 1;
+
+                // Use two pointers to maintain a sliding window
+                for (int left = 0, right = 0; right < nums.Length; right++)
+                {
+                    // Expand the window by including the element at the right pointer
+                    product *= nums[right];
+
+                    // Shrink the window from the left while the product is greater than or equal to k
+                    while (product >= k)
+                    {
+                        // Remove the element at the left pointer from the product
+                        product /= nums[left++];
+                    }
+
+                    // Update the total count by adding the number of valid subarrays with the current window size
+                    totalCount += right - left + 1;  // right - left + 1 represents the current window size
+                }
+
+                return totalCount;
+            }
+
+            /* Approach 2: Using Binary Search
+            Complexity Analysis
+Let n be the length of the nums array.
+•	Time complexity: O(n⋅log(n))
+The time complexity of the overall algorithm is O(n⋅log(n)) due to the binary search performed in each iteration of the outer loop.
+•	Space complexity: O(n)
+The space complexity is O(n) due to the list logsPrefixSum, storing logarithmic prefix sums of nums, whose length equals that of nums.
+
+            */
+            public int numSubarrayProductLessThanK(int[] nums, int k)
+            {
+                if (k == 0) return 0;
+                double logK = Math.Log(k);
+                int m = nums.Length + 1;
+                double[] logsPrefixSum = new double[m];
+
+                // Calculate prefix sum of logarithms of elements
+                for (int i = 0; i < nums.Length; i++)
+                {
+                    logsPrefixSum[i + 1] = logsPrefixSum[i] + Math.Log(nums[i]);
+                }
+
+                int totalCount = 0;
+                // Calculate subarray count with product less than k
+                for (int currIdx = 0; currIdx < m; currIdx++)
+                {
+                    int low = currIdx + 1, high = m;
+                    while (low < high)
+                    {
+                        int mid = low + (high - low) / 2;
+                        if (logsPrefixSum[mid] < logsPrefixSum[currIdx] + logK - 1e-9)
+                        {
+                            low = mid + 1;
+                        }
+                        else
+                        {
+                            high = mid;
+                        }
+                    }
+                    totalCount += low - currIdx - 1;
+                }
+                return totalCount;
+            }
+        }
+
+        /* 
+        357. Count Numbers with Unique Digits
+        https://leetcode.com/problems/count-numbers-with-unique-digits/description/
+        https://algo.monster/liteproblems/357
+         */
+        class CountNumbersWithUniqueDigitsSol
+        {
+
+            /* Time and Space Complexity
+            The provided Python code defines a function countNumbersWithUniqueDigits which calculates the number of n-digit integers that have unique digits.
+            •	Time Complexity: The time complexity of the function is primarily determined by the for loop that iterates n - 1 times. Within the for loop, there are only constant-time operations. Therefore, the overall time complexity is O(n).
+            •	Space Complexity: The space complexity of the function is O(1) because the space used does not grow with the input size n. The function only uses a constant amount of additional space for variables ans and cur.
+             */
+            // This method counts the numbers with unique digits up to a certain length.
+            public int CountNumbersWithUniqueDigits(int n)
+            {
+                // If n is 0, there's only one number which is 0 itself
+                if (n == 0)
+                {
+                    return 1;
+                }
+
+                // If n is 1, we have digits from 0 to 9, resulting in 10 unique numbers
+                if (n == 1)
+                {
+                    return 10;
+                }
+
+                // Initialize answer with the count for n = 1
+                int answer = 10;
+
+                // Current number of unique digits as we increase the length
+                int currentUniqueNumbers = 9;
+
+                // Loop to calculate the number of unique digit numbers for lengths 2 to n
+                for (int i = 0; i < n - 1; ++i)
+                {
+                    // Compute the count for the current length by multiplying with the digits
+                    // available considering we can't reuse any we have already used
+                    currentUniqueNumbers *= (9 - i);
+
+                    // Add the current length's count to the total answer so far
+                    answer += currentUniqueNumbers;
+                }
+
+                // Return the total count of unique numbers with digits up to length n
+                return answer;
+            }
+        }
+
+        /* 2563. Count the Number of Fair Pairs
+        https://leetcode.com/problems/count-the-number-of-fair-pairs/description/
+        https://algo.monster/liteproblems/2563
+         */
+        class CountFairPairsSol
+        {
+            /* Time and Space Complexity
+            Time Complexity
+            The given Python code performs the sorting of the nums list, which takes O(n log n) time, where n is the number of elements in the list. After sorting, it iterates over each element in nums and performs two binary searches using the bisect_left function.
+            For each element x in the list, it finds the index j of the first number not less than lower - x starting from index i + 1 and the index k of the first number not less than upper - x + 1 from the same index i + 1. The binary searches take O(log n) time each.
+            Since the binary searches are inside a loop that runs n times, the total time for all binary searches combined is O(n log n). This means the overall time complexity of the function is dominated by the sorting and binary searches, which results in O(n log n).
+            Space Complexity
+            The space complexity of the algorithm is O(1) if we disregard the input and only consider additional space because the sorting is done in-place and the only other variables are used for iteration and counting.
+            In the case where the sorting is not done in-place (depending on the Python implementation), the space complexity would be O(n) due to the space needed to create a sorted copy of the list. However, typically, the .sort() method on a list in Python sorts in-place, thus the typical space complexity remains O(1).
+             */
+            // Counts the number of 'fair' pairs in the array, where a pair is considered fair 
+            // if the sum of its elements is between 'lower' and 'upper' (inclusive).
+            public long CountFairPairs(int[] nums, int lower, int upper)
+            {
+                // Sort the array to enable binary search
+                Array.Sort(nums);
+                long count = 0; // Initialize count of fair pairs
+                int n = nums.Length;
+
+                // Iterate over each element in the array
+                for (int i = 0; i < n; ++i)
+                {
+                    // Find the left boundary for the fair sum range
+                    int leftBoundaryIndex = BinarySearch(nums, lower - nums[i], i + 1);
+
+                    // Find the right boundary for the fair sum range
+                    int rightBoundaryIndex = BinarySearch(nums, upper - nums[i] + 1, i + 1);
+
+                    // Calculate the number of fair pairs with the current element
+                    count += rightBoundaryIndex - leftBoundaryIndex;
+                }
+
+                // Return the total count of fair pairs
+                return count;
+            }
+
+            // Performs a binary search to find the index of the smallest number in 'nums' 
+            // starting from 'startIdx' that is greater or equal to 'target'.
+            private int BinarySearch(int[] nums, int target, int startIdx)
+            {
+                int endIdx = nums.Length; // Sets the end index of the search range
+
+                // Continue the loop until the search range is exhausted
+                while (startIdx < endIdx)
+                {
+                    int midIdx = (startIdx + endIdx) >> 1; // Calculate the mid index
+                                                           // If the mid element is greater or equal to target,
+                                                           // we need to continue in the left part of the array
+                    if (nums[midIdx] >= target)
+                    {
+                        endIdx = midIdx;
+                    }
+                    else
+                    {
+                        // Otherwise, continue in the right part
+                        startIdx = midIdx + 1;
+                    }
+                }
+
+                // Return the start index which is the index of the smallest
+                // number greater or equal to 'target'.
+                return startIdx;
+            }
+        }
+
+        /* 1802. Maximum Value at a Given Index in a Bounded Array
+        https://leetcode.com/problems/maximum-value-at-a-given-index-in-a-bounded-array/description/
+         */
+        class MaxValueAtGivenIndexInABoundedArraySol
+        {
+            /* Approach: Greedy + Binary Search
+Complexity Analysis
+•	Time complexity: O(log(maxSum))
+o	We set the searching space as [1, maxSum], thus it takes O(log(maxSum)) steps to finish the binary search.
+o	At each step, we made some calculations that take O(1) time.
+•	Space complexity: O(1)
+o	Both the binary search and the getSum function take O(1) space.
+
+             */
+
+            public int UsingGreedyAndBinarySearch(int n, int index, int maxSum)
+            {
+                int left = 1, right = maxSum;
+                while (left < right)
+                {
+                    int mid = (left + right + 1) / 2;
+                    if (GetSum(index, mid, n) <= maxSum)
+                    {
+                        left = mid;
+                    }
+                    else
+                    {
+                        right = mid - 1;
+                    }
+                }
+
+                return left;
+            }
+            private long GetSum(int index, int value, int n)
+            {
+                long count = 0;
+
+                // On index's left:
+                // If value > index, there are index + 1 numbers in the arithmetic sequence:
+                // [value - index, ..., value - 1, value].
+                // Otherwise, there are value numbers in the arithmetic sequence:
+                // [1, 2, ..., value - 1, value], plus a sequence of length (index - value + 1) of 1s. 
+                if (value > index)
+                {
+                    count += (long)(value + value - index) * (index + 1) / 2;
+                }
+                else
+                {
+                    count += (long)(value + 1) * value / 2 + index - value + 1;
+                };
+                // On index's right:
+                // If value >= n - index, there are n - index numbers in the arithmetic sequence:
+                // [value, value - 1, ..., value - n + 1 + index].
+                // Otherwise, there are value numbers in the arithmetic sequence:
+                // [value, value - 1, ..., 1], plus a sequence of length (n - index - value) of 1s. 
+                if (value >= n - index)
+                {
+                    count += (long)(value + value - n + 1 + index) * (n - index) / 2;
+                }
+                else
+                {
+                    count += (long)(value + 1) * value / 2 + n - index - value;
+                }
+
+                return count - value;
+
+            }
+
+        }
+
+        /* 1885. Count Pairs in Two Arrays
+        https://leetcode.com/problems/count-pairs-in-two-arrays/description/
+         */
+        class CountPairsInTwoArraysSol
+        {
+            /* Approach 1: Binary Search
+Complexity Analysis
+Let n be the length of nums1 and nums2.
+•	Time complexity: O(nlogn)
+Calculating the difference of each pair of elements nums1[i] and nums2[i] takes O(n).
+difference is of size n, so sorting difference takes O(nlogn).
+Counting the number of valid pairs using binary search takes O(nlogn). The outer loop runs n times, once for each element in difference, and the inner loop can run up to logn times since we divide the search space in half with each iteration.
+The total time complexity will be O(n+2nlogn), which we can simplify to O(nlogn).
+•	Space complexity: O(n)
+We use a few variables and the array difference, which is size O(n)
+Note that some extra space is used when we sort an array in place. The space complexity of the sorting algorithm depends on the programming language.
+o	In Python, the sort method sorts a list using the Tim Sort algorithm which is a combination of Merge Sort and Insertion Sort and has O(n) additional space. Additionally, Tim Sort is designed to be a stable algorithm.
+o	In Java, Arrays.sort() is implemented using a variant of the Quick Sort algorithm which has a space complexity of O(logn) for sorting an array.
+o	In C++, the sort() function is implemented as a hybrid of Quick Sort, Heap Sort, and Insertion Sort, with a worse-case space complexity of O(logn).
+The dominating term is O(n).
+
+             */
+            public long UsingBinarySearch(int[] nums1, int[] nums2)
+            {
+                int N = nums1.Length;  // nums2 is the same length
+
+                // Difference[i] stores nums1[i] - nums2[i]
+                long[] difference = new long[N];
+                for (int i = 0; i < N; i++)
+                {
+                    difference[i] = nums1[i] - nums2[i];
+                }
+                Array.Sort(difference);
+
+                // Count the number of valid pairs
+                long result = 0;
+                for (int i = 0; i < N; i++)
+                {
+                    // All indices j following i make a valid pair
+                    if (difference[i] > 0)
+                    {
+                        result += N - i - 1;
+                    }
+                    else
+                    {
+                        // Binary search to find the first index j
+                        // that makes a valid pair with i
+                        int left = i + 1;
+                        int right = N - 1;
+                        while (left <= right)
+                        {
+                            int mid = left + (right - left) / 2;
+                            // If difference[mid] is a valid pair, search in left half
+                            if (difference[i] + difference[mid] > 0)
+                            {
+                                right = mid - 1;
+                                // If difference[mid] does not make a valid pair, search in right half
+                            }
+                            else
+                            {
+                                left = mid + 1;
+                            }
+                        }
+                        // After the search left points to the first index j that makes
+                        // a valid pair with i so we count that and all following indices
+                        result += N - left;
+                    }
+                }
+                return result;
+            }
+
+            /* Approach 2: Sort and Two Pointer 
+            Complexity Analysis
+Let n be the length of nums1 and nums2.
+•	Time complexity: O(nlogn)
+Calculating the difference of each pair of elements nums1[i] and nums2[i] takes O(n).
+difference is of size n, so sorting difference takes O(nlogn).
+Counting the number of valid pairs takes O(n), since we use two pointers to traverse the array, one from the beginning and one from the end. One of the pointers is moved one step to the center with each iteration. Iteration stops when they meet in the middle.
+The total time complexity will be O(2n+nlogn), which we can simplify to O(nlogn).
+•	Space complexity: O(n)
+We use a few variables and the array difference, which is size O(n)
+Note that some extra space is used when we sort an array in place. The space complexity of the sorting algorithm depends on the programming language.
+o	In Python, the sort method sorts a list using the Tim Sort algorithm which is a combination of Merge Sort and Insertion Sort and has O(n) additional space. Additionally, Tim Sort is designed to be a stable algorithm.
+o	In Java, Arrays.sort() is implemented using a variant of the Quick Sort algorithm which has a space complexity of O(logn) for sorting an array.
+o	In C++, the sort() function is implemented as a hybrid of Quick Sort, Heap Sort, and Insertion Sort, with a worse-case space complexity of O(logn).
+The dominating term is O(n).
+
+            */
+            public long UsingSortingAndTwoPointers(int[] nums1, int[] nums2)
+            {
+                int N = nums1.Length; // nums2 is the same length
+
+                // Difference[i] stores nums1[i] - nums2[i]
+                long[] difference = new long[N];
+                for (int i = 0; i < N; i++)
+                {
+                    difference[i] = nums1[i] - nums2[i];
+                }
+                Array.Sort(difference);
+
+                // Count the number of valid pairs
+                long result = 0;
+                int left = 0;
+                int right = N - 1;
+                while (left < right)
+                {
+                    // Left makes a valid pair with right
+                    // Right also makes a valid pair with the indices between the pointers
+                    if (difference[left] + difference[right] > 0)
+                    {
+                        result += right - left;
+                        right--;
+                        // Left and right are not a valid pair
+                    }
+                    else
+                    {
+                        left++;
+                    }
+                }
+                return result;
+            }
+        }
+
+        /* 845. Longest Mountain in Array
+        https://leetcode.com/problems/longest-mountain-in-array/description/
+         */
+        public class LongestMountainInArraySol
+        {
+
+            /* Approach #1: Two Pointer [Accepted]
+Complexity Analysis
+•	Time Complexity: O(N), where N is the length of A.
+•	Space Complexity: O(1).
+•	Can you solve it in O(1) space?
+
+             */
+            public int LongestMountain(int[] array)
+            {
+                int arrayLength = array.Length;
+                int longestMountainLength = 0, baseIndex = 0;
+                while (baseIndex < arrayLength)
+                {
+                    int endIndex = baseIndex;
+                    // if baseIndex is a left-boundary
+                    if (endIndex + 1 < arrayLength && array[endIndex] < array[endIndex + 1])
+                    {
+                        // set endIndex to the peak of this potential mountain
+                        while (endIndex + 1 < arrayLength && array[endIndex] < array[endIndex + 1]) endIndex++;
+
+                        // if endIndex is really a peak..
+                        if (endIndex + 1 < arrayLength && array[endIndex] > array[endIndex + 1])
+                        {
+                            // set endIndex to the right-boundary of mountain
+                            while (endIndex + 1 < arrayLength && array[endIndex] > array[endIndex + 1]) endIndex++;
+                            // record candidate answer
+                            longestMountainLength = Math.Max(longestMountainLength, endIndex - baseIndex + 1);
+                        }
+                    }
+
+                    baseIndex = Math.Max(endIndex, baseIndex + 1);
+                }
+
+                return longestMountainLength;
+            }
+        }
 
 
 

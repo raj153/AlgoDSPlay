@@ -574,18 +574,7 @@ We only used constant extra space.
             return headNodeAfterRemovingNthNode;
 
         }
-        public class ListNode
-        {
-            public int Val;
-            public ListNode Next;
 
-            public ListNode(int val = 0, ListNode next = null)
-            {
-                this.Val = val;
-                this.Next = next;
-            }
-
-        }
         public ListNode RemoveNthFromEndTP(ListNode head, int n)
         {
             ListNode dummy = new ListNode(0);
@@ -1482,45 +1471,45 @@ have not used any extra space as such.
             •	Space Complexity: O(1). It is a constant space solution.
 
              */
-            public Node Insert(Node head, int insertVal)
+            public DataStructures.ListNode Insert(DataStructures.ListNode head, int insertVal)
             {
                 if (head == null)
                 {
-                    Node newNode = new Node(insertVal);
-                    newNode.next = newNode;
+                    DataStructures.ListNode newNode = new DataStructures.ListNode(insertVal);
+                    newNode.Next = newNode;
                     return newNode;
                 }
 
-                Node prev = head;
-                Node curr = head.next;
+                DataStructures.ListNode prev = head;
+                DataStructures.ListNode curr = head.Next;
                 bool toInsert = false;
 
                 do
                 {
-                    if (prev.val <= insertVal && insertVal <= curr.val)
+                    if (prev.Val <= insertVal && insertVal <= curr.Val)
                     {
                         // Case 1).
                         toInsert = true;
                     }
-                    else if (prev.val > curr.val)
+                    else if (prev.Val > curr.Val)
                     {
                         // Case 2).
-                        if (insertVal >= prev.val || insertVal <= curr.val)
+                        if (insertVal >= prev.Val || insertVal <= curr.Val)
                             toInsert = true;
                     }
 
                     if (toInsert)
                     {
-                        prev.next = new Node(insertVal, curr);
+                        prev.Next = new DataStructures.ListNode(insertVal, curr);
                         return head;
                     }
 
                     prev = curr;
-                    curr = curr.next;
+                    curr = curr.Next;
                 } while (prev != head);
 
                 // Case 3).
-                prev.next = new Node(insertVal, curr);
+                prev.Next = new DataStructures.ListNode(insertVal, curr);
                 return head;
             }
         }
@@ -1531,12 +1520,12 @@ have not used any extra space as such.
          */
         public class AddTwoNumbersSol
         {
-/*             Approach 1: Elementary Math
-Complexity Analysis
-•	Time complexity : O(max(m,n)). Assume that m and n represents the length of l1 and l2 respectively, the algorithm above iterates at most max(m,n) times.
-•	Space complexity : O(1). The length of the new list is at most max(m,n)+1 However, we don't count the answer as part of the space complexity.
+            /*             Approach 1: Elementary Math
+            Complexity Analysis
+            •	Time complexity : O(max(m,n)). Assume that m and n represents the length of l1 and l2 respectively, the algorithm above iterates at most max(m,n) times.
+            •	Space complexity : O(1). The length of the new list is at most max(m,n)+1 However, we don't count the answer as part of the space complexity.
 
- */
+             */
             public ListNode AddTwoNumbers(ListNode l1, ListNode l2)
             {
                 ListNode dummyHead = new ListNode(0);
@@ -1560,26 +1549,1566 @@ Complexity Analysis
             }
         }
 
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
+
+        /* 2058. Find the Minimum and Maximum Number of Nodes Between Critical Points
+        https://leetcode.com/problems/find-the-minimum-and-maximum-number-of-nodes-between-critical-points/description/
+         */
+        class NodesBetweenCriticalPointsSol
+        {
+            /* 
+            Approach: One Pass 
+            Complexity Analysis
+Let n be the the length of the linked list.
+•	Time complexity: O(n)
+The algorithm traverses the list only once, making the time complexity O(n).
+•	Space complexity: O(1)
+The algorithm has a constant space complexity since it does not utilize any additional data structures.
+
+            */
+            public int[] UsingOnePass(ListNode head)
+            {
+                int[] result = { -1, -1 };
+
+                // Initialize minimum distance to the maximum possible value
+                int minDistance = int.MaxValue;
+
+                // Pointers to track the previous node, current node, and indices
+                ListNode previousNode = head;
+                ListNode currentNode = head.Next;
+                int currentIndex = 1;
+                int previousCriticalIndex = 0;
+                int firstCriticalIndex = 0;
+
+                while (currentNode.Next != null)
+                {
+                    // Check if the current node is a local maxima or minima
+                    if (
+                        (currentNode.Val < previousNode.Val &&
+                            currentNode.Val < currentNode.Next.Val) ||
+                        (currentNode.Val > previousNode.Val &&
+                            currentNode.Val > currentNode.Next.Val)
+                    )
+                    {
+                        // If this is the first critical point found
+                        if (previousCriticalIndex == 0)
+                        {
+                            previousCriticalIndex = currentIndex;
+                            firstCriticalIndex = currentIndex;
+                        }
+                        else
+                        {
+                            // Calculate the minimum distance between critical points
+                            minDistance = Math.Min(
+                                minDistance,
+                                currentIndex - previousCriticalIndex
+                            );
+                            previousCriticalIndex = currentIndex;
+                        }
+                    }
+
+                    // Move to the next node and update indices
+                    currentIndex++;
+                    previousNode = currentNode;
+                    currentNode = currentNode.Next;
+                }
+
+                // If at least two critical points were found
+                if (minDistance != int.MaxValue)
+                {
+                    int maxDistance = previousCriticalIndex - firstCriticalIndex;
+                    result = new int[] { minDistance, maxDistance };
+                }
+
+                return result;
+            }
+        }
+
+
+        /* 2487. Remove Nodes From Linked List
+        https://leetcode.com/problems/remove-nodes-from-linked-list/description/	
+         */
+
+        class RemoveNodesSol
+        {
+            /* Approach 1: Stack
+Complexity Analysis
+Let n be the length of the original linked list.
+•	Time complexity: O(n)
+Adding the nodes from the original linked list to the stack takes O(n).
+Removing nodes from the stack and adding them to the result takes O(n), as each node is popped from the stack exactly once.
+Therefore, the time complexity is O(2n), which simplifies to O(n).
+•	Space complexity: O(n)
+We add each of the nodes from the original linked list to the stack, making its size n.
+We only use resultList to store the result, so it does not contribute to the space complexity.
+Therefore, the space complexity is O(n).
+
+             */
+            public ListNode UsingStack(ListNode head)
+            {
+                Stack<ListNode> stack = new();
+                ListNode current = head;
+
+                // Add nodes to the stack
+                while (current != null)
+                {
+                    stack.Push(current);
+                    current = current.Next;
+                }
+
+                current = stack.Pop();
+                int maximum = current.Val;
+                ListNode resultList = new ListNode(maximum);
+
+                // Remove nodes from the stack and add to result
+                while (stack.Count > 0)
+                {
+                    current = stack.Pop();
+                    // Current should not be added to the result
+                    if (current.Val < maximum)
+                    {
+                        continue;
+                    }
+                    // Add new node with current's value to front of the result
+                    else
+                    {
+                        ListNode newNode = new ListNode(current.Val);
+                        newNode.Next = resultList;
+                        resultList = newNode;
+                        maximum = current.Val;
+                    }
+                }
+
+                return resultList;
+            }
+
+            /* Approach 2: Recursion
+Complexity Analysis
+Let n be the length of the original linked list.
+•	Time complexity: O(n)
+We call removeNodes() once for each node in the original linked list. The other operations inside the function all take constant time, so the time complexity is dominated by the recursive calls. Thus, the time complexity is O(n).
+•	Space complexity: O(n)
+Since we make n recursive calls to removeNodes(), the call stack can grow up to size n. Therefore, the space complexity is O(n).
+
+            */
+            public ListNode UsingRecursion(ListNode head)
+            {
+                // Base case, reached end of the list
+                if (head == null || head.Next == null)
+                {
+                    return head;
+                }
+
+                // Recursive call
+                ListNode nextNode = UsingRecursion(head.Next);
+
+                // If the next node has greater value than head, delete the head
+                // Return next node, which removes the current head and makes next the new head
+                if (head.Val < nextNode.Val)
+                {
+                    return nextNode;
+                }
+
+                // Keep the head
+                head.Next = nextNode;
+                return head;
+            }
+            /* Approach 3: Reverse Twice
+Complexity Analysis
+Let n be the length of the original linked list.
+•	Time complexity: O(n)
+Reversing the original linked list takes O(n).
+Traversing the reversed original linked list and removing nodes takes O(n).
+Reversing the modified linked list takes an additional O(n) time.
+Therefore, the total time complexity is O(3n), which simplifies to O(n).
+•	Space complexity: O(1)
+We use a few variables and pointers that use constant extra space. Since we don't use any data structures that grow with input size, the space complexity remains O(1).	
+
+             */
+            public ListNode UsingReverseTwice(ListNode head)
+            {
+                // Reverse the original linked list
+                head = ReverseList(head);
+
+                int maximum = 0;
+                ListNode prev = null;
+                ListNode current = head;
+
+                // Traverse the list deleting nodes
+                while (current != null)
+                {
+                    maximum = Math.Max(maximum, current.Val);
+
+                    // Delete nodes that are smaller than maximum
+                    if (current.Val < maximum)
+                    {
+                        // Delete current by skipping
+                        prev.Next = current.Next;
+                        ListNode deleted = current;
+                        current = current.Next;
+                        deleted.Next = null;
+                    }
+
+                    // Current does not need to be deleted
+                    else
+                    {
+                        prev = current;
+                        current = current.Next;
+                    }
+                }
+
+                // Reverse and return the modified linked list
+                return ReverseList(head);
+            }
+            private ListNode ReverseList(ListNode head)
+            {
+                ListNode prev = null;
+                ListNode current = head;
+                ListNode nextTemp = null;
+
+                // Set each node's next pointer to the previous node
+                while (current != null)
+                {
+                    nextTemp = current.Next;
+                    current.Next = prev;
+                    prev = current;
+                    current = nextTemp;
+                }
+
+                return prev;
+            }
+
+
+        }
+
+        /* 725. Split Linked List in Parts
+        https://leetcode.com/problems/split-linked-list-in-parts/description/
+         */
+
+        class SplitListToPartsSol
+        {
+            /* 
+            Approach 1: Create New Parts
+            Complexity Analysis
+            Let N be the size of the linked list head.
+            •	Time Complexity: O(N)
+            We traverse the entire linked list head twice, where each time takes O(N) time. Thus, the total time complexity is O(N).
+            •	Space Complexity: O(N)
+            There are N new nodes created. This results in a space complexity of O(N). We ignore the O(K) space needed for ans since the array is required for the question.
+
+             */
+            public ListNode[] UsingCreateNewParts(ListNode head, int k)
+            {
+                ListNode[] ans = new ListNode[k];
+
+                // get total size of linked list
+                int size = 0;
+                ListNode current = head;
+                while (current != null)
+                {
+                    size++;
+                    current = current.Next;
+                }
+
+                // minimum size for the k parts
+                int splitSize = size / k;
+
+                // Remaining nodes after splitting the k parts evenly.
+                // These will be distributed to the first (size % k) nodes
+                int numRemainingParts = size % k;
+
+                current = head;
+                for (int i = 0; i < k; i++)
+                {
+                    // create the i-th part
+                    ListNode newPart = new ListNode(0);
+                    ListNode tail = newPart;
+
+                    int currentSize = splitSize;
+                    if (numRemainingParts > 0)
+                    {
+                        numRemainingParts--;
+                        currentSize++;
+                    }
+                    int j = 0;
+                    while (j < currentSize)
+                    {
+                        tail.Next = new ListNode(current.Val);
+                        tail = tail.Next;
+                        j++;
+                        current = current.Next;
+                    }
+                    ans[i] = newPart.Next;
+                }
+
+                return ans;
+            }
+            /* Approach 2: Modify Linked List
+            Complexity Analysis
+Let N be the size of the linked list head.
+•	Time Complexity: O(N)
+head is traversed twice, which takes O(N) time.
+•	Space Complexity: O(1)
+In contrast to Approach 1, no new nodes are created and the input is modified to create k parts. Thus, the space complexity is a constant O(1).
+
+             */
+            public ListNode[] UsingModifyLinkedList(ListNode head, int k)
+            {
+                ListNode[] ans = new ListNode[k];
+
+                // get total size of linked list
+                int size = 0;
+                ListNode current = head;
+                while (current != null)
+                {
+                    size++;
+                    current = current.Next;
+                }
+
+                // minimum size for the k parts
+                int splitSize = size / k;
+
+                // Remaining nodes after splitting the k parts evenly.
+                // These will be distributed to the first (size % k) nodes
+                int numRemainingParts = size % k;
+
+                current = head;
+                ListNode prev = current;
+                for (int i = 0; i < k; i++)
+                {
+                    // create the i-th part
+                    ListNode newPart = current;
+                    // calculate size of i-th part
+                    int currentSize = splitSize;
+                    if (numRemainingParts > 0)
+                    {
+                        numRemainingParts--;
+                        currentSize++;
+                    }
+
+                    // traverse to end of new part
+                    int j = 0;
+                    while (j < currentSize)
+                    {
+                        prev = current;
+                        current = current.Next;
+                        j++;
+                    }
+                    // cut off the rest of linked list
+                    if (prev != null)
+                    {
+                        prev.Next = null;
+                    }
+
+                    ans[i] = newPart;
+                }
+
+                return ans;
+            }
+
+        }
+
+
+        /* 2181. Merge Nodes in Between Zeros
+        https://leetcode.com/problems/merge-nodes-in-between-zeros/description/
+         */
+
+        public class MergeNodesInBetweenZerosSol
+        {
+
+            /* Approach 1: Two-Pointer (One-Pass)	
+Complexity Analysis
+Let n be the size of the linked list.
+•	Time complexity: O(n)
+All the nodes of the linked list are visited exactly once. Therefore, the total time complexity is given by O(n).
+•	Space complexity: O(1)
+Apart from the original list, we don't use any additional space. Therefore, the total space complexity is given by O(1).	
+
+             */
+            public ListNode UsingTwoPointersWithOnePass(ListNode head)
+            {
+                // Initialize a sentinel/dummy node with the first non-zero value.
+                ListNode modify = head.Next;
+                ListNode nextSum = modify;
+
+                while (nextSum != null)
+                {
+                    int sum = 0;
+                    // Find the sum of all nodes until you encounter a 0.
+                    while (nextSum.Val != 0)
+                    {
+                        sum += nextSum.Val;
+                        nextSum = nextSum.Next;
+                    }
+
+                    // Assign the sum to the current node's value.
+                    modify.Val = sum;
+                    // Move nextSum to the first non-zero value of the next block.
+                    nextSum = nextSum.Next;
+                    // Move modify also to this node.
+                    modify.Next = nextSum;
+                    modify = modify.Next;
+                }
+                return head.Next;
+            }
+            /* Approach 2: Recursion
+Complexity Analysis
+Let n be the size of the linked list.
+•	Time complexity: O(n)
+All the nodes of the linked list are visited exactly once. Therefore, the total time complexity is given by O(n).
+•	Space complexity: O(n)
+The extra space comes from implicit stack space due to recursion. The recursion could go up to n levels deep. Therefore, the total space complexity is given by O(n).
+
+             */
+            public ListNode UsingRecursion(ListNode head)
+            {
+                // Start with the first non-zero value.
+                head = head.Next;
+                if (head == null)
+                {
+                    return head;
+                }
+
+                // Initialize a dummy head node.
+                ListNode temp = head;
+                int sum = 0;
+                while (temp.Val != 0)
+                {
+                    sum += temp.Val;
+                    temp = temp.Next;
+                }
+
+                // Store the sum in head's value.
+                head.Val = sum;
+                // Store head's next node as the recursive result for temp node.
+                head.Next = UsingRecursion(temp);
+                return head;
+            }
+        }
+
+        /* 237. Delete Node in a Linked List
+        https://leetcode.com/problems/delete-node-in-a-linked-list/description/
+         */
+        class DeleteNodeSol
+        {
+
+            /* 
+            Approach: Data Overwriting
+
+            Complexity Analysis
+            •	Time Complexity: O(1)
+            o	The method involves a constant number of operations: updating the data of the current node and altering its next pointer. Each of these operations requires a fixed amount of time, irrespective of the size of the linked list.
+            •	Space Complexity: O(1)
+            o	This deletion technique does not necessitate any extra memory allocation, as it operates directly on the existing nodes without creating additional data structures.
+             */
+            public void UsingDataOverwriting(ListNode node)
+            {
+                // Overwrite data of next node on current node.
+                node.Val = node.Next.Val;
+                // Make current node point to next of next node.
+                node.Next = node.Next.Next;
+            }
+        }
+        /* 
+        1367. Linked List in Binary Tree
+        https://leetcode.com/problems/linked-list-in-binary-tree/description/
+         */
+        class IsSubPathSol
+        {
+            /* Approach 1: DFS
+            Complexity Analysis
+Let n be the number of nodes in the tree and m be the length of the linked list.
+•	Time complexity: O(n×m)
+In the worst case, we might need to check every node in the tree as a potential starting point for the linked list. For each node, we might need to traverse up to m nodes in the linked list.
+•	Space complexity: O(n+m)
+The space complexity remains the same as Approach 1 due to the recursive nature of the solution.
+
+             */
+            public bool UsingDFS(ListNode head, TreeNode root)
+            {
+                if (root == null) return false;
+                return CheckPath(root, head);
+            }
+
+            private bool CheckPath(TreeNode node, ListNode head)
+            {
+                if (node == null) return false;
+                if (Dfs(node, head)) return true; // If a matching path is found
+                                                  // Recursively check left and right subtrees
+                return CheckPath(node.Left, head) || CheckPath(node.Right, head);
+            }
+
+            private bool Dfs(TreeNode node, ListNode head)
+            {
+                if (head == null) return true; // All nodes in the list matched
+                if (node == null) return false; // Reached end of tree without matching all nodes
+                if (node.Val != head.Val) return false; // Value mismatch
+                return Dfs(node.Left, head.Next) || Dfs(node.Right, head.Next);
+            }
+
+            /* Approach 2: Iterative Approach
+            	Complexity Analysis
+Let n be the number of nodes in the tree and m be the length of the linked list.
+•	Time complexity: O(n×m)
+We potentially visit each node in the tree once. For each node, we might need to check up to m nodes in the linked list.
+•	Space complexity: O(n)
+The space is used by the stack, which in the worst case might contain all nodes of the tree. We don't need extra space for the linked list traversal as it's done iteratively.
+
+             */
+            public bool UsingIterative(ListNode head, TreeNode root)
+            {
+                if (root == null) return false;
+
+                Stack<TreeNode> nodes = new Stack<TreeNode>();
+                nodes.Push(root);
+
+                while (nodes.Count != 0)
+                {
+                    TreeNode node = nodes.Pop();
+
+                    if (IsMatch(node, head))
+                    {
+                        return true;
+                    }
+
+                    if (node.Left != null)
+                    {
+                        nodes.Push(node.Left);
+                    }
+                    if (node.Right != null)
+                    {
+                        nodes.Push(node.Right);
+                    }
+                }
+
+                return false;
+            }
+
+            private bool IsMatch(TreeNode node, ListNode lst)
+            {
+                Stack<KeyValuePair<TreeNode, ListNode>> s = new Stack<KeyValuePair<TreeNode, ListNode>>();
+                s.Push(new KeyValuePair<TreeNode, ListNode>(node, lst));
+
+                while (s.Count != 0)
+                {
+                    KeyValuePair<TreeNode, ListNode> entry = s.Pop();
+                    TreeNode currentNode = entry.Key;
+                    ListNode currentList = entry.Value;
+
+                    while (currentNode != null && currentList != null)
+                    {
+                        if (currentNode.Val != currentList.Val)
+                        {
+                            break;
+                        }
+                        currentList = currentList.Next;
+
+                        if (currentList != null)
+                        {
+                            if (currentNode.Left != null)
+                            {
+                                s.Push(
+                                    new KeyValuePair<TreeNode, ListNode>(
+                                        currentNode.Left,
+                                        currentList
+                                    )
+                                );
+                            }
+                            if (currentNode.Right != null)
+                            {
+                                s.Push(
+                                    new KeyValuePair<TreeNode, ListNode>(
+                                        currentNode.Right,
+                                        currentList
+                                    )
+                                );
+                            }
+                            break;
+                        }
+                    }
+
+                    if (currentList == null)
+                    {
+                        return true;
+                    }
+                }
+
+                return false;
+            }
+
+            /* Approach 3: Knuth-Morris-Pratt (KMP) Algorithm
+Complexity Analysis
+Let n be the number of nodes in the tree and m be the length of the linked list.
+•	Time complexity: O(n+m)
+Building the pattern and prefix table takes O(m), and searching the tree is O(n).
+•	Space complexity: O(n+m)
+We need O(m) space for the pattern and prefix table. The recursive call stack in the worst case (skewed tree) can take up to O(n) space.
+
+             */
+            public bool UsingKMPAlgo(ListNode head, TreeNode root)
+            {
+                // Build the pattern and prefix table from the linked list
+                List<int> pattern = new List<int>();
+                List<int> prefixTable = new List<int>();
+                pattern.Add(head.Val);
+                prefixTable.Add(0);
+                int patternIndex = 0;
+                head = head.Next;
+
+                while (head != null)
+                {
+                    while (patternIndex > 0 && head.Val != pattern[patternIndex])
+                    {
+                        patternIndex = prefixTable[patternIndex - 1];
+                    }
+                    patternIndex += head.Val == pattern[patternIndex] ? 1 : 0;
+                    pattern.Add(head.Val);
+                    prefixTable.Add(patternIndex);
+                    head = head.Next;
+                }
+
+                // Perform DFS to search for the pattern in the tree
+                return SearchInTree(root, 0, pattern, prefixTable);
+            }
+
+            private bool SearchInTree(
+                TreeNode node,
+                int patternIndex,
+                List<int> pattern,
+                List<int> prefixTable
+            )
+            {
+                if (node == null) return false;
+
+                while (patternIndex > 0 && node.Val != pattern[patternIndex])
+                {
+                    patternIndex = prefixTable[patternIndex - 1];
+                }
+                patternIndex += node.Val == pattern[patternIndex] ? 1 : 0;
+
+                // Check if the pattern is fully matched
+                if (patternIndex == pattern.Count) return true;
+
+                // Recursively search left and right subtrees
+                return (
+                    SearchInTree(node.Left, patternIndex, pattern, prefixTable) ||
+                    SearchInTree(node.Right, patternIndex, pattern, prefixTable)
+                );
+            }
+
+
+
+        }
+
+
+        /* 2816. Double a Number Represented as a Linked List
+        https://leetcode.com/problems/double-a-number-represented-as-a-linked-list/description/
+         */
+
+        public class DoubleItSol
+        {
+            /* Approach 1: Reversing the List
+Complexity Analysis
+Let n be the number of nodes in the linked list.
+•	Time complexity: O(n)
+The algorithm involves traversing the linked list once to double the values and handle carry, performing constant-time operations for each node. So, it takes O(n) time.
+Reversing the list also takes O(n) time.
+Thus, the overall time complexity of the algorithm is O(n).
+•	Space complexity: O(1)
+In-place reversal is performed, so it doesn't incur significant extra space usage. Thus, the space complexity remains O(1).
+
+             */
+            public ListNode UsingReverseList(ListNode head)
+            {
+                // Reverse the linked list
+                ListNode reversedList = ReverseList(head);
+                // Initialize variables to track carry and previous node
+                int carry = 0;
+                ListNode current = reversedList, previous = null;
+
+                // Traverse the reversed linked list
+                while (current != null)
+                {
+                    // Calculate the new value for the current node
+                    int newValue = current.Val * 2 + carry;
+                    // Update the current node's value
+                    current.Val = newValue % 10;
+                    // Update carry for the next iteration
+                    if (newValue > 9)
+                    {
+                        carry = 1;
+                    }
+                    else
+                    {
+                        carry = 0;
+                    }
+                    // Move to the next node
+                    previous = current;
+                    current = current.Next;
+                }
+
+                // If there's a carry after the loop, add an extra node
+                if (carry != 0)
+                {
+                    ListNode extraNode = new ListNode(carry);
+                    previous.Next = extraNode;
+                }
+
+                // Reverse the list again to get the original order
+                ListNode result = ReverseList(reversedList);
+
+                return result;
+            }
+
+            // Method to reverse the linked list
+            private ListNode ReverseList(ListNode node)
+            {
+                ListNode previous = null, current = node, nextNode;
+
+                // Traverse the original linked list
+                while (current != null)
+                {
+                    // Store the next node
+                    nextNode = current.Next;
+                    // Reverse the link
+                    current.Next = previous;
+                    // Move to the next nodes
+                    previous = current;
+                    current = nextNode;
+                }
+                // Previous becomes the new head of the reversed list
+                return previous;
+            }
+
+            /* Approach 2: Using Stack
+    Complexity Analysis
+    Let n be the number of nodes in the linked list.
+    •	Time complexity: O(n)
+    The algorithm traverses the linked list once to push its values onto the stack, which takes O(n) time. Then, it iterates over the stack and performs operations to create the new linked list, which also takes O(n) time, as the stack contains n elements.
+    Therefore, the overall time complexity of the algorithm is O(n).
+    •	Space complexity: O(n)
+    The space complexity mainly depends on the additional space used by the stack to store the values of the linked list, which takes O(n) space.
+    Additionally, the space used for the new linked list is also O(n) since we are creating a new node for each element in the original linked list.
+    Therefore, the overall space complexity of the algorithm is O(n).
+
+             */
+            public ListNode UsingStack(ListNode head)
+            {
+                // Initialize a stack to store the values of the linked list
+                Stack<int> values = new();
+                int val = 0;
+
+                // Traverse the linked list and push its values onto the stack
+                while (head != null)
+                {
+                    values.Push(head.Val);
+                    head = head.Next;
+                }
+
+                ListNode newTail = null;
+
+                // Iterate over the stack of values and the carryover
+                while (values.Count > 0 || val != 0)
+                {
+                    // Create a new ListNode with value 0 and the previous tail as its next node
+                    newTail = new ListNode(0, newTail);
+
+                    // Calculate the new value for the current node
+                    // by doubling the last digit, adding carry, and getting the remainder
+                    if (values.Count > 0)
+                    {
+                        val += values.Pop() * 2;
+                    }
+                    newTail.Val = val % 10;
+                    val /= 10;
+                }
+
+                // Return the tail of the new linked list
+                return newTail;
+            }
+            /* Approach 3: Recursion
+            Complexity Analysis
+Let n be the number of nodes in the linked list.
+•	Time complexity: O(n)
+The twiceOfVal function recursively traverses the entire linked list once, performing constant-time operations at each node. Therefore, the time complexity of the twiceOfVal function is O(n).
+The doubleIt function calls the twiceOfVal function once, which has a time complexity of O(n). Additionally, inserting a new node at the beginning of the linked list takes constant time. Hence, the overall time complexity of the doubleIt function is O(n).
+Therefore, the overall time complexity of the algorithm is O(n).
+•	Space complexity: O(n)
+The twiceOfVal function is tail-recursive, meaning it should typically use O(1) space on the call stack due to the recursive calls in C++ and Java. However, in languages like Python, which don't optimize tail recursion, each recursive call consumes additional space on the call stack. Therefore, the space complexity of twiceOfVal is O(n) due to the recursive call stack.
+The doubleIt function uses no additional space apart from the space required for the input linked list. Hence, its space complexity is O(1).
+Therefore, the overall space complexity of the algorithm is dominated by the recursive call stack, making it O(n).
+s
+             */
+            public ListNode UsingRecursion(ListNode head)
+            {
+                int carry = TwiceOfVal(head);
+
+                // If there's a carry, insert a new node at the beginning with the carry value
+                if (carry != 0)
+                {
+                    head = new ListNode(carry, head);
+                }
+
+                return head;
+            }
+            // To compute twice the value of each node's value and propagate carry
+            private int TwiceOfVal(ListNode head)
+            {
+                // Base case: if head is null, return 0
+                if (head == null) return 0;
+
+                // Double the value of current node and add the result of next nodes
+                int doubledValue = head.Val * 2 + TwiceOfVal(head.Next);
+
+                // Update current node's value with the units digit of the result
+                head.Val = doubledValue % 10;
+
+                // Return the carry (tens digit of the result)
+                return doubledValue / 10;
+            }
+
+            /* Approach 4: Two Pointers
+Complexity Analysis
+Let n be the number of nodes in the linked list.
+•	Time complexity: O(n)
+The algorithm traverses the entire linked list once. Within the loop, each operation (including arithmetic operations and pointer manipulations) takes constant time.
+Therefore, the time complexity of the algorithm is O(n).
+•	Space complexity: O(1)
+The algorithm uses only a constant amount of additional space for storing pointers and temporary variables, regardless of the size of the input linked list.
+Therefore, the space complexity is O(1).
+
+             */
+            public ListNode UsingTwoPointers(ListNode head)
+            {
+                ListNode curr = head;
+                ListNode prev = null;
+
+                // Traverse the linked list
+                while (curr != null)
+                {
+                    int twiceOfVal = curr.Val * 2;
+
+                    // If the doubled value is less than 10
+                    if (twiceOfVal < 10)
+                    {
+                        curr.Val = twiceOfVal;
+                    }
+                    // If doubled value is 10 or greater
+                    else if (prev != null)
+                    { // other than first node
+                      // Update current node's value with units digit of the doubled value
+                        curr.Val = twiceOfVal % 10;
+                        // Add the carry to the previous node's value
+                        prev.Val = prev.Val + 1;
+                    }
+                    // If it's the first node and doubled value is 10 or greater
+                    else
+                    { // first node
+                      // Create a new node with carry as value and link it to the current node
+                        head = new ListNode(1, curr);
+                        // Update current node's value with units digit of the doubled value
+                        curr.Val = twiceOfVal % 10;
+                    }
+
+                    // Update prev and curr pointers
+                    prev = curr;
+                    curr = curr.Next;
+                }
+                return head;
+            }
+
+            /* Approach 5: Single Pointer
+Complexity Analysis
+Let n be the number of nodes in the linked list.
+•	Time complexity: O(n)
+The algorithm traverses the entire linked list once, visiting each node. Within the loop, each operation (including arithmetic operations and pointer manipulations) takes constant time.
+Therefore, the time complexity of the algorithm is O(n).
+•	Space complexity: O(1)
+The algorithm uses only a constant amount of additional space for storing pointers and temporary variables, regardless of the size of the input linked list.
+Therefore, the space complexity is O(1).	
+
+             */
+            public ListNode UsingSinglePointer(ListNode head)
+            {
+                // If the value of the head node is greater than 4, 
+                // insert a new node at the beginning
+                if (head.Val > 4)
+                {
+                    head = new ListNode(0, head);
+                }
+
+                // Traverse the linked list
+                for (ListNode node = head; node != null; node = node.Next)
+                {
+                    // Double the value of the current node 
+                    // and update it with the units digit
+                    node.Val = (node.Val * 2) % 10;
+
+                    // If the current node has a next node 
+                    // and the next node's value is greater than 4,
+                    // increment the current node's value to handle carry
+                    if (node.Next != null && node.Next.Val > 4)
+                    {
+                        node.Val++;
+                    }
+                }
+
+                return head;
+            }
+
+        }
+
+        /* 143. Reorder List
+        https://leetcode.com/problems/reorder-list/description/
+         */
+        public class ReorderListSol
+        {
+
+            /*             Approach 1: Reverse the Second Part of the List and Merge Two Sorted Lists
+            Complexity Analysis
+            •	Time complexity: O(N). There are three steps here. To identify the middle node takes O(N) time. To reverse the second part of the list, one needs N/2 operations. The final step, to merge two lists, requires N/2 operations as well. In total, that results in O(N) time complexity.
+            •	Space complexity: O(1), since we do not allocate any additional data structures
+
+             */
+            public void ReverseSecondPartOfListAndMergeTwoSortedLists(ListNode head)
+            {
+                if (head == null)
+                    return;
+                // find the middle of linked list [Problem 876]
+                // in 1->2->3->4->5->6 find 4
+                ListNode slow = head, fast = head;
+                while (fast != null && fast.Next != null)
+                {
+                    slow = slow.Next;
+                    fast = fast.Next.Next;
+                }
+
+                // reverse the second part of the list [Problem 206]
+                // convert 1->2->3->4->5->6 into 1->2->3->4 and 6->5->4
+                // reverse the second half in-place
+                ListNode prev = null, curr = slow, tmp;
+                while (curr != null)
+                {
+                    tmp = curr.Next;
+                    curr.Next = prev;
+                    prev = curr;
+                    curr = tmp;
+                }
+
+                // merge two sorted linked lists [Problem 21]
+                // merge 1->2->3->4 and 6->5->4 into 1->6->2->5->3->4
+                ListNode first = head, second = prev;
+                while (second.Next != null)
+                {
+                    tmp = first.Next;
+                    first.Next = second;
+                    first = tmp;
+                    tmp = second.Next;
+                    second.Next = first;
+                    second = tmp;
+                }
+            }
+        }
+
+
+        /* 3217. Delete Nodes From Linked List Present in Array
+        https://leetcode.com/problems/delete-nodes-from-linked-list-present-in-array/description/
+         */
+        public class DeleteNodesFromLinkedListPresentInArraySolution
+        {
+            /* 
+            Approach: Hash Set
+            Complexity Analysis
+Let m and n be the lengths of the nums array and the linked list, respectively.
+•	Time complexity: O(m+n)
+Iterating through the nums array and inserting each element into the hash set takes O(m) time, as each insertion into the set is O(1) on average.
+The algorithm traverses the entire linked list exactly once, checking if each node's value is in the hash set. This operation takes O(n) time.
+Thus, the overall time complexity of the algorithm is O(m)+O(n)=O(m+n).
+•	Space complexity: O(m)
+The hash set can store up to m elements, one for each unique value in the nums array, leading to a space complexity of O(m). All additional variables used take constant space.
+ */
+            public ListNode UsingHashSet(int[] nums, ListNode head)
+            {
+                // Create a HashSet for efficient lookup of values in nums
+                HashSet<int> valuesToRemove = new HashSet<int>();
+                foreach (int num in nums)
+                {
+                    valuesToRemove.Add(num);
+                }
+
+                // Handle the case where the head node needs to be removed
+                while (head != null && valuesToRemove.Contains(head.Val))
+                {
+                    head = head.Next;
+                }
+
+                // If the list is empty after removing head nodes, return null
+                if (head == null)
+                {
+                    return null;
+                }
+
+                // Iterate through the list, removing nodes with values in the set
+                ListNode current = head;
+                while (current.Next != null)
+                {
+                    if (valuesToRemove.Contains(current.Next.Val))
+                    {
+                        // Skip the next node by updating the pointer
+                        current.Next = current.Next.Next;
+                    }
+                    else
+                    {
+                        // Move to the next node
+                        current = current.Next;
+                    }
+                }
+
+                return head;
+            }
+        }
+
+        /* 1721. Swapping Nodes in a Linked List
+        https://leetcode.com/problems/swapping-nodes-in-a-linked-list/description/
+         */
+        class SwapNodesSol
+        {
+            /* 
+            Approach 1: Three Pass Approach
+            Complexity Analysis
+•	Time Complexity : O(n), where n is the length of the Linked List. We are iterating over the Linked List thrice.
+In the first pass, we are finding the length of the Linked List which would take O(n) time.
+In second pass and third pass, we are iterating k and n - k times respectively. This would take O(k+n−k) i.e O(n) time.
+Thus, the total time complexity would be O(n)+O(n)=O(n).
+•	Space Complexity: O(1), as we are using constant extra space to maintain list node pointers frontNode, endNode and currentNode.
+
+             */
+            public ListNode UsingThreePass(ListNode head, int k)
+            {
+                int listLength = 0;
+                ListNode currentNode = head;
+                // find the length of linked list
+                while (currentNode != null)
+                {
+                    listLength++;
+                    currentNode = currentNode.Next;
+                }
+                // set the front node at kth node
+                ListNode frontNode = head;
+                for (int i = 1; i < k; i++)
+                {
+                    frontNode = frontNode.Next;
+                }
+                //set the end node at (listLength - k)th node
+                ListNode endNode = head;
+                for (int i = 1; i <= listLength - k; i++)
+                {
+                    endNode = endNode.Next;
+                }
+                // swap the values of front node and end node
+                int temp = frontNode.Val;
+                frontNode.Val = endNode.Val;
+                endNode.Val = temp;
+                return head;
+            }
+            /* Approach 2: Two Pass Approach
+Complexity Analysis
+•	Time Complexity : O(n), where n is the length of the Linked List. We are iterating over the Linked List twice.
+In the first pass, we are finding the length of the Linked List and setting the frontNode which would take O(n) time.
+In the second pass, we are setting the endNode by iterating n - k times.
+Thus, the total time complexity would be O(n)+O(n−k) which is equivalent to O(n).
+•	Space Complexity: O(1), as we are using constant extra space to maintain list node pointers frontNode, endNode and currentNode.
+
+             */
+            public ListNode UsingTwoPass(ListNode head, int k)
+            {
+                int listLength = 0;
+                ListNode frontNode = null;
+                ListNode endNode = null;
+                ListNode currentNode = head;
+                // find the length of list and set the front node
+                while (currentNode != null)
+                {
+                    listLength++;
+                    if (listLength == k)
+                    {
+                        frontNode = currentNode;
+                    }
+                    currentNode = currentNode.Next;
+                }
+                // set the end node at (listLength - k)th node
+                endNode = head;
+                for (int i = 1; i <= listLength - k; i++)
+                {
+                    endNode = endNode.Next;
+                }
+                // swap front node and end node values
+                int temp = frontNode.Val;
+                frontNode.Val = endNode.Val;
+                endNode.Val = temp;
+                return head;
+            }
+            /* Approach 3: Single Pass Approach
+            Complexity Analysis
+•	Time Complexity : O(n), where n is the size of Linked List. We are iterating over the entire Linked List once.
+•	Space Complexity: O(1), as we are using constant extra space to maintain list node pointers frontNode, endNode and currentNode.
+
+             */
+            public ListNode UsingSinlePass(ListNode head, int k)
+            {
+                int listLength = 0;
+                ListNode frontNode = null;
+                ListNode endNode = null;
+                ListNode currentNode = head;
+                // set the front node and end node in single pass
+                while (currentNode != null)
+                {
+                    listLength++;
+                    if (endNode != null)
+                        endNode = endNode.Next;
+                    // check if we have reached kth node
+                    if (listLength == k)
+                    {
+                        frontNode = currentNode;
+                        endNode = head;
+                    }
+                    currentNode = currentNode.Next;
+                }
+                // swap the values of front node and end node
+                int temp = frontNode.Val;
+                frontNode.Val = endNode.Val;
+                endNode.Val = temp;
+                return head;
+            }
+
+        }
+
+        /* 148. Sort List
+        https://leetcode.com/problems/sort-list/description/
+         */
+
+        public class SortListSol
+        {
+            /* Approach 1: Top Down Merge Sort 
+            Complexity Analysis
+•	Time Complexity: O(nlogn), where n is the number of nodes in linked list.
+The algorithm can be split into 2 phases, Split and Merge.
+Let's assume that n is power of 2. For n = 16, the split and merge operation in Top Down fashion can be visualized as follows
+ 
+Split
+The recursion tree expands in form of a complete binary tree, splitting the list into two halves recursively. The number of levels in a complete binary tree is given by log2n. For n=16, number of splits = log216=4
+Merge
+At each level, we merge n nodes which takes O(n) time.
+For n=16, we perform merge operation on 16 nodes in each of the 4 levels.
+So the time complexity for split and merge operation is O(nlogn)
+•	Space Complexity: O(logn) , where n is the number of nodes in linked list. Since the problem is recursive, we need additional space to store the recursive call stack. The maximum depth of the recursion tree is logn
+s
+            */
+
+            public ListNode UsingTopDownMergeSort(ListNode head)
+            {
+                if (head == null || head.Next == null)
+                    return head;
+                ListNode mid = GetMid(head);
+                ListNode left = UsingTopDownMergeSort(head);
+                ListNode right = UsingTopDownMergeSort(mid);
+                return Merge(left, right);
+            }
+
+            private ListNode Merge(ListNode list1, ListNode list2)
+            {
+                ListNode dummyHead = new ListNode(0);
+                ListNode tail = dummyHead;
+                while (list1 != null && list2 != null)
+                {
+                    if (list1.Val < list2.Val)
+                    {
+                        tail.Next = list1;
+                        list1 = list1.Next;
+                    }
+                    else
+                    {
+                        tail.Next = list2;
+                        list2 = list2.Next;
+                    }
+
+                    tail = tail.Next;
+                }
+
+                tail.Next = list1 != null ? list1 : list2;
+                return dummyHead.Next;
+            }
+
+            private ListNode GetMid(ListNode head)
+            {
+                ListNode midPrev = null;
+                while (head != null && head.Next != null)
+                {
+                    midPrev = midPrev == null ? head : midPrev.Next;
+                    head = head.Next.Next;
+                }
+
+                ListNode mid = midPrev.Next;
+                midPrev.Next = null;
+                return mid;
+            }
+            /* Approach 2: Bottom Up Merge Sort
+            Complexity Analysis
+•	Time Complexity: O(nlogn), where n is the number of nodes in linked list.
+Let's analyze the time complexity of each step:
+1.	Count Nodes - Get the count of number nodes in the linked list requires O(n) time.
+2.	Split and Merge - This operation is similar to Approach 1 and takes O(nlogn) time.
+For n = 16, the split and merge operation in Bottom Up fashion can be visualized as follows
+ 
+This gives us total time complexity as
+O(n)+O(nlogn)=O(nlogn)
+•	Space Complexity: O(1) We use only constant space for storing the reference pointers tail , nextSubList etc.
+
+             */
+            private ListNode tail;
+            private ListNode nextSubList;
+
+            // Sorts the linked list using merge sort
+            public ListNode SortList(ListNode head)
+            {
+                if (head == null || head.Next == null)
+                    return head;
+
+                int n = GetCount(head);
+                ListNode start = head;
+                ListNode dummyHead = new ListNode();
+                for (int size = 1; size < n; size *= 2)
+                {
+                    tail = dummyHead;
+                    while (start != null)
+                    {
+                        if (start.Next == null)
+                        {
+                            tail.Next = start;
+                            break;
+                        }
+
+                        ListNode mid = Split(start, size);
+                        Merge(start, mid);
+                        start = nextSubList;
+                    }
+
+                    start = dummyHead.Next;
+                }
+
+                return dummyHead.Next;
+                void Merge(ListNode list1, ListNode list2)
+                {
+                    ListNode dummyHead = new ListNode();
+                    ListNode newTail = dummyHead;
+                    while (list1 != null && list2 != null)
+                    {
+                        if (list1.Val < list2.Val)
+                        {
+                            newTail.Next = list1;
+                            list1 = list1.Next;
+                            newTail = newTail.Next;
+                        }
+                        else
+                        {
+                            newTail.Next = list2;
+                            list2 = list2.Next;
+                            newTail = newTail.Next;
+                        }
+                    }
+
+                    newTail.Next = (list1 != null) ? list1 : list2;
+                    // Traverse till the end of merged list to get the newTail
+                    while (newTail.Next != null)
+                    {
+                        newTail = newTail.Next;
+                    }
+
+                    // Link the old tail with the head of merged list
+                    tail.Next = dummyHead.Next;
+                    // Update the old tail to the new tail of merged list
+                    tail = newTail;
+                }
+            }
+
+            // Splits the list into two and returns the middle node
+            private ListNode Split(ListNode start, int size)
+            {
+                ListNode midPrev = start;
+                ListNode end = start.Next;
+                // Use fast and slow approach to find middle and end of second linked
+                // list
+                for (int index = 1; index < size && (midPrev.Next != null ||
+                                                     (end != null && end.Next != null));
+                     index++)
+                {
+                    if (end != null && end.Next != null)
+                    {
+                        end = (end.Next.Next != null) ? end.Next.Next : end.Next;
+                    }
+
+                    if (midPrev.Next != null)
+                    {
+                        midPrev = midPrev.Next;
+                    }
+                }
+
+                ListNode mid = midPrev.Next;
+                midPrev.Next = null;
+                nextSubList = end != null ? end.Next : null;
+                if (end != null)
+                    end.Next = null;
+                // Return the start of second linked list
+                return mid;
+            }
+
+            // Merges two sorted lists
+
+
+            // Counts the number of nodes in the list
+            private int GetCount(ListNode head)
+            {
+                int cnt = 0;
+                ListNode ptr = head;
+                while (ptr != null)
+                {
+                    ptr = ptr.Next;
+                    cnt++;
+                }
+
+                return cnt;
+            }
+
+
+        }
+
+        /* 328. Odd Even Linked List
+        https://leetcode.com/problems/odd-even-linked-list/description/
+         */
+        public class OddEvenListSol
+        {
+            /* 
+            Complexity Analysis
+            •	Time complexity : O(n). There are total n nodes and we visit each node once.
+            •	Space complexity : O(1). All we need is the four pointers.
+             */
+            public ListNode OddEvenList(ListNode head)
+            {
+                if (head == null) return null;
+                ListNode odd = head, even = head.Next, evenHead = even;
+                while (even != null && even.Next != null)
+                {
+                    odd.Next = even.Next;
+                    odd = odd.Next;
+                    even.Next = odd.Next;
+                    even = even.Next;
+                }
+                odd.Next = evenHead;
+                return head;
+            }
+        }
+
+
+        /* 142. Linked List Cycle II
+        https://leetcode.com/problems/linked-list-cycle-ii/description/
+         */
+        public class DetectCycleIISol
+        {
+            /* Approach 1: Hash Set
+            Implementation
+Complexity Analysis
+Let n be the total number of nodes in the linked list.
+•	Time complexity: O(n).
+We have to visit all nodes once.
+•	Space complexity: O(n).
+We have to store all nodes in the hash set.
+
+             */
+            public ListNode UsingHashSet(ListNode head)
+            {
+                // Initialize an empty hash set
+                HashSet<ListNode> nodesSeen = new HashSet<ListNode>();
+                // Start from the head of the linked list
+                ListNode node = head;
+                while (node != null)
+                {
+                    // If the current node is in nodesSeen, we have a cycle
+                    if (nodesSeen.Contains(node))
+                    {
+                        return node;
+                    }
+                    else
+                    {
+                        // Add this node to nodesSeen and move to the next node
+                        nodesSeen.Add(node);
+                        node = node.Next;
+                    }
+                }
+
+                // If we reach a null node, there is no cycle
+                return null;
+            }
+
+
+            /* Approach 2: Floyd's Tortoise and Hare Algorithm
+            Complexity Analysis
+Let n be the total number of nodes in the linked list.
+•	Time complexity: O(n).
+The algorithm consists of two phases. In the first phase, we use two pointers (the "hare" and the "tortoise") to traverse the list. The slow pointer (tortoise) will go through the list only once until it meets the hare. Therefore, this phase runs in O(n) time.
+In the second phase, we again have two pointers traversing the list at the same speed until they meet. The maximum distance to be covered in this phase will not be greater than the length of the list (recall that the hare just needs to get back to the entrance of the cycle). So, this phase also runs in O(n) time.
+As a result, the total time complexity of the algorithm is O(n)+O(n), which simplifies to O(n).
+•	Space complexity: O(1).
+The space complexity is constant, O(1), because we are only using a fixed amount of space to store the slow and fast pointers. No additional space is used that scales with the input size. So the space complexity of the algorithm is O(1), which means it uses constant space.
+
+             */
+            public ListNode UsingFloydsTortoiseAndHareAlgo(ListNode head)
+            {
+                // Initialize tortoise and hare pointers
+                ListNode tortoise = head;
+                ListNode hare = head;
+                // Move tortoise one step and hare two steps
+                while (hare != null && hare.Next != null)
+                {
+                    tortoise = tortoise.Next;
+                    hare = hare.Next.Next;
+                    // Check if the hare meets the tortoise
+                    if (tortoise == hare)
+                    {
+                        break;
+                    }
+                }
+
+                // Check if there is no cycle
+                if (hare == null || hare.Next == null)
+                {
+                    return null;
+                }
+
+                // Reset either tortoise or hare pointer to the head
+                hare = head;
+                // Move both pointers one step until they meet again
+                while (tortoise != hare)
+                {
+                    tortoise = tortoise.Next;
+                    hare = hare.Next;
+                }
+
+                // Return the node where the cycle begins
+                return tortoise;
+            }
+
+        }
+
+
+        /* 1669. Merge In Between Linked Lists
+        https://leetcode.com/problems/merge-in-between-linked-lists/description/
+         */
+        class MergeInBetweenSol
+        {
+            /* Approach 1: Merge Values in Array 
+            Complexity Analysis
+Let n be the length of list1 and m be the length of list2.
+•	Time complexity: O(n+m)
+The algorithm traverses list1 and list2 to add the nodes to the array, taking n+m computational steps.
+Then, the array is traversed once to create the resulting linked list. The size of the array will be at most n+m.
+Therefore, the time complexity is O(n+m).
+•	Space complexity: O(n+m)
+We use mergeArray, which can contain the values of list1 and list2. It can have at most n+m elements. Therefore, the space complexity is O(n+m).
+
+            */
+            public ListNode UsingMergeValuesInArray(ListNode list1, int a, int b, ListNode list2)
+            {
+                List<int> mergeArray = new();
+
+                // Add list1 node values before `a` to the array.
+                int index = 0;
+                ListNode current1 = list1;
+                while (index < a)
+                {
+                    mergeArray.Add(current1.Val);
+                    current1 = current1.Next;
+                    index++;
+                }
+
+                // Add list2 node values to the array
+                ListNode current2 = list2;
+                while (current2 != null)
+                {
+                    mergeArray.Add(current2.Val);
+                    current2 = current2.Next;
+                }
+
+                // Find node b + 1
+                while (index < b + 1)
+                {
+                    current1 = current1.Next;
+                    index++;
+                }
+
+                // Add list1 node values after `b` to the array.
+                while (current1 != null)
+                {
+                    mergeArray.Add(current1.Val);
+                    current1 = current1.Next;
+                }
+
+                // Build a linked list with the result by iterating over the array
+                // in reverse order and inserting new nodes to the front of the list
+                ListNode resultList = null;
+                for (int i = mergeArray.Count - 1; i >= 0; i--)
+                {
+                    ListNode newNode = new ListNode(mergeArray[i], resultList);
+                    resultList = newNode;
+                }
+
+                return resultList;
+            }
+
+            /* Approach 2: Two Pointer
+Complexity Analysis
+Let n be the length of list1 and m be the length of list2.
+•	Time complexity: O(n+m)
+The algorithm traverses list1 once to find the nodes start and end. Note that list1 is not fully traversed for every input, but in the worst case, we may need to traverse at most n nodes. list2 is traversed once to find its tail. The other operations all take constant time.
+Therefore, the time complexity is O(n+m).
+The recursive implementation has the same time complexity as the iterative implementation.
+•	Space complexity: O(1)
+We use a few variables and pointers, including index, start, and end, which use constant extra space. We don't use any data structures that grow with input size, so the space complexity of the iterative implementation is O(1).
+The recursive implementation may use up to O(n+m) space for the recursive call stack, though this space may be reduced through the use of tail recursion, depending on the implementation language.
+
+             */
+            public ListNode UsingTwoPointer(ListNode list1, int a, int b, ListNode list2)
+            {
+                ListNode start = null;
+                ListNode end = list1;
+
+                // Set start to node a - 1 and end to node b
+                for (int index = 0; index < b; index++)
+                {
+                    if (index == a - 1)
+                    {
+                        start = end;
+                    }
+                    end = end.Next;
+                }
+                // Connect the start node to list2
+                start.Next = list2;
+
+                // Find the tail of list2
+                while (list2.Next != null)
+                {
+                    list2 = list2.Next;
+                }
+                // Set the tail of list2 to end.Next
+                list2.Next = end.Next;
+                end.Next = null;
+
+                return list1;
+            }
+
+        }
+
+
+
+
+
     }
 }

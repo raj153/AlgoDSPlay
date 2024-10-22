@@ -8,12 +8,59 @@ using AlgoDSPlay.DataStructures;
 using AlgoDSPlay.Sorting;
 using AlgoDSPlay.Design;
 using static AlgoDSPlay.Design.SparseVector;
+using static AlgoDSPlay.RealProbs.DiningPhilosophersSol;
 
-int res1= (4-3)/2;
-double res2 = (double)(4-3)/2 ;
-var output = ArrayOps.CommonCharacters(new string[]{"abc","bcd", "cbaccd"});
-var res3 = RealProbs.GroupAnagrams(new List<string>{"yo", "act", "flop", "tac", "foo", "cat", "oy", "olfp"});
-var resg2= RealProbs.ShortenPath("/foo/../test/../test/../foo//bar/./baz");
+var philosophers = InitializePhilosophers();
+// Start dinner
+Console.WriteLine("Dinner is starting!");
+
+// Spawn threads for each philosopher's eating cycle
+var philosopherThreads = new List<Thread>();
+foreach (var philosopher in philosophers)
+{
+    var philosopherThread = new Thread(new ThreadStart(philosopher.EatAll));
+    philosopherThreads.Add(philosopherThread);
+    philosopherThread.Start();
+}
+
+// Wait for all philosopher's to finish eating
+foreach (var thread in philosopherThreads)
+{
+    thread.Join();
+}
+
+// Done
+Console.WriteLine("Dinner is over!");
+static List<DiningPhilosopherUsingMonitors> InitializePhilosophers()
+{
+    const int PHILOSOPHER_COUNT = 5;
+
+    // Construct philosophers
+    var philosophers = new List<DiningPhilosopherUsingMonitors>(PHILOSOPHER_COUNT);
+    for (int i = 0; i < PHILOSOPHER_COUNT; i++)
+    {
+        philosophers.Add(new DiningPhilosopherUsingMonitors(philosophers, i));
+    }
+
+    // Assign chopsticks to each philosopher
+    foreach (var philosopher in philosophers)
+    {
+        // Assign left chopstick
+        philosopher.LeftChopstick = philosopher.LeftPhilosopher.RightChopstick ?? new Chopstick();
+
+        // Assign right chopstick
+        philosopher.RightChopstick = philosopher.RightPhilosopher.LeftChopstick ?? new Chopstick();
+    }
+
+    return philosophers;
+}
+
+
+int res1 = (4 - 3) / 2;
+double res2 = (double)(4 - 3) / 2;
+var output = ArrayOps.CommonCharacters(new string[] { "abc", "bcd", "cbaccd" });
+var res3 = RealProbs.GroupAnagrams(new List<string> { "yo", "act", "flop", "tac", "foo", "cat", "oy", "olfp" });
+var resg2 = RealProbs.ShortenPath("/foo/../test/../test/../foo//bar/./baz");
 var resG = RealProbs.KrusaklMST(new int[][][]{
                                 new int[][]{
                                     new int[]{1,3},
@@ -29,19 +76,19 @@ var resG = RealProbs.KrusaklMST(new int[][][]{
                                     new int[]{1,10}
                                 },
                                 new int[][]{
-                                    new int[]{1,12},                                  
+                                    new int[]{1,12},
                                 },
                                 }
 );
 
 LinkedList lse = new LinkedList(1);
-lse.Next=new LinkedList(3);
-lse.Next.Next=new LinkedList(4);
-lse.Next.Next.Next=new LinkedList(5);
-lse.Next.Next.Next.Next=new LinkedList(6);
+lse.Next = new LinkedList(3);
+lse.Next.Next = new LinkedList(4);
+lse.Next.Next.Next = new LinkedList(5);
+lse.Next.Next.Next.Next = new LinkedList(6);
 //LinkedList lst2 = LinkedListOps.RemoveDuplicatesFromLinkedList1(lse);
-string str2= StringOps.ReverseWordsInString("I AM ");
-var resu1 = ArrayOps.IndexEqualsValue(new int[]{-5, -4, -3, -2, -1, 0, 1, 3, 5, 6, 7, 11, 12, 14, 19, 20});
+string str2 = StringOps.ReverseWordsInString("I AM ");
+var resu1 = ArrayOps.IndexEqualsValue(new int[] { -5, -4, -3, -2, -1, 0, 1, 3, 5, 6, 7, 11, 12, 14, 19, 20 });
 var resss = MatrixOps.KnapsackProblem(new int[,]{
     {465, 100},
     {400, 85},
@@ -59,11 +106,11 @@ var resss = MatrixOps.KnapsackProblem(new int[,]{
     {100, 50},
     {600, 70},
     {240, 40}
-},200);
+}, 200);
 var resu = RealProbs.GenerateDivTags(3);
-var ress = StringOps.IsBigStringContainsSmallStringUsingKMP("abxabcabcaby","abcaby");
+var ress = StringOps.IsBigStringContainsSmallStringUsingKMP("abxabcabcaby", "abcaby");
 //var res = StackProbs.CollidingAsteroids(new int[]{-3,5,-8,6,7,-4,-7});
-var str=SubstringOps.LongestSubstringWithoutDuplication("clementisacap");
+var str = SubstringOps.LongestSubstringWithoutDuplication("clementisacap");
 MatrixOps.MinimumPassesOfMatrix(new int[][]{
                         new int[]{0,-1,-3,2,0},
                         new int[]{1,-2,-5,-1,-3},
@@ -71,26 +118,27 @@ MatrixOps.MinimumPassesOfMatrix(new int[][]{
                         }
                         );
 //2,4,3,6,7,10,9
-var sortedArray =BubbleSort.Sort(new List<int>(){10,2,4,1});
-sortedArray =BubbleSort.OptimalSort(new List<int>(){10,2,4,1});
+var sortedArray = BubbleSort.Sort(new List<int>() { 10, 2, 4, 1 });
+sortedArray = BubbleSort.OptimalSort(new List<int>() { 10, 2, 4, 1 });
 //foreach(int value in sortedArray)
-    //Console.WriteLine(value);
-Console.WriteLine(MaxMin.FindMaxValueOfExpNaive(new int[]{3,6,1,-3,2,7}));
-Console.WriteLine(MaxMin.FindMaxValueOfExpDP(new int[]{3,6,1,-3,2,7}));
+//Console.WriteLine(value);
+Console.WriteLine(MaxMin.FindMaxValueOfExpNaive(new int[] { 3, 6, 1, -3, 2, 7 }));
+Console.WriteLine(MaxMin.FindMaxValueOfExpDP(new int[] { 3, 6, 1, -3, 2, 7 }));
 Console.WriteLine();
 
 //Console.WriteLine(MinJump.FindMinimumNumberOfJumpsOptimal(new int[]{3,4,2,1,2,3,7,1,1,1,3}));
 LinkedList list = new LinkedList(1);
 list.Next = new LinkedList(2);
-list.Next.Next=new LinkedList(3);
-list.Next.Next.Next=new LinkedList(4);
-list.Next.Next.Next.Next=new LinkedList(5);
-list.Next.Next.Next.Next.Next= new LinkedList(6);
+list.Next.Next = new LinkedList(3);
+list.Next.Next.Next = new LinkedList(4);
+list.Next.Next.Next.Next = new LinkedList(5);
+list.Next.Next.Next.Next.Next = new LinkedList(6);
 var lst = TwoPointerOps.ZipLinkedList(list);
-var currentNode=lst;
-while (currentNode != null){
+var currentNode = lst;
+while (currentNode != null)
+{
     Console.Write(currentNode.Value);
-    currentNode=lst.Next;
+    currentNode = lst.Next;
 }
 //var result = RealProbs.CalendarMatching()
 //big - bigger

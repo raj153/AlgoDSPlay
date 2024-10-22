@@ -673,6 +673,166 @@ namespace AlgoDSPlay
         }
 
 
+        /* 3043. Find the Length of the Longest Common Prefix
+        https://leetcode.com/problems/find-the-length-of-the-longest-common-prefix/description/
+         */
+        public class LongestCommonPrefixSol
+        {
+
+            /* Approach 1: Using Hash Table 
+            Complexity Analysis
+Let m be the length of arr1, n be the length of arr2, M be the maximum value in arr1, and N be the maximum value in arr2.
+•	Time Complexity: O(m⋅log10M+n⋅log10N)
+For each number in arr1, we repeatedly divide the number by 10 to generate its prefixes. Since dividing a number by 10 reduces the number of digits logarithmically, this process takes O(log10M) for each number in arr1. Hence, for m numbers, the total time complexity is O(m⋅log10M).
+Similarly, for each number in arr2, we reduce it by repeatedly dividing it by 10 to check if it matches any prefix in the set. This also takes O(log10N) for each number in arr2. Hence, for n numbers, the total time complexity is O(n⋅log10N).
+Overall, the total time complexity is O(m⋅log10M+n⋅log10N).
+•	Space Complexit: O(m⋅log10M)
+Each number in arr1 contributes O(log10M) space to the set, as it generates prefixes proportional to the number of digits (logarithmic in the value of the number with base 10). With m numbers in arr1, the total space complexity for the set is O(m⋅log10M).
+The algorithm uses constant space for variables like longestPrefix and loop variables, so this doesn’t contribute significantly to the space complexity.
+Thus, the total space complexity is O(m⋅log10M).
+
+            */
+            public int UsingHashSet(int[] array1, int[] array2)
+            {
+                HashSet<int> array1Prefixes = new HashSet<int>(); // Set to store all prefixes from array1
+
+                // Step 1: Build all possible prefixes from array1
+                foreach (int value in array1)
+                {
+                    int currentValue = value;
+                    while (!array1Prefixes.Contains(currentValue) && currentValue > 0)
+                    {
+                        // Insert current value as a prefix
+                        array1Prefixes.Add(currentValue);
+                        // Generate the next shorter prefix by removing the last digit
+                        currentValue /= 10;
+                    }
+                }
+
+                int longestPrefix = 0;
+
+                // Step 2: Check each number in array2 for the longest matching prefix
+                foreach (int value in array2)
+                {
+                    int currentValue = value;
+                    while (!array1Prefixes.Contains(currentValue) && currentValue > 0)
+                    {
+                        // Reduce currentValue by removing the last digit if not found in the prefix set
+                        currentValue /= 10;
+                    }
+                    if (currentValue > 0)
+                    {
+                        // Length of the matched prefix using Math.Log10 to determine the number of digits
+                        longestPrefix = Math.Max(
+                            longestPrefix,
+                            (int)Math.Log10(currentValue) + 1
+                        );
+                    }
+                }
+
+                return longestPrefix;
+            }
+
+            /* Approach 2: Trie
+            Complexity Analysis
+Let m be the length of arr1, n be the length of arr2.
+•	Time Complexity: O(m⋅d+n⋅d)=O(m+n)
+For each number in arr1, we insert it into the Trie by processing each digit. Since each number has up to d digits, inserting a single number takes O(d) time. Therefore, inserting all m numbers from arr1 into the Trie takes O(m⋅d) time.
+For each number in arr2, we check how long its prefix matches with any prefix in the Trie. This involves traversing up to d digits of the number, which takes O(d) time per number. For all n numbers in arr2, the time complexity for this step is O(n⋅d).
+Overall, the total time complexity is O(m⋅d+n⋅d)=O(m+n)
+•	Space Complexity: O(m⋅d)=O(m)
+Each node in the Trie represents a digit (0-9), and each number from arr1 can contribute up to d nodes. Thus, the total space used by the Trie for storing all prefixes is O(m⋅d).
+The algorithm uses constant space for variables like longestPrefix and loop variables, which is negligible compared to the space used by the Trie.
+Thus, the total space complexity is O(m⋅d)=O(m).
+
+             */
+            public int UsingTrie(int[] arr1, int[] arr2)
+            {
+                Trie trie = new Trie();
+
+                // Step 1: Insert all numbers from arr1 into the Trie
+                foreach (int num in arr1)
+                {
+                    trie.Insert(num);
+                }
+
+                int longestPrefix = 0;
+
+                // Step 2: Find the longest prefix match for each number in arr2
+                foreach (int num in arr2)
+                {
+                    int len = trie.FindLongestPrefix(num);
+                    longestPrefix = Math.Max(longestPrefix, len);
+                }
+
+                return longestPrefix;
+            }
+            class TrieNode
+            {
+
+                // Each node has up to 10 possible children (digits 0-9)
+                public TrieNode[] Children = new TrieNode[10];
+            }
+
+            class Trie
+            {
+
+                TrieNode root = new TrieNode();
+
+                // Insert a number into the Trie by treating it as a string of digits
+                public void Insert(int num)
+                {
+                    TrieNode node = root;
+                    String numStr = num.ToString();
+                    foreach (char digit in numStr)
+                    {
+                        int idx = digit - '0';
+                        if (node.Children[idx] == null)
+                        {
+                            node.Children[idx] = new TrieNode();
+                        }
+                        node = node.Children[idx];
+                    }
+                }
+
+                // Find the longest common prefix for a number in arr2 with the Trie
+                public int FindLongestPrefix(int num)
+                {
+                    TrieNode node = root;
+                    String numStr = num.ToString();
+                    int len = 0;
+
+                    foreach (char digit in numStr)
+                    {
+                        int idx = digit - '0';
+                        if (node.Children[idx] != null)
+                        {
+                            // Increase length if the current digit matches
+                            len++;
+                            node = node.Children[idx];
+                        }
+                        else
+                        {
+                            // Stop if no match for the current digit
+                            break;
+                        }
+                    }
+                    return len;
+                }
+            }
+
+        }
+
+
+
+
+
+
+
+
+
+
+
 
     }
 }

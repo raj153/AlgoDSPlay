@@ -12,6 +12,9 @@ namespace AlgoDSPlay.DataStructures
         public TreeNode? Right;
         public string Name;
         public List<TreeNode> Children = new List<TreeNode>();
+        public TreeNode Next;
+        
+
         public TreeNode(int value, TreeNode left = null, TreeNode right = null)
         {
             this.Val = value;
@@ -26,6 +29,10 @@ namespace AlgoDSPlay.DataStructures
         public TreeNode(string name)
         {
             this.Name = name;
+        }
+
+        public TreeNode()
+        {
         }
 
         public TreeNode AddChild(string name)

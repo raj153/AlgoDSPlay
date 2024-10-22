@@ -4309,7 +4309,98 @@ https://leetcode.com/problems/letter-combinations-of-a-phone-number/description/
             return false;
 
         }
+        /* 
+        1462. Course Schedule IV
+        https://leetcode.com/problems/course-schedule-iv/description/
+        https://algo.monster/liteproblems/1462
+         */
 
+        class CourseScheduleIVSol
+        {
+            /*Time and Space Complexity
+Time Complexity
+The given Python code performs multiple operations involving graphs and lists, so let's break down its time complexity:
+1.	Initialization of f and g: The two lists are initialized with sizes n x n and n, respectively. Initializations run in O(n^2) for f and O(n) for g.
+2.	Iterating over prerequisites list: The loop goes through the list of prerequisites, which in worst case will have O(n^2) elements (if every node is a prerequisite for every other node), and updates graph g and indeg. Each operation inside the loop takes constant time, so this step runs in O(E) where E is the number of edges or prerequisites.
+3.	Processing the graph: The while loop dequeues nodes with indegree of 0 and processes adjacent nodes. Each edge is considered once when its destination node's indegree becomes 0, and the for loop inside processes n possible predecessors. This results in O(n + E) operations for the while loop since every node and edge is considered once. But due to the nested for loops, we're actually considering n times the adjacent nodes for updating f which yields O(n * E).
+4.	Answering queries: This is a direct access operation for each query in f which takes O(1) time. There may be Q queries, thus this would take O(Q).
+Combining all these, the overall time complexity is dominated by O(n * E), given that updating f can take up to O(n) time for each of the E edges in the worst-case scenario. Therefore, the time complexity is O(n^2 + E + n * E + Q) = O(n * E + Q).
+Space Complexity
+The space complexity of the algorithm can be analyzed as follows:
+1.	Space for f: O(n^2) since it stores boolean values for every possible pair of nodes.
+2.	Space for g and indeg: O(n) for each, since they store a list of adjacent nodes and indegree counts for each node, respectively.
+3.	Additional space for the queue q: In the worst case, this can store all n nodes, so O(n).
+So, the overall space complexity is the sum of these which gives O(n^2) + 2 * O(n) + O(n) = O(n^2) as n^2 will dominate the space complexity for large n.
+  */
+            public IList<bool> CheckIfPrerequisite(int numberOfCourses, int[][] prerequisites, int[][] queries)
+            {
+                // Floyd-Warshall algorithm to determine transitive closure of prerequisites
+                bool[,] transitiveClosure = new bool[numberOfCourses, numberOfCourses];
+                List<int>[] courseGraph = new List<int>[numberOfCourses];
+                int[] inDegree = new int[numberOfCourses]; // For topological sorting
+
+                // Initialize adjacency list
+                for (int i = 0; i < numberOfCourses; i++)
+                {
+                    courseGraph[i] = new List<int>();
+                }
+
+                // Build graph and in-degree array from prerequisites
+                foreach (int[] prerequisite in prerequisites)
+                {
+                    courseGraph[prerequisite[0]].Add(prerequisite[1]);
+                    inDegree[prerequisite[1]]++; // Increment in-degree of successor
+                }
+
+                // Queue used for topological sorting
+                Queue<int> queue = new Queue<int>();
+
+                // Adding all nodes with in-degree 0 to queue
+                for (int i = 0; i < numberOfCourses; i++)
+                {
+                    if (inDegree[i] == 0)
+                    {
+                        queue.Enqueue(i);
+                    }
+                }
+
+                // Perform topological sort (Kahn's algorithm)
+                while (queue.Count > 0)
+                {
+                    int currentCourse = queue.Dequeue();
+
+                    // Explore all neighbors of the current course
+                    foreach (int neighbor in courseGraph[currentCourse])
+                    {
+                        transitiveClosure[currentCourse, neighbor] = true;
+
+                        // Update transitive closure for all nodes that lead to current
+                        for (int preCourse = 0; preCourse < numberOfCourses; preCourse++)
+                        {
+                            transitiveClosure[preCourse, neighbor] |= transitiveClosure[preCourse, currentCourse];
+                        }
+
+                        // Decrement in-degree of neighbor and if 0, add to queue
+                        if (--inDegree[neighbor] == 0)
+                        {
+                            queue.Enqueue(neighbor);
+                        }
+                    }
+                }
+
+                // Prepare the answer list to fulfill queries
+                List<bool> answers = new List<bool>();
+
+                // Check in the transitive closure if prerequisites are met
+                foreach (int[] query in queries)
+                {
+                    answers.Add(transitiveClosure[query[0], query[1]]);
+                }
+
+                // Return the list of results for each query
+                return answers;
+            }
+        }
         /*
         1136. Parallel Courses
         https://leetcode.com/problems/parallel-courses
@@ -4601,11 +4692,28 @@ https://leetcode.com/problems/letter-combinations-of-a-phone-number/description/
         /*
         2115. Find All Possible Recipes from Given Supplies
         https://leetcode.com/problems/find-all-possible-recipes-from-given-supplies/description/
-
+        https://algo.monster/liteproblems/2115
 
         */
         public List<string> FindAllRecipes(List<string> recipes, List<List<string>> ingredients, List<string> supplies)
         {
+            /* Time and Space Complexity
+Time Complexity
+The time complexity of the findAllRecipes function is O(N + M + V) where:
+•	N is the number of supplies.
+•	M is the number of recipes.
+•	V is the total number of ingredients across all recipes.
+Here's why:
+•	Building the graph with adjacency lists takes O(V) time, as you must process each ingredient of each recipe.
+•	Filling the indegree map also takes O(V) time.
+•	The breadth-first search (BFS) queue processing would be O(N + M) at most since each supply is put into the queue exactly once at the start, and then each recipe can only be put into the queue at most once when its indegree reaches zero.
+•	Within the BFS, for each item, you look at its adjacency list and update indegrees. In total, across all BFS steps, you will examine and decrement each edge in the adjacency list only once. There are V edges since each edge corresponds to a unique ingredient in a recipe.
+Space Complexity
+The space complexity of the given code is O(N + M + V). The factors contributing to the space complexity include:
+•	The queue can grow up to a maximum of the number of supplies plus recipes, O(N + M).
+•	The graph g and indegree map indeg both combined will take up space proportional to the number of unique ingredients plus recipes, which is O(M + V).
+ */
+            // Initialize a graph to represent ingredients pointing to recipes
             Dictionary<string, List<string>> recipeGraph = new Dictionary<string, List<string>>();
             int recipeCount = recipes.Count;
             HashSet<string> supplySet = new HashSet<string>(supplies); // Store all the supplies in a hash set
@@ -4615,7 +4723,7 @@ https://leetcode.com/problems/letter-combinations-of-a-phone-number/description/
             {
                 recipeIndegree[recipe] = 0; // Initially set the indegree of all recipes to be 0
             }
-
+            // Build the graph and indegree map
             for (int i = 0; i < recipeCount; i++)
             {
                 for (int j = 0; j < ingredients[i].Count; j++)
@@ -4633,6 +4741,7 @@ https://leetcode.com/problems/letter-combinations-of-a-phone-number/description/
             }
 
             // KAHN'S ALGORITHM
+            // Queue to perform the topological sort
             Queue<string> recipeQueue = new Queue<string>();
             foreach (var recipeEntry in recipeIndegree)
             {
@@ -4661,6 +4770,7 @@ https://leetcode.com/problems/letter-combinations-of-a-phone-number/description/
             }
             return result;
         }
+
         /*
         2076. Process Restricted Friend Requests
         https://leetcode.com/problems/process-restricted-friend-requests/description/
@@ -7188,9 +7298,17 @@ https://leetcode.com/problems/letter-combinations-of-a-phone-number/description/
         /*
         419. Battleships in a Board
         https://leetcode.com/problems/battleships-in-a-board/description/
+        https://algo.monster/liteproblems/419
         */
         public int CountBattleships(char[][] board)
         {
+            /* Time Complexity
+We can check if a cell is a leader in O(1)O(1) and since there are O(MN)O(MN) cells, our time complexity is O(MN)O(MN).
+Time Complexity: O(MN)O(MN)
+Space Complexity
+Since we only maintain a counter for the number of leaders, our space complexity is O(1)O(1).
+Space Complexity: O(1)O(1)	
+ */
             int m = board.Length;
             if (m == 0) return 0;
             int n = board[0].Length;
@@ -8160,6 +8278,77 @@ Let N be the number of nodes in the binary tree.
             }
 
             return Math.Max(dpRob[0], dpNotRob[0]);
+        }
+
+        /* 2560. House Robber IV
+        https://leetcode.com/problems/house-robber-iv/description/
+        https://algo.monster/liteproblems/2560
+         */
+        class HouseRobberIVSol
+        {
+
+            /* Time Complexity
+            The given Python function minCapability uses binary search through the bisect_left function to find the minimum capability required. It applies a helper function f as a key which processes the nums list on each iteration.
+            •	The bisect_left function performs a binary search over a range of size max(nums) + 1, which involves O(log(Max)) iterations, where Max is the maximum element in nums.
+            •	Within each binary search iteration, the helper function f performs a linear scan over the nums list of size n, to check how many elements can be skipped without exceeding capability x. The time complexity for this will be O(n).
+            Combining these two, the overall time complexity will be O(n * log(Max)), where n is the number of elements in nums, and Max is the maximum element in nums.
+            Space Complexity
+            The space complexity of the minCapability function is O(1) assuming that the list nums is given and does not count towards the space complexity (as it's an input). There are no additional data structures used that grow with the input size. The variables cnt, j, i, and v use a constant amount of space.
+             */
+            // Determine the minimum capability to partition the array in such a way that
+            // the sum of each sub-array is less than or equal to k
+            public int MinCapability(int[] nums, int k)
+            {
+                // Start with the least possible capability
+                int left = 0;
+                // Set an upper limit for the search space, assuming the max value according to problem constraints
+                int right = (int)1e9;
+
+                // Perform a binary search to find the minimum capability
+                while (left < right)
+                {
+                    // Get the midpoint of the current search space
+                    int mid = (left + right) >> 1;
+
+                    // Check if the current capability can achieve the required partition
+                    if (CalculatePartitionCount(nums, mid) >= k)
+                    {
+                        // If it qualifies, search the lower half to find a smaller capability
+                        right = mid;
+                    }
+                    else
+                    {
+                        // Otherwise, search the upper half
+                        left = mid + 1;
+                    }
+                }
+
+                // left is now the minimum capability that can achieve the required partition
+                return left;
+            }
+
+            // Helper method to calculate the number of partitions formed by capability x
+            private int CalculatePartitionCount(int[] nums, int x)
+            {
+                int count = 0; // Initialize the partition count
+                int lastPartitionIndex = -2; // Initialize the index of the last partition start
+
+                // Iterate over the array
+                for (int i = 0; i < nums.Length; ++i)
+                {
+                    // Skip if the current number exceeds the capability or is the next immediate number after the last partition
+                    if (nums[i] > x || i == lastPartitionIndex + 1)
+                    {
+                        continue;
+                    }
+                    // Increment the partition count and update lastPartitionIndex
+                    ++count;
+                    lastPartitionIndex = i;
+                }
+
+                // Return the total number of partitions that can be made with capability x
+                return count;
+            }
         }
 
 
@@ -11013,6 +11202,49 @@ o	The space is for the additional 2-dimensional array dp of size (M⋅N).
             }
 
 
+        }
+
+
+        /* 161. One Edit Distance
+        https://leetcode.com/problems/one-edit-distance/description/
+         */
+        public class IsOneEditDistanceSol
+        {
+            /*             
+            Approach 1: One pass algorithm
+            Complexity Analysis
+•	Time complexity: O(N) in the worst case when string lengths are close enough abs(ns - nt) <= 1, where N is a number of characters in the longest string. O(1) in the best case when abs(ns - nt) > 1.
+•	Space complexity: O(N) because strings are immutable in Python and Java and create substring costs O(N) space.
+             */
+
+            public bool IsOneEditDistance(string s, string t)
+            {
+                int ns = s.Length;
+                int nt = t.Length;
+
+                // Ensure that s is shorter than t.
+                if (ns > nt)
+                    return IsOneEditDistance(t, s);
+
+                // The strings are NOT one edit away from distance  
+                // if the length diff is more than 1.
+                if (nt - ns > 1)
+                    return false;
+
+                for (int i = 0; i < ns; i++)
+                    if (s[i] != t[i])
+                        // If strings have the same length
+                        if (ns == nt)
+                            return s.Substring(i + 1) == t.Substring(i + 1);
+                        // If strings have different lengths
+                        else
+                            return s.Substring(i) == t.Substring(i + 1);
+
+                // If there are no diffs in ns distance
+                // The strings are one edit away only if
+                // t has one more character. 
+                return ns + 1 == nt;
+            }
         }
 
 
@@ -17333,17 +17565,16 @@ We use the boolean array bold which has a length of n.
         /*
         443. String Compression
         https://leetcode.com/problems/string-compression/description/
-        Complexity Analysis
-Let n be the length of chars.
-•	Time complexity: O(n).
-All cells are initially white. We will repaint each white cell blue, and we may repaint some blue cells green. Thus each cell will be repainted at most twice. Since there are n cells, the total number of repaintings is O(n).
-•	Space complexity: O(1).
-We store only a few integer variables and the string representation of groupLength which takes up O(1) space.
-
         */
 
         public class StringCompressSol
         {
+            /*         Complexity Analysis
+Let n be the length of chars.
+•	Time complexity: O(n).
+All cells are initially white. We will repaint each white cell blue, and we may repaint some blue cells green. Thus each cell will be repainted at most twice. Since there are n cells, the total number of repaintings is O(n).
+•	Space complexity: O(1).
+We store only a few integer variables and the string representation of groupLength which takes up O(1) space. */
             public int Compress(char[] characters)
             {
                 int index = 0, result = 0;
@@ -17430,6 +17661,38 @@ We store only a few integer variables and the string representation of groupLeng
                 return res;
             }
         }
+
+        /*     3163. String Compression III
+        https://leetcode.com/problems/string-compression-iii/description/
+         */
+        public class CompressedStringSol
+        {
+            /* Complexity
+            Time complexity: O(n)
+
+            Space complexity: O(1)
+
+             */
+            public string CompressedString(string word)
+            {
+                int n = word.Length, count = 0, i = 0, j = 0;
+                StringBuilder ans = new StringBuilder();
+                while (j < n)
+                {
+                    count = 0;
+                    while (j < n && word[i] == word[j] && count < 9)
+                    {
+                        j++;
+                        count++;
+                    }
+                    ans.Append(count).Append(word[i]);
+                    i = j;
+                }
+                return ans.ToString();
+
+            }
+        }
+
         /*
         609. Find Duplicate File in System
 https://leetcode.com/problems/find-duplicate-file-in-system/description/
@@ -17704,25 +17967,45 @@ The freq array can store at most 26 unique tasks, resulting in O(26) space compl
         /*
         2365. Task Scheduler II	
         https://leetcode.com/problems/task-scheduler-ii/description/
+        https://algo.monster/liteproblems/2365        
         */
 
         public class TaskSchedulerIISol
         {
             /*
             Approach1: HashMap
-            Time O(n)
-            Space O(n)
+            Time and Space Complexity
+The given Python function canMeasureWater determines whether it is possible to measure exactly targetCapacity liters by using two jugs of capacities jug1Capacity and jug2Capacity. It does so using a theorem related to the Diophantine equation which states that a target capacity x can be measured using two jugs with capacities m and n if and only if x is a multiple of the greatest common divisor (GCD) of m and n.
+Time Complexity:
+The time complexity of the function is predominantly determined by the computation of the GCD of jug1Capacity and jug2Capacity. Here’s how the complexity breaks down:
+1.	The function checks if the sum of the capacities of the two jugs is less than the targetCapacity. This comparison is constant time, O(1).
+2.	Then, it checks if either jug has a 0 capacity, and in such cases, it also performs constant-time comparisons: O(1).
+3.	Finally, it calculates the GCD of the two jug capacities. The GCD is calculated using Euclid's algorithm, which has a worst-case time complexity of O(log(min(a, b))), where a and b are jug1Capacity and jug2Capacity. Since the GCD function is bounded by the smaller of the two numbers, the time complexity for this step is O(log(min(jug1Capacity, jug2Capacity))).
+Therefore, the overall time complexity of the function is O(log(min(jug1Capacity, jug2Capacity))).
+Space Complexity:
+The space complexity of the function is determined by the space used to hold any variables and the stack space used by the recursion (if the implementation of GCD is recursive):
+1.	Only a fixed number of integer variables are used, and there’s no use of any data structures that scale with the input size. This contributes a constant space complexity: O(1).
+2.	Assuming gcd function from the math library is used, which is typically implemented iteratively, the space complexity remains constant as there are no recursive calls stacking up.
+Therefore, the overall space complexity of the function is O(1) constant space.	
+s
             */
             public long UsingHashMap(int[] tasks, int space)
             {
-                Dictionary<int, long> last = new Dictionary<int, long>();
-                long res = 0;
-                foreach (int a in tasks)
-                    if (last.ContainsKey(a))
-                        last[a] = res = Math.Max(res, last[a] + space) + 1;
-                    else
-                        last.Add(a, ++res);
-                return res;
+                // Map to store the next valid day a task can be scheduled
+                Dictionary<int, long> nextValidDay = new Dictionary<int, long>();
+                long currentDay = 0; // Represents the current day
+
+                foreach (int task in tasks)         // Iterate through all tasks
+                {
+                    currentDay++; // Move to the next day
+                                  // Check if we need to wait for a cooldown for the current task, and if necessary, jump to the next valid day
+                    currentDay = Math.Max(currentDay, nextValidDay.GetValueOrDefault(task, 0L));
+                    // Calculate and store the next valid day the current task can be executed based on the space (cooldown period)
+                    nextValidDay[task] = currentDay + space + 1;
+
+                }
+                // The last value of currentDay will be the total time taken to complete all tasks
+                return currentDay;
 
             }
             /*

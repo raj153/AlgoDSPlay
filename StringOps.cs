@@ -4015,21 +4015,1310 @@ Note: The time and space complexity for both solutions are same because the getH
             }
         }
 
+        /* 394. Decode String
+        https://leetcode.com/problems/decode-string/description/?envType=company&envId=facebook&favoriteSlug=facebook-all&difficulty=MEDIUM
+         */
+        public class DecodeStringSol
+        {
+
+            /* Approach 1: Using Stack
+            Complexity Analysis
+            •	Time Complexity: O(maxK^(countK)⋅n), where maxK is the maximum value of k, countK is the count of nested k values and n is the maximum length of encoded string.
+            Example, for s = 20[a10[bc]], maxK is 20, countK is 2 as there are 2 nested k values (20 and 10) . Also, there are 2 encoded strings a and bc with maximum length of encoded string ,n as 2
+            The worst case scenario would be when there are multiple nested patterns. Let's assume that all the k values (maxK) are 10 and all encoded string(n) are of size 2.
+            For, s = 10[ab10[cd]]10[ef], time complexity would be roughly equivalent to 10∗cd∗10∗ab+10∗2=10^2∗2.
+            Hence, for an encoded pattern of form maxK[nmaxK[n]], the time complexity to decode the pattern can be given as, O(maxK^(countK)⋅n).
+            •	Space Complexity: O(sum(maxK^(countK)⋅n)), where maxK is the maximum value of k, countK is the count of nested k values and n is the maximum length of encoded string.
+            The maximum stack size would be equivalent to the sum of all the decoded strings in the form maxK[nmaxK[n]]
+
+             */
+            public string UsingStack(string inputString)
+            {
+                Stack<char> characterStack = new Stack<char>();
+                for (int index = 0; index < inputString.Length; index++)
+                {
+                    if (inputString[index] == ']')
+                    {
+                        List<char> decodedString = new List<char>();
+                        // get the encoded string
+                        while (characterStack.Peek() != '[')
+                        {
+                            decodedString.Add(characterStack.Pop());
+                        }
+                        // pop [ from the stack
+                        characterStack.Pop();
+                        int baseValue = 1;
+                        int repeatCount = 0;
+                        // get the number k
+                        while (characterStack.Count > 0 && char.IsDigit(characterStack.Peek()))
+                        {
+                            repeatCount = repeatCount + (characterStack.Pop() - '0') * baseValue;
+                            baseValue *= 10;
+                        }
+                        // decode k[decodedString], by pushing decodedString k times into stack
+                        while (repeatCount != 0)
+                        {
+                            for (int j = decodedString.Count - 1; j >= 0; j--)
+                            {
+                                characterStack.Push(decodedString[j]);
+                            }
+                            repeatCount--;
+                        }
+                    }
+                    // push the current character to stack
+                    else
+                    {
+                        characterStack.Push(inputString[index]);
+                    }
+                }
+                // get the result from stack
+                char[] resultArray = new char[characterStack.Count];
+                for (int i = resultArray.Length - 1; i >= 0; i--)
+                {
+                    resultArray[i] = characterStack.Pop();
+                }
+                return new string(resultArray);
+            }
+            /* Approach 2: Using 2 Stack
+            Complexity Analysis
+Assume, n is the length of the string s.
+•	Time Complexity: O(maxK⋅n), where maxK is the maximum value of k and n is the length of a given string s. We traverse a string of size n and iterate k times to decode each pattern of form k[string]. This gives us worst case time complexity as O(maxK⋅n).
+•	Space Complexity: O(m+n), where m is the number of letters(a-z) and n is the number of digits(0-9) in string s. In worst case, the maximum size of stringStack and countStack could be m and n respectively.
+
+             */
+            String UsingTwoStack(String s)
+            {
+                Stack<int> countStack = new();
+                Stack<StringBuilder> stringStack = new();
+                StringBuilder currentString = new StringBuilder();
+                int k = 0;
+                foreach (char ch in s)
+                {
+                    if (Char.IsDigit(ch))
+                    {
+                        k = k * 10 + ch - '0';
+                    }
+                    else if (ch == '[')
+                    {
+                        // push the number k to countStack
+                        countStack.Push(k);
+                        // push the currentString to stringStack
+                        stringStack.Push(currentString);
+                        // reset currentString and k
+                        currentString = new StringBuilder();
+                        k = 0;
+                    }
+                    else if (ch == ']')
+                    {
+                        StringBuilder decodedString = stringStack.Pop();
+                        // decode currentK[currentString] by appending currentString k times
+                        for (int currentK = countStack.Pop(); currentK > 0; currentK--)
+                        {
+                            decodedString.Append(currentString);
+                        }
+                        currentString = decodedString;
+                    }
+                    else
+                    {
+                        currentString.Append(ch);
+                    }
+                }
+                return currentString.ToString();
+            }
+            /* 
+Approach 3: Using Recursion
+Complexity Analysis
+Assume, n is the length of the string s.
+•	Time Complexity: O(maxK⋅n) as in Approach 2
+•	Space Complexity: O(n). This is the space used to store the internal call stack used for recursion. As we are recursively decoding each nested pattern, the maximum depth of recursive call stack would not be more than n
+
+ */
+            private int index = 0;
+
+            public string UsingRecursion(string s)
+            {
+                StringBuilder result = new StringBuilder();
+                while (index < s.Length && s[index] != ']')
+                {
+                    if (!char.IsDigit(s[index]))
+                        result.Append(s[index++]);
+                    else
+                    {
+                        int k = 0;
+                        // build k while next character is a digit
+                        while (index < s.Length && char.IsDigit(s[index]))
+                            k = k * 10 + s[index++] - '0';
+                        // ignore the opening bracket '['    
+                        index++;
+                        string decodedString = UsingRecursion(s);
+                        // ignore the closing bracket ']'
+                        index++;
+                        // build k[decodedString] and append to the result
+                        while (k-- > 0)
+                            result.Append(decodedString);
+                    }
+                }
+                return result.ToString();
+            }
+
+        }
+
+        /* 1209. Remove All Adjacent Duplicates in String II
+        https://leetcode.com/problems/remove-all-adjacent-duplicates-in-string-ii/description/?envType=company&envId=facebook&favoriteSlug=facebook-all&difficulty=MEDIUM
+         */
+
+        public class RemoveAllAdjacentDuplicatesSol
+        {
+            /* Approach 1: Brute Force
+            Complexity Analysis
+•	Time complexity: O(n^2/k), where n is a string length. We scan the string no more than n/k times.
+•	Space complexity: O(1). A copy of a string may be created in some languages, however, the algorithm itself only uses the current string.
+
+             */
+            public string Naive(string s, int k)
+            {
+                StringBuilder sb = new StringBuilder(s);
+                int length = -1;
+                while (length != sb.Length)
+                {
+                    length = sb.Length;
+                    for (int i = 0, count = 1; i < sb.Length; ++i)
+                    {
+                        if (i == 0 || sb[i] != sb[i - 1])
+                        {
+                            count = 1;
+                        }
+                        else if (++count == k)
+                        {
+                            sb.Remove(i - k + 1, i + 1);
+                            break;
+                        }
+                    }
+                }
+                return sb.ToString();
+
+            }
+            /* Approach 2: Memoise Count
+Complexity Analysis
+•	Time complexity: O(n), where n is a string length. We process each character in the string once.
+•	Space complexity: O(n) to store the count for each character.
+
+             */
+            public String UsingMemoiseCount(String s, int k)
+            {
+                StringBuilder sb = new StringBuilder(s);
+                int[] count = new int[sb.Length];
+                for (int i = 0; i < sb.Length; ++i)
+                {
+                    if (i == 0 || sb[i] != sb[i - 1])
+                    {
+                        count[i] = 1;
+                    }
+                    else
+                    {
+                        count[i] = count[i - 1] + 1;
+                        if (count[i] == k)
+                        {
+                            sb.Remove(i - k + 1, i + 1);
+                            i = i - k;
+                        }
+                    }
+                }
+                return sb.ToString();
+            }/* 
+Approach 3: Stack
+Complexity Analysis
+•	Time complexity: O(n), where n is a string length. We process each character in the string once.
+•	Space complexity: O(n) for the stack.
+
+ */
+            public String UsingStack(String s, int k)
+            {
+                StringBuilder sb = new StringBuilder(s);
+                Stack<int> counts = new Stack<int>();
+                for (int i = 0; i < sb.Length; ++i)
+                {
+                    if (i == 0 || sb[i] != sb[i - 1])
+                    {
+                        counts.Push(1);
+                    }
+                    else
+                    {
+                        int incremented = counts.Pop() + 1;
+                        if (incremented == k)
+                        {
+                            sb.Remove(i - k + 1, k);
+                            i = i - k;
+                        }
+                        else
+                        {
+                            counts.Push(incremented);
+                        }
+                    }
+                }
+                return sb.ToString();
+
+            }
+
+            /* Approach 4: Stack with Reconstruction
+            Complexity Analysis
+            •	Time complexity: O(n), where n is a string length. We process each character in the string once.
+            •	Space complexity: O(n) for the stack.
+
+             */
+            class Pair
+            {
+                public int Count { get; set; }
+                public char Character { get; set; }
+
+                public Pair(int count, char character)
+                {
+                    this.Character = character;
+                    this.Count = count;
+                }
+            }
+
+            public string UsingStackWithReconstruction(string inputString, int k)
+            {
+                Stack<Pair> counts = new Stack<Pair>();
+                for (int i = 0; i < inputString.Length; ++i)
+                {
+                    if (counts.Count == 0 || inputString[i] != counts.Peek().Character)
+                    {
+                        counts.Push(new Pair(1, inputString[i]));
+                    }
+                    else
+                    {
+                        if (++counts.Peek().Count == k)
+                        {
+                            counts.Pop();
+                        }
+                    }
+                }
+                System.Text.StringBuilder stringBuilder = new System.Text.StringBuilder();
+                while (counts.Count > 0)
+                {
+                    Pair pair = counts.Pop();
+                    for (int i = 0; i < pair.Count; i++)
+                    {
+                        stringBuilder.Append(pair.Character);
+                    }
+                }
+                return stringBuilder.ToString().Reverse().ToString(); ;
+            }
+            /* Approach 5: Two Pointers
+            Complexity Analysis
+            •	Time complexity: O(n), where n is a string length. We process each character in the string once.
+            •	Space complexity: O(n) for the stack.
+
+             */
+            public String UsingTwoPointers(String s, int k)
+            {
+                Stack<int> counts = new();
+                char[] sa = s.ToCharArray();
+                int j = 0;
+                for (int i = 0; i < s.Length; ++i, ++j)
+                {
+                    sa[j] = sa[i];
+                    if (j == 0 || sa[j] != sa[j - 1])
+                    {
+                        counts.Push(1);
+                    }
+                    else
+                    {
+                        int incremented = counts.Pop() + 1;
+                        if (incremented == k)
+                        {
+                            j = j - k;
+                        }
+                        else
+                        {
+                            counts.Push(incremented);
+                        }
+                    }
+                }
+                return new String(sa, 0, j);
+            }
+
+        }
+
+        /* 
+        424. Longest Repeating Character Replacement
+        https://leetcode.com/problems/longest-repeating-character-replacement/description/?envType=company&envId=facebook&favoriteSlug=facebook-all&difficulty=MEDIUM
+         */
+
+        class CharacterReplacementSol
+        {
+            /* Approach 1: Sliding Window + Binary Search
+Complexity Analysis
+If there are n characters in the given string -
+•	Time complexity: O(nlogn). Binary search divides the search space in half in each iteration until one element is left. So from n elements to reach 1 element it takes O(logn) iterations. We go through the full length of the string using a sliding window in every iteration. So it takes O(n) additional time per iteration. So the final time complexity is O(logn)∗O(n)=O(nlogn) .
+•	Space complexity: O(m) where m is the number of distinct characters in the string. The core logic of binary search doesn't involve any auxiliary data structure but checking for valid string involves creating a hash map. The number of keys could be as many as the number of distinct characters. For uppercase English alphabets, m=26.
+
+             */
+            public int UsingBinarySearchAndSlidingWindow(String s, int k)
+            {
+                // binary search over the length of substring
+                // lo contains the valid value, and hi contains the
+                // invalid value
+                int lo = 1;
+                int hi = s.Length + 1;
+
+                while (lo + 1 < hi)
+                {
+                    int mid = lo + (hi - lo) / 2;
+
+                    // can we make a valid substring of length `mid`?
+                    if (CanMakeValidSubstring(s, mid, k))
+                    {
+                        // explore the right half
+                        lo = mid;
+                    }
+                    else
+                    {
+                        // explore the left half
+                        hi = mid;
+                    }
+                }
+
+                // length of the longest substring that satisfies
+                // the given condition
+                return lo;
+            }
+
+            private Boolean CanMakeValidSubstring(
+                    String s,
+                    int substringLength,
+                    int k)
+            {
+                // take a window of length `substringLength` on the given
+                // string, and move it from left to right. If this window
+                // satisfies the condition of a valid string, then we return
+                // true
+
+                int[] freqMap = new int[26];
+                int maxFrequency = 0;
+                int start = 0;
+                for (int end = 0; end < s.Length; end += 1)
+                {
+                    freqMap[s[end] - 'A'] += 1;
+
+                    // if the window [start, end] exceeds substringLength
+                    // then move the start pointer one step toward right
+                    if (end + 1 - start > substringLength)
+                    {
+                        // before moving the pointer toward right, decrease
+                        // the frequency of the corresponding character
+                        freqMap[s[start] - 'A'] -= 1;
+                        start += 1;
+                    }
+
+                    // record the maximum frequency seen so far
+                    maxFrequency = Math.Max(maxFrequency, freqMap[s[end] - 'A']);
+                    if (substringLength - maxFrequency <= k)
+                    {
+                        return true;
+                    }
+                }
+
+                // we didn't a valid substring of the given size
+                return false;
+            }
+
+            /* Approach 2: Sliding Window (Slow)
+            Complexity Analysis
+Let n be the number of characters in the string and m be the number of unique characters.
+•	Time complexity: O(nm). We iterate over each unique character once, which requires O(k) time. We move a sliding window for each unique character from left to right of the string. As the window moves, each character of the string is visited at most two times. Once when it enters the window and again when it leaves the window. This adds O(n) time complexity for each iteration. So the final time complexity is O(nm). For all uppercase English letters, the maximum value of m would be 26.
+•	Space complexity: O(m). We use an auxiliary set to store all unique characters, so the space complexity required here is O(m). Since there are only uppercase English letters in the string, m=26
+
+             */
+            public int UsingSlidingWindowSlow(string s, int k)
+            {
+                HashSet<char> allLetters = new HashSet<char>();
+
+                // collect all unique letters
+                for (int i = 0; i < s.Length; i++)
+                {
+                    allLetters.Add(s[i]);
+                }
+
+                int maxLength = 0;
+                foreach (char letter in allLetters)
+                {
+                    int start = 0;
+                    int count = 0;
+                    // initialize a sliding window for each unique letter
+                    for (int end = 0; end < s.Length; end += 1)
+                    {
+                        if (s[end] == letter)
+                        {
+                            // if the letter matches, increase the count
+                            count += 1;
+                        }
+                        // bring start forward until the window is valid again
+                        while (!IsWindowValid(start, end, count, k))
+                        {
+                            if (s[start] == letter)
+                            {
+                                // if the letter matches, decrease the count
+                                count -= 1;
+                            }
+                            start += 1;
+                        }
+                        // at this point the window is valid, update maxLength
+                        maxLength = Math.Max(maxLength, end + 1 - start);
+                    }
+                }
+                return maxLength;
+            }
+
+            private bool IsWindowValid(int start, int end, int count, int k)
+            {
+                return end + 1 - start - count <= k;
+            }
+
+            /* Approach 3: Sliding Window (Fast)
+Complexity Analysis
+If there are n characters in the given string -
+•	Time complexity: O(n). In this approach, we access each index of the string at most two times. When it is added to the sliding window, and when it is removed from the sliding window. The sliding window always moves forward. In each step, we update the frequency map, maxFrequency, and check for validity, they are all constant-time operations. To sum up, the time complexity is proportional to the number of characters in the string - O(n).
+•	Space complexity: O(m). Similar to the previous approaches, this approach requires an auxiliary frequency map. The maximum number of keys in the map equals the number of unique characters in the string. If there are m unique characters, then the memory required is proportional to m. So the space complexity is O(m). Considering uppercase English letters only, m=26.
+
+             */
+            public int UsingSlidingWindowFast(String s, int k)
+            {
+                int start = 0;
+                int[] frequencyMap = new int[26];
+                int maxFrequency = 0;
+                int longestSubstringLength = 0;
+
+                for (int end = 0; end < s.Length; end += 1)
+                {
+                    // if 'A' is 0, then what is the relative order
+                    // or offset of the current character entering the window
+                    // 0 is 'A', 1 is 'B' and so on
+                    int currentChar = s[end] - 'A';
+
+                    frequencyMap[currentChar] += 1;
+
+                    // the maximum frequency we have seen in any window yet
+                    maxFrequency = Math.Max(maxFrequency, frequencyMap[currentChar]);
+
+                    // move the start pointer towards right if the current
+                    // window is invalid
+                    Boolean isValid = (end + 1 - start - maxFrequency <= k);
+                    if (!isValid)
+                    {
+                        // offset of the character moving out of the window
+                        int outgoingChar = s[start] - 'A';
+
+                        // decrease its frequency
+                        frequencyMap[outgoingChar] -= 1;
+
+                        // move the start pointer forward
+                        start += 1;
+                    }
+
+                    // the window is valid at this point, note down the length
+                    // size of the window never decreases
+                    longestSubstringLength = end + 1 - start;
+                }
+
+                return longestSubstringLength;
+            }
+
+        }
 
 
+        /* 151. Reverse Words in a String
+         https://leetcode.com/problems/reverse-words-in-a-string/description/?envType=company&envId=facebook&favoriteSlug=facebook-all&difficulty=MEDIUM
+          */
+
+        public class ReverseWordsSol
+        {
+            /*             Approach 1: Built-in Split + Reverse
+            Complexity Analysis
+            •	Time complexity: O(N), where N is the number of characters in the input string.
+            •	Space complexity: O(N), to store the result of split by spaces.
+
+             */
+            public string UsingSplitAndReverse(string s)
+            {
+                // remove leading and trailing spaces
+                s = s.Trim();
+                // split by spaces and reverse
+                string[] words = s.Split(new char[] { ' ' },
+                    StringSplitOptions.RemoveEmptyEntries);
+                Array.Reverse(words);
+                // join the words with a space
+                return String.Join(" ", words);
+            }
+            /* Approach 2: Reverse the Whole String and Then Reverse Each Word
+Complexity Analysis
+•	Time complexity: O(N).
+•	Space complexity: O(N).
+
+             */
+            public string UsingReverseWholeAndEachWord(string s)
+            {
+                StringBuilder sb = TrimSpaces(s);
+                // reverse the whole string
+                Reverse(sb, 0, sb.Length - 1);
+                // reverse each word
+                ReverseEachWord(sb);
+                return sb.ToString();
+            }
+
+            private StringBuilder TrimSpaces(string s)
+            {
+                int left = 0, right = s.Length - 1;
+                // remove leading spaces
+                while (left <= right && s[left] == ' ') ++left;
+                // remove trailing spaces
+                while (left <= right && s[right] == ' ') --right;
+                // reduce multiple spaces to single one
+                StringBuilder sb = new StringBuilder();
+                while (left <= right)
+                {
+                    if (s[left] != ' ') sb.Append(s[left]);
+                    else if (sb[sb.Length - 1] != ' ') sb.Append(s[left]);
+                    ++left;
+                }
+
+                return sb;
+            }
+
+            private void ReverseEachWord(StringBuilder sb)
+            {
+                int n = sb.Length;
+                int start = 0, end = 0;
+                while (start < n)
+                {
+                    // go to the end of the word
+                    while (end < n && sb[end] != ' ') ++end;
+                    // reverse the word
+                    Reverse(sb, start, end - 1);
+                    // move to the next word
+                    start = end + 1;
+                    ++end;
+                }
+            }
+
+            private void Reverse(StringBuilder sb, int left, int right)
+            {
+                while (left < right)
+                {
+                    char tmp = sb[left];
+                    sb[left++] = sb[right];
+                    sb[right--] = tmp;
+                }
+            }
+
+            /* Approach 3: Deque of Words
+Complexity Analysis
+•	Time complexity: O(N).
+•	Space complexity: O(N).
+
+             */
+            public string UsingDequeOfWords(string s)
+            {
+                int left = 0, right = s.Length - 1;
+                while (left <= right && s[left] == ' ') ++left;
+                while (left <= right && s[right] == ' ') --right;
+
+                LinkedList<string> d = new LinkedList<string>();
+                StringBuilder word = new StringBuilder();
+
+                while (left <= right)
+                {
+                    if ((word.Length != 0) && (s[left] == ' '))
+                    {
+                        d.AddFirst(word.ToString());
+                        word.Clear();
+                    }
+                    else if (s[left] != ' ')
+                    {
+                        word.Append(s[left]);
+                    }
+
+                    ++left;
+                }
+
+                d.AddFirst(word.ToString());
+
+                return string.Join(" ", d);
+            }
+        }
 
 
+        /* 767. Reorganize String
+        https://leetcode.com/problems/reorganize-string/description/
+         */
+        class ReorganizeStringSol
+        {
+            /*             Approach 1: Counting and Priority Queue
+            Complexity Analysis
+            Let N be the total characters in the string.
+            Let k be the total unique characters in the string.
+            •	Time complexity: O(N⋅logk). We add one character to the string per iteration, so there are O(N) iterations. In each iteration, we perform a maximum of 3 priority queue operations. Each priority queue operation costs logk. For this problem, k is bounded by 26, so one could argue that the time complexity is actually O(N).
+            •	Space complexity: O(k). The counter used to count the number of occurrences will incur a space complexity of O(k). Similarly, the maximum size of the priority queue will also be O(k). Given that k <= 26 in this problem, one could argue the space complexity is O(1).
+
+             */
+            public String UsingCoutingAndMaxHeapPQ(String s)
+            {
+                var charCounts = new int[26];
+                foreach (char c in s)
+                {
+                    charCounts[c - 'a']++;
+                }
+
+                // Max heap ordered by character counts
+                var maxHeap = new PriorityQueue<int[], int[]>(
+                    Comparer<int[]>.Create((a, b) => b[1].CompareTo(a[1])));
+                for (int i = 0; i < 26; i++)
+                {
+                    if (charCounts[i] > 0)
+                    {
+                        maxHeap.Enqueue(new int[] { i + 'a', charCounts[i] }, new int[] { i + 'a', charCounts[i] });
+                    }
+                }
+
+                var sb = new StringBuilder();
+                while (maxHeap.Count > 0)
+                {
+                    var first = maxHeap.Dequeue();
+                    if (sb.Length == 0 || first[0] != sb[sb.Length - 1])
+                    {
+                        sb.Append((char)first[0]);
+                        if (--first[1] > 0)
+                        {
+                            maxHeap.Enqueue(first, first);
+                        }
+                    }
+                    else
+                    {
+                        if (maxHeap.Count == 0)
+                        {
+                            return "";
+                        }
+
+                        var second = maxHeap.Dequeue();
+                        sb.Append((char)second[0]);
+                        if (--second[1] > 0)
+                        {
+                            maxHeap.Enqueue(second, second);
+                        }
+
+                        maxHeap.Enqueue(first, first);
+                    }
+                }
+
+                return sb.ToString();
+            }
+            /* Approach 2: Counting and Odd/Even	
+Complexity Analysis
+Let N be the total characters in the string.
+Let k be the total unique characters in the string.
+•	Time complexity: O(N). We will have to iterate over the entire string once to gather the counts of each character. Then, we we place each character in the answer which costs O(N).
+•	Space complexity: O(k). The counter used to count the number of occurrences will incur a space complexity of O(k). Again, one could argue that because k <= 26, the space complexity is constant.
+
+             */
+            public String UsingCountingAndOddEOrEven(String s)
+            {
+                var charCounts = new int[26];
+                foreach (char c in s)
+                {
+                    charCounts[c - 'a']++;
+                }
+                int maxCount = 0, letter = 0;
+                for (int i = 0; i < charCounts.Length; i++)
+                {
+                    if (charCounts[i] > maxCount)
+                    {
+                        maxCount = charCounts[i];
+                        letter = i;
+                    }
+                }
+                if (maxCount > (s.Length + 1) / 2)
+                {
+                    return "";
+                }
+                var ans = new char[s.Length];
+                int index = 0;
+
+                // Place the most frequent letter
+                while (charCounts[letter] != 0)
+                {
+                    ans[index] = (char)(letter + 'a');
+                    index += 2;
+                    charCounts[letter]--;
+                }
+
+                // Place rest of the letters in any order
+                for (int i = 0; i < charCounts.Length; i++)
+                {
+                    while (charCounts[i] > 0)
+                    {
+                        if (index >= s.Length)
+                        {
+                            index = 1;
+                        }
+                        ans[index] = (char)(i + 'a');
+                        index += 2;
+                        charCounts[i]--;
+                    }
+                }
+
+                return ans.ToString();
+            }
+        }
 
 
+        /* 1653. Minimum Deletions to Make String Balanced
+        https://leetcode.com/problems/minimum-deletions-to-make-string-balanced/description/
+         */
+        class MinimumDeletionsToMakeStringBalancedSol
+        {
+
+            /* Approach 1: Three-Pass Count 
+            Complexity Analysis
+            Let n be the length of the string s.
+            •	Time complexity: O(n)
+            The algorithm performs three linear passes over the string.
+            •	Space complexity: O(n)
+            We use two arrays of size n to store counts, resulting in linear space complexity.	
+
+             */
+            public int UsingThreePassCount(String s)
+            {
+                int n = s.Length;
+                int[] countA = new int[n];
+                int[] countB = new int[n];
+                int bCount = 0;
+
+                // First pass: compute count_b which stores the number of
+                // 'b' characters to the left of the current position.
+                for (int i = 0; i < n; i++)
+                {
+                    countB[i] = bCount;
+                    if (s[i] == 'b') bCount++;
+                }
+
+                int aCount = 0;
+                // Second pass: compute count_a which stores the number of
+                // 'a' characters to the right of the current position
+                for (int i = n - 1; i >= 0; i--)
+                {
+                    countA[i] = aCount;
+                    if (s[i] == 'a') aCount++;
+                }
+
+                int minDeletions = n;
+                // Third pass: iterate through the string to find the minimum deletions
+                for (int i = 0; i < n; i++)
+                {
+                    minDeletions = Math.Min(minDeletions, countA[i] + countB[i]);
+                }
+
+                return minDeletions;
+            }
+
+            /* Approach 2: Combined Pass Method	
+            Complexity Analysis
+Let n be the length of the string s.
+•	Time complexity: O(n)
+The algorithm performs two linear passes over the string.
+•	Space complexity: O(n)
+We use one array of size n to store counts, resulting in linear space complexity.
+
+             */
+            public int UsingCombinedPass(String s)
+            {
+                int n = s.Length;
+                int[] countA = new int[n];
+                int aCount = 0;
+
+                // First pass: compute count_a which stores the number of
+                // 'a' characters to the right of the current position
+                for (int i = n - 1; i >= 0; i--)
+                {
+                    countA[i] = aCount;
+                    if (s[i] == 'a') aCount++;
+                }
+
+                int minDeletions = n;
+                int bCount = 0;
+                // Second pass: compute minimum deletions on the fly
+                for (int i = 0; i < n; i++)
+                {
+                    minDeletions = Math.Min(countA[i] + bCount, minDeletions);
+                    if (s[i] == 'b') bCount++;
+                }
+
+                return minDeletions;
+            }
+            /* Approach 3: Two-Variable Method
+            Complexity Analysis
+Let n be the length of the string s.
+•	Time complexity: O(n)
+The algorithm performs a single linear pass over the string.
+•	Space complexity: O(1)
+We only use constant space auxiliary variables, resulting in constant space complexity.
+
+             */
+            public int UsingTwoVariable(String s)
+            {
+                int n = s.Length;
+                int aCount = 0;
+
+                // First pass: count the number of 'a's
+                for (int i = 0; i < n; i++)
+                {
+                    if (s[i] == 'a') aCount++;
+                }
+
+                int bCount = 0;
+                int minDeletions = n;
+
+                // Second pass: iterate through the string to compute minimum deletions
+                for (int i = 0; i < n; i++)
+                {
+                    if (s[i] == 'a') aCount--;
+                    minDeletions = Math.Min(minDeletions, aCount + bCount);
+                    if (s[i] == 'b') bCount++;
+                }
+
+                return minDeletions;
+            }
+            /*             Approach 4: Using stack (one pass)
+            Complexity Analysis
+            Let n be the size of string s.
+            •	Time complexity: O(n)
+            The algorithm performs a single linear pass over the string, with stack operations (push and pop) taking O(1) time.
+            •	Space complexity: O(n)
+            The algorithm uses a stack that may grow up to the size of the string.
+
+             */
+            public int UsingStackOnePass(String s)
+            {
+                int n = s.Length;
+                Stack<char> charStack = new();
+                int deleteCount = 0;
+
+                // Iterate through each character in the string
+                for (int i = 0; i < n; i++)
+                {
+                    // If stack is not empty, top of stack is 'b',
+                    // and current char is 'a'
+                    if (
+                        charStack.Count > 0 &&
+                        charStack.Peek() == 'b' &&
+                        s[i] == 'a'
+                    )
+                    {
+                        charStack.Pop(); // Remove 'b' from stack
+                        deleteCount++; // Increment deletion count
+                    }
+                    else
+                    {
+                        charStack.Push(s[i]); // Push current character onto stack
+                    }
+                }
+
+                return deleteCount;
+            }
+            /* Approach 5: Using DP (One Pass)
+            Complexity Analysis
+            Let n be the size of string s.
+            •	Time complexity: O(n)
+            The algorithm performs a single linear pass over the string with updates to the dp array.
+            •	Space complexity: O(n)
+            The algorithm uses requires additional space for the dp array.
+
+             */
+            public int UsingDPOnePass(String s)
+            {
+                int n = s.Length;
+                int[] dp = new int[n + 1];
+                int bCount = 0;
+
+                // dp[i]: The number of deletions required to
+                // balance the substring s[0, i)
+                for (int i = 0; i < n; i++)
+                {
+                    if (s[i] == 'b')
+                    {
+                        dp[i + 1] = dp[i];
+                        bCount++;
+                    }
+                    else
+                    {
+                        // Two cases: remove 'a' or keep 'a'
+                        dp[i + 1] = Math.Min(dp[i] + 1, bCount);
+                    }
+                }
+
+                return dp[n];
+            }
+            /*             Approach 6: Optimized DP
+Complexity Analysis
+Let n be the size of string s.
+•	Time complexity: O(n)
+The algorithm performs a single linear pass over the string.
+•	Space complexity: O(1)
+The algorithm uses a constant amount of additional space for min_deletions and b_count.
+
+             */
+            public int UsingDPOptimal(String s)
+            {
+                int n = s.Length;
+                int minDeletions = 0;
+                int bCount = 0;
+
+                // minDeletions variable represents dp[i]
+                for (int i = 0; i < n; i++)
+                {
+                    if (s[i] == 'b')
+                    {
+                        bCount++;
+                    }
+                    else
+                    {
+                        // Two cases: remove 'a' or keep 'a'
+                        minDeletions = Math.Min(minDeletions + 1, bCount);
+                    }
+                }
+
+                return minDeletions;
+            }
+        }
 
 
+        /* 3016. Minimum Number of Pushes to Type Word II
+        https://leetcode.com/problems/minimum-number-of-pushes-to-type-word-ii/description/
+         */
+        public class MinPushesToTypeWordIISol
+        {
+            /* 
+            Approach 1: Greedy Sorting
+
+            Complexity Analysis
+            Let n be the length of the string.
+            •	Time complexity: O(n)
+            Iterating through the word string to count the frequency of each letter takes O(n).
+            Sorting the frequency array, which has a fixed size of 26 (for each letter in the alphabet), takes O(1) because the size of the array is constant.
+            Iterating through the frequency array to compute the total number of presses is O(1) because the array size is constant.
+            Overall, the dominant term is O(n) due to the frequency counting step.
+            •	Space complexity: O(1)
+            Frequency array and sorting takes O(1) space, as it always requires space for 26 integers.
+            Overall, the space complexity is O(1) because the space used does not depend on the input size.
+             */
+            public int WithGreedySorting(String word)
+            {
+                // Frequency array to store count of each letter
+                int[] frequency = new int[26];
+
+                // Count occurrences of each letter
+                foreach (char c in word)
+                {
+                    frequency[c - 'a']++;
+                }
+
+                // Sort frequencies in descending order
+                Array.Sort(frequency);
+                int[] sortedFrequency = new int[26];
+                for (int i = 0; i < 26; i++)
+                {
+                    sortedFrequency[i] = frequency[25 - i];
+                }
+
+                /*
+                 Or do like this 
+                 Sort frequencies in descending order
+                Integer[] sortedFrequency = Arrays.stream(frequency).boxed().toArray(Integer[]::new);
+                Arrays.sort(sortedFrequency, (a, b) -> b - a);
+                */
+
+                int totalPushes = 0;
+
+                // Calculate total number of presses
+                for (int i = 0; i < 26; i++)
+                {
+                    if (sortedFrequency[i] == 0) break;
+                    totalPushes += (i / 8 + 1) * sortedFrequency[i];
+                }
+                return totalPushes;
+
+            }
+            /*             Approach 2: Using Heap
+            Complexity Analysis
+            Let n be the length of the string.
+            •	Time complexity: O(n)
+            Iterating through the word string to count the frequency of each letter takes O(n).
+            Inserting each frequency into the priority queue and extracting the maximum frequency both operate with a time complexity of O(klogk), where k represents the number of distinct letters. Each of these operations—insertions, and extractions—is logarithmic due to the heap structure of the priority queue. However, since the number of distinct letters is limited to a maximum of 26 (one for each letter in the alphabet), the size of the priority queue remains constant and thus the time complexity effectively becomes O(1) in practice.
+            Overall, the dominant term is O(n) due to the frequency counting step.
+            •	Space complexity: O(1)
+            The frequency map and priority queue take O(26)=O(1) space, as it always requires a fixed space for 26 integers.  
+            Overall, the space complexity is O(1) because the space used does not depend on the input size.
+
+             */
+            public int UsingMaxHeapPQ(String word)
+            {
+                // Frequency map to store count of each letter
+                Dictionary<char, int> frequencyMap = new();
+
+                // Count occurrences of each letter
+                foreach (char c in word)
+                {
+                    frequencyMap[c] = frequencyMap.GetValueOrDefault(c, 0) + 1;
+                }
+
+                // Priority queue to store frequencies in descending order
+                PriorityQueue<int, int> frequencyQueue = new PriorityQueue<int, int>(
+                    Comparer<int>.Create((a, b) => b - a
+                ));
+                foreach (int val in frequencyMap.Values)
+                {
+                    frequencyQueue.Enqueue(val, val);
+                }
+
+                int totalPushes = 0;
+                int index = 0;
+
+                // Calculate total number of presses
+                while (frequencyQueue.Count > 0)
+                {
+                    totalPushes += (index / 8 + 1) * frequencyQueue.Dequeue();
+                    index++;
+                }
+
+                return totalPushes;
+            }
+
+        }
 
 
+        /* 2370. Longest Ideal Subsequence
+        https://leetcode.com/problems/longest-ideal-subsequence/description/
+         */
+        class LongestIdealSubseqSol
+        {
+
+            /* 
+            
+Approach 1: Recursive Dynamic Programming (Top Down)
+
+            Complexity Analysis
+        Let N be the length of s and L be the number of letters in the English alphabet, which is 26.
+        •	Time complexity: O(NL).
+        In the main function, we check each possible ending letter of some subsequence, calling dfs() L times. The dfs() function recursively calls itself, and the total number of dfs() calls that run prior to memoizing is bounded by N⋅L, so this step takes O(NL+L), which is essentially O(NL).
+        The loop inside the dfs() function makes up to 26 iterations. This loop is executed only if match is true, which is the case if c corresponds to the same ASCII value as the character s[i]. There is only one instance of c that fits this description for each distinct i, so this loop is executed at most once for each character in s. In other words, L transitions are executed only for N total states. Over the course of the whole search process, this loop executes up to O(NL) times.
+        Therefore, the total time complexity is O(NL+NL), or O(2NL), which we can simplify to O(NL). Note that L is 26, which is a constant, so we could simplify the time complexity to O(N).
+        •	Space complexity: O(NL).
+        The additional space complexity is O(NL), since the two-dimensional dp grid needs to be initialized for memoization. L is 26, which is a constant, so we could simplify the time complexity to O(N).
+         */
+            public int TopDownDPRec(String s, int k)
+            {
+                int N = s.Length;
+
+                // Initialize all dp values to -1 to indicate non-visited states
+                int[][] dp = new int[N][];
+                for (int i = 0; i < N; i++)
+                {
+                    Array.Fill(dp[i], -1);
+                }
+
+                // Find the maximum dp[N-1][c] and return the result
+                int res = 0;
+                for (int c = 0; c < 26; c++)
+                {
+                    res = Math.Max(res, Dfs(N - 1, c, dp, s, k));
+                }
+                return res;
+            }
+
+            private int Dfs(int i, int c, int[][] dp, String s, int k)
+            {
+                // Memoized value
+                if (dp[i][c] != -1)
+                {
+                    return dp[i][c];
+                }
+
+                // State is not visited yet
+                dp[i][c] = 0;
+                bool match = c == (s[i] - 'a');
+                if (match)
+                {
+                    dp[i][c] = 1;
+                }
+
+                // Non base case handling
+                if (i > 0)
+                {
+                    dp[i][c] = Dfs(i - 1, c, dp, s, k);
+                    if (match)
+                    {
+                        for (int p = 0; p < 26; p++)
+                        {
+                            if (Math.Abs(c - p) <= k)
+                            {
+                                dp[i][c] = Math.Max(dp[i][c], Dfs(i - 1, p, dp, s, k) + 1);
+                            }
+                        }
+                    }
+                }
+                return dp[i][c];
+            }
+
+            /* Approach 2: Iterative Dynamic Programming (Bottom Up, Space Optimized)
+Complexity Analysis
+Let N be the length of s and L be the number of letters in the English alphabet, which is 26.
+•	Time complexity: O(NL).
+The outer loop iterates through the characters in s, so it runs N times. The inner loop iterates up to L times for each character in s. Therefore, the time complexity is O(NL). Note that L is 26, which is a constant, so we could simplify the time complexity to O(N).
+•	Space complexity: O(L)
+We use a DP array of size L. L is 26, which is a constant, so we could simplify the time complexity to O(1).
+
+             */
+            public int BottomUpDPSpaceOptimal(String s, int k)
+            {
+                int N = s.Length;
+                int[] dp = new int[26];
+
+                int res = 0;
+                // Updating dp with the i-th character
+                for (int i = 0; i < N; i++)
+                {
+                    int curr = s[i] - 'a';
+                    int best = 0;
+                    for (int prev = Math.Max(0, curr - k); prev < Math.Min(26, curr + k + 1); prev++)
+                    {
+                        best = Math.Max(best, dp[prev]);
+                    }
+
+                    // Append s[i] to the previous longest ideal subsequence
+                    dp[curr] = best + 1;
+                    res = Math.Max(res, dp[curr]);
+                }
+
+                return res;
+            }
+        }
+
+        /* 1347. Minimum Number of Steps to Make Two Strings Anagram
+        https://leetcode.com/problems/minimum-number-of-steps-to-make-two-strings-anagram/description/
+         */
+        class MinStepsToMakeTwoStringsAnagramSol
+        {
+            /* Approach: HashMap 
+            Complexity Analysis
+Here, N is the size of the string s and t.
+•	Time complexity: O(N)
+We are iterating over the indices of string s or t to find the frequencies in the array freq. Then we iterate over the integers from 0 to 26 to find the final answer. Hence, the total time complexity is equal to O(N).
+•	Space complexity: O(1)
+The only space required is the array count which has the constant size of 26. Therefore, the total space complexity is constant.	
+
+            */
+            public int UsingHashTable(String s, String t)
+            {
+                int[] count = new int[26];
+                // Storing the difference of frequencies of characters in t and s.
+                for (int i = 0; i < s.Length; i++)
+                {
+                    count[t[i] - 'a']++;
+                    count[s[i] - 'a']--;
+                }
+
+                int ans = 0;
+                // Adding the difference where string t has more instances than s.
+                // Ignoring where t has fewer instances as they are redundant and
+                // can be covered by the first case.
+                for (int i = 0; i < 26; i++)
+                {
+                    ans += Math.Max(0, count[i]);
+                }
+
+                return ans;
+            }
+        }
+
+        /* 316. Remove Duplicate Letters
+        https://leetcode.com/problems/remove-duplicate-letters/description/
+         */
+        public class RemoveDuplicateLettersSol
+        {
 
 
+            /* Approach 1: Greedy - Solving Letter by Letter
+Complexity Analysis
+•	Time complexity : O(N). Each recursive call will take O(N). The number of recursive calls is bounded by a constant (26 letters in the alphabet), so we have O(N)∗C=O(N).
+•	Space complexity : O(N). Each time we slice the string we're creating a new one (strings are immutable). The number of slices is bound by a constant, so we have O(N)∗C=O(N).
 
+             */
+            public String UsingGreedyLetterByLetter(String s)
+            {
+                // find pos - the index of the leftmost letter in our solution
+                // we create a counter and end the iteration once the suffix doesn't have each unique character
+                // pos will be the index of the smallest character we encounter before the iteration ends
+                int[] cnt = new int[26];
+                int pos = 0;
+                for (int i = 0; i < s.Length; i++) cnt[s[i] - 'a']++;
+                for (int i = 0; i < s.Length; i++)
+                {
+                    if (s[i] < s[pos]) pos = i;
+                    if (--cnt[s[i] - 'a'] == 0) break;
+                }
+                // our answer is the leftmost letter plus the recursive call on the remainder of the string
+                // note that we have to get rid of further occurrences of s[pos] to ensure that there are no duplicates
+                return s.Length == 0 ? "" : s[pos] + UsingGreedyLetterByLetter(s.Substring(pos + 1).Replace("" + s[pos], ""));
+            }
+            /* Approach 2: Greedy - Solving with Stack
+Complexity Analysis
+•	Time complexity : O(N). Although there is a loop inside a loop, the time complexity is still O(N). This is because the inner while loop is bounded by the total number of elements added to the stack (each time it fires an element goes). This means that the total amount of time spent in the inner loop is bounded by O(N), giving us a total time complexity of O(N)
+•	Space complexity : O(1). At first glance it looks like this is O(N), but that is not true! seen will only contain unique elements, so it's bounded by the number of characters in the alphabet (a constant). You can only add to stack if an element has not been seen, so stack also only consists of unique elements. This means that both stack and seen are bounded by constant, giving us O(1) space complexity.
 
+             */
+            public string UsingGreedyWithStack(string inputString)
+            {
+                Stack<char> characterStack = new Stack<char>();
 
+                // this lets us keep track of what's in our solution in O(1) time
+                HashSet<char> charactersSeen = new HashSet<char>();
+
+                // this will let us know if there are any more instances of inputString[i] left in inputString
+                Dictionary<char, int> lastOccurrence = new Dictionary<char, int>();
+                for (int index = 0; index < inputString.Length; index++)
+                {
+                    lastOccurrence[inputString[index]] = index;
+                }
+
+                for (int index = 0; index < inputString.Length; index++)
+                {
+                    char currentCharacter = inputString[index];
+                    // we can only try to add currentCharacter if it's not already in our solution
+                    // this is to maintain only one of each character
+                    if (!charactersSeen.Contains(currentCharacter))
+                    {
+                        // if the last letter in our solution:
+                        //     1. exists
+                        //     2. is greater than currentCharacter so removing it will make the string smaller
+                        //     3. it's not the last occurrence
+                        // we remove it from the solution to keep the solution optimal
+                        while (characterStack.Count > 0 && currentCharacter < characterStack.Peek() && lastOccurrence[characterStack.Peek()] > index)
+                        {
+                            charactersSeen.Remove(characterStack.Pop());
+                        }
+                        charactersSeen.Add(currentCharacter);
+                        characterStack.Push(currentCharacter);
+                    }
+                }
+                System.Text.StringBuilder stringBuilder = new System.Text.StringBuilder(characterStack.Count);
+                foreach (char character in characterStack)
+                {
+                    stringBuilder.Append(character);
+                }
+                return stringBuilder.ToString();
+            }
+        }
 
 
 

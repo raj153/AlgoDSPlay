@@ -185,7 +185,7 @@ namespace AlgoDSPlay
         }
 
         /*
-        12. Integer to Roman
+        12. int to Roman
 https://leetcode.com/problems/integer-to-roman/description/	
      
         */
@@ -257,7 +257,7 @@ https://leetcode.com/problems/integer-to-roman/description/
             }
         }
         /*
-273. Integer to English Words
+273. int to English Words
 https://leetcode.com/problems/integer-to-english-words/	
 
         */
@@ -1596,20 +1596,901 @@ The space occupied by the output result is not considered in the space complexit
 
         }
 
+        /* 633. Sum of Square Numbers
+        https://leetcode.com/problems/sum-of-square-numbers/description/ */
+
+        public class JudgeSquareSumSol
+        {
+
+            /* Approach 1: Brute Force
+            Complexity Analysis
+            •	Time complexity : O(c).
+            Two loops up to sqrt(c). Here, c refers to the given integer (sum of squares).
+            •	Space complexity : O(1).
+            Constant extra space is used.
+
+             */
+            public bool Naive(int c)
+            {
+                for (long a = 0; a * a <= c; a++)
+                {
+                    for (long b = 0; b * b <= c; b++)
+                    {
+                        if (a * a + b * b == c) return true;
+                    }
+                }
+                return false;
+            }
+
+            /* Approach 2: Better Brute Force
+Complexity Analysis
+•	Time complexity : O(c).
+The total number of times the sum is updated is: 1+2+3+…+sqrt©=sqrt( c )(sqrt (c )+1)=O(c).
+•	Space complexity : O(1).
+Constant extra space is used.
+
+             */
+            public bool NaiveOptimal(int c)
+            {
+                for (long a = 0; a * a <= c; a++)
+                {
+                    int b = c - (int)(a * a);
+                    int i = 1, sum = 0;
+                    while (sum < b)
+                    {
+                        sum += i;
+                        i += 2;
+                    }
+                    if (sum == b) return true;
+                }
+                return false;
+            }
+            /*             Approach 3: Using Sqrt Function
+            Complexity Analysis
+            •	Time complexity : O(Sqrt(c) logc).
+            We iterate over Sqrt( c ) values for choosing a. For every a chosen, finding square root of c−a^2 takes O(logc) time in the worst case.
+            •	Space complexity : O(1).
+            Constant extra space is used.
+
+             */
+            public bool UsingSqrtFunc(int c)
+            {
+                for (long a = 0; a * a <= c; a++)
+                {
+                    double b = Math.Sqrt(c - a * a);
+                    if (b == (int)b) return true;
+                }
+                return false;
+            }
+            /*             Approach 4: Binary Search
+Complexity Analysis
+•	Time complexity : O(Sqrt( c ) logc).
+Binary search taking O(logc) in the worst case is done for Sqrt( c ) values of a.
+•	Space complexity : O(logc). Binary Search will take O(logc) space.
+
+             */
+            public bool UsingBinarySearch(int c)
+            {
+                for (long a = 0; a * a <= c; a++)
+                {
+                    int b = c - (int)(a * a);
+                    if (BinarySearch(0, b, b)) return true;
+                }
+                return false;
+            }
+
+            private bool BinarySearch(long s, long e, int n)
+            {
+                if (s > e) return false;
+                long mid = s + (e - s) / 2;
+                if (mid * mid == n) return true;
+                if (mid * mid > n) return BinarySearch(s, mid - 1, n);
+                return BinarySearch(mid + 1, e, n);
+            }
+
+            /*             Approach 5: Fermat Theorem
+Complexity Analysis
+•	Time complexity : O(Sqrt( c ))).
+We find the factors of c and their count using repeated division. We check for the factors in the range [0, Sqrt( c )))].
+However, the number of times a factor can occur is spread over the entire outer loop, so the entire complexity caused by the inner loop is effectively O(logc). As a result, the total time complexity is O(Sqrt( c )))+logc)=O(Sqrt( c )))).
+•	Space complexity : O(1).
+Constant space is used.
+
+             */
+            public bool UsingFermatTheorem(int c)
+            {
+                for (int i = 2; i * i <= c; i++)
+                {
+                    int count = 0;
+                    if (c % i == 0)
+                    {
+                        while (c % i == 0)
+                        {
+                            count++;
+                            c /= i;
+                        }
+                        if (i % 4 == 3 && count % 2 != 0) return false;
+                    }
+                }
+                return c % 4 != 3;
+            }
+
+        }
 
 
+        /* 264. Ugly Number II
+        https://leetcode.com/problems/ugly-number-ii/description/
+         */
+
+        class NthUglyNumberSol
+        {
+            /* Approach 1: Using SortedSet 
+            Complexity Analysis
+            Let n be the given index value of the ugly number and m be the size of set.
+            •	Time complexity: O(nlogm)
+            Each insertion and removal operation in the set takes logarithmic time.
+            In Python, the min function has a time complexity of O(n) due to the need to scan through all elements of the set to find the minimum. Since this function is called once per iteration of the loop and there are n iterations, the overall time complexity is O(n×m).
+            •	Space complexity: O(m)
+            The space required depends on the number of unique ugly numbers stored in the set.	
+
+            */
+            public int UsingSortedSet(int n)
+            {
+                SortedSet<long> uglyNumbersSet = new(); // TreeSet to store potential ugly numbers
+                uglyNumbersSet.Add(1L); // Start with 1, the first ugly number
+                                        // TreeSet automatically sorts elements in ascending order and does not
+                                        // allow duplicate entries, just like a HashSet in python
+
+                long currentUgly = 1L;
+                for (int i = 0; i < n; i++)
+                {
+                    currentUgly = uglyNumbersSet.First(); // Get the smallest number from the set and remove it
+
+                    // Insert the next potential ugly numbers into the set
+                    uglyNumbersSet.Add(currentUgly * 2);
+                    uglyNumbersSet.Add(currentUgly * 3);
+                    uglyNumbersSet.Add(currentUgly * 5);
+                }
+
+                return (int)currentUgly; // Return the nth ugly number
+            }
+            /* Approach 2: Min-Heap/Priority Queue
+            Complexity Analysis
+Let n be the given index value of the ugly number and m be the size of set.
+•	Time complexity: O(nlogm)
+The operations on the priority queue (push and pop) take logarithmic time, and there are m such operations.
+•	Space complexity: O(m)
+The space is used by the heap and the set, which store up to m elements as it depends on the number of unique ugly numbers stored in the set.
+
+             */
+            public int UsingMinHeapPQ(int n)
+            {
+                PriorityQueue<long, long> minHeap = new();
+                HashSet<long> seenNumbers = new(); // Set to avoid duplicates
+                int[] primeFactors = { 2, 3, 5 }; // Factors for generating new ugly numbers
+
+                minHeap.Enqueue(1L, 1L);
+                seenNumbers.Add(1L);
+
+                long currentUgly = 1L;
+                for (int i = 0; i < n; i++)
+                {
+                    currentUgly = minHeap.Dequeue(); // Get the smallest number
+
+                    // Generate and push the next ugly numbers
+                    foreach (int prime in primeFactors)
+                    {
+                        long nextUgly = currentUgly * prime;
+                        if (seenNumbers.Add(nextUgly))
+                        { // Avoid duplicates
+                            minHeap.Enqueue(nextUgly, nextUgly);
+                        }
+                    }
+                }
+
+                return (int)currentUgly; // Return the nth ugly number
+            }
+            /* Approach 3: Dynamic Programming (DP)
+            Complexity Analysis
+Let n be the given index value of the ugly number.
+•	Time complexity: O(n)
+This approach is linear because we generate each ugly number directly using the three pointers.
+•	Space complexity: O(n)
+We need space to store the first n ugly numbers.
+
+             */
+            public int UsingDP(int n)
+            {
+                int[] uglyNumbers = new int[n]; // DP array to store ugly numbers
+                uglyNumbers[0] = 1; // The first ugly number is 1
+
+                // Three pointers for the multiples of 2, 3, and 5
+                int indexMultipleOf2 = 0, indexMultipleOf3 = 0, indexMultipleOf5 = 0;
+                int nextMultipleOf2 = 2, nextMultipleOf3 = 3, nextMultipleOf5 = 5;
+
+                // Generate ugly numbers until we reach the nth one
+                for (int i = 1; i < n; i++)
+                {
+                    // Find the next ugly number as the minimum of the next multiples
+                    int nextUglyNumber = Math.Min(
+                        nextMultipleOf2,
+                        Math.Min(nextMultipleOf3, nextMultipleOf5)
+                    );
+                    uglyNumbers[i] = nextUglyNumber;
+
+                    // Update the corresponding pointer and next multiple
+                    if (nextUglyNumber == nextMultipleOf2)
+                    {
+                        indexMultipleOf2++;
+                        nextMultipleOf2 = uglyNumbers[indexMultipleOf2] * 2;
+                    }
+                    if (nextUglyNumber == nextMultipleOf3)
+                    {
+                        indexMultipleOf3++;
+                        nextMultipleOf3 = uglyNumbers[indexMultipleOf3] * 3;
+                    }
+                    if (nextUglyNumber == nextMultipleOf5)
+                    {
+                        indexMultipleOf5++;
+                        nextMultipleOf5 = uglyNumbers[indexMultipleOf5] * 5;
+                    }
+                }
+
+                return uglyNumbers[n - 1]; // Return the nth ugly number
+            }
+
+        }
 
 
+        /* 2028. Find Missing Observations
+           https://leetcode.com/problems/find-missing-observations/description/
+            */
+        public class MissingRollsSol
+        {
+            /* 
+            Approach: Math
+            Complexity Analysis
+            Let m be the size of the rolls array.
+            •	Time complexity: O(m+n)
+            We iterate through the rolls array exactly once. Also, while filling the mod values, we iterate the array up to index mod. Since the value of mod in the worst case can go up to n-1, the total time complexity is given by O(m+n).
+            •	Space complexity: O(1)
+            Apart from the nElements array, where we store the answer, no additional space is used to solve the problem. Therefore, the space complexity is given by O(1).
+
+             */
+            public int[] UsingMaths(int[] rolls, int mean, int n)
+            {
+                int sum = 0;
+                foreach (int roll in rolls)
+                {
+                    sum = sum + roll;
+                }
+                // Find the remaining sum.
+                int remainingSum = mean * (n + rolls.Length) - sum;
+                // Check if sum is valid or not.
+                if (remainingSum > 6 * n || remainingSum < n)
+                {
+                    return new int[0];
+                }
+                int distributeMean = remainingSum / n;
+                int mod = remainingSum % n;
+                // Distribute the remaining mod elements in nElements array.
+                int[] nElements = new int[n];
+                Array.Fill(nElements, distributeMean);
+                for (int i = 0; i < mod; i++)
+                {
+                    nElements[i]++;
+                }
+                return nElements;
+            }
+        }
 
 
+        /* 1344. Angle Between Hands of a Clock
+        https://leetcode.com/problems/angle-between-hands-of-a-clock/description/
+         */
+
+        class AngleBetweenHandsOfClockSol
+        {
+
+            /* Approach 1: Math
+            Complexity Analysis
+            •	Time complexity : O(1).
+            •	Space complexity : O(1).
+
+             */
+            public double UsingMaths(int hour, int minutes)
+            {
+                int oneMinAngle = 6;
+                int oneHourAngle = 30;
+
+                double minutesAngle = oneMinAngle * minutes;
+                double hourAngle = (hour % 12 + minutes / 60.0) * oneHourAngle;
+
+                double diff = Math.Abs(hourAngle - minutesAngle);
+                return Math.Min(diff, 360 - diff);
+            }
+        }
+
+        /* 2812. Find the Safest Path in a Grid
+        https://leetcode.com/problems/find-the-safest-path-in-a-grid/description/
+         */
+        class MaximumSafenessFactorSol
+        {
+
+            // Directions for moving to neighboring cells: right, left, down, up
+            readonly int[][] dir = { new int[] { 0, 1 }, new int[] { 0, -1 }, new int[] { 1, 0 }, new int[] { -1, 0 } };
+
+            /* Approach 1: Breadth-First Search + Binary 
+Complexity Analysis
+Let n⋅n be the size of the matrix.
+•	Time complexity: O(n^2⋅logn).
+The time complexity for the initial BFS is O(n^2), as each cell in the n⋅n grid is visited once during the traversal.
+The binary search occurs in the range [0, maximum safeness factor possible], where the maximum safeness factor possible is 2⋅n. The time complexity of the binary search is O(log(2⋅n)), which is equivalent to O(logn).
+For each iteration of the binary search, a breadth-first Search is conducted to verify validity, which has a time complexity of O(n^2). Thus, the total time complexity of the binary search portion is O(n^2⋅logn).
+The total time complexity is the sum of the time complexities of the two parts: O(n2)+O(n2⋅logn). This can be simplified to O(n2⋅logn).
+•	Space complexity: O(n^2).
+The data structure used in the algorithm is a queue, which takes linear space. Since the total number of cells in the grid is n^2, the space complexity is O(n^2).
+            
+             */
+            public int UsingBFSAndBinarySearch(List<List<int>> grid)
+            {
+                int n = grid.Count;
+                int[][] mat = new int[n][];
+                Queue<int[]> multiSourceQueue = new();
+
+                // To make modifications and navigation easier, the grid is converted into a 2-d array.
+                for (int i = 0; i < n; i++)
+                {
+                    for (int j = 0; j < n; j++)
+                    {
+                        if (grid[i][j] == 1)
+                        {
+                            // Push thief coordinates to the queue
+                            multiSourceQueue.Enqueue(new int[] { i, j });
+                            // Mark thief cell with 0
+                            mat[i][j] = 0;
+                        }
+                        else
+                        {
+                            // Mark empty cell with -1
+                            mat[i][j] = -1;
+                        }
+                    }
+                }
+
+                // Calculate safeness factor for each cell using BFS
+                while (multiSourceQueue.Count > 0)
+                {
+                    int size = multiSourceQueue.Count;
+                    while (size-- > 0)
+                    {
+                        int[] curr = multiSourceQueue.Dequeue();
+                        // Check neighboring cells
+                        foreach (int[] d in dir)
+                        {
+                            int di = curr[0] + d[0];
+                            int dj = curr[1] + d[1];
+                            int val = mat[curr[0]][curr[1]];
+                            // Check if the neighboring cell is valid and unvisited
+                            if (IsValidCell(mat, di, dj) && mat[di][dj] == -1)
+                            {
+                                // Update safeness factor and push to the queue
+                                mat[di][dj] = val + 1;
+                                multiSourceQueue.Enqueue(new int[] { di, dj });
+                            }
+                        }
+                    }
+                }
+
+                // Binary search for maximum safeness factor
+                int start = 0;
+                int end = 0;
+                int res = -1;
+                for (int i = 0; i < n; i++)
+                {
+                    for (int j = 0; j < n; j++)
+                    {
+                        // Set end as the maximum safeness factor possible
+                        end = Math.Max(end, mat[i][j]);
+                    }
+                }
+
+                while (start <= end)
+                {
+                    int mid = start + (end - start) / 2;
+                    if (IsValidSafeness(mat, mid))
+                    {
+                        // Store valid safeness and search for larger ones 
+                        res = mid;
+                        start = mid + 1;
+                    }
+                    else
+                    {
+                        end = mid - 1;
+                    }
+                }
+                return res;
+            }
+
+            // Check if a path exists with given minimum safeness value
+            private bool IsValidSafeness(int[][] grid, int minSafeness)
+            {
+                int n = grid.Length;
+
+                // Check if the source and destination cells satisfy minimum safeness
+                if (grid[0][0] < minSafeness || grid[n - 1][n - 1] < minSafeness)
+                {
+                    return false;
+                }
+
+                Queue<int[]> traversalQueue = new();
+                traversalQueue.Enqueue(new int[] { 0, 0 });
+                bool[][] visited = new bool[n][];
+                visited[0][0] = true;
+
+                // Breadth-first search to find a valid path
+                while (traversalQueue.Count > 0)
+                {
+                    int[] curr = traversalQueue.Dequeue();
+                    if (curr[0] == n - 1 && curr[1] == n - 1)
+                    {
+                        return true; // Valid path found
+                    }
+                    // Check neighboring cells
+                    foreach (int[] d in dir)
+                    {
+                        int di = curr[0] + d[0];
+                        int dj = curr[1] + d[1];
+                        // Check if the neighboring cell is valid, unvisited and satisfying minimum safeness
+                        if (IsValidCell(grid, di, dj) && !visited[di][dj] && grid[di][dj] >= minSafeness)
+                        {
+                            visited[di][dj] = true;
+                            traversalQueue.Enqueue(new int[] { di, dj });
+                        }
+                    }
+                }
+
+                return false; // No valid path found
+            }
+
+            // Check if a given cell lies within the grid
+            private bool IsValidCell(int[][] mat, int i, int j)
+            {
+                int n = mat.Length;
+                return i >= 0 && j >= 0 && i < n && j < n;
+            }
+
+            /* Approach 2: BFS + Greedy 
+            Complexity Analysis
+Let n⋅n be the size of the matrix.
+•	Time Complexity: O(n^2⋅log(n))
+Similar to Approach 1, the time complexity of the initial BFS is O(n^2).
+To find the optimal path, we use Dijkstra's single source shortest path algorithm, which has a time complexity of O(n^2⋅log(n)) when implemented in a grid of size n⋅n.
+The total time complexity is the sum of the time complexities of the two parts: O(n^2)+O(n^2⋅log(n)). This can be simplified to O(n^2⋅log(n)).
+•	Space Complexity: O(n^2)
+The two data structures used in this approach are the queue and the priority queue, both of which have a linear space complexity. Since the maximum number of elements that can be present in the queues is n⋅n, the space complexity is O(n^2).
+            */
+
+            public int UsingBFSAndGreedy(IList<IList<int>> grid)
+            {
+                int n = grid.Count;
+                int[,] mat = new int[n, n];
+                Queue<int[]> multiSourceQueue = new Queue<int[]>();
+
+                // To make modifications and navigation easier, the grid is converted into a 2-d array
+                for (int i = 0; i < n; i++)
+                {
+                    for (int j = 0; j < n; j++)
+                    {
+                        if (grid[i][j] == 1)
+                        {
+                            // Push thief coordinates to the queue
+                            multiSourceQueue.Enqueue(new int[] { i, j });
+                            // Mark thief cell with 0
+                            mat[i, j] = 0;
+                        }
+                        else
+                        {
+                            // Mark empty cell with -1
+                            mat[i, j] = -1;
+                        }
+                    }
+                }
+
+                // Calculate safeness factor for each cell using BFS
+                while (multiSourceQueue.Count > 0)
+                {
+                    int size = multiSourceQueue.Count;
+                    while (size-- > 0)
+                    {
+                        int[] curr = multiSourceQueue.Dequeue();
+                        // Check neighboring cells
+                        foreach (int[] d in dir)
+                        {
+                            int di = curr[0] + d[0];
+                            int dj = curr[1] + d[1];
+                            int val = mat[curr[0], curr[1]];
+                            // Check if the neighboring cell is valid and unvisited
+                            if (IsValidCell(mat, di, dj) && mat[di, dj] == -1)
+                            {
+                                // Update safeness factor and push to the queue
+                                mat[di, dj] = val + 1;
+                                multiSourceQueue.Enqueue(new int[] { di, dj });
+                            }
+                        }
+                    }
+                }
+
+                // Priority queue to prioritize cells with higher safeness factor
+                PriorityQueue<int[], int[]> pq = new PriorityQueue<int[], int[]>(
+                    Comparer<int[]>.Create((a, b) => b[2] - a[2]));
+                // Push starting cell to the priority queue
+                pq.Enqueue(new int[] { 0, 0, mat[0, 0] }, new int[] { 0, 0, mat[0, 0] }); // [x-coordinate, y-coordinate, maximum_safeness_till_now]
+                mat[0, 0] = -1; // Mark the source cell as visited
+
+                // BFS to find the path with maximum safeness factor
+                while (pq.Count > 0)
+                {
+                    int[] curr = pq.Dequeue();
+                    // If reached the destination, return safeness factor
+                    if (curr[0] == n - 1 && curr[1] == n - 1)
+                    {
+                        return curr[2];
+                    }
+                    // Explore neighboring cells
+                    foreach (int[] d in dir)
+                    {
+                        int di = d[0] + curr[0];
+                        int dj = d[1] + curr[1];
+                        if (IsValidCell(mat, di, dj) && mat[di, dj] != -1)
+                        {
+                            // Update safeness factor for the path and mark the cell as visited
+                            pq.Enqueue(new int[] { di, dj, Math.Min(curr[2], mat[di, dj]) }, new int[] { di, dj, Math.Min(curr[2], mat[di, dj]) });
+                            mat[di, dj] = -1;
+                        }
+                    }
+                }
+
+                return -1; // No valid path found
+            }
+            // Check if a given cell lies within the grid
+            private bool IsValidCell(int[,] mat, int i, int j)
+            {
+                int n = mat.GetLength(0);
+                return i >= 0 && j >= 0 && i < n && j < n;
+            }
+        }
 
 
+        /* 204. Count Primes
+        https://leetcode.com/problems/count-primes/description/
+         */
 
+        class CountPrimesSol
+        {
 
+            /* Approach: Sieve of Eratosthenes
+Complexity Analysis
+•	Time Complexity: The overall time complexity is O(nloglogn+n). The +n is from calculating the answer after the main algorithm. The n comes from the outer loop. Each time we hit a prime, we "cross out" the multiples of that prime because we know they aren't prime. But how many iterations do we perform for each prime number? That depends on how many multiples of that number are lower than n. Let's look at a rough estimate of these values for all the primes.
+•	  For 2, we have to cross out n/2 numbers.
+•	  For 3, we have to cross out n/3 numbers.
+•	  For 5, we have to cross out n/5 numbers.
+•	  ...etc for each prime less than n.
+  
+This means that the time complexity of "crossing out" is O(2n+3n+5n+...+last prime < nn). This is bounded by O(loglogn) and the proof is available here. Cheers to this discussion post for explaining the complexity analysis in a detailed manner!
+•	Space Complexity: O(n) because we use an array of length n+1 to track primes and their multiples. If you use a dictionary instead of an array, you will still end up marking at least 2n elements as composites of the number 2. Thus, the overall complexity when using a dictionary is also O(n).
 
+             */
+            public int CountPrimes(int n)
+            {
+                if (n <= 2)
+                {
+                    return 0;
+                }
 
+                bool[] numbers = new bool[n];
+                for (int p = 2; p <= (int)Math.Sqrt(n); ++p)
+                {
+                    if (numbers[p] == false)
+                    {
+                        for (int j = p * p; j < n; j += p)
+                        {
+                            numbers[j] = true;
+                        }
+                    }
+                }
 
+                int numberOfPrimes = 0;
+                for (int i = 2; i < n; i++)
+                {
+                    if (numbers[i] == false)
+                    {
+                        ++numberOfPrimes;
+                    }
+                }
 
+                return numberOfPrimes;
+            }
+        }
+
+        /* 279. Perfect Squares
+        https://leetcode.com/problems/perfect-squares/description/
+         */
+        public class NumPerfectSquaresSol
+        {
+            /*             Approach 1: Brute-force Enumeration [Time Limit Exceeded]
+
+             */
+            public int Naive(int n)
+            {
+                List<int> squareNums = new List<int>();
+                for (int i = 1; i <= (int)Math.Sqrt(n); i++)
+                {
+                    squareNums.Add(i * i);
+                }
+
+                int[] dp = new int[n + 1];
+                Array.Fill(dp, int.MaxValue);
+                dp[0] = 0;
+
+                for (int i = 1; i <= n; i++)
+                {
+                    foreach (int square in squareNums)
+                    {
+                        if (i >= square)
+                        {
+                            dp[i] = Math.Min(dp[i], dp[i - square] + 1);
+                        }
+                    }
+                }
+
+                return dp[n];
+            }
+            /*             Approach 2: Dynamic Programming
+Complexity
+•	Time complexity: O(n⋅Sqrt(n)). In main step, we have a nested loop, where the outer loop is of n iterations and in the inner loop it takes at maximum n iterations.
+•	Space Complexity: O(n). We keep all the intermediate sub-solutions in the array dp[].
+
+             */
+            public int UsingDP(int n)
+            {
+                int[] dp = new int[n + 1];
+                Array.Fill(dp, int.MaxValue);
+                // bottom case
+                dp[0] = 0;
+
+                // pre-calculate the square numbers.
+                int max_square_index = (int)Math.Sqrt(n) + 1;
+                int[] square_nums = new int[max_square_index];
+                for (int i = 1; i < max_square_index; ++i)
+                {
+                    square_nums[i] = i * i;
+                }
+
+                for (int i = 1; i <= n; ++i)
+                {
+                    for (int s = 1; s < max_square_index; ++s)
+                    {
+                        if (i < square_nums[s])
+                            break;
+                        dp[i] = Math.Min(dp[i], dp[i - square_nums[s]] + 1);
+                    }
+                }
+                return dp[n];
+            }
+
+            /*             Approach 3: Greedy Enumeration
+Complexity
+•	Time complexity: O((Sqrt(n)^h+1)-1)/Sqrt(n)-1))=O(n^h/2) where h is the maximal number of recursion that could happen. As one might notice, the above formula actually resembles the formula to calculate the number of nodes in a complete N-ary tree. Indeed, the trace of recursive calls in the algorithm form a N-ary tree, where N is the number of squares in square_nums, i.e. n. In the worst case, we might have to traverse the entire tree to find the solution.
+
+•	Space Complexity: O(n). We keep a list of square_nums, which is of n size. In addition, we would need additional space for the recursive call stack. But as we will learn later, the size of the call track would not exceed 4.
+
+             */
+            HashSet<int> square_nums = new HashSet<int>();
+            public int UsingGreedyEnumeration(int n)
+            {
+                this.square_nums.Clear();
+
+                for (int i = 1; i * i <= n; ++i)
+                {
+                    this.square_nums.Add(i * i);
+                }
+
+                int count = 1;
+                for (; count <= n; ++count)
+                {
+                    if (IsDividedBy(n, count))
+                        return count;
+                }
+                return count;
+            }
+
+            private bool IsDividedBy(int n, int count)
+            {
+                if (count == 1)
+                {
+                    return square_nums.Contains(n);
+                }
+
+                foreach (int square in square_nums)
+                {
+                    if (IsDividedBy(n - square, count - 1))
+                    {
+                        return true;
+                    }
+                }
+                return false;
+            }
+
+            /* Approach 4: Greedy + BFS (Breadth-First Search)
+Complexity
+•	Time complexity: O((Sqrt(n)^h+1)-1)/Sqrt(n)-1))=O(n^h/2) where h is the height of the N-ary tree. One can see the detailed explanation on the previous Approach #3.
+
+•	Space complexity: O(Sqrt(n%)^h), which is also the maximal number of nodes that can appear at the level h. As one can see, though we keep a list of square_nums, the main consumption of the space is the queue variable, which keep track of the remainders to visit for a given level of N-ary tree.
+
+             */
+            public int UsingGreedyBFS(int number)
+            {
+                List<int> squareNumbers = new List<int>();
+                for (int i = 1; i * i <= number; ++i)
+                {
+                    squareNumbers.Add(i * i);
+                }
+
+                HashSet<int> queue = new HashSet<int>();
+                queue.Add(number);
+
+                int level = 0;
+                while (queue.Count > 0)
+                {
+                    level += 1;
+                    HashSet<int> nextQueue = new HashSet<int>();
+
+                    foreach (int remainder in queue)
+                    {
+                        foreach (int square in squareNumbers)
+                        {
+                            if (remainder == square)
+                            {
+                                return level;
+                            }
+                            else if (remainder < square)
+                            {
+                                break;
+                            }
+                            else
+                            {
+                                nextQueue.Add(remainder - square);
+                            }
+                        }
+                    }
+                    queue = nextQueue;
+                }
+                return level;
+            }
+            /* Approach 5: Mathematics
+            Complexity
+•	Time complexity: O(n). In the main loop, we check if the number can be decomposed into the sum of two squares, which takes O(n) iterations. In the rest of cases, we do the check in constant time.
+
+•	Space complexity: O(1). The algorithm consumes a constant space, regardless the size of the input number.
+
+             */
+            protected bool IsSquare(int n)
+            {
+                int sq = (int)Math.Sqrt(n);
+                return n == sq * sq;
+            }
+
+            public int UsingMaths(int n)
+            {
+                // four-square and three-square theorems.
+                while (n % 4 == 0)
+                    n /= 4;
+                if (n % 8 == 7)
+                    return 4;
+
+                if (this.IsSquare(n))
+                    return 1;
+                // enumeration to check if the number can be decomposed into sum of two squares.
+                for (int i = 1; i * i <= n; ++i)
+                {
+                    if (this.IsSquare(n - i * i))
+                        return 2;
+                }
+                // bottom case of three-square theorem.
+                return 3;
+            }
+
+        }
+
+        /* 400. Nth Digit
+        https://leetcode.com/problems/nth-digit/description/
+        https://algo.monster/liteproblems/400
+         */
+        class FindNthDigitSol
+        {
+            /* Time and Space Complexity
+The time complexity of the given code is O(log n) because the while loop runs proportional to the number of digits in n. Each increase in the number of digits results in a ten-fold increase in the number range, thus the loop iterates through each digit length once, which is related logarithmically to n.
+The space complexity is O(1) because there are a fixed number of integer variables (k, cnt, num, idx) used that do not grow with the input size n. The conversion of num to a string does not significantly affect the space complexity as it is related to the current k value (number of digits), which is a small constant for practical purposes.
+ */
+            public int FindNthDigit(int n)
+            {
+                // Initialize digit length `k` for numbers of k digits
+                // Initialize count `digitCount` for the count of numbers with `k` digits
+                int digitLength = 1;
+                int digitCount = 9;
+
+                // Determine the range where the nth digit lies
+                while ((long)digitLength * digitCount < n)
+                {
+                    n -= digitLength * digitCount; // Reduce n by the number of positions we've covered
+                    digitLength++;                 // Move to next digit length
+                    digitCount *= 10;              // Increase the count for the next range of numbers
+                }
+
+                // Calculate the actual number where the nth digit is from
+                int number = (int)Math.Pow(10, digitLength - 1) + (n - 1) / digitLength;
+
+                // Calculate the index within the number where the nth digit is located
+                int digitIndex = (n - 1) % digitLength;
+
+                // Extract and return the nth digit from number
+                return number.ToString()[digitIndex] - '0';
+            }
+        }
+
+        /* 166. Fraction to Recurring Decimal
+        https://leetcode.com/problems/fraction-to-recurring-decimal/description/
+         */
+
+        public class FractionToRecurringDecimalSol
+        {
+            /*Approach 1: Long Division
+            */
+            public string FractionToDecimal(int numerator, int denominator)
+            {
+                if (numerator == 0)
+                {
+                    return "0";
+                }
+
+                StringBuilder fraction = new StringBuilder();
+                // If either one is negative (not both)
+                if (numerator < 0 ^ denominator < 0)
+                {
+                    fraction.Append("-");
+                }
+
+                // Convert to Long or else abs(-2147483648) overflows
+                long dividend = Math.Abs((long)numerator);
+                long divisor = Math.Abs((long)denominator);
+                fraction.Append(dividend / divisor);
+                long remainder = dividend % divisor;
+                if (remainder == 0)
+                {
+                    return fraction.ToString();
+                }
+
+                fraction.Append(".");
+                Dictionary<long, int> map = new Dictionary<long, int>();
+                while (remainder != 0)
+                {
+                    if (map.ContainsKey(remainder))
+                    {
+                        fraction.Insert(map[remainder], "(");
+                        fraction.Append(")");
+                        break;
+                    }
+
+                    map[remainder] = fraction.Length;
+                    remainder *= 10;
+                    fraction.Append(remainder / divisor);
+                    remainder %= divisor;
+                }
+
+                return fraction.ToString();
+            }
+        }
 
 
 

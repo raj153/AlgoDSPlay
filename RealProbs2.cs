@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using AlgoDSPlay.DataStructures;
 using static AlgoDSPlay.LinkedListOps;
 
 namespace AlgoDSPlay
@@ -1999,7 +2000,7 @@ o	Building the adjacency list takes O(E) space. The BFS queue takes O(N) because
             /*
         Approach 1: Dijkstra Algorithm
             Complexity Analysis
-        Let n refer to the number of cities, where the constraints are 2<=n<=100, and m refer to the number of edges, with 1<=edges.length<=(n⋅(n−1))/2. This means that m can be at most (n⋅(n−1))/2, representing the maximum number of edges in an undirected graph where every city is connected to every other city with a unique edge.
+        Let n refer to the number of cities, where the constraints are 2<=n<=100, and m refer to the number of edges, with 1<=edges.Length<=(n⋅(n−1))/2. This means that m can be at most (n⋅(n−1))/2, representing the maximum number of edges in an undirected graph where every city is connected to every other city with a unique edge.
         •	Time complexity: O(n^3logn)
         For one source, Dijkstra's algorithm using a priority queue runs in O(m⋅logn). With the maximum number of edges m, this becomes O(n⋅(n−1)/2⋅logn)=O(n^2logn). Running Dijkstra's algorithm for each city (source), the overall time complexity is O(n⋅n^2logn)=O(n^3logn).
         •	Space complexity: O(n^2)
@@ -2128,7 +2129,7 @@ o	Building the adjacency list takes O(E) space. The BFS queue takes O(N) because
             /*
             Approach 2: Bellman-Ford Algorithm
         Complexity Analysis
-        Let n refer to the number of cities, where the constraints are 2<=n<=100, and m refer to the number of edges, with 1<=edges.length<=(n⋅(n−1))/2. This means that m can be at most n⋅(n−1)/2/2/2, representing the maximum number of edges in an undirected graph where every city is connected to every other city with a unique edge.
+        Let n refer to the number of cities, where the constraints are 2<=n<=100, and m refer to the number of edges, with 1<=edges.Length<=(n⋅(n−1))/2. This means that m can be at most n⋅(n−1)/2/2/2, representing the maximum number of edges in an undirected graph where every city is connected to every other city with a unique edge.
         •	Time complexity: O(n^4)
         For one source, Bellman-Ford runs in O(n⋅m), where m is the number of edges. In the worst case, m is n⋅(n−1)/2 (checkout the constraints), so the time complexity for one source becomes O(n⋅(n⋅(n−1)/2))=O(n^3). Since Bellman-Ford must be run for each city (source), the overall time complexity is O(n⋅n^3)=O(n^4).
         •	Space complexity: O(n^2)
@@ -2198,7 +2199,7 @@ o	Building the adjacency list takes O(E) space. The BFS queue takes O(N) because
             /*
             Approach 3: Shortest Path First Algorithm (SPFA)
 Complexity Analysis
-Let n refer to the number of cities, where the constraints are 2<=n<=100, and m refer to the number of edges, with 1<=edges.length<=n⋅(n−1)/2. This means that m can be at most n⋅(n−1)/2, representing the maximum number of edges in an undirected graph where every city is connected to every other city with a unique edge.
+Let n refer to the number of cities, where the constraints are 2<=n<=100, and m refer to the number of edges, with 1<=edges.Length<=n⋅(n−1)/2. This means that m can be at most n⋅(n−1)/2, representing the maximum number of edges in an undirected graph where every city is connected to every other city with a unique edge.
 •	Time complexity: O(n^4)
 The average time complexity of SPFA is Θ(m) per source, which is Θ(n^2) in the worst case per source. Running SPFA for each city (source), the overall average time complexity is Θ(n⋅m)=Θ(n⋅n^2)=Θ(n^3), and the worst-case time complexity is O(n⋅n^3)=O(n^4).
 •	Space complexity: O(n^2)
@@ -2291,7 +2292,7 @@ The space complexity is O(n^2) for the shortestPathMatrix and O(m+n) for the adj
             /*
 Approach 4: Floyd-Warshall Algorithm
 Complexity Analysis
-Let n refer to the number of cities, where the constraints are 2<=n<=100, and m refer to the number of edges, with 1<=edges.length<=n⋅(n−1)/2. This means that m can be at most n⋅(n−1)2///2, representing the maximum number of edges in an undirected graph where every city is connected to every other city with a unique edge.
+Let n refer to the number of cities, where the constraints are 2<=n<=100, and m refer to the number of edges, with 1<=edges.Length<=n⋅(n−1)/2. This means that m can be at most n⋅(n−1)2///2, representing the maximum number of edges in an undirected graph where every city is connected to every other city with a unique edge.
 •	Time complexity: O(n^3)
 The Floyd-Warshall algorithm directly computes the shortest paths between all pairs of cities in O(n^3), regardless of the number of edges. This comes from the three nested loops, each iterating n times.
 •	Space complexity: O(n^2)
@@ -3391,8 +3392,8 @@ Complexity Analysis
             /*
             Approach #1: Brute Force [Accepted]
 Complexity Analysis
-•	Time Complexity: O(J.length∗S.length)).
-•	Space Complexity: O(1) additional space complexity in Python. In Java, this can be O(J.length∗S.length)) because of the creation of new arrays.
+•	Time Complexity: O(J.length∗S.Length)).
+•	Space Complexity: O(1) additional space complexity in Python. In Java, this can be O(J.length∗S.Length)) because of the creation of new arrays.
 
             */
 
@@ -3412,8 +3413,8 @@ Complexity Analysis
             /*
             Approach #2: Hash Set [Accepted]
             Complexity Analysis: J and S represnets Jewesls and Stones respectively.
-            •	Time Complexity: O(J.length+S.length). The O(J.length) part comes from creating J. The O(S.length) part comes from searching S.
-            •	Space Complexity: O(J.length).
+            •	Time Complexity: O(J.Length+S.Length). The O(J.Length) part comes from creating J. The O(S.Length) part comes from searching S.
+            •	Space Complexity: O(J.Length).
 
             */
             public int numJewelsInStones(String jewels, String stones)
@@ -3492,7 +3493,7 @@ Complexity Analysis
             Approach: Brute Force
             Complexity Analysis
 •	Time Complexity: O(N^3), as we perform two outer loops (O(N^2)), plus the inner loop involving k is O(N).
-•	Space Complexity: O(mines.length).
+•	Space Complexity: O(mines.Length).
 
             */
             public int Naive(int gridSize, int[][] mines)
@@ -10142,6 +10143,136 @@ The size of array dp is K. Hence, the space complexity would equal O(K).
             }
         }
 
+        /* 518. Coin Change II
+        https://leetcode.com/problems/coin-change-ii/description/
+         */
+        class CoinChangeIISol
+        {
+            int[][] memo;
+            int[] coins;
+            /* 
+            Approach 1: Top-Down Dynamic Programming 
+            Complexity Analysis
+Here n is the size of coins.
+•	Time complexity: O(n⋅amount).
+o	We take O(n⋅amount) to initialize the memo array.
+o	There are total of O(n⋅amount) states that are computed. There is no loop inside the recursive method. Each state is computed once and it takes an average of O(1) time to compute the answer of a state using the smaller states. So, it takes O(n⋅amount) time to compute values for all the states.
+•	Space complexity: O(n⋅amount).
+o	The memo array takes O(n⋅amount) space.
+o	The recursion stack can grow up to a maximum size of O(n+amount) as we are reducing either the number of coins or the required amount while going from one recursive call to another.
+
+            */
+            public int UsingTopDownDP(int amount, int[] coins)
+            {
+                this.coins = coins;
+                memo = new int[coins.Length][];
+                foreach (int[] row in memo)
+                {
+                    Array.Fill(row, -1);
+                }
+
+                return NumberOfWays(0, amount);
+            }
+            public int NumberOfWays(int i, int amount)
+            {
+                if (amount == 0)
+                {
+                    return 1;
+                }
+                if (i == coins.Length)
+                {
+                    return 0;
+                }
+                if (memo[i][amount] != -1)
+                {
+                    return memo[i][amount];
+                }
+
+                if (coins[i] > amount)
+                {
+                    return memo[i][amount] = NumberOfWays(i + 1, amount);
+                }
+
+                memo[i][amount] = NumberOfWays(i, amount - coins[i]) + NumberOfWays(i + 1, amount);
+                return memo[i][amount];
+            }
+
+            /* Approach 2: Bottom-Up Dynamic Programming
+            Complexity Analysis
+Here n is the size of coins.
+•	Time complexity: O(n⋅amount).
+o	We take O(n⋅amount) to initialize the dp array.
+o	We run two nested to fill the entire dp table. Each state consumes O(1) time to compute. As a result, it takes O(n⋅amount) to fill the dp table using two nested loops.
+•	Space complexity: O(n⋅amount).
+o	The dp array takes O(n⋅amount) space.
+
+             */
+            public int BottomUpDP(int amount, int[] coins)
+            {
+                int n = coins.Length;
+                long[][] dp = new long[n + 1][]; // Use long to handle large values
+
+                // Initialize the base case: There's one way to make amount 0, which is by not using any coins.
+                for (int i = 0; i <= n; i++)
+                {
+                    dp[i][0] = 1;
+                }
+
+                // Initialize the base case: There's no way to make positive amounts with zero coins.
+                for (int i = 1; i <= amount; i++)
+                {
+                    dp[n][i] = 0;
+                }
+
+                // Populate the dp table.
+                for (int i = n - 1; i >= 0; i--)
+                {
+                    for (int j = 1; j <= amount; j++)
+                    {
+                        if (coins[i] > j)
+                        {
+                            dp[i][j] = dp[i + 1][j];
+                        }
+                        else
+                        {
+                            dp[i][j] = dp[i + 1][j] + dp[i][j - coins[i]];
+                        }
+                    }
+                }
+
+                // Check if the final result exceeds the integer limit and return accordingly.
+                return dp[0][amount] <= int.MaxValue ? (int)dp[0][amount] : -1;
+            }
+            /* Approach 3: Dynamic Programming with Space Optimization
+            Complexity Analysis
+Here n is the size of coins.
+•	Time complexity: O(n⋅amount)
+o	Initializing the dp array takes O(amount) time.
+o	To get the answer, we use two nested loops that take O(n⋅amount) time.
+•	Space complexity: O(amount)
+o	The dp array take O(amount) space.
+
+             */
+            public int UsingDPWithSpaceOptimal(int amount, int[] coins)
+            {
+                int n = coins.Length;
+                long[] dp = new long[amount + 1]; // Use long to avoid overflow
+                dp[0] = 1;
+
+                for (int i = n - 1; i >= 0; i--)
+                {
+                    for (int j = coins[i]; j <= amount; j++)
+                    {
+                        dp[j] += dp[j - coins[i]];
+                    }
+                }
+
+                return dp[amount] <= int.MaxValue ? (int)dp[amount] : -1; // Return -1 if result exceeds int limit
+            }
+
+
+        }
+
         /* 997. Find the Town Judge
         https://leetcode.com/problems/find-the-town-judge/description/
          */
@@ -11059,6 +11190,67 @@ When I looked through the discussion forum for this question, I was surprised to
                 return biggestWeight;
             }
         }
+
+        /* 1049. Last Stone Weight II
+        https://leetcode.com/problems/last-stone-weight-ii/description/
+        https://algo.monster/liteproblems/1049
+         */
+        class LastStoneWeightIISol
+        {
+            /* Time and Space Complexity
+The given code is an implementation of a dynamic programming solution to solve a variation of the classic knapsack problem. To analyze the time complexity and space complexity, let us explore the code:
+Time Complexity
+The time complexity of the code can be determined by looking at the nested loops. There is an outer loop that iterates over each stone, and an inner loop that runs in reverse from "n" (where "n" is half of the sum of stones, "s >> 1") to the value of the current stone "v" (i.e., "range(n, v - 1, -1)"). The inner loop ensures that each sub-sum only considers each stone once.
+•	The outer loop runs once for each stone, so it runs "m" times where "m" is the number of stones ("len(stones)").
+•	The inner loop runs (at most) "n" times for each outer iteration, where "n" is half the sum of all stone weights, rounded down ("s >> 1").
+Therefore, the overall time complexity is O(mn), where "m" is the number of stones and "n" is half the sum of the stones' weights.
+Space Complexity
+The space complexity of the code is determined by the storage requirements. The array "dp" of size "n + 1" is created to store the maximum achievable weight for each sub-sum. No other data structures are used that grow with the size of the input. Thus, the space complexity is O(n), where "n" is half the sum of the stones' weights.
+ */
+            public int LastStoneWeightII(int[] stones)
+            {
+                // Calculate the sum of all stones' weights
+                int sumOfStones = 0;
+                foreach (int weight in stones)
+                {
+                    sumOfStones += weight;
+                }
+
+                // The number of stones in the array
+                int numOfStones = stones.Length;
+
+                // Set the target as half of the sum, because we are trying
+                // to minimize the difference between two groups to get the
+                // smallest last stone weight possible
+                int target = sumOfStones >> 1; // Equivalent to sumOfStones / 2
+
+                // Initialize a DP array where dp[i] will store the maximum
+                // weight that can be achieved with a sum not exceeding i
+                int[] dp = new int[target + 1];
+
+                // Loop through each stone
+                foreach (int weight in stones)
+                {
+                    // Update dp array in a reverse manner to ensure that
+                    // each stone is only used once
+                    for (int j = target; j >= weight; --j)
+                    {
+                        // Determine whether to include the current stone or not
+                        // by comparing which choice gives us a higher weight
+                        // that does not exceed the current weight limit j
+                        dp[j] = Math.Max(dp[j], dp[j - weight] + weight);
+                    }
+                }
+
+                // The result is the difference between the sum of all stones
+                // and twice the weight of the heavier group
+                // This is because we are trying to partition the array into
+                // two groups such that the difference between the sum of two groups
+                // is minimized (typical partition problem that can be solved by DP).
+                return sumOfStones - dp[target] * 2;
+            }
+        }
+
 
         /* 1057. Campus Bikes
         https://leetcode.com/problems/campus-bikes/description/
@@ -13627,10 +13819,10 @@ When we put these two parts together, the total time complexity is O((M+N)log(M+
             /*
             Approach 1: Depth-first search
             Complexity Analysis
-            Let m be the number of edges in the graph, and l be the maximum length of a URL (urls[i].length).
+            Let m be the number of edges in the graph, and l be the maximum length of a URL (urls[i].Length).
             •	Time complexity: O(m⋅l).
             Let k be the number of traversed vertices. We add all these nodes to the set, with each node costing up to O(l). The total time for inserting into the set is thus O(k⋅l).
-            The most time-consuming part in the dfs is calling htmlParser.getUrls(url) to get the edges outgoing from url and iterating over all nextUrl. When processing nextUrl, we call getHostname(nextUrl) and search nextUrl in the hash set. Both of these can take O(nextUrl.length)=O(l) time. The complexity equals the sum of all the O(l) work done.
+            The most time-consuming part in the dfs is calling htmlParser.getUrls(url) to get the edges outgoing from url and iterating over all nextUrl. When processing nextUrl, we call getHostname(nextUrl) and search nextUrl in the hash set. Both of these can take O(nextUrl.Length)=O(l) time. The complexity equals the sum of all the O(l) work done.
             The total number of elements in htmlParser.getUrls(url) over all URLs is m – the total number of edges in the graph. Each element can have a length of O(l). The sum of lengths of the elements of htmlParser.getUrls(url) over all URLs is O(m⋅l).
             The total complexity is O(k⋅l+m⋅l). Since k=O(m), we can simplify this expression to O(m⋅l).
             •	Space complexity: O(m⋅l).
@@ -13679,10 +13871,10 @@ When we put these two parts together, the total time complexity is O((M+N)log(M+
             /*
             Approach 2: Breadth-first search
             Complexity Analysis
-            Let n be the total number of URLs (urls.length), m be the number of edges in the graph, and l be the maximum length of a URL (urls[i].length).
+            Let n be the total number of URLs (urls.Length), m be the number of edges in the graph, and l be the maximum length of a URL (urls[i].Length).
             •	Time complexity: O(m⋅l).
             Let k be the number of traversed vertices. We add each of these vertices to the set and to the queue in up to O(l) per vertex. The total time for inserting into the set and into the queue is thus O(k⋅l).
-            The most time-consuming part is calling htmlParser.getUrls(url) to get the edges outgoing from url and iterating over all nextUrl. When processing nextUrl, we call getHostname(nextUrl) and search nextUrl in the hash set. Both of these can take O(nextUrl.length)=O(l) time. The complexity equals the sum of all the O(l) work done.
+            The most time-consuming part is calling htmlParser.getUrls(url) to get the edges outgoing from url and iterating over all nextUrl. When processing nextUrl, we call getHostname(nextUrl) and search nextUrl in the hash set. Both of these can take O(nextUrl.Length)=O(l) time. The complexity equals the sum of all the O(l) work done.
             The total number of elements in htmlParser.getUrls(url) over all URLs is m – the total number of edges in the graph. Each element can have a length of O(l). The sum of lengths of the elements of htmlParser.getUrls(url) over all URLs is O(m⋅l).
             The total complexity is O(k⋅l+m⋅l). Since k=O(m), we can simplify this expression to O(m⋅l).
             •	Space complexity: O(n⋅l).
@@ -13714,68 +13906,107 @@ When we put these two parts together, the total time complexity is O((M+N)log(M+
 
         /* 1242. Web Crawler Multithreaded
         https://leetcode.com/problems/web-crawler-multithreaded/description/
+        https://algo.monster/liteproblems/1242        
          */
         class CrawlMultiThreadedSol
         {
+            /*1. Using Parallelism */
+            public IList<string> UsingParallelism(string startUrl, HtmlParser htmlParser)
+            {
+                HashSet<string> ans = new HashSet<string>();
+                string PREFIX = startUrl.Split("/")[2];
+                Queue<string> queue = new Queue<string>();
+                queue.Enqueue(startUrl);
+                ans.Add(startUrl);
+                Parallel.ForEach(Enumerable.Range(0, Environment.ProcessorCount * 2), _ =>
+                {
+                    while (true)
+                    {
+                        string current = null;
+                        lock (queue)
+                        {
+                            if (queue.Count == 0) return;
+                            current = queue.Dequeue();
+                        }
+                        foreach (var nextUrl in htmlParser.GetUrls(current))
+                        {
+                            if (!nextUrl.Split("/")[2].Equals(PREFIX) || ans.Contains(nextUrl))
+                            {
+                                continue;
+                            };
+                            lock (ans)
+                            {
+                                ans.Add(nextUrl);
+                            }
+                            lock (queue)
+                            {
+                                queue.Enqueue(nextUrl);
+                            }
+                        };
+                    }
+                });
+                return ans.ToList();
+            }
             public class HtmlParser
             {
                 public List<String> GetUrls(String url)
                 {
-                    return new List<string>(); //Dummy code}
-                }
-
-                public IList<string> Crawl(string startUrl, HtmlParser htmlParser)
-                {
-                    ConcurrentDictionary<string, bool> dict =
-                        new ConcurrentDictionary<string, bool>();
-                    if (IsValidHost(GetHostName(startUrl)))
-                    {
-                        dict[startUrl] = true;
-                    }
-                    CrawlPage(startUrl, htmlParser, dict).Wait();
-                    return dict.Keys.ToList();
-                }
-
-                private async Task CrawlPage(
-                    string url,
-                    HtmlParser htmlParser,
-                    ConcurrentDictionary<string, bool> dict
-                )
-                {
-                    IList<String> crawledUrls = htmlParser.GetUrls(url);
-                    List<Task> tasks = new();
-                    foreach (string c in crawledUrls)
-                    {
-                        if (
-                            !dict.ContainsKey(c)
-                            && GetHostName(url).Equals(GetHostName(c))
-                            && IsValidHost(GetHostName(c))
-                        )
-                        {
-                            dict[c] = true;
-                            tasks.Add(Task.Run(async () => await CrawlPage(c, htmlParser, dict)));
-                        }
-                    }
-                    await Task.WhenAll(tasks);
-                }
-
-                private string GetHostName(string url)
-                {
-                    string[] splits = url.Split("//");
-                    string second = splits[1];
-                    string[] ends = second.Split("/");
-                    return ends[0];
-                }
-
-                private bool IsValidHost(string hostName)
-                {
-                    if (hostName.Length < 1 || hostName.Length > 63)
-                    {
-                        return false;
-                    }
-                    return Regex.IsMatch(hostName, @"[a-z0-9.][a-z0-9.-]*[a-z0-9.]$");
+                    return new List<string>(); //Dummy code}}
                 }
             }
+            /*2. Using Concurrent Dict*/
+            public IList<string> UsingConcurrentDict(string startUrl, HtmlParser htmlParser)
+            {
+                ConcurrentDictionary<string, bool> dict =
+                    new ConcurrentDictionary<string, bool>();
+                if (IsValidHost(GetHostName(startUrl)))
+                {
+                    dict[startUrl] = true;
+                }
+                CrawlPage(startUrl, htmlParser, dict).Wait();
+                return dict.Keys.ToList();
+            }
+
+            private async Task CrawlPage(
+                string url,
+                HtmlParser htmlParser,
+                ConcurrentDictionary<string, bool> dict
+            )
+            {
+                IList<String> crawledUrls = htmlParser.GetUrls(url);
+                List<Task> tasks = new();
+                foreach (string c in crawledUrls)
+                {
+                    if (
+                        !dict.ContainsKey(c)
+                        && GetHostName(url).Equals(GetHostName(c))
+                        && IsValidHost(GetHostName(c))
+                    )
+                    {
+                        dict[c] = true;
+                        tasks.Add(Task.Run(async () => await CrawlPage(c, htmlParser, dict)));
+                    }
+                }
+                await Task.WhenAll(tasks);
+            }
+
+            private string GetHostName(string url)
+            {
+                string[] splits = url.Split("//");
+                string second = splits[1];
+                string[] ends = second.Split("/");
+                return ends[0];
+            }
+
+            private bool IsValidHost(string hostName)
+            {
+                if (hostName.Length < 1 || hostName.Length > 63)
+                {
+                    return false;
+                }
+                return Regex.IsMatch(hostName, @"[a-z0-9.][a-z0-9.-]*[a-z0-9.]$");
+            }
+
         }
 
         /* 1259. Handshakes That Don't Cross
@@ -14111,7 +14342,7 @@ o	Thus, the overall time complexity of the algorithm is O(N⋅K).
 o	We used a queue to maintain the order of visited states. In the worst case, the queue will contain the majority of the possible states that we need to visit, which in total is N⋅K as we discussed in the time complexity analysis. Thus, the space complexity of the queue is O(N⋅K).
 o	Other than the queue, we also used a set variable (named seen) to keep track of all the visited states along the way. Same as the queue, the space complexity of this set is also O(N⋅K).
 o	To sum up, the overall space complexity of the algorithm is O(N⋅K).
- 
+
             */
             public int BFS(int[][] grid, int k)
             {
@@ -15008,7 +15239,7 @@ Let n be the length of the jobDifficulty array, and d be the total number of day
             private long[][] memo;
 
             /*
-            
+
 Approach 1: Recursion with Memoization (Top-Down DP)
 Complexity Analysis
 If N is the number of the orders given.
@@ -15377,7 +15608,7 @@ Here N is the number of dishes.
 Sorting the array satisfaction takes O(NlogN) time, and then we iterate over the array satisfaction with time O(N). Thus, the total time complexity equals O(NlogN).
 •	Space complexity: O(logN).
 No extra space is needed apart from two variables. However, some space is required for sorting. The space complexity of the sorting algorithm depends on the implementation of each programming language. For instance, in Java, the Arrays.sort() for primitives is implemented as a variant of the quicksort algorithm whose space complexity is O(log⁡N). In C++ sort() function provided by STL is a hybrid of Quick Sort, Heap Sort, and Insertion Sort and has a worst-case space complexity of O(log⁡N). Thus, the inbuilt sort() function might add up to O(log⁡N) to space complexity. Hence, the space complexity equals O(log⁡N).
-   
+
             */
             public int WithGreedy(int[] satisfaction)
             {
@@ -15667,7 +15898,7 @@ o	The dfs function visits each node once, which takes O(n) time in total. Becaus
 •	Space complexity: O(n).
 o	Building the adjacency list takes O(n) space.
 o	The recursion call stack used by dfs can have no more than n elements in the worst-case scenario. It would take up O(n) space in that case.
- 
+
             */
             public int DFS(int n, int[][] connections)
             {
@@ -17419,7 +17650,7 @@ Here N is the size of the given array.
     Space complexity: O(1).
     No auxiliary space was used other than for the output array.
     Although, in Java, in order to maintain a dynamic size array (since we don't know the size of the output array at the beginning), we created an extra Array List that supports fast O(1) push operation. Array List can contain at most N elements, hence for the Java solution, the space complexity is O(N).
- 
+
             */
             public int[] UsingMontonicStackSpaceOptimaal(int[] heights)
             {
@@ -17809,7 +18040,7 @@ Post that, we would continue iteration until queue is not empty or remaining tru
         class MaximumBagsSol
         {
             /*
-            
+
 Approach 1: Greedy
 
 Complexity Analysis
@@ -17928,7 +18159,7 @@ o	In Swift, copying the costs array will also take an additional O(n) space.
             }
 
             /*
-            
+
 Approach 2: Counting Sort (Greedy)
 Complexity Analysis
 Let n be the length of the input array, and m be the maximum element in it.
@@ -18537,7 +18768,7 @@ The array maxDefense will be of size K to store the defense value corresponding 
                 }
                 else
                 { // Empty
-                    // Get number of mines first.
+                  // Get number of mines first.
                     int count = 0;
                     for (int i = -1; i < 2; i++)
                     {
@@ -18603,7 +18834,7 @@ The array maxDefense will be of size K to store the defense value corresponding 
                     }
                     else
                     { // Empty
-                        // Get number of mines first.
+                      // Get number of mines first.
                         int count = 0;
                         for (int i = -1; i < 2; i++)
                         {
@@ -18828,7 +19059,7 @@ o	We need to perform n breadth-first searches.
 •	Space complexity: O(n^2)
 o	There are at O(n^2) edges stored in graph.
 o	queue can store up to n nodes.
-  
+
             */
             public int BFS(int[][] bombs)
             {
@@ -19039,7 +19270,7 @@ o	We use three hash sets to store all the players, there are at most O(n) player
             }
 
             /*
-            
+
 Approach 2: Hash Set + Hash Map
 Complexity Analysis
 Let n be the size of the input array matches.
@@ -20240,14 +20471,124 @@ o	The space complexity of a recursive call depends on the maximum depth of the r
             }
         }
 
-        /* 1152. Analyze User Website Visit Pattern
-        https://leetcode.com/problems/analyze-user-website-visit-pattern/description/
+        /* 
+        1152. Analyze User Website Visit Pattern
+https://leetcode.com/problems/analyze-user-website-visit-pattern/description/
+https://algo.monster/liteproblems/1152
+
          */
-
-
         class MostVisitedPatternSol
         {
-            public IList<string> MostVisitedPattern(
+
+            /* Time and Space Complexity
+            Time Complexity
+            The time complexity can be split into a few different parts:
+            •	Sorting the combined list of (username, timestamp, website) by timestamp. If we say n is the number of events, this operation has a complexity of O(n log n).
+            •	Constructing the dictionary (d). The for-loop runs through each of the n events once, so this step has a complexity of O(n).
+            •	Constructing the 3-sequence set and counting. For each user, we generate all possible combinations of website visit sequences of length 3. In the worst case, every user visits m websites, and the number of possible combinations is O((m choose 3)), which is O(m^3/6) when expanded. Summing this up for all users, if u is the number of users, this step would have complexity of O(u * m^3/6). However, since m = n in the worst case (a single user visiting all websites), it simplifies to O(u * n^3/6).
+            •	Sorting the count dictionary cnt items which, in the worst case, can have as many as O(n^3/6) unique sequences. The complexity of this sort is O((n^3/6) log (n^3/6)), which simplifies to O(n^3 log n).
+            Considering all steps, the overall time complexity would be dominated by O(n log n) + O(n) + O(u * n^3/6) + O(n^3 log n) which simplifies to O(u * n^3/6) + O(n^3 log n) due to the higher powers of n.
+            Space Complexity
+            For space complexity, we consider the data structures used:
+            •	The dictionary d with the list of sites for each user. In the worst case, this can store up to n elements, giving O(n).
+            •	The set s which, in the worst case, can contain O(n^3/6) different sequences per user (again considering that a user visits all websites). Therefore, across all users, this could potentially be O(u * n^3/6).
+            •	The counter cnt, which will hold the same number of unique sequences as in set s, so it also has a possible space complexity of O(u * n^3/6).
+            Combining these observations, the overall space complexity would also be dictated by the counter and set, giving an upper bound of O(u * n^3/6). If u is not significantly large compared to n, we can approximate the space complexity to O(n^3) to reflect the worst-case scenario.
+             */
+            public List<string> MostVisitedPattern(string[] usernames, int[] timestamps, string[] websites)
+            {
+                // Map to hold data for each user and their list of Node objects (timestamps and websites visited).
+                var userData = new Dictionary<string, List<Node>>();
+                int visitCount = usernames.Length; // Total number of website visits
+
+                // Constructing the user data map from usernames, timestamps, and websites.
+                for (int i = 0; i < visitCount; ++i)
+                {
+                    string user = usernames[i];
+                    int ts = timestamps[i];
+                    string site = websites[i];
+                    if (!userData.ContainsKey(user))
+                    {
+                        userData[user] = new List<Node>();
+                    }
+                    userData[user].Add(new Node(user, ts, site));
+                }
+
+                // Map to hold the count of each unique 3-sequence pattern.
+                var patternFrequency = new Dictionary<string, int>();
+
+                // Process each user's site visit history to calculate the pattern frequency.
+                foreach (var sites in userData.Values)
+                {
+                    int visitSize = sites.Count;
+                    var sequences = new HashSet<string>();
+
+                    // Check if there are at least 3 sites visited to form a valid pattern.
+                    if (visitSize > 2)
+                    {
+                        // Sort the user's visit by timestamp
+                        sites.Sort((a, b) => a.Timestamp.CompareTo(b.Timestamp));
+
+                        // Iterate through combinations to form unique 3-sequence keys for this user
+                        for (int i = 0; i < visitSize - 2; ++i)
+                        {
+                            for (int j = i + 1; j < visitSize - 1; ++j)
+                            {
+                                for (int k = j + 1; k < visitSize; ++k)
+                                {
+                                    sequences.Add(sites[i].Website + "," +
+                                                  sites[j].Website + "," +
+                                                  sites[k].Website);
+                                }
+                            }
+                        }
+                    }
+
+                    // Count frequency of each 3-sequence pattern.
+                    foreach (string seq in sequences)
+                    {
+                        if (!patternFrequency.ContainsKey(seq))
+                        {
+                            patternFrequency[seq] = 0;
+                        }
+                        patternFrequency[seq]++;
+                    }
+                }
+
+                // Variables to track the maximum frequency and the corresponding pattern.
+                int maxFrequency = 0;
+                string topPattern = "";
+
+                // Iterate over the pattern frequencies to determine the most visited pattern.
+                foreach (var entry in patternFrequency)
+                {
+                    // Compare the count or lexicographical order if counts are equal.
+                    if (maxFrequency < entry.Value ||
+                        (maxFrequency == entry.Value && string.Compare(entry.Key, topPattern) < 0))
+                    {
+                        maxFrequency = entry.Value;
+                        topPattern = entry.Key;
+                    }
+                }
+
+                // Return the top pattern as a list of sites.
+                return topPattern.Split(',').ToList();
+
+            }
+            public class Node
+            {
+                public string User { get; set; }
+                public int Timestamp { get; set; }
+                public string Website { get; set; }
+
+                public Node(string user, int timestamp, string website)
+                {
+                    User = user;
+                    Timestamp = timestamp;
+                    Website = website;
+                }
+            }
+            public IList<string> MostVisitedPattern1(
                 string[] username,
                 int[] timestamp,
                 string[] website
@@ -20274,7 +20615,7 @@ o	The space complexity of a recursive call depends on the maximum depth of the r
                     // this set is to avoid visit the same 3-seq in one user
                     List<Pair> userVisits = userWebsiteMap[user];
                     userVisits.Sort((a, b) => a.Time.CompareTo(b.Time)); // sort by time
-                    // brute force O(N ^ 3)
+                                                                         // brute force O(N ^ 3)
                     for (int i = 0; i < userVisits.Count; i++)
                     {
                         for (int j = i + 1; j < userVisits.Count; j++)
@@ -20428,10 +20769,10 @@ o	The space complexity of a recursive call depends on the maximum depth of the r
             }
 
             /*
-Approach 2: Stack and No String Reversal
-Complexity Analysis
-•	Time Complexity: O(N), where N is the length of the string. The difference in time complexity between this approach and the previous one is that every character in this approach will get processed exactly once. However, in the previous approach, each character can potentially get processed twice, once when it's pushed onto the stack and once when it's popped for processing of the final result (or a subexpression). That's why this approach is faster.
-•	Space Complexity: O(N), where N is the length of the string.
+    Approach 2: Stack and No String Reversal
+    Complexity Analysis
+    •	Time Complexity: O(N), where N is the length of the string. The difference in time complexity between this approach and the previous one is that every character in this approach will get processed exactly once. However, in the previous approach, each character can potentially get processed twice, once when it's pushed onto the stack and once when it's popped for processing of the final result (or a subexpression). That's why this approach is faster.
+    •	Space Complexity: O(N), where N is the length of the string.
 
             */
             public int UsingStack(String s)
@@ -20509,9 +20850,9 @@ Complexity Analysis
         {
             /*
             Approach 1: Using Stack
-Complexity Analysis
-•	Time Complexity: O(n), where n is the length of the string s. We iterate over the string s at most twice.
-•	Space Complexity: O(n), where n is the length of the string s.
+    Complexity Analysis
+    •	Time Complexity: O(n), where n is the length of the string s. We iterate over the string s at most twice.
+    •	Space Complexity: O(n), where n is the length of the string s.
 
             */
             public int UsingStack(String s)
@@ -20565,8 +20906,8 @@ Complexity Analysis
             /*
             Approach 2: Optimised Approach without the stack
             Complexity Analysis
-•	Time Complexity: O(n), where n is the length of the string s.
-•	Space Complexity: O(1), as we use constant extra space to store lastNumber, result and so on.
+    •	Time Complexity: O(n), where n is the length of the string s.
+    •	Space Complexity: O(1), as we use constant extra space to store lastNumber, result and so on.
 
             */
             public int OptimalWithoutStack(String s)
@@ -20621,12 +20962,12 @@ Complexity Analysis
             /*
             Approach1: Stack
             Complexity Analysis
-Given n as the length of the expression,
-For this analysis, we will assume you are using the Python implementation since it is relevant that curr is of type int.
-•	Time complexity: O(n)
-The analysis here is simple - each character in the input can only be pushed and popped from the stack at most one time. Every other operation in each of the O(n) iterations costs O(1) - updating curr, calling evaluate, etc.
-•	Space complexity: O(n)
-The stack could grow to a size of O(n) - for example, if the expression contains only the addition of single-digit numbers.
+    Given n as the length of the expression,
+    For this analysis, we will assume you are using the Python implementation since it is relevant that curr is of type int.
+    •	Time complexity: O(n)
+    The analysis here is simple - each character in the input can only be pushed and popped from the stack at most one time. Every other operation in each of the O(n) iterations costs O(1) - updating curr, calling evaluate, etc.
+    •	Space complexity: O(n)
+    The stack could grow to a size of O(n) - for example, if the expression contains only the addition of single-digit numbers.
 
             */
             public int UsingStack(string s)
@@ -20712,12 +21053,12 @@ The stack could grow to a size of O(n) - for example, if the expression contains
 
             /*
             Approach 2: Solve Isolated Expressions With Recursion
-Complexity Analysis
-Given n as the length of the expression,
-•	Time complexity: O(n)
-The time complexity is the same as the previous approach for the same reason. i is strictly increasing and increments on each iteration. Any given character can only be pushed to a stack once and popped from a stack once, so the total number of operations across the algorithm is linear.
-•	Space complexity: O(n)
-The stacks across all function calls could grow to a size of O(n) - for example, if the expression contains only the addition of single-digit numbers.
+    Complexity Analysis
+    Given n as the length of the expression,
+    •	Time complexity: O(n)
+    The time complexity is the same as the previous approach for the same reason. i is strictly increasing and increments on each iteration. Any given character can only be pushed to a stack once and popped from a stack once, so the total number of operations across the algorithm is linear.
+    •	Space complexity: O(n)
+    The stacks across all function calls could grow to a size of O(n) - for example, if the expression contains only the addition of single-digit numbers.
 
             */
             public int SolveIsolatedExpressionsWithRecursion(string expression)
@@ -22227,14 +22568,14 @@ The stacks across all function calls could grow to a size of O(n) - for example,
             };
 
             /*
-Approach 1: Left-to-Right Pass
-Complexity Analysis
-Let n be the length of the input string (the total number of symbols in it).
-•	Time complexity : O(1).
-As there is a finite set of roman numerals, the maximum number possible number can be 3999, which in roman numerals is MMMCMXCIX. As such the time complexity is O(1).
-If roman numerals had an arbitrary number of symbols, then the time complexity would be proportional to the length of the input, i.e. O(n). This is assuming that looking up the value of each symbol is O(1).
-•	Space complexity : O(1).
-Because only a constant number of single-value variables are used, the space complexity is O(1).
+    Approach 1: Left-to-Right Pass
+    Complexity Analysis
+    Let n be the length of the input string (the total number of symbols in it).
+    •	Time complexity : O(1).
+    As there is a finite set of roman numerals, the maximum number possible number can be 3999, which in roman numerals is MMMCMXCIX. As such the time complexity is O(1).
+    If roman numerals had an arbitrary number of symbols, then the time complexity would be proportional to the length of the input, i.e. O(n). This is assuming that looking up the value of each symbol is O(1).
+    •	Space complexity : O(1).
+    Because only a constant number of single-value variables are used, the space complexity is O(1).
 
             */
             public int LeftToRightPass(string s)
@@ -22271,11 +22612,11 @@ Because only a constant number of single-value variables are used, the space com
 
             /*
             Approach 2: Left-to-Right Pass Improved
-Complexity Analysis
-•	Time complexity : O(1).
-Same as Approach 1.
-•	Space complexity : O(1).
-Same as Approach 1.
+    Complexity Analysis
+    •	Time complexity : O(1).
+    Same as Approach 1.
+    •	Space complexity : O(1).
+    Same as Approach 1.
 
             */
             static Dictionary<string, int> valuesStr = new Dictionary<string, int>
@@ -22321,12 +22662,12 @@ Same as Approach 1.
             }
 
             /*
-Approach 3: Right-to-Left Pass
-Complexity Analysis
-•	Time complexity : O(1).
-Same as Approach 1.
-•	Space complexity : O(1).
-Same as Approach 1.
+    Approach 3: Right-to-Left Pass
+    Complexity Analysis
+    •	Time complexity : O(1).
+    Same as Approach 1.
+    •	Space complexity : O(1).
+    Same as Approach 1.
             */
             public int RightToLeftPass(string s)
             {
@@ -22368,8 +22709,8 @@ Same as Approach 1.
             /*
             Approach 1: Recursion
             Complexity Analysis
-•	Time Complexity: O(N) since we process each node exactly twice. Once when we are counting the number of nodes in each recursive call, and then once when we are actually reversing the sub-list. A slightly optimized implementation here could be that we don't count the number of nodes at all and simply reverse k nodes. If at any point we find that we didn't have enough nodes, we can re-reverse the last set of nodes so as to keep the original structure as required by the problem statement. That ways, we can get rid of the extra counting.
-•	Space Complexity: O(N/k) used up by the recursion stack. The number of recursion calls is determined by both k and N. In every recursive call, we process k nodes and then make a recursive call to process the rest.
+    •	Time Complexity: O(N) since we process each node exactly twice. Once when we are counting the number of nodes in each recursive call, and then once when we are actually reversing the sub-list. A slightly optimized implementation here could be that we don't count the number of nodes at all and simply reverse k nodes. If at any point we find that we didn't have enough nodes, we can re-reverse the last set of nodes so as to keep the original structure as required by the problem statement. That ways, we can get rid of the extra counting.
+    •	Space Complexity: O(N/k) used up by the recursion stack. The number of recursion calls is determined by both k and N. In every recursive call, we process k nodes and then make a recursive call to process the rest.
 
             */
             public ListNode Rec(ListNode head, int k)
@@ -22411,7 +22752,7 @@ Same as Approach 1.
             /*
             Approach 2: Iterative O(1) space
             •	Time Complexity: O(N) since we process each node exactly twice. Once when we are counting the number of nodes in each recursive call, and then once when we are actually reversing the sub-list.
-•	Space Complexity: O(1).
+    •	Space Complexity: O(1).
 
             */
             public ListNode ReverseKGroup(ListNode head, int k)
@@ -22463,11 +22804,11 @@ Same as Approach 1.
         public class CandySol
         {
             /*
-            
-Approach 1: Brute Force
-Complexity Analysis
-•	Time complexity : O(n^2). We need to traverse the array at most n times. This is because at most, a child will get n candies, and their candy count will be update once on each traversal.
-•	Space complexity : O(n). One array, candies array of size n is used.
+
+    Approach 1: Brute Force
+    Complexity Analysis
+    •	Time complexity : O(n^2). We need to traverse the array at most n times. This is because at most, a child will get n candies, and their candy count will be update once on each traversal.
+    •	Space complexity : O(n). One array, candies array of size n is used.
 
             */
             public int Naive(int[] ratings)
@@ -22511,8 +22852,8 @@ Complexity Analysis
             /*
             Approach 2: Using two arrays
             Complexity Analysis
-•	Time complexity : O(n). left2right and right2left arrays are traversed thrice.
-•	Space complexity : O(n). Two arrays left2right and right2left of size n are used.
+    •	Time complexity : O(n). left2right and right2left arrays are traversed thrice.
+    •	Space complexity : O(n). Two arrays left2right and right2left of size n are used.
 
             */
             public int UsingTwoArrays(int[] ratings)
@@ -22548,8 +22889,8 @@ Complexity Analysis
             /*
             Approach 3: Using one array
             Complexity Analysis
-•	Time complexity : O(n). The array candies of size n is traversed thrice.
-•	Space complexity : O(n). An array candies of size n is used.
+    •	Time complexity : O(n). The array candies of size n is traversed thrice.
+    •	Space complexity : O(n). An array candies of size n is used.
 
             */
             public int UsingOneArray(int[] ratings)
@@ -22581,9 +22922,9 @@ Complexity Analysis
 
             /*
             Approach 4: Single Pass Approach with Constant Space
-Complexity Analysis
-•	Time complexity : O(n). We traverse the rankings array once only.
-•	Space complexity : O(1). Constant extra space is used.
+    Complexity Analysis
+    •	Time complexity : O(n). We traverse the rankings array once only.
+    •	Space complexity : O(1). Constant extra space is used.
 
             */
             // Function to calculate sum of first n natural numbers
@@ -22635,8 +22976,8 @@ Complexity Analysis
         {
             /*
             Complexity Analysis
-•	Time complexity : O(m+logn). In each iteration, we either increase the index i or we double the variable miss. The total number of increment for index i is m and the total number of doubling miss is logn
-•	Space complexity : O(1). We only need three variables, patches, i and miss.
+    •	Time complexity : O(m+logn). In each iteration, we either increase the index i or we double the variable miss. The total number of increment for index i is m and the total number of doubling miss is logn
+    •	Space complexity : O(1). We only need three variables, patches, i and miss.
 
             */
             public int MinPatches(int[] nums, int n)
@@ -22666,14 +23007,14 @@ Complexity Analysis
         {
             /*
 
-Approach 1: Bucket Sort
-Complexity Analysis
-Let n be the number of elements and M be the maximum possible distance.
-•	Time complexity: O(n^2+M)
-The O(n^2) term arises from the nested loops used to calculate all pairwise distances between elements. Since we are examining every possible pair of elements in the array, this results in n(n−1)/2 comparisons, which simplifies to O(n^2).
-After calculating all distances, we traverse the distanceBucket array to find the k-th smallest distance. This traversal is O(M), where M is the maximum possible distance, which is proportional to the largest element in the array. Thus, the total time complexity is O(n2+M), accounting for both the pair distance calculations and the bucket traversal.
-•	Space complexity: O(M)
-The space complexity is dominated by the distanceBucket array, which is used to count occurrences of each possible distance. The size of this array is proportional to the maximum possible distance M. Aside from this array, the space usage is minimal and does not depend on the number of elements, leading to a space complexity of O(M).
+    Approach 1: Bucket Sort
+    Complexity Analysis
+    Let n be the number of elements and M be the maximum possible distance.
+    •	Time complexity: O(n^2+M)
+    The O(n^2) term arises from the nested loops used to calculate all pairwise distances between elements. Since we are examining every possible pair of elements in the array, this results in n(n−1)/2 comparisons, which simplifies to O(n^2).
+    After calculating all distances, we traverse the distanceBucket array to find the k-th smallest distance. This traversal is O(M), where M is the maximum possible distance, which is proportional to the largest element in the array. Thus, the total time complexity is O(n2+M), accounting for both the pair distance calculations and the bucket traversal.
+    •	Space complexity: O(M)
+    The space complexity is dominated by the distanceBucket array, which is used to count occurrences of each possible distance. The size of this array is proportional to the maximum possible distance M. Aside from this array, the space usage is minimal and does not depend on the number of elements, leading to a space complexity of O(M).
 
             */
 
@@ -22722,18 +23063,18 @@ The space complexity is dominated by the distanceBucket array, which is used to 
 
             /*
             Approach 2: Binary Search + Dynamic Programming (DP)
-Complexity Analysis
-Let n be the number of elements and M be the maximum possible distance.
-•	Time complexity: O(nlogn+nlogM+M)
-The O(nlogn) term arises from sorting the array, which is necessary for efficiently calculating distances and performing binary search. Sorting takes O(nlogn) time.
-The O(nlogM) term comes from the binary search over the range of possible distances and counting pairs for each mid-value. Counting pairs involves traversing the array, and the binary search operations are logarithmic with respect to the maximum possible distance M. And we populate the prefixCount array by iterating through the possible values from 0 to maxPossibleDistance - 1 taking O(M). Hence, the combined time complexity is O(nlogn+nlogM+M).
-•	Space complexity: O(n+M+S)
-The space complexity includes O(n) for storing the prefixCount array and the value counts in the valueCount map. The prefixCount array tracks the number of elements up to each possible distance, while valueCount stores counts of each unique element. Additionally, O(M) is required for the prefixCount array.
-Some extra space is used when we sort an array of size n in place. The space complexity of the sorting algorithm (S) depends on the programming language. The value of S depends on the programming language and the sorting algorithm being used:
-o	In Python, the sort method sorts a list using the Timsort algorithm which is a combination of Merge Sort and Insertion Sort and has a space complexity of O(n)
-o	In C++, the sort() function is implemented as a hybrid of Quick Sort, Heap Sort, and Insertion Sort, with a worst-case space complexity of O(logn)
-o	In Java, Arrays.sort() is implemented using a variant of the Quick Sort algorithm which has a space complexity of O(logn)
-Thus, the total space complexity of the algorithm is O(n+M+S).
+    Complexity Analysis
+    Let n be the number of elements and M be the maximum possible distance.
+    •	Time complexity: O(nlogn+nlogM+M)
+    The O(nlogn) term arises from sorting the array, which is necessary for efficiently calculating distances and performing binary search. Sorting takes O(nlogn) time.
+    The O(nlogM) term comes from the binary search over the range of possible distances and counting pairs for each mid-value. Counting pairs involves traversing the array, and the binary search operations are logarithmic with respect to the maximum possible distance M. And we populate the prefixCount array by iterating through the possible values from 0 to maxPossibleDistance - 1 taking O(M). Hence, the combined time complexity is O(nlogn+nlogM+M).
+    •	Space complexity: O(n+M+S)
+    The space complexity includes O(n) for storing the prefixCount array and the value counts in the valueCount map. The prefixCount array tracks the number of elements up to each possible distance, while valueCount stores counts of each unique element. Additionally, O(M) is required for the prefixCount array.
+    Some extra space is used when we sort an array of size n in place. The space complexity of the sorting algorithm (S) depends on the programming language. The value of S depends on the programming language and the sorting algorithm being used:
+    o	In Python, the sort method sorts a list using the Timsort algorithm which is a combination of Merge Sort and Insertion Sort and has a space complexity of O(n)
+    o	In C++, the sort() function is implemented as a hybrid of Quick Sort, Heap Sort, and Insertion Sort, with a worst-case space complexity of O(logn)
+    o	In Java, Arrays.sort() is implemented using a variant of the Quick Sort algorithm which has a space complexity of O(logn)
+    Thus, the total space complexity of the algorithm is O(n+M+S).
 
             */
             public int DPWithBinarySearch(int[] nums, int k)
@@ -22812,19 +23153,19 @@ Thus, the total space complexity of the algorithm is O(n+M+S).
             }
 
             /*
-Approach 3: Binary Search + Sliding Window
-Complexity Analysis
-Let n be the number of elements and M be the maximum possible distance.
-•	Time complexity: O(nlogM+nlogn)
-The O(nlogM) term arises from the binary search over possible distances, where the search space is up to the maximum possible distance M. For each mid-value in the binary search, the countPairsWithMaxDistance function is called, which operates in linear time O(n).
-The binary search itself runs in O(logM) time. Hence, the combined time complexity is O(nlogM+nlogn), where the binary search and pair counting operations are combined.
-•	Space complexity: O(S)
-The space complexity is constant because the algorithm only uses a fixed amount of extra space for the left and right pointers, the mid-value, and counters. It does not require additional data structures that scale with the input size, so the space complexity is O(1), excluding the space used to store the input array.
-Some extra space is used when we sort an array of size n in place. The space complexity of the sorting algorithm (S) depends on the programming language. The value of S depends on the programming language and the sorting algorithm being used:
-o	In Python, the sort() method sorts a list using the Timsort algorithm which is a combination of Merge Sort and Insertion Sort and has a space complexity of O(n)
-o	In C++, the sort() function is implemented as a hybrid of Quick Sort, Heap Sort, and Insertion Sort, with a worst-case space complexity of O(logn)
-o	In Java, Arrays.sort() is implemented using a variant of the Quick Sort algorithm which has a space complexity of O(logn)
-Thus, the total space complexity of the algorithm is O(S).
+    Approach 3: Binary Search + Sliding Window
+    Complexity Analysis
+    Let n be the number of elements and M be the maximum possible distance.
+    •	Time complexity: O(nlogM+nlogn)
+    The O(nlogM) term arises from the binary search over possible distances, where the search space is up to the maximum possible distance M. For each mid-value in the binary search, the countPairsWithMaxDistance function is called, which operates in linear time O(n).
+    The binary search itself runs in O(logM) time. Hence, the combined time complexity is O(nlogM+nlogn), where the binary search and pair counting operations are combined.
+    •	Space complexity: O(S)
+    The space complexity is constant because the algorithm only uses a fixed amount of extra space for the left and right pointers, the mid-value, and counters. It does not require additional data structures that scale with the input size, so the space complexity is O(1), excluding the space used to store the input array.
+    Some extra space is used when we sort an array of size n in place. The space complexity of the sorting algorithm (S) depends on the programming language. The value of S depends on the programming language and the sorting algorithm being used:
+    o	In Python, the sort() method sorts a list using the Timsort algorithm which is a combination of Merge Sort and Insertion Sort and has a space complexity of O(n)
+    o	In C++, the sort() function is implemented as a hybrid of Quick Sort, Heap Sort, and Insertion Sort, with a worst-case space complexity of O(logn)
+    o	In Java, Arrays.sort() is implemented using a variant of the Quick Sort algorithm which has a space complexity of O(logn)
+    Thus, the total space complexity of the algorithm is O(S).
 
             */
             public int BinarySearchWithSlidingWindow(int[] nums, int k)
@@ -22959,18 +23300,18 @@ Thus, the total space complexity of the algorithm is O(S).
 
             /*
             Approach 2: Bottom Up Dynamic Programming (Tabulation)
-Complexity Analysis
-Let n be the length of the input string s.
-•	Time complexity: O(n^3)
-The initialization of the minTurns 2-D array and setting up base cases both take O(n) time. Filling the DP table involves three nested loops:
-1.	The outer loop iterates over substring lengths from 2 to n, running n−1 times.
-2.	The second loop iterates over possible starting indices for each substring, running up to n times.
-3.	The innermost loop iterates over possible split points, also running up to n times.
-As a result, the time complexity for filling the DP table is O((n−1)⋅n⋅n), which simplifies to O(n^3). Additionally, the removeDuplicates method, which iterates through the string s once, has a linear complexity of O(n).
-Therefore, the overall time complexity of the algorithm is 2⋅O(n)+O(n^3)=O(n^3).
-•	Space complexity: O(n^2)
-The minTurns 2-D array, with dimensions n×n, requires O(n^2) space. The processed string s (after removing duplicates) takes up O(n) space.
-Consequently, the overall space complexity of the algorithm is O(n^2)+O(n)=O(n^2).
+    Complexity Analysis
+    Let n be the length of the input string s.
+    •	Time complexity: O(n^3)
+    The initialization of the minTurns 2-D array and setting up base cases both take O(n) time. Filling the DP table involves three nested loops:
+    1.	The outer loop iterates over substring lengths from 2 to n, running n−1 times.
+    2.	The second loop iterates over possible starting indices for each substring, running up to n times.
+    3.	The innermost loop iterates over possible split points, also running up to n times.
+    As a result, the time complexity for filling the DP table is O((n−1)⋅n⋅n), which simplifies to O(n^3). Additionally, the removeDuplicates method, which iterates through the string s once, has a linear complexity of O(n).
+    Therefore, the overall time complexity of the algorithm is 2⋅O(n)+O(n^3)=O(n^3).
+    •	Space complexity: O(n^2)
+    The minTurns 2-D array, with dimensions n×n, requires O(n^2) space. The processed string s (after removing duplicates) takes up O(n) space.
+    Consequently, the overall space complexity of the algorithm is O(n^2)+O(n)=O(n^2).
 
             */
             public int BottomUpDPTabulation(string s)
@@ -23141,8 +23482,8 @@ Consequently, the overall space complexity of the algorithm is O(n^2)+O(n)=O(n^2
             /*
             Approach2: Segment Tree
             Complexity
-•	Time complexity: O(n∗log(n)) -->
-•	Space complexity: O(n)
+    •	Time complexity: O(n∗log(n)) -->
+    •	Space complexity: O(n)
 
             */
             public List<bool> UsingSegmentTree(List<List<int>> queries)
@@ -23414,9 +23755,9 @@ Consequently, the overall space complexity of the algorithm is O(n^2)+O(n)=O(n^2
 
             /*
             Approach 2: Dynamic Programming
-Complexity Analysis
-•	Time Complexity: O(2^T∗S∗T) where S is the total number of letters in all stickers, and T is the number of letters in the target word. We can examine each loop carefully to arrive at this conclusion.
-•	Space Complexity: O(2^T), the space used by dp.
+    Complexity Analysis
+    •	Time Complexity: O(2^T∗S∗T) where S is the total number of letters in all stickers, and T is the number of letters in the target word. We can examine each loop carefully to arrive at this conclusion.
+    •	Space Complexity: O(2^T), the space used by dp.
 
             */
             public int DP(String[] stickers, String target)
@@ -23533,13 +23874,13 @@ Complexity Analysis
             }
 
             /*
-Approach 2: Bottom-Up Dynamic Programming
-Complexity Analysis
-Here N is the length of the array and M is the number of subarrays allowed.
-•	Time complexity: O(N^2⋅M)
-Each state is defined by the values currIndex and subarrayCount. As such, there are N⋅M possible states, and we must visit almost every state in order to solve the original problem. Each state (subproblem) requires O(N) time because we have a for loop from currIndex to N - subarrayCount; because we have stored the result in the table memo, any repeated calls will only require constant time. Thus the total time complexity is equal to O(N^2⋅M).
-•	Space complexity: O(N⋅M)
-The results are stored in the table memo with size N⋅M. Hence, the space complexity is equal to O(N⋅M).
+    Approach 2: Bottom-Up Dynamic Programming
+    Complexity Analysis
+    Here N is the length of the array and M is the number of subarrays allowed.
+    •	Time complexity: O(N^2⋅M)
+    Each state is defined by the values currIndex and subarrayCount. As such, there are N⋅M possible states, and we must visit almost every state in order to solve the original problem. Each state (subproblem) requires O(N) time because we have a for loop from currIndex to N - subarrayCount; because we have stored the result in the table memo, any repeated calls will only require constant time. Thus the total time complexity is equal to O(N^2⋅M).
+    •	Space complexity: O(N⋅M)
+    The results are stored in the table memo with size N⋅M. Hence, the space complexity is equal to O(N⋅M).
 
             */
             // Defined it as per the maximum size of array and split count
@@ -23603,13 +23944,13 @@ The results are stored in the table memo with size N⋅M. Hence, the space compl
             }
 
             /*
-Approach 3: Binary Search
-Complexity Analysis
-Here N is the length of the array and S is the sum of integers in the array.
-•	Time complexity: O(N⋅log(S))
-The total number of iterations in the binary search is log(S), and for each such iteration, we call minimumSubarraysRequired which takes O(N) time. Hence, the time complexity is equal to O(N⋅log(S)).
-•	Space complexity: O(1)
-We do not use any data structures that require more than constant extra space.
+    Approach 3: Binary Search
+    Complexity Analysis
+    Here N is the length of the array and S is the sum of integers in the array.
+    •	Time complexity: O(N⋅log(S))
+    The total number of iterations in the binary search is log(S), and for each such iteration, we call minimumSubarraysRequired which takes O(N) time. Hence, the time complexity is equal to O(N⋅log(S)).
+    •	Space complexity: O(1)
+    We do not use any data structures that require more than constant extra space.
 
             */
             public int UsingBinarySearch(int[] nums, int m)
@@ -23683,8 +24024,8 @@ We do not use any data structures that require more than constant extra space.
         {
             /*
             Complexity
-O(n logn).
-O(n) steps in the iteration, since we have to complete at most n buildings before finding out the maximum score. Binary search in each step takes O(logn) (I think it can be reduced to O(1) since the minimum flower is monotonically decreasing, as we increase the number of complete gardens).
+    O(n logn).
+    O(n) steps in the iteration, since we have to complete at most n buildings before finding out the maximum score. Binary search in each step takes O(logn) (I think it can be reduced to O(1) since the minimum flower is monotonically decreasing, as we increase the number of complete gardens).
             */
             public long MaximumBeauty(
                 int[] flowers,
@@ -23753,9 +24094,9 @@ O(n) steps in the iteration, since we have to complete at most n buildings befor
         {
             /*
             Approach #1: Exhaustive Search [Time Limit Exceeded]
-Complexity Analysis
-•	Time Complexity: O(2^(tx+ty)), a loose bound found by considering every move as (x, y) -> (x+1, y) or (x, y) -> (x, y+1) instead.
-•	Space Complexity: O(tx∗ty), the size of the implicit call stack.
+    Complexity Analysis
+    •	Time Complexity: O(2^(tx+ty)), a loose bound found by considering every move as (x, y) -> (x+1, y) or (x, y) -> (x, y+1) instead.
+    •	Space Complexity: O(tx∗ty), the size of the implicit call stack.
 
             */
             public bool ExhaustiveSearch(int sx, int sy, int tx, int ty)
@@ -23771,8 +24112,8 @@ Complexity Analysis
             /*
             Approach #2: Dynamic Programming [Time Limit Exceeded]
             Complexity Analysis
-•	Time Complexity: O(tx∗ty), as at most tx * ty points are searched once per point.
-•	Space Complexity: O(tx∗ty), the size of the implicit call stack.
+    •	Time Complexity: O(tx∗ty), as at most tx * ty points are searched once per point.
+    •	Space Complexity: O(tx∗ty), the size of the implicit call stack.
 
             */
             HashSet<Point> seen;
@@ -23814,8 +24155,8 @@ Complexity Analysis
             /*
             Approach #3: Work Backwards (Naive Variant) [Time Limit Exceeded]
             Complexity Analysis
-•	Time Complexity: O(max(tx,ty)). If say ty = 1, we could be subtracting tx times.
-•	Space Complexity: O(1).
+    •	Time Complexity: O(max(tx,ty)). If say ty = 1, we could be subtracting tx times.
+    •	Space Complexity: O(1).
 
             */
             public bool WorkBackwardsNaive(int sx, int sy, int tx, int ty)
@@ -23833,10 +24174,10 @@ Complexity Analysis
             }
 
             /*
-Approach #4: Work Backwards (Modulo Variant) [Accepted]
-Complexity Analysis
-•	Time Complexity: O(log(max(tx,ty))). The analysis is similar to the analysis of the Euclidean algorithm, and we assume that the modulo operation can be done in O(1) time.
-•	Space Complexity: O(1).
+    Approach #4: Work Backwards (Modulo Variant) [Accepted]
+    Complexity Analysis
+    •	Time Complexity: O(log(max(tx,ty))). The analysis is similar to the analysis of the Euclidean algorithm, and we assume that the modulo operation can be done in O(1) time.
+    •	Space Complexity: O(1).
 
             */
             public bool WorkBackwardsNaiveModulo(int sx, int sy, int tx, int ty)
@@ -23914,12 +24255,12 @@ Complexity Analysis
 
             /*
             Approach 2: Bottom-Up Dynamic Programming
-Complexity Analysis
-Given n as the length of cost and time,
-•	Time complexity: O(n^2)
-i ranges from 0 to n and remain ranges from n to 0. Thus, there are O(n^2) states. Each state is calculated only once. To calculate a state, we simply check two options paint and dontPaint, which costs O(1).
-•	Space complexity: O(n^2)
-The dp table takes O(n^2) space.
+    Complexity Analysis
+    Given n as the length of cost and time,
+    •	Time complexity: O(n^2)
+    i ranges from 0 to n and remain ranges from n to 0. Thus, there are O(n^2) states. Each state is calculated only once. To calculate a state, we simply check two options paint and dontPaint, which costs O(1).
+    •	Space complexity: O(n^2)
+    The dp table takes O(n^2) space.
 
             */
             public int BottomUpDP(int[] cost, int[] time)
@@ -23948,11 +24289,11 @@ The dp table takes O(n^2) space.
             /*
             Approach 3: Space-Optimized Dynamic Programming
             Complexity Analysis
-Given n as the length of cost and time,
-•	Time complexity: O(n^2)
-i ranges from 0 to n and remain ranges from n to 0. Thus, there are O(n^2) states. Each state is calculated only once. To calculate a state, we simply check two options paint and dontPaint, which costs O(1).
-•	Space complexity: O(n)
-We have improved on space by making dp a 1d array of length O(n).
+    Given n as the length of cost and time,
+    •	Time complexity: O(n^2)
+    i ranges from 0 to n and remain ranges from n to 0. Thus, there are O(n^2) states. Each state is calculated only once. To calculate a state, we simply check two options paint and dontPaint, which costs O(1).
+    •	Space complexity: O(n)
+    We have improved on space by making dp a 1d array of length O(n).
 
             */
             public int BottomUpDPSpaceOptimal(int[] cost, int[] time)
@@ -24165,13 +24506,13 @@ We have improved on space by making dp a 1d array of length O(n).
 
             /*
             Approach 2: Backtracking
-Complexity Analysis
-Let W be the length of words, L be the maximum length of any word in words, and A be the size of the alphabet (in this case, A=26).
-•	Time complexity: O((2^W)⋅(L+A)).
-There are a total of (2^W) subsets that could be checked, and the check function could be called for each one, or up to (2^W)times. Inside the check function, we iterate through the current word's letters to determine if the subset it currently belongs in is valid, which takes L time. Additionally, the isValidWord function takes A time because we compare the count of each letter in the alphabet with the frequency. This yields a complexity of O((2^W) (L+A).
-While the worst-case runtime of backtracking matches the worst-case runtime of the iterative solution, in practice, the backtracking solution will prune many subset possibilities that break the limits imposed by the given letters and will run significantly faster than the iterative solution.
-•	Space complexity: O(A+W).
-In this implementation, only two arrays of length A are created: the freq array that stores the frequencies of characters in letters, and the subsetLetters array that stores letter frequencies for the current subset. Additionally, the check method is called with and without each element in words, which incurs O(W) space on the recursive call stack.
+    Complexity Analysis
+    Let W be the length of words, L be the maximum length of any word in words, and A be the size of the alphabet (in this case, A=26).
+    •	Time complexity: O((2^W)⋅(L+A)).
+    There are a total of (2^W) subsets that could be checked, and the check function could be called for each one, or up to (2^W)times. Inside the check function, we iterate through the current word's letters to determine if the subset it currently belongs in is valid, which takes L time. Additionally, the isValidWord function takes A time because we compare the count of each letter in the alphabet with the frequency. This yields a complexity of O((2^W) (L+A).
+    While the worst-case runtime of backtracking matches the worst-case runtime of the iterative solution, in practice, the backtracking solution will prune many subset possibilities that break the limits imposed by the given letters and will run significantly faster than the iterative solution.
+    •	Space complexity: O(A+W).
+    In this implementation, only two arrays of length A are created: the freq array that stores the frequencies of characters in letters, and the subsetLetters array that stores letter frequencies for the current subset. Additionally, the check method is called with and without each element in words, which incurs O(W) space on the recursive call stack.
 
             */
             public int WithBacktracking(String[] words, char[] letters, int[] score)
@@ -24254,8 +24595,8 @@ In this implementation, only two arrays of length A are created: the freq array 
             /*
             Approach 1: DP - Brute Force - TLE
             Complexity
-Time O(n^2)
-Space O(n)
+    Time O(n^2)
+    Space O(n)
 
             */
             public int Naive(List<int> nums)
@@ -24336,8 +24677,8 @@ Space O(n)
             /*
             Approach 3: DP + BinarySearch
             Complexity
-Time O(nlogn)
-Space O(n)
+    Time O(nlogn)
+    Space O(n)
 
             */
             public int DPWithBinarySearch(int[] nums)
@@ -24367,8 +24708,8 @@ Space O(n)
             /*
             Approach 4: Prefix Sum with Monotonic Stack
             Complexity
-Time O(n)
-Space O(n) */
+    Time O(n)
+    Space O(n) */
             public int PrefixSumwithMonoStack(List<int> nums)
             {
                 int n = nums.Count;
@@ -24450,13 +24791,13 @@ Space O(n) */
 
             /*
             Approach 2: Iteration
-Complexity Analysis
-•	Time complexity: O((log^2)n)
-The while loop will iterate logn times. For each set bit, it will perform an exponentiation that costs O(logn).
-This algorithm shares the same worst-case scenario as the previous approach. When n=(2^k)−1, the cost of exponentiation would be 1+2+3+...+logn. This is the partial sum of this series for logn, which is equal to (logn⋅((logn)+1))/2=O((log^2)n).
-•	Space complexity: O(1)
-This may be controversial. We aren't using any extra space other than a few integers. However, mask grows to a value linear with n. One could argue that such a value uses O(logn) space, although mask never has more than one bit set.
-We have written the space complexity as constant here as it is a standard convention to consider integers as using O(1) space. However, there is nuance to consider when the nature of the problem focuses on bits.
+    Complexity Analysis
+    •	Time complexity: O((log^2)n)
+    The while loop will iterate logn times. For each set bit, it will perform an exponentiation that costs O(logn).
+    This algorithm shares the same worst-case scenario as the previous approach. When n=(2^k)−1, the cost of exponentiation would be 1+2+3+...+logn. This is the partial sum of this series for logn, which is equal to (logn⋅((logn)+1))/2=O((log^2)n).
+    •	Space complexity: O(1)
+    This may be controversial. We aren't using any extra space other than a few integers. However, mask grows to a value linear with n. One could argue that such a value uses O(logn) space, although mask never has more than one bit set.
+    We have written the space complexity as constant here as it is a standard convention to consider integers as using O(1) space. However, there is nuance to consider when the nature of the problem focuses on bits.
 
              */
             public int UsingMathAndIteration(int n)
@@ -24480,14 +24821,14 @@ We have written the space complexity as constant here as it is a standard conven
             }
 
             /*             Approach 3: Gray Code
-Complexity Analysis
-•	Time complexity: O(logn)
-The bit operations require logarithmic time. As we are always performing 10 operations (5 XORs, 5 shifts), the time complexity is O(logn).
-However, we should note that the reason we are able to hardcode these 5 lines is because we know the input is a 32-bit integer. What if we wanted to develop an algorithm that could handle an arbitrarily large integer?
-The number of logarithmic-time operations we would require is logarithmic with the number of bits, which is logarithmic with n. Thus, the time complexity would be O(log(logn)⋅logn).
-As log(logn) grows extremely slowly, this is a very efficient algorithm. For log(logn) to grow to even a value of 100 would require n to have 2^100 bits, a number so large it could not be explicitly written in any physical format within the observable universe. As such, this term could be considered a constant for any practical value of n.
-•	Space complexity: O(1)
-We aren't using any extra space. The previous approach's analysis does not apply here since we don't count the answer as part of the space complexity.
+    Complexity Analysis
+    •	Time complexity: O(logn)
+    The bit operations require logarithmic time. As we are always performing 10 operations (5 XORs, 5 shifts), the time complexity is O(logn).
+    However, we should note that the reason we are able to hardcode these 5 lines is because we know the input is a 32-bit integer. What if we wanted to develop an algorithm that could handle an arbitrarily large integer?
+    The number of logarithmic-time operations we would require is logarithmic with the number of bits, which is logarithmic with n. Thus, the time complexity would be O(log(logn)⋅logn).
+    As log(logn) grows extremely slowly, this is a very efficient algorithm. For log(logn) to grow to even a value of 100 would require n to have 2^100 bits, a number so large it could not be explicitly written in any physical format within the observable universe. As such, this term could be considered a constant for any practical value of n.
+    •	Space complexity: O(1)
+    We aren't using any extra space. The previous approach's analysis does not apply here since we don't count the answer as part of the space complexity.
 
              */
             public int UsingGrayCode(int n)
@@ -24760,10 +25101,10 @@ We aren't using any extra space. The previous approach's analysis does not apply
             /*
             1. Union Find
            Complexity
-Time O(n^2logn), where logn can be improved to constant.
-Space O(n)
+    Time O(n^2logn), where logn can be improved to constant.
+    Space O(n)
 
- 
+
             */
             private int Find(int[] f, int i)
             {
@@ -25055,11 +25396,11 @@ Space O(n)
             /*
             1. Binary Search
             Complexity
-Time complexity:
-O(n * log(N)) where N is the maximum value in nums.
+    Time complexity:
+    O(n * log(N)) where N is the maximum value in nums.
 
-Space complexity:
-O(1)        */
+    Space complexity:
+    O(1)        */
             public int UsingBinarySearch(int[] nums, int x, int y)
             {
                 int right = nums[0];
@@ -25120,9 +25461,9 @@ O(1)        */
             /*
             Approach 2: Dynamic Programming (Top-Down)
             Complexity Analysis
-Let N be the number of balloons given.
-•	Time complexity: O(N^3). There are O(N^2) states. For each state, determining the maximum coins requires iterating over all balloons in the range [left, right]. Thus the total time complexity is O(N^2)×O(N)=O(N^3).
-•	Space complexity: O(N^2). We need O(N^2) to store all states, O(N) for stacks to perform recursion, and O(N) to store [1] + nums + [1]. In total, this algorithm requires O(N^2)+O(N)+O(N)=O(N^2) space.
+    Let N be the number of balloons given.
+    •	Time complexity: O(N^3). There are O(N^2) states. For each state, determining the maximum coins requires iterating over all balloons in the range [left, right]. Thus the total time complexity is O(N^2)×O(N)=O(N^3).
+    •	Space complexity: O(N^2). We need O(N^2) to store all states, O(N) for stacks to perform recursion, and O(N) to store [1] + nums + [1]. In total, this algorithm requires O(N^2)+O(N)+O(N)=O(N^2) space.
 
 
             */
@@ -25228,13 +25569,13 @@ Let N be the number of balloons given.
 
             /* Approach 1: Depth First Search
             Complexity Analysis
-Here, n is the number of nodes.
-•	Time complexity: O(n)
-o	Each node is visited by the dfs function once, which takes O(n) time in total. We also iterate over the edges of every node once (since we don't visit a node more than once, we don't iterate its edges more than once), which adds O(n) time since we have n−1 edges.
-o	We also need O(n) time to initialize the children array.
-•	Space complexity: O(n)
-o	The recursion call stack used by dfs can have no more than n elements in the worst-case scenario. So, we would take up O(n) space in the worst case.
-o	We also need O(n) space for the the children array.
+    Here, n is the number of nodes.
+    •	Time complexity: O(n)
+    o	Each node is visited by the dfs function once, which takes O(n) time in total. We also iterate over the edges of every node once (since we don't visit a node more than once, we don't iterate its edges more than once), which adds O(n) time since we have n−1 edges.
+    o	We also need O(n) time to initialize the children array.
+    •	Space complexity: O(n)
+    o	The recursion call stack used by dfs can have no more than n elements in the worst-case scenario. So, we would take up O(n) space in the worst case.
+    o	We also need O(n) space for the the children array.
 
              */
             public int DFS(int[] parent, string s)
@@ -25723,6 +26064,41 @@ o	We also need O(n) space for the the children array.
             }
         }
 
+        /* 2498. Frog Jump II
+        https://leetcode.com/problems/frog-jump-ii/description/
+        https://algo.monster/liteproblems/2498
+         */
+        class FrogJumpIISol
+        {
+            /* Time and Space Complexity
+            The given Python code snippet defines a method maxJump that determines the maximum jump between consecutive or alternate stones in a list of stones represented by their positions in stones.
+            Time Complexity
+            The time complexity of the code is O(n), where n is the length of the stones list. This is because there is a single for loop iterating through the stones array, starting at the second index and performing a constant time operation (calculating the maximum jump and updating ans) during each iteration.
+            Space Complexity
+            The space complexity of the code is O(1), which means it is constant space complexity. Apart from the input list itself, the only additional storage used is a single variable ans to keep track of the current maximum jump, which does not rely on the size of the input.
+             */
+            // Method to calculate the maximum jump distance between consecutive stones
+            public int MaxJump(int[] stones)
+            {
+                // Initialize the maximum jump to the distance between the first two stones
+                int maxJumpDistance = stones[1] - stones[0];
+
+                // Loop through the array starting from the third stone
+                for (int i = 2; i < stones.Length; ++i)
+                {
+                    // Calculate the jump distance between the current stone and the stone two steps back
+                    int jumpDistance = stones[i] - stones[i - 2];
+
+                    // Update the maximum jump distance if the current jump is greater
+                    maxJumpDistance = Math.Max(maxJumpDistance, jumpDistance);
+                }
+
+                // Return the maximum jump distance found
+                return maxJumpDistance;
+            }
+        }
+
+
         /* 632. Smallest Range Covering Elements from K Lists
         https://leetcode.com/problems/smallest-range-covering-elements-from-k-lists/description/
          */
@@ -25880,8 +26256,8 @@ o	We also need O(n) space for the the children array.
         {
             /* Approach #1: Recursion
             Complexity Analysis
-•	Time Complexity: O(N^2), where N is the length of S.
-•	Space Complexity: O(N).
+    •	Time Complexity: O(N^2), where N is the length of S.
+    •	Space Complexity: O(N).
 
              */
             public string Recur(string inputString)
@@ -26177,10 +26553,10 @@ o	We also need O(n) space for the the children array.
             }
 
             /*
-Approach 2: Bottom Up DP  (3D)
-Time Complexity: O(n^3 * K) (n is the number of stone)
+    Approach 2: Bottom Up DP  (3D)
+    Time Complexity: O(n^3 * K) (n is the number of stone)
 
-*/
+    */
             public int BottomUp3DDP(int[] stones, int K)
             {
                 int len = stones.Length;
@@ -26405,16 +26781,16 @@ Time Complexity: O(n^3 * K) (n is the number of stone)
 
             /* Approach 2: Hierholzer's Algorithm
             Complexity
-•	Time Complexity: O(∣E∣log (∣E∣/∣V|)) where ∣E∣ is the number of edges (flights) in the input.
-o	As one can see from the above algorithm, during the DFS process, we would traverse each edge once. Therefore, the complexity of the DFS function would be ∣E∣.
-o	However, before the DFS, we need to sort the outgoing edges for each vertex. And this, unfortunately, dominates the overall complexity.
-o	It is though tricky to estimate the complexity of sorting, which depends on the structure of the input graph.
-o	In the worst case where the graph is not balanced, i.e. the connections are concentered in a single airport. Imagine the graph is of star shape, in this case, the JFK airport would assume half of the flights (since we still need the return flight). As a result, the sorting operation on this airport would be exceptionally expensive, i.e. NlogN, where N=2∣E∣. And this would be the final complexity as well since it dominates the rest of the calculation.
-o	Let us consider a less bad case, or an average case, where the graph is less clustered, i.e. each node has an equal number of outgoing flights. Under this assumption, each airport would have (2⋅∣V∣)∣E∣ number of flights (still we need the return flights). Again, we can plug it into the NlogN minimal sorting complexity. In addition, this time, we need to take into consideration all airports, rather than the superhub (JFK) in the above case. As a result, we have ∣V∣⋅(NlogN), where N=2⋅∣V∣∣E∣. If we expand the formula, we will obtain the complexity of the average case as O(2∣E∣log2⋅∣V∣∣E∣)=O(∣E∣log∣V∣∣E∣)
-•	Space Complexity: O(∣V∣+∣E∣) where ∣V∣ is the number of airports and ∣E∣ is the number of flights.
-o	In the algorithm, we use the graph, which would require the space of ∣V∣+∣E∣.
-o	Since we applied recursion in the algorithm, which would incur additional memory consumption in the function call stack. The maximum depth of the recursion would be exactly the number of flights in the input, i.e. ∣E∣.
-o	As a result, the total space complexity of the algorithm would be O(∣V∣+2⋅∣E∣)=O(∣V∣+∣E∣).
+    •	Time Complexity: O(∣E∣log (∣E∣/∣V|)) where ∣E∣ is the number of edges (flights) in the input.
+    o	As one can see from the above algorithm, during the DFS process, we would traverse each edge once. Therefore, the complexity of the DFS function would be ∣E∣.
+    o	However, before the DFS, we need to sort the outgoing edges for each vertex. And this, unfortunately, dominates the overall complexity.
+    o	It is though tricky to estimate the complexity of sorting, which depends on the structure of the input graph.
+    o	In the worst case where the graph is not balanced, i.e. the connections are concentered in a single airport. Imagine the graph is of star shape, in this case, the JFK airport would assume half of the flights (since we still need the return flight). As a result, the sorting operation on this airport would be exceptionally expensive, i.e. NlogN, where N=2∣E∣. And this would be the final complexity as well since it dominates the rest of the calculation.
+    o	Let us consider a less bad case, or an average case, where the graph is less clustered, i.e. each node has an equal number of outgoing flights. Under this assumption, each airport would have (2⋅∣V∣)∣E∣ number of flights (still we need the return flights). Again, we can plug it into the NlogN minimal sorting complexity. In addition, this time, we need to take into consideration all airports, rather than the superhub (JFK) in the above case. As a result, we have ∣V∣⋅(NlogN), where N=2⋅∣V∣∣E∣. If we expand the formula, we will obtain the complexity of the average case as O(2∣E∣log2⋅∣V∣∣E∣)=O(∣E∣log∣V∣∣E∣)
+    •	Space Complexity: O(∣V∣+∣E∣) where ∣V∣ is the number of airports and ∣E∣ is the number of flights.
+    o	In the algorithm, we use the graph, which would require the space of ∣V∣+∣E∣.
+    o	Since we applied recursion in the algorithm, which would incur additional memory consumption in the function call stack. The maximum depth of the recursion would be exactly the number of flights in the input, i.e. ∣E∣.
+    o	As a result, the total space complexity of the algorithm would be O(∣V∣+2⋅∣E∣)=O(∣V∣+∣E∣).
 
              */
             // origin -> list of destinations
@@ -26632,7 +27008,7 @@ o	As a result, the total space complexity of the algorithm would be O(∣V∣+2�
                     count;
                 while (N % 2 == 0)
                     N /= 2; //we dont want any even factors, so squeeze all 2 factors first
-                //iterate 3,5,7,9... note: when oddNum get to 9, it will just skip because factor 3 already removed.
+                            //iterate 3,5,7,9... note: when oddNum get to 9, it will just skip because factor 3 already removed.
                 for (int i = 3; i * i <= N; i += 2)
                 {
                     count = 0;
@@ -26652,7 +27028,7 @@ o	As a result, the total space complexity of the algorithm would be O(∣V∣+2�
                 }
                 else
                 { //en==1 so oddNum*oddNum > N (Pn*Pn > Pn^1)
-                    //why 2 ?: last N is the largest prime number and its exponent is 1
+                  //why 2 ?: last N is the largest prime number and its exponent is 1
                     return res * 2;
                 }
             }
@@ -26759,8 +27135,8 @@ o	As a result, the total space complexity of the algorithm would be O(∣V∣+2�
             /*
              Approach 1: Brute Force Approach [Time Limit Exceeded]
              Complexity Analysis
-•	Time complexity: O(n!). Let f(n) be the time to find the solution of n boxes with n different colors, then f(n)=n∗f(n−1) which results in the n! time complexity.
-•	Space complexity: O(n^2). The recursive tree goes upto a depth of n, with every level consisting of upto n newBoxes elements.
+    •	Time complexity: O(n!). Let f(n) be the time to find the solution of n boxes with n different colors, then f(n)=n∗f(n−1) which results in the n! time complexity.
+    •	Space complexity: O(n^2). The recursive tree goes upto a depth of n, with every level consisting of upto n newBoxes elements.
 
              */
             public int Naive(int[] boxes)
@@ -26805,9 +27181,9 @@ o	As a result, the total space complexity of the algorithm would be O(∣V∣+2�
             /*
             Approach 2: Top-Down Dynamic Programming
             Complexity Analysis
-•	Time complexity: O(n^4) dp array of size n^3 is filled, and linear
-time is taken to process each element.
-•	Space complexity: O(n^3) dp array is of size n^3.
+    •	Time complexity: O(n^4) dp array of size n^3 is filled, and linear
+    time is taken to process each element.
+    •	Space complexity: O(n^3) dp array is of size n^3.
 
             */
             public int TopDownDP(int[] boxes)
@@ -26907,8 +27283,8 @@ time is taken to process each element.
             /*
             Approach 1: Coordinate Compression
             Complexity Analysis
-•	Time Complexity: O(N^3), where N is the number of rectangles.
-•	Space Complexity: O(N^2).
+    •	Time Complexity: O(N^3), where N is the number of rectangles.
+    •	Space Complexity: O(N^2).
 
              */
             public int UsingCoordinateCompression(int[][] rectangles)
@@ -26960,8 +27336,8 @@ time is taken to process each element.
             /*
             Approach 2: Line Sweep
             Complexity Analysis
-•	Time Complexity: O((N^2)logN), where N is the number of rectangles.
-•	Space Complexity: O(N).
+    •	Time Complexity: O((N^2)logN), where N is the number of rectangles.
+    •	Space Complexity: O(N).
 
              */
             public int UsingLineSwap(int[][] rectangles)
@@ -27026,10 +27402,10 @@ time is taken to process each element.
             /*
             Approach 3: Segment Tree
             Complexity Analysis
-Let N be the number of rectangles.
-•	Time Complexity: O(N^2)
-The update operation takes O(logN) in the average case and O(N) in the worst case when the segment tree is unbalanced. update() is called N times, so the overall time complexity is O(NlogN) in the average case and O(N^2) in the worst case.
-•	Space Complexity: O(N).
+    Let N be the number of rectangles.
+    •	Time Complexity: O(N^2)
+    The update operation takes O(logN) in the average case and O(N) in the worst case when the segment tree is unbalanced. update() is called N times, so the overall time complexity is O(NlogN) in the average case and O(N^2) in the worst case.
+    •	Space Complexity: O(N).
 
              */
             public int UsingSegmentTree(int[][] rectangles)
@@ -27156,20 +27532,20 @@ The update operation takes O(logN) in the average case and O(N) in the worst cas
             /*
             Approach 1: Backtracking
             Complexity Analysis
-If N is the number of cards in the input array.
-•	Time complexity: O(N^3⋅3^(N−1)⋅N!⋅(N−1)!).
-o	In a time-sensitive interview setting, it may be difficult to provide an exact analysis for this problem. A tighter upper bound likely exists, but the current analysis provides a reasonable upper bound for the time complexity.
-o	In each recursive call, if we have k elements in our array, we choose k⋅(k−1)/2 pairs of numbers and for each pair, we perform 6 operations and for each operation, we make a recursive call.
-o	With each recursive call, the array size decreases by 1. Thus, the total number of recursive calls is:
-N(N−1)(3)⋅(N−1)(N−2)(3)⋅...⋅(2)(1)(3) =N!⋅(N−1)!⋅3^(N−1)
- 
-o	As the number of nodes more than doubles at every level, the total number of nodes can be approximated by the number of nodes in the last level, N!⋅(N−1)!⋅3^(N−1).
-o	And the maximum time required for any node will be O(outer_two_for_loops)⋅O(array_copy + inner_for_loop)=O(N(N−1)/2)⋅O(N+6)=O(N^3)
-o	So, we can say the time complexity is O(N^3⋅3^(N−1)⋅N!⋅(N−1)!).
-•	Space complexity: O(N^2).
-o	At one time, we make at most N recursive calls, and the recursive stack will take O(N) space.
-o	With each recursive call, we create a new array, and the array size decreases by 1 with each call.
-Thus, space used by new arrays will be O((N−1)+(N−2)+(N−3)+....+2+1)=O(N^2)
+    If N is the number of cards in the input array.
+    •	Time complexity: O(N^3⋅3^(N−1)⋅N!⋅(N−1)!).
+    o	In a time-sensitive interview setting, it may be difficult to provide an exact analysis for this problem. A tighter upper bound likely exists, but the current analysis provides a reasonable upper bound for the time complexity.
+    o	In each recursive call, if we have k elements in our array, we choose k⋅(k−1)/2 pairs of numbers and for each pair, we perform 6 operations and for each operation, we make a recursive call.
+    o	With each recursive call, the array size decreases by 1. Thus, the total number of recursive calls is:
+    N(N−1)(3)⋅(N−1)(N−2)(3)⋅...⋅(2)(1)(3) =N!⋅(N−1)!⋅3^(N−1)
+
+    o	As the number of nodes more than doubles at every level, the total number of nodes can be approximated by the number of nodes in the last level, N!⋅(N−1)!⋅3^(N−1).
+    o	And the maximum time required for any node will be O(outer_two_for_loops)⋅O(array_copy + inner_for_loop)=O(N(N−1)/2)⋅O(N+6)=O(N^3)
+    o	So, we can say the time complexity is O(N^3⋅3^(N−1)⋅N!⋅(N−1)!).
+    •	Space complexity: O(N^2).
+    o	At one time, we make at most N recursive calls, and the recursive stack will take O(N) space.
+    o	With each recursive call, we create a new array, and the array size decreases by 1 with each call.
+    Thus, space used by new arrays will be O((N−1)+(N−2)+(N−3)+....+2+1)=O(N^2)
 
             */
             public bool JudgePoint24(int[] cards)
@@ -27302,12 +27678,12 @@ Thus, space used by new arrays will be O((N−1)+(N−2)+(N−3)+....+2+1)=O(N^2
 
             /*
             Approach 2: Top-Down Dynamic Programming (Memoization)
-Complexity Analysis
-•	Time complexity: O(n⋅wordLength+targetLength⋅wordLength).
-The time complexity of calculating the charOccurrences matrix is O(n⋅wordLength).
-Even though we changed the order of calculating DP, the time complexity of this part is the same as in the previous approach: for each pair (length, col), we calculate dp[length][col] in O(1). Since we store the results in memory, we will compute each dp[length][col] only once.
-•	Space complexity: O(targetLength⋅wordLength).
-It is the same as in the first approach.
+    Complexity Analysis
+    •	Time complexity: O(n⋅wordLength+targetLength⋅wordLength).
+    The time complexity of calculating the charOccurrences matrix is O(n⋅wordLength).
+    Even though we changed the order of calculating DP, the time complexity of this part is the same as in the previous approach: for each pair (length, col), we calculate dp[length][col] in O(1). Since we store the results in memory, we will compute each dp[length][col] only once.
+    •	Space complexity: O(targetLength⋅wordLength).
+    It is the same as in the first approach.
 
             */
             public int TopDownDPWithMemo(IList<string> words, string target)
@@ -27552,7 +27928,7 @@ It is the same as in the first approach.
                         int nextx = positions[i][0]; // Next x-coordinate
                         int nexty = positions[i][1]; // Next y-coordinate
                         int newDist = dist[x, y, nextx, nexty]; // Distance to next position
-                        // Compute maximum score by taking the maximum of all possible moves
+                                                                // Compute maximum score by taking the maximum of all possible moves
                         ans = Math.Max(ans, newDist + f(i, mask | (1 << i), !turn, positions));
                     }
                 }
@@ -27566,7 +27942,7 @@ It is the same as in the first approach.
                         int nextx = positions[i][0]; // Next x-coordinate
                         int nexty = positions[i][1]; // Next y-coordinate
                         int newDist = dist[x, y, nextx, nexty]; // Distance to next position
-                        // Compute minimum score by taking the minimum of all possible moves
+                                                                // Compute minimum score by taking the minimum of all possible moves
                         ans = Math.Min(ans, newDist + f(i, mask | (1 << i), !turn, positions));
                     }
                 }
@@ -27610,7 +27986,7 @@ It is the same as in the first approach.
                     {
                         int newx = x + dx[i]; // New x-coordinate after move
                         int newy = y + dy[i]; // New y-coordinate after move
-                        // Check if new position is within bounds and has not been visited yet
+                                              // Check if new position is within bounds and has not been visited yet
                         if (
                             newx >= 0
                             && newx < 50
@@ -27754,26 +28130,26 @@ It is the same as in the first approach.
 
             /*
              Approach 2: Depth First Search - Iterative And Recursion
-Complexity Analysis
-Let N be the number of people, and M be the number of meetings.
-•	Time complexity: O(M⋅(M+N))
-o	Initially, we are creating a graph by processing meetings. This will take O(M) time.
-o	Then we initialize the earliest array of size N. It will take O(N) time.
-o	Now there is a while loop.
-o	In each iteration, we are popping one element from stack. It will take O(1) time.
-o	Then we iterate over neighbors of the popped element using the for loop. There will be at most M neighbors because a person can meet at most M people. In each iteration of the for loop, we are doing some constant time operations of checking conditions and pushing.
-Hence, the time complexity of the for loop will be O(M).
-o	Thus, each iteration of the while loop will take O(1+M), which is O(M) time.
-o	How many times while loop will run?
-In each iteration, one person is processed. The person was pushed because of meeting with some other person. Hence, there will be at most M+N iterations of the while loop.
-o	Thus, the while loop takes O((M+N)⋅M) time.
-o	Finally, we are iterating over the earliest array to find indices of people who know the secret. It will take O(N) time.
-Hence, the total time complexity will be O(M+N+(M+N)⋅M+N), which is O(M⋅(M+N)).
-•	Space complexity: O(M+N)
-o	The graph will take O(M) space.
-o	The earliest array will take O(N) space.
-o	The stack may grow upto O(M+N), because at any instance, there can be at most M+N nodes in the stack. It is worth noting that there can be multiple instances of person x in the stack, with multiple times of knowing the secret.
-Hence, total space complexity will be O(M+N).
+    Complexity Analysis
+    Let N be the number of people, and M be the number of meetings.
+    •	Time complexity: O(M⋅(M+N))
+    o	Initially, we are creating a graph by processing meetings. This will take O(M) time.
+    o	Then we initialize the earliest array of size N. It will take O(N) time.
+    o	Now there is a while loop.
+    o	In each iteration, we are popping one element from stack. It will take O(1) time.
+    o	Then we iterate over neighbors of the popped element using the for loop. There will be at most M neighbors because a person can meet at most M people. In each iteration of the for loop, we are doing some constant time operations of checking conditions and pushing.
+    Hence, the time complexity of the for loop will be O(M).
+    o	Thus, each iteration of the while loop will take O(1+M), which is O(M) time.
+    o	How many times while loop will run?
+    In each iteration, one person is processed. The person was pushed because of meeting with some other person. Hence, there will be at most M+N iterations of the while loop.
+    o	Thus, the while loop takes O((M+N)⋅M) time.
+    o	Finally, we are iterating over the earliest array to find indices of people who know the secret. It will take O(N) time.
+    Hence, the total time complexity will be O(M+N+(M+N)⋅M+N), which is O(M⋅(M+N)).
+    •	Space complexity: O(M+N)
+    o	The graph will take O(M) space.
+    o	The earliest array will take O(N) space.
+    o	The stack may grow upto O(M+N), because at any instance, there can be at most M+N nodes in the stack. It is worth noting that there can be multiple instances of person x in the stack, with multiple times of knowing the secret.
+    Hence, total space complexity will be O(M+N).
 
              */
             public List<int> DFSIterative(int numberOfPeople, int[][] meetings, int firstPerson)
@@ -27914,30 +28290,30 @@ Hence, total space complexity will be O(M+N).
 
             /*
             Approach 3: Earliest Informed First Traversal
-Complexity Analysis
-Let N be the number of people, and M be the number of meetings.
-•	Time complexity: O((N+M)log(N+M)+NM).
-o	Initially, we are creating a graph by processing meetings. This will take O(M) time.
-o	Then we are initializing min-heap pq by enqueuing two people. It will take O(1) time.
-o	Then we initialize the visited array of size N. It will take O(N) time.
-o	Now there is a while loop.
-o	In each iteration, we are popping one element from pq. It will take O(log(N+M)) time because, at any instance, there can be at most N+M elements in the heap.
-o	Then we iterate over neighbors of the popped element using the for loop. There will be at most M neighbors because a person can meet at most M people. In each iteration of the for loop, we are doing some constant time operations of checking conditions and pushing.
-Hence, the time complexity of the for loop will be O(M).
-o	Thus, each iteration of the while loop will take O(log(N+M)+M), which is O(M) time.
-o	How many times while loop will run?
-In each iteration, one person is processed. The person was enqueued because of meeting with some other person. Hence, there will be at most N+M iterations of the while loop.
-o	However, we will process the for loop only for those neighbors of a person who has not been visited. Hence, the for loop of time complexity O(M) will run for at most N iterations of the while loop.
-o	Thus, for N iterations of the while loop, it will take O(log(N+M)+M) time.
-o	For M iterations of the while loop, it will take O(log(N+M)) time. The for loop will not run for these iterations.
-Thus, while loop takes O(N⋅(log(N+M)+M)+M⋅log(N+M)) time, which is O(N⋅log(N+M)+N⋅M+log(N+M)⋅M) time. This can be rearranged as O((N+M)log(N+M)+NM) time.
-o	Finally, we are iterating over the visited array to find indices of people who know the secret. It will take O(N) time.
-Hence, total time complexity will be O(M+1+N+(N+M)log(N+M)+NM+N), which is O((N+M)log(N+M)+NM).
-•	Space complexity: O(M+N)
-o	The graph will take O(M) space.
-o	The pq may grow upto O(M+N), because at any instance, there can be at most M+N nodes in the queue. It is worth noting that there can be multiple instances of person x in the queue, with multiple times of knowing the secret.
-o	The visited array will take O(N) space.
-Hence, total space complexity will be O(M+N).
+    Complexity Analysis
+    Let N be the number of people, and M be the number of meetings.
+    •	Time complexity: O((N+M)log(N+M)+NM).
+    o	Initially, we are creating a graph by processing meetings. This will take O(M) time.
+    o	Then we are initializing min-heap pq by enqueuing two people. It will take O(1) time.
+    o	Then we initialize the visited array of size N. It will take O(N) time.
+    o	Now there is a while loop.
+    o	In each iteration, we are popping one element from pq. It will take O(log(N+M)) time because, at any instance, there can be at most N+M elements in the heap.
+    o	Then we iterate over neighbors of the popped element using the for loop. There will be at most M neighbors because a person can meet at most M people. In each iteration of the for loop, we are doing some constant time operations of checking conditions and pushing.
+    Hence, the time complexity of the for loop will be O(M).
+    o	Thus, each iteration of the while loop will take O(log(N+M)+M), which is O(M) time.
+    o	How many times while loop will run?
+    In each iteration, one person is processed. The person was enqueued because of meeting with some other person. Hence, there will be at most N+M iterations of the while loop.
+    o	However, we will process the for loop only for those neighbors of a person who has not been visited. Hence, the for loop of time complexity O(M) will run for at most N iterations of the while loop.
+    o	Thus, for N iterations of the while loop, it will take O(log(N+M)+M) time.
+    o	For M iterations of the while loop, it will take O(log(N+M)) time. The for loop will not run for these iterations.
+    Thus, while loop takes O(N⋅(log(N+M)+M)+M⋅log(N+M)) time, which is O(N⋅log(N+M)+N⋅M+log(N+M)⋅M) time. This can be rearranged as O((N+M)log(N+M)+NM) time.
+    o	Finally, we are iterating over the visited array to find indices of people who know the secret. It will take O(N) time.
+    Hence, total time complexity will be O(M+1+N+(N+M)log(N+M)+NM+N), which is O((N+M)log(N+M)+NM).
+    •	Space complexity: O(M+N)
+    o	The graph will take O(M) space.
+    o	The pq may grow upto O(M+N), because at any instance, there can be at most M+N nodes in the queue. It is worth noting that there can be multiple instances of person x in the queue, with multiple times of knowing the secret.
+    o	The visited array will take O(N) space.
+    Hence, total space complexity will be O(M+N).
 
              */
             public List<int> EarliestInformedFirstTraversal(
@@ -28021,38 +28397,38 @@ Hence, total space complexity will be O(M+N).
             /*
             Approach 4: Breadth First Search on Time Scale
             Complexity Analysis
-Let N be the number of people, and M be the number of meetings.
-•	Time complexity: O(MlogM+N)
-o	Sorting meetings will take O(MlogM) time. This may vary depending on the implementation of the sorting algorithm in the programming language.
-o	In Python3, the sort method sorts a list using the Timsort algorithm, which is a combination of Merge Sort and Insertion Sort and takes O(MlogM) time in the worst case.
-o	In C++, the sort() function is implemented as a hybrid of Quick Sort, Heap Sort, and Insertion Sort, with worst-case time complexity of O(MlogM).
-o	In Java, Arrays.sort() is implemented using a variant of the Quick Sort algorithm which has a time complexity of O(MlogM).
-o	Populating sameTimeMeetings will take O(M) time.
-o	Then we initialize the knowsSecret array of size N. It will take O(N) time.
-o	Then there is a for loop. The number of iterations of the for loop depends on the number of unique meeting times. It will be at most M. Let's narrow our analysis to one iteration of the for loop.
-o	Creating meet and initiating q may vary from O(1) time to O(M) time, depending on the number of meetings happening at the time t. However, the amortized time complexity will be O(1).
-(Amortized time complexity is the time taken per operation averaged over all operations)
-o	If one iteration of creating meet and initiating q takes O(1) time (when a single meeting is happening at the time t), then there may be the next iteration of the for loop. However, it will be limited to M iterations.
-o	If one iteration of creating meet and initiating q takes O(M) time, then there will be no next iteration of the for loop because all meetings happening will get processed in the current iteration.
-Hence, when creating meet and initiating q takes O(1) time, the number of for loop iterations will be O(M). When creating meet and initiating q takes O(M) time, the number of for loop iterations will be O(1).
-Thus, the amortized time complexity for creating meet and initiating q per iteration of the for loop will be O(1)
-o	The BFS may take O(N) time in the worst case because, at any instance, there can be at most N nodes in the queue. However, the amortized time complexity will be O(1).
-o	If every meeting time has only 2 participants, then there will be O(M) unique meeting times deciding the number of iterations of the for loop. In each iteration of the for loop, there will be O(2) people in the queue. Hence, the time complexity will be O(2⋅M) which is O(M).
-o	If every meeting time has N participants, then there will be O(NM) unique meeting times deciding the number of iterations of the for loop. In each iteration of the for loop, there will be O(N) people in the queue. Hence, the time complexity will be O(N⋅NM) which is O(M).
-Thus, the amortized time complexity of BFS per iteration of the for loop will be O(1).
-o	Thus, each iteration of the for loop will take amortized O(1) time for creating meet, initiating q, and BFS.
-o	Finally, we are iterating over the knowsSecret array to find indices of people who know the secret. It will take O(N) time.
-Hence, the total time complexity will be O(MlogM+M+N+M⋅1+N), which is O(MlogM+N).
-•	Space complexity: O(M+N)
-o	We are sorting the meetings array in place. When we sort an array in place, some extra space is used. The space complexity depends on the implementation of the sorting algorithm in the programming language.
-o	In Python3, the sort method sorts a list using the Timsort algorithm, which is a combination of Merge Sort and Insertion Sort and uses O(M) space in the worst case.
-o	In C++, the sort() function is implemented as a hybrid of Quick Sort, Heap Sort, and Insertion Sort, with worst-case space complexity of O(logM).
-o	In Java, Arrays.sort() is implemented using a variant of the Quick Sort algorithm which has a space complexity of O(logM).
-o	The sameTimeMeetings will take O(M) space.
-o	The knowsSecret array will take O(N) space.
-o	The meet HashMap will take O(M) space per iteration of for loop. After iteration, it will be empty. Hence, the total space complexity will be O(M).
-o	The q may grow up to O(N) per iteration of the for loop because any person can be in the queue at most once. After iteration, it will be empty. Hence, the total space complexity will be O(N).
-Hence, total space complexity will be O(M+N).
+    Let N be the number of people, and M be the number of meetings.
+    •	Time complexity: O(MlogM+N)
+    o	Sorting meetings will take O(MlogM) time. This may vary depending on the implementation of the sorting algorithm in the programming language.
+    o	In Python3, the sort method sorts a list using the Timsort algorithm, which is a combination of Merge Sort and Insertion Sort and takes O(MlogM) time in the worst case.
+    o	In C++, the sort() function is implemented as a hybrid of Quick Sort, Heap Sort, and Insertion Sort, with worst-case time complexity of O(MlogM).
+    o	In Java, Arrays.sort() is implemented using a variant of the Quick Sort algorithm which has a time complexity of O(MlogM).
+    o	Populating sameTimeMeetings will take O(M) time.
+    o	Then we initialize the knowsSecret array of size N. It will take O(N) time.
+    o	Then there is a for loop. The number of iterations of the for loop depends on the number of unique meeting times. It will be at most M. Let's narrow our analysis to one iteration of the for loop.
+    o	Creating meet and initiating q may vary from O(1) time to O(M) time, depending on the number of meetings happening at the time t. However, the amortized time complexity will be O(1).
+    (Amortized time complexity is the time taken per operation averaged over all operations)
+    o	If one iteration of creating meet and initiating q takes O(1) time (when a single meeting is happening at the time t), then there may be the next iteration of the for loop. However, it will be limited to M iterations.
+    o	If one iteration of creating meet and initiating q takes O(M) time, then there will be no next iteration of the for loop because all meetings happening will get processed in the current iteration.
+    Hence, when creating meet and initiating q takes O(1) time, the number of for loop iterations will be O(M). When creating meet and initiating q takes O(M) time, the number of for loop iterations will be O(1).
+    Thus, the amortized time complexity for creating meet and initiating q per iteration of the for loop will be O(1)
+    o	The BFS may take O(N) time in the worst case because, at any instance, there can be at most N nodes in the queue. However, the amortized time complexity will be O(1).
+    o	If every meeting time has only 2 participants, then there will be O(M) unique meeting times deciding the number of iterations of the for loop. In each iteration of the for loop, there will be O(2) people in the queue. Hence, the time complexity will be O(2⋅M) which is O(M).
+    o	If every meeting time has N participants, then there will be O(NM) unique meeting times deciding the number of iterations of the for loop. In each iteration of the for loop, there will be O(N) people in the queue. Hence, the time complexity will be O(N⋅NM) which is O(M).
+    Thus, the amortized time complexity of BFS per iteration of the for loop will be O(1).
+    o	Thus, each iteration of the for loop will take amortized O(1) time for creating meet, initiating q, and BFS.
+    o	Finally, we are iterating over the knowsSecret array to find indices of people who know the secret. It will take O(N) time.
+    Hence, the total time complexity will be O(MlogM+M+N+M⋅1+N), which is O(MlogM+N).
+    •	Space complexity: O(M+N)
+    o	We are sorting the meetings array in place. When we sort an array in place, some extra space is used. The space complexity depends on the implementation of the sorting algorithm in the programming language.
+    o	In Python3, the sort method sorts a list using the Timsort algorithm, which is a combination of Merge Sort and Insertion Sort and uses O(M) space in the worst case.
+    o	In C++, the sort() function is implemented as a hybrid of Quick Sort, Heap Sort, and Insertion Sort, with worst-case space complexity of O(logM).
+    o	In Java, Arrays.sort() is implemented using a variant of the Quick Sort algorithm which has a space complexity of O(logM).
+    o	The sameTimeMeetings will take O(M) space.
+    o	The knowsSecret array will take O(N) space.
+    o	The meet HashMap will take O(M) space per iteration of for loop. After iteration, it will be empty. Hence, the total space complexity will be O(M).
+    o	The q may grow up to O(N) per iteration of the for loop because any person can be in the queue at most once. After iteration, it will be empty. Hence, the total space complexity will be O(N).
+    Hence, total space complexity will be O(M+N).
 
              */
             public List<int> BreadthFirstSearchOnTimeScale(
@@ -28158,37 +28534,37 @@ Hence, total space complexity will be O(M+N).
 
             /* Approach 5: Union-Find with Reset
             Complexity Analysis
-Before analyzing the time complexity, let's first understand the time complexity of Union-Find. If an instance of Union-Find is created with nodes, then the following are the time complexities of Union-Find methods:
-•	Constructor: O(nodes), because we are initializing parent and rank arrays of size nodes. However, the constructor is called only once.
-•	find(x): It is amortized O(1) time, because we are using Path Compression and Union by Rank heuristics.
-•	unite(x, y): It is amortized O(1) time, because we are using Path Compression and Union by Rank heuristics.
-•	connected(x, y): It is amortized O(1) time, because we are using Path Compression and Union by Rank heuristics.
-In actuality, the time complexity of the above three methods after using Path Compression and Union by Rank heuristics is O(α(nodes)) time, where α is Inverse Ackermann Function. However, α(nodes) is less than 5 for all practical purposes. More here
-•	reset(x): It is O(1) time because we are just resetting the initial properties of node x.
-For analyzing the time complexity of our algorithm, let N be the number of people, and M be the number of meetings.
-•	Time complexity: O(MlogM+N)
-o	Sorting meetings will take O(MlogM) time. This may vary depending on the implementation of the sorting algorithm in the programming language.
-o	In Python3, the sort method sorts a list using the Timsort algorithm, which is a combination of Merge Sort and Insertion Sort and takes O(MlogM) time in the worst case.
-o	In C++, the sort() function is implemented as a hybrid of Quick Sort, Heap Sort, and Insertion Sort, with worst-case time complexity of O(MlogM).
-o	In Java, Arrays.sort() is implemented using a variant of the Quick Sort algorithm which has a time complexity of O(MlogM).
-o	Populating sameTimeMeetings will take O(M) time.
-o	Creating graph will take O(N) time.
-o	Uniting firstPerson with 0 will take O(1) time.
-o	Upon looking at the for loop, we can observe that we will process each meeting exactly twice, once for uniting, and once while checking if any one of them is connected to 0 or not.
-o	For uniting, it will be amortized O(1) time.
-o	For checking if any one of them is connected to 0 or not, it will be amortized O(1) time. Resetting, if required, will be O(1) time.
-Hence, the total time complexity of the for loop will be O(2⋅M⋅1), which is O(M).
-o	Finally, we are iterating over the graph to find indices that are connected to 0. It will take O(N⋅1) time.
-Hence, the total time complexity will be O(MlogM+M+N+M+N), which is O(MlogM+N).
-•	Space complexity: O(M+N)
-o	We are sorting the meetings array in place. When we sort an array in place, some extra space is used. The space complexity depends on the implementation of the sorting algorithm in the programming language.
-o	In Python3, the sort method sorts a list using the Timsort algorithm, which is a combination of Merge Sort and Insertion Sort and uses O(M) space in the worst case.
-o	In C++, the sort() function is implemented as a hybrid of Quick Sort, Heap Sort, and Insertion Sort, with worst-case space complexity of O(logM).
-o	In Java, Arrays.sort() is implemented using a variant of the Quick Sort algorithm which has a space complexity of O(logM).
-o	The sameTimeMeetings will take O(M) space.
-o	The graph will take O(N) space for parent and rank arrays.
-Hence, total space complexity will be O(M+N).
-As a challenge, try to implement the Union-Find approach without using the sameTimeMeetings HashMap! We perhaps may need some iterators to process all the meetings happening at the same time. Readers can comment their code below.
+    Before analyzing the time complexity, let's first understand the time complexity of Union-Find. If an instance of Union-Find is created with nodes, then the following are the time complexities of Union-Find methods:
+    •	Constructor: O(nodes), because we are initializing parent and rank arrays of size nodes. However, the constructor is called only once.
+    •	find(x): It is amortized O(1) time, because we are using Path Compression and Union by Rank heuristics.
+    •	unite(x, y): It is amortized O(1) time, because we are using Path Compression and Union by Rank heuristics.
+    •	connected(x, y): It is amortized O(1) time, because we are using Path Compression and Union by Rank heuristics.
+    In actuality, the time complexity of the above three methods after using Path Compression and Union by Rank heuristics is O(α(nodes)) time, where α is Inverse Ackermann Function. However, α(nodes) is less than 5 for all practical purposes. More here
+    •	reset(x): It is O(1) time because we are just resetting the initial properties of node x.
+    For analyzing the time complexity of our algorithm, let N be the number of people, and M be the number of meetings.
+    •	Time complexity: O(MlogM+N)
+    o	Sorting meetings will take O(MlogM) time. This may vary depending on the implementation of the sorting algorithm in the programming language.
+    o	In Python3, the sort method sorts a list using the Timsort algorithm, which is a combination of Merge Sort and Insertion Sort and takes O(MlogM) time in the worst case.
+    o	In C++, the sort() function is implemented as a hybrid of Quick Sort, Heap Sort, and Insertion Sort, with worst-case time complexity of O(MlogM).
+    o	In Java, Arrays.sort() is implemented using a variant of the Quick Sort algorithm which has a time complexity of O(MlogM).
+    o	Populating sameTimeMeetings will take O(M) time.
+    o	Creating graph will take O(N) time.
+    o	Uniting firstPerson with 0 will take O(1) time.
+    o	Upon looking at the for loop, we can observe that we will process each meeting exactly twice, once for uniting, and once while checking if any one of them is connected to 0 or not.
+    o	For uniting, it will be amortized O(1) time.
+    o	For checking if any one of them is connected to 0 or not, it will be amortized O(1) time. Resetting, if required, will be O(1) time.
+    Hence, the total time complexity of the for loop will be O(2⋅M⋅1), which is O(M).
+    o	Finally, we are iterating over the graph to find indices that are connected to 0. It will take O(N⋅1) time.
+    Hence, the total time complexity will be O(MlogM+M+N+M+N), which is O(MlogM+N).
+    •	Space complexity: O(M+N)
+    o	We are sorting the meetings array in place. When we sort an array in place, some extra space is used. The space complexity depends on the implementation of the sorting algorithm in the programming language.
+    o	In Python3, the sort method sorts a list using the Timsort algorithm, which is a combination of Merge Sort and Insertion Sort and uses O(M) space in the worst case.
+    o	In C++, the sort() function is implemented as a hybrid of Quick Sort, Heap Sort, and Insertion Sort, with worst-case space complexity of O(logM).
+    o	In Java, Arrays.sort() is implemented using a variant of the Quick Sort algorithm which has a space complexity of O(logM).
+    o	The sameTimeMeetings will take O(M) space.
+    o	The graph will take O(N) space for parent and rank arrays.
+    Hence, total space complexity will be O(M+N).
+    As a challenge, try to implement the Union-Find approach without using the sameTimeMeetings HashMap! We perhaps may need some iterators to process all the meetings happening at the same time. Readers can comment their code below.
              */
             public List<int> UsingUnionFindWithReset(
                 int numberOfPeople,
@@ -28408,14 +28784,14 @@ As a challenge, try to implement the Union-Find approach without using the sameT
 
             /* Approach 2: DP with Bitmasking (Iterative)
             Complexity Analysis
-Here, m=2∗n is the number of elements, and A is the maximum value in the nums array.
-The maximum value of A can be 10^6.
-•	Time complexity: O(2^2n⋅(2n) ^2⋅logA)=O(4^n⋅n^2⋅logA)
-o	We iterate over 2^m states.
-o	And for each state, we find the number of set bits in the current state which in the worst case will take O(log2(2^(m−1)))=O(log2 2^m)=O(m) time, then we iterate on all pairs using a nested for loop which will take O(m^2) time, and for each pair, we perform a gcd operation which will take at most O(logA) time. So, we take O(m+m^2⋅logA)=O(m^2⋅logA) time.
-o	Thus, overall we take O(2^m⋅m^2⋅logA) time.
-•	Space complexity: O(2^(2)n)=O(4^n)
-o	We keep an additional array dp of size 2^m=2^(2n) to store results for all possible states.
+    Here, m=2∗n is the number of elements, and A is the maximum value in the nums array.
+    The maximum value of A can be 10^6.
+    •	Time complexity: O(2^2n⋅(2n) ^2⋅logA)=O(4^n⋅n^2⋅logA)
+    o	We iterate over 2^m states.
+    o	And for each state, we find the number of set bits in the current state which in the worst case will take O(log2(2^(m−1)))=O(log2 2^m)=O(m) time, then we iterate on all pairs using a nested for loop which will take O(m^2) time, and for each pair, we perform a gcd operation which will take at most O(logA) time. So, we take O(m+m^2⋅logA)=O(m^2⋅logA) time.
+    o	Thus, overall we take O(2^m⋅m^2⋅logA) time.
+    •	Space complexity: O(2^(2)n)=O(4^n)
+    o	We keep an additional array dp of size 2^m=2^(2n) to store results for all possible states.
 
              */
             public int DPIterativeWithBitMasking(int[] nums)
@@ -28483,9 +28859,9 @@ o	We keep an additional array dp of size 2^m=2^(2n) to store results for all pos
         class FindMinMovesSol
         {
             /* Approach 1: Greedy
-Complexity Analysis
-•	Time complexity: O(N) since there is a three-level iteration over the input array.
-•	Space complexity: O(1) since it's a constant space solution.
+    Complexity Analysis
+    •	Time complexity: O(N) since there is a three-level iteration over the input array.
+    •	Space complexity: O(1) since it's a constant space solution.
 
              */
 
@@ -28643,9 +29019,9 @@ Complexity Analysis
         {
             /* Approach #1: Insert Into Sorted Structure [Accepted]
             Complexity Analysis
-•	Time Complexity (Java): O(NlogN), where N is the length of flowers. Every insertion and search is O(logN).
-•	Time Complexity (Python): O(N2). As above, except list.insert is O(N).
-•	Space Complexity: O(N), the size of active.
+    •	Time Complexity (Java): O(NlogN), where N is the length of flowers. Every insertion and search is O(logN).
+    •	Time Complexity (Python): O(N2). As above, except list.insert is O(N).
+    •	Space Complexity: O(N), the size of active.
 
              */
             public int SortedSetWithInsertion(int[] flowers, int k)
@@ -28677,9 +29053,9 @@ Complexity Analysis
             }
 
             /* Approach #2: Min Queue [Accepted]
-Complexity Analysis
-•	Time Complexity: O(N), where N is the length of flowers. In enumerating through the O(N) outer loop, we do constant work as MinQueue.popleft and MinQueue.min operations are (amortized) constant time.
-•	Space Complexity: O(N), the size of our window.
+    Complexity Analysis
+    •	Time Complexity: O(N), where N is the length of flowers. In enumerating through the O(N) outer loop, we do constant work as MinQueue.popleft and MinQueue.min operations are (amortized) constant time.
+    •	Space Complexity: O(N), the size of our window.
 
              */
             public int UsingMinQueue(int[] flowers, int k)
@@ -28750,8 +29126,8 @@ Complexity Analysis
             }
 
             /* Approach #3: Sliding Window [Accepted]
-Complexity Analysis
-•	Time and Space Complexity: O(N
+    Complexity Analysis
+    •	Time and Space Complexity: O(N
 
              */
             public int UsingSlidingWindow(int[] flowers, int k)
@@ -29125,19 +29501,19 @@ Complexity Analysis
 
             /* Approach 2: Bottom-up Dynamic Programming
             Complexity Analysis
-Let N be the length of blocks.
-•	Time complexity: O(N^2).
-o	Sorting the blocks takes O(N⋅logN) time.
-o	Filling two base cases takes O(N) time.
-o	We are traversing O(N^2) cells of dp array. In each traversal, we do constant time operations.
-Thus, total time complexity is O(N⋅logN+N+N^2)=O(N^2).
-•	Space complexity: O(N^2).
-o	We are sorting the blocks array in place. When we sort an array in place, some extra space is used. The space complexity depends on the implementation of the sorting algorithm in the programming language.
-o	In Python, the sort method sorts a list using the Timsort algorithm, which is a combination of Merge Sort and Insertion Sort and uses O(N) additional space.
-o	In C++, the sort() function is implemented as a hybrid of Quick Sort, Heap Sort, and Insertion Sort, with worst-case space complexity of O(logN).
-o	In Java, Arrays.sort() is implemented using a variant of the Quick Sort algorithm which has a space complexity of O(logN).
-o	dp array consumes O(N^2) space.
-Thus, total space complexity is O(N+N^2)=O(N^2).
+    Let N be the length of blocks.
+    •	Time complexity: O(N^2).
+    o	Sorting the blocks takes O(N⋅logN) time.
+    o	Filling two base cases takes O(N) time.
+    o	We are traversing O(N^2) cells of dp array. In each traversal, we do constant time operations.
+    Thus, total time complexity is O(N⋅logN+N+N^2)=O(N^2).
+    •	Space complexity: O(N^2).
+    o	We are sorting the blocks array in place. When we sort an array in place, some extra space is used. The space complexity depends on the implementation of the sorting algorithm in the programming language.
+    o	In Python, the sort method sorts a list using the Timsort algorithm, which is a combination of Merge Sort and Insertion Sort and uses O(N) additional space.
+    o	In C++, the sort() function is implemented as a hybrid of Quick Sort, Heap Sort, and Insertion Sort, with worst-case space complexity of O(logN).
+    o	In Java, Arrays.sort() is implemented using a variant of the Quick Sort algorithm which has a space complexity of O(logN).
+    o	dp array consumes O(N^2) space.
+    Thus, total space complexity is O(N+N^2)=O(N^2).
 
              */
             public int BottomUpDP(int[] blocks, int split)
@@ -29196,18 +29572,18 @@ Thus, total space complexity is O(N+N^2)=O(N^2).
 
             /* Approach 3: Space-Optimized Bottom-up Dynamic Programming
             Complexity Analysis
-Let N be the length of blocks.
-•	Time complexity: O(N^2).
-o	Sorting the blocks takes O(N⋅logN) time.
-o	We are doing O(N^2) traversals using nested loops. In each traversal, we do constant time operations.
-Thus, total time complexity is O(N⋅logN+N^2)=O(N^2).
-•	Space complexity: O(N)
-o	We are sorting the blocks array in place. When we sort an array in place, some extra space is used. The space complexity depends on the implementation of the sorting algorithm in the programming language.
-o	In Python, the sort method sorts a list using the Timsort algorithm, which is a combination of Merge Sort and Insertion Sort and uses O(N) additional space.
-o	In C++, the sort() function is implemented as a hybrid of Quick Sort, Heap Sort, and Insertion Sort, with worst-case space complexity of O(logN).
-o	In Java, Arrays.sort() is implemented using a variant of the Quick Sort algorithm which has a space complexity of O(logN).
-o	dp array consumes O(N) space.
-Thus, total space complexity is O(N+N)=O(N).
+    Let N be the length of blocks.
+    •	Time complexity: O(N^2).
+    o	Sorting the blocks takes O(N⋅logN) time.
+    o	We are doing O(N^2) traversals using nested loops. In each traversal, we do constant time operations.
+    Thus, total time complexity is O(N⋅logN+N^2)=O(N^2).
+    •	Space complexity: O(N)
+    o	We are sorting the blocks array in place. When we sort an array in place, some extra space is used. The space complexity depends on the implementation of the sorting algorithm in the programming language.
+    o	In Python, the sort method sorts a list using the Timsort algorithm, which is a combination of Merge Sort and Insertion Sort and uses O(N) additional space.
+    o	In C++, the sort() function is implemented as a hybrid of Quick Sort, Heap Sort, and Insertion Sort, with worst-case space complexity of O(logN).
+    o	In Java, Arrays.sort() is implemented using a variant of the Quick Sort algorithm which has a space complexity of O(logN).
+    o	dp array consumes O(N) space.
+    Thus, total space complexity is O(N+N)=O(N).
 
              */
             public int BottomUpDPWithSpaceOptimal(int[] blocks, int split)
@@ -29296,29 +29672,29 @@ Thus, total space complexity is O(N+N)=O(N).
             }
 
             /* Approach 5: Binary Search
-Complexity Analysis
-Let N be the number of blocks, M be the maximum building time in blocks and S be the split time.
-•	Time complexity: O(N⋅(logN+logS))
-o	Sorting the blocks array takes O(N⋅logN) time.
-o	Now, we have binary search on time range [M,S⋅logN+M].
-The total number of iterations will be O(log(S⋅logN+M−M)) which is O(log(S⋅logN)).
-This term can be written as O(logS+log(logN)).
-We now call the possible function in each iteration. Hence, the time complexity of the binary search loop depends on the time complexity of the possible function.
-o	Let's analyze the possible function.
-It has a for loop which runs N times.
-Inside the loop, we have a while loop. The while loop will terminate when the number of worker exceeds the remaining blocks. Hence, there will be at most O(N) total iterations of the while loop. This is because we are doubling the number of the remaining worker in each iteration until we reach the N, which creates at least 1 worker each time.
-Here is the case where we will have O(N) splits for creating N workers. The worst case varies with split and limit, but it won't exceed O(N).
- 
-It's worth noting that the while loop will run at most O(N) times in total, and not O(N) times in each iteration of the for loop. On doing amortized analysis, we can say that the while loop will run O(1) times in each iteration of the for loop.
-Thus, the time complexity of the possible function will be O(N).
-•	Hence, overall time complexity will be O(N⋅logN)+O(logS+log(logN))⋅O(N) which can be simplified as O(N⋅logN+N⋅logS+N⋅log(logN))
-•	Thus, the final time complexity will be O(N⋅(logN+logS)).
-•	Space complexity: O(N)
-We are sorting the blocks array in place. When we sort an array in place, some extra space is used. The space complexity depends on the implementation of the sorting algorithm in the programming language.
-o	In Python, the sort method sorts a list using the Timsort algorithm, which is a combination of Merge Sort and Insertion Sort and uses O(N) additional space.
-o	In C++, the sort() function is implemented as a hybrid of Quick Sort, Heap Sort, and Insertion Sort, with worst-case space complexity of O(logN).
-o	In Java, Arrays.sort() is implemented using a variant of the Quick Sort algorithm which has a space complexity of O(logN).
-Thus, the space complexity will be O(N).
+    Complexity Analysis
+    Let N be the number of blocks, M be the maximum building time in blocks and S be the split time.
+    •	Time complexity: O(N⋅(logN+logS))
+    o	Sorting the blocks array takes O(N⋅logN) time.
+    o	Now, we have binary search on time range [M,S⋅logN+M].
+    The total number of iterations will be O(log(S⋅logN+M−M)) which is O(log(S⋅logN)).
+    This term can be written as O(logS+log(logN)).
+    We now call the possible function in each iteration. Hence, the time complexity of the binary search loop depends on the time complexity of the possible function.
+    o	Let's analyze the possible function.
+    It has a for loop which runs N times.
+    Inside the loop, we have a while loop. The while loop will terminate when the number of worker exceeds the remaining blocks. Hence, there will be at most O(N) total iterations of the while loop. This is because we are doubling the number of the remaining worker in each iteration until we reach the N, which creates at least 1 worker each time.
+    Here is the case where we will have O(N) splits for creating N workers. The worst case varies with split and limit, but it won't exceed O(N).
+
+    It's worth noting that the while loop will run at most O(N) times in total, and not O(N) times in each iteration of the for loop. On doing amortized analysis, we can say that the while loop will run O(1) times in each iteration of the for loop.
+    Thus, the time complexity of the possible function will be O(N).
+    •	Hence, overall time complexity will be O(N⋅logN)+O(logS+log(logN))⋅O(N) which can be simplified as O(N⋅logN+N⋅logS+N⋅log(logN))
+    •	Thus, the final time complexity will be O(N⋅(logN+logS)).
+    •	Space complexity: O(N)
+    We are sorting the blocks array in place. When we sort an array in place, some extra space is used. The space complexity depends on the implementation of the sorting algorithm in the programming language.
+    o	In Python, the sort method sorts a list using the Timsort algorithm, which is a combination of Merge Sort and Insertion Sort and uses O(N) additional space.
+    o	In C++, the sort() function is implemented as a hybrid of Quick Sort, Heap Sort, and Insertion Sort, with worst-case space complexity of O(logN).
+    o	In Java, Arrays.sort() is implemented using a variant of the Quick Sort algorithm which has a space complexity of O(logN).
+    Thus, the space complexity will be O(N).
 
             */
             public int UsingBinarySearch(int[] blocks, int split)
@@ -29391,15 +29767,15 @@ Thus, the space complexity will be O(N).
         class FindNumberOfValidWordsForEachPuzzleSol
         {
             /* Approach 1: Hashing (Bitmask)
-Complexity Analysis
-Let N and M be the length of words and puzzles respectively. Let Nˉ,Mˉ be the average length of words[i] and puzzles[i] respectively. Let k be the size of the character set.
-Note that in this problem, the value of Mˉ is fixed at 7, and the value of k is fixed at 26.
-•	Time Complexity: O(N⋅Nˉ+M⋅2^Mˉ).
-For each words[i] in words, we spend O(Nˉ) time to calculate its mask. For each puzzles[i] in puzzles, we spend O(Mˉ) to transform its characters into a bitmask, and O(2^Mˉ) to iterate over all of its subsets.
-In total, we have O(N⋅Nˉ+M⋅(2^Mˉ+Mˉ))=O(N⋅Nˉ+M⋅2^Mˉ).
-•	Space Complexity: O(N).
-We use a map to store the mask of each word[i], and each entry uses an integer for the key and the value.
-Alternatively, if you use a list with length = (1<<k), then the space complexity is O(2^k). Note that, in practice, 2^26=67108864, which is much larger than the maximum of the given N, 10^5.
+    Complexity Analysis
+    Let N and M be the length of words and puzzles respectively. Let Nˉ,Mˉ be the average length of words[i] and puzzles[i] respectively. Let k be the size of the character set.
+    Note that in this problem, the value of Mˉ is fixed at 7, and the value of k is fixed at 26.
+    •	Time Complexity: O(N⋅Nˉ+M⋅2^Mˉ).
+    For each words[i] in words, we spend O(Nˉ) time to calculate its mask. For each puzzles[i] in puzzles, we spend O(Mˉ) to transform its characters into a bitmask, and O(2^Mˉ) to iterate over all of its subsets.
+    In total, we have O(N⋅Nˉ+M⋅(2^Mˉ+Mˉ))=O(N⋅Nˉ+M⋅2^Mˉ).
+    •	Space Complexity: O(N).
+    We use a map to store the mask of each word[i], and each entry uses an integer for the key and the value.
+    Alternatively, if you use a list with length = (1<<k), then the space complexity is O(2^k). Note that, in practice, 2^26=67108864, which is much larger than the maximum of the given N, 10^5.
 
              */
             public List<int> UsingBitMasking(string[] words, string[] puzzles)
@@ -29451,16 +29827,16 @@ Alternatively, if you use a list with length = (1<<k), then the space complexity
             }
 
             /*             Approach 2: Trie
-Complexity Analysis
-Let N and M be the length of words and puzzles respectively. Let Nˉ,Mˉ be the average length of words[i] and puzzles[i] respectively. Let k be the size of the character set.
-Note that in this problem, the value of Mˉ is fixed at 7, and the value of k is fixed at 26.
-•	Time Complexity: O(N⋅(NˉlogNˉ+Mˉ)+M⋅Mˉ!).
-o	To build the trie, for each word[i] in words, we spend O(NˉlogNˉ) to sort it and remove the duplicates, and, we spend O(Mˉ) to insert into the trie.
-o	To search for the answer for each puzzles[i] in puzzles, we spend O(Mˉ!) to iterate the whole trie.
-o	Totally, we have O(N⋅(NˉlogNˉ+Mˉ)+M⋅Mˉ!).
-o	Alternatively, one can use bucket sort to reduce the time complexity to O(N⋅(Nˉ+k+Mˉ)+M⋅Mˉ!).
-•	Space Complexity: O(k⋅Mˉ!).
-Our trie has at most O(Mˉ!) nodes, and each node is an array of size k.
+    Complexity Analysis
+    Let N and M be the length of words and puzzles respectively. Let Nˉ,Mˉ be the average length of words[i] and puzzles[i] respectively. Let k be the size of the character set.
+    Note that in this problem, the value of Mˉ is fixed at 7, and the value of k is fixed at 26.
+    •	Time Complexity: O(N⋅(NˉlogNˉ+Mˉ)+M⋅Mˉ!).
+    o	To build the trie, for each word[i] in words, we spend O(NˉlogNˉ) to sort it and remove the duplicates, and, we spend O(Mˉ) to insert into the trie.
+    o	To search for the answer for each puzzles[i] in puzzles, we spend O(Mˉ!) to iterate the whole trie.
+    o	Totally, we have O(N⋅(NˉlogNˉ+Mˉ)+M⋅Mˉ!).
+    o	Alternatively, one can use bucket sort to reduce the time complexity to O(N⋅(Nˉ+k+Mˉ)+M⋅Mˉ!).
+    •	Space Complexity: O(k⋅Mˉ!).
+    Our trie has at most O(Mˉ!) nodes, and each node is an array of size k.
 
              */
             public List<int> UsingTrie(string[] words, string[] puzzles)
@@ -29710,7 +30086,7 @@ Our trie has at most O(Mˉ!) nodes, and each node is an array of size k.
                 visited[0][0] = true; // Set the starting state as visited with a horizontal orientation
 
                 int steps = 0; // Number of steps to reach the target
-                // BFS to find the minimum moves required
+                               // BFS to find the minimum moves required
                 while (queue.Count > 0)
                 {
                     int currentLevelSize = queue.Count;
@@ -29808,7 +30184,7 @@ Our trie has at most O(Mˉ!) nodes, and each node is an array of size k.
                 numSeats = seats[0].Length; // number of seats in a row
                 validSeats = new int[rows]; // create an array to represent the valid seats using bitmasks
                 memo = new int?[1 << numSeats, rows]; // initialize the memoization table
-                // Preprocess the seats and store the valid positions using bit manipulation
+                                                      // Preprocess the seats and store the valid positions using bit manipulation
                 for (int i = 0; i < rows; ++i)
                 {
                     for (int j = 0; j < numSeats; ++j)
@@ -29832,7 +30208,7 @@ Our trie has at most O(Mˉ!) nodes, and each node is an array of size k.
                     return memo[seatRow, rowIndex].Value;
                 }
                 int maxStudentsCount = 0; // initialize the current count of students to 0
-                // Iterate over all possible seat combinations for the current row
+                                          // Iterate over all possible seat combinations for the current row
                 for (int mask = 0; mask < 1 << numSeats; ++mask)
                 {
                     // Check if the mask is a subset of available seats and has no adjacent students
@@ -29841,7 +30217,7 @@ Our trie has at most O(Mˉ!) nodes, and each node is an array of size k.
                         continue; // skip this combination if it's not valid
                     }
                     int seatCount = CountBits(mask); // count the number of students seated
-                    // If we are at the last row, update the maxStudents if needed
+                                                     // If we are at the last row, update the maxStudents if needed
                     if (rowIndex == validSeats.Length - 1)
                     {
                         maxStudentsCount = Math.Max(maxStudentsCount, seatCount);
@@ -29852,7 +30228,7 @@ Our trie has at most O(Mˉ!) nodes, and each node is an array of size k.
                         int nextRow = validSeats[rowIndex + 1];
                         nextRow &= ~(mask << 1); // remove seats left-diagonal to a seated student
                         nextRow &= ~(mask >> 1); // remove seats right-diagonal to a seated student
-                        // Recursively call dfs for the next row and accumulate the result
+                                                 // Recursively call dfs for the next row and accumulate the result
                         maxStudentsCount = Math.Max(
                             maxStudentsCount,
                             seatCount + Dfs(nextRow, rowIndex + 1)
@@ -29916,24 +30292,6 @@ Our trie has at most O(Mˉ!) nodes, and each node is an array of size k.
                 return total;
             }
 
-            public class NestedInteger
-            {
-                internal int GetInteger()
-                {
-                    throw new NotImplementedException();
-                }
-
-                internal List<NestedInteger> GetList()
-                {
-                    throw new NotImplementedException();
-                }
-
-                internal bool IsInteger()
-                {
-                    throw new NotImplementedException();
-                }
-            }
-
             /*             Approach 2: Breadth-first Search
             Complexity Analysis
             •	Time complexity : O(N).
@@ -29977,6 +30335,172 @@ Our trie has at most O(Mˉ!) nodes, and each node is an array of size k.
             }
         }
 
+        /* 364. Nested List Weight Sum II
+        https://leetcode.com/problems/nested-list-weight-sum-ii/description/
+         */
+        class DepthSumInverseSol
+        {
+
+            /* Approach 1: Double Pass Depth-First Search (DFS) 
+Complexity Analysis
+Let N be the total number of nested elements in the input list.
+For example, the list [[[[[1]]]], 2] contains 4 nested lists and 2 nested integers (1 and 2), so N is 6, for list [[[[1, [2]]]], [3, [4]]] there are 6 nested list and 4 integers, hence N is 10.
+•	Time complexity: O(N)
+We perform two depth-first searches: one to find the maximum depth and one to get the weighted sum of the nested list. In each DFS, we will visit every element exactly once. Hence the time complexity is O(N).
+•	Space complexity: O(N)
+Space complexity is equal to the maximum number of active stack calls during the depth-first search. In the worst case, such as [[[[[[1]]]]]], the call stack will use O(N) space. Hence the space complexity is O(N).
+
+            */
+            public int UsingDoublePassDFS(List<NestedInteger> nestedList)
+            {
+                int maxDepth = FindMaxDepth(nestedList);
+                return WeightedSum(nestedList, 1, maxDepth);
+            }
+
+            private int FindMaxDepth(List<NestedInteger> list)
+            {
+                int maxDepth = 1;
+
+                foreach (NestedInteger nested in list)
+                {
+                    if (!nested.IsInteger() && nested.GetList().Count > 0)
+                    {
+                        maxDepth = Math.Max(maxDepth, 1 + FindMaxDepth(nested.GetList()));
+                    }
+                }
+
+                return maxDepth;
+            }
+
+            private int WeightedSum(List<NestedInteger> list, int depth, int maxDepth)
+            {
+                int answer = 0;
+                foreach (NestedInteger nested in list)
+                {
+                    if (nested.IsInteger())
+                    {
+                        answer += nested.GetInteger() * (maxDepth - depth + 1);
+                    }
+                    else
+                    {
+                        answer += WeightedSum(nested.GetList(), depth + 1, maxDepth);
+                    }
+                }
+                return answer;
+            }
+
+            /* Approach 2: Single Pass Depth-First Search (DFS)
+Complexity Analysis
+Let N be the total number of nested elements in the input list.
+For example, the list [[[[[1]]]], 2] contains 4 nested lists and 2 nested integers (1 and 2), so N is 6, for list [[[[1, [2]]]], [3, [4]]] there are 6 nested list and 4 integers, hence N is 10.
+•	Time complexity: O(N)
+We perform only one depth-first search. In the DFS, we traverse every element (i.e., nested lists and integers) in the nested list once. Hence the time complexity is O(N).
+•	Space complexity: O(N)
+Space complexity is equal to the maximum number of active stack calls during the depth-first search. In the worst case, such as [[[[[[1]]]]]], the call stack will use O(N) space. Hence the space complexity is O(N).
+
+            */
+            public int UsingSingleassDFS(List<NestedInteger> nestedList)
+            {
+                WeightedSumTriplet weightedSumTriplet = GetWeightedSumTriplet(nestedList, 1);
+                int maxDepth = weightedSumTriplet.maxDepth;
+                int sumOfElements = weightedSumTriplet.sumOfElements;
+                int sumOfProducts = weightedSumTriplet.sumOfProducts;
+
+                return (maxDepth + 1) * sumOfElements - sumOfProducts;
+            }
+
+            private WeightedSumTriplet GetWeightedSumTriplet(List<NestedInteger> list, int depth)
+            {
+                int sumOfProducts = 0;
+                int sumOfElements = 0;
+                int maxDepth = 0;
+
+                foreach (NestedInteger nested in list)
+                {
+                    if (nested.IsInteger())
+                    {
+                        sumOfProducts += nested.GetInteger() * depth;
+                        sumOfElements += nested.GetInteger();
+                        maxDepth = Math.Max(maxDepth, depth);
+                    }
+                    else
+                    {
+                        WeightedSumTriplet result = GetWeightedSumTriplet(nested.GetList(), depth + 1);
+                        sumOfProducts += result.sumOfProducts;
+                        sumOfElements += result.sumOfElements;
+                        maxDepth = Math.Max(maxDepth, result.maxDepth);
+                    }
+                }
+
+                return new WeightedSumTriplet(maxDepth, sumOfElements, sumOfProducts);
+            }
+            class WeightedSumTriplet
+            {
+                public int maxDepth;
+                public int sumOfElements;
+                public int sumOfProducts;
+
+                public WeightedSumTriplet(int maxDepth, int sumOfElements, int sumOfProducts)
+                {
+                    this.maxDepth = maxDepth;
+                    this.sumOfElements = sumOfElements;
+                    this.sumOfProducts = sumOfProducts;
+                }
+            }
+
+            /* Approach 3: Single Pass Breadth-First Search (BFS)
+Complexity Analysis
+Let N be the total number of nested elements in the input list.
+For example, the list [[[[[1]]]], 2] contains 4 nested lists and 2 nested integers (1 and 2), so N is 6, for list [[[[1, [2]]]], [3, [4]]] there are 6 nested list and 4 integers, hence N is 10.
+•	Time complexity: O(N)
+Each nested element is put in the queue and removed from the queue exactly once.
+•	Space complexity: O(N)
+The worst-case for space complexity in BFS occurs where the majority of elements are at the same depth, as all of the elements at that depth will be in the queue at the same time. Therefore worst-case space complexity is O(N).
+
+             */
+            public int SinglePassBFS(List<NestedInteger> nestedList)
+            {
+                Queue<NestedInteger> queue = new Queue<NestedInteger>();
+                foreach (var nestedInteger in nestedList)
+                {
+                    queue.Enqueue(nestedInteger);
+                }
+
+                int depth = 1;
+                int maxDepth = 0;
+                int sumOfElements = 0;
+                int sumOfProducts = 0;
+
+                while (queue.Count > 0)
+                {
+                    int size = queue.Count;
+                    maxDepth = Math.Max(maxDepth, depth);
+
+                    for (int i = 0; i < size; i++)
+                    {
+                        NestedInteger nested = queue.Dequeue();
+
+                        if (nested.IsInteger())
+                        {
+                            sumOfElements += nested.GetInteger();
+                            sumOfProducts += nested.GetInteger() * depth;
+                        }
+                        else
+                        {
+                            foreach (var item in nested.GetList())
+                            {
+                                queue.Enqueue(item);
+                            }
+                        }
+                    }
+                    depth++;
+                }
+                return (maxDepth + 1) * sumOfElements - sumOfProducts;
+            }
+
+
+        }
+
         /* 670. Maximum Swap
         https://leetcode.com/problems/maximum-swap/description/?envType=company&envId=facebook&favoriteSlug=facebook-all&difficulty=MEDIUM
          */
@@ -29985,14 +30509,14 @@ Our trie has at most O(Mˉ!) nodes, and each node is an array of size k.
         {
             /* Approach 1: Brute Force
             Complexity Analysis
-Let n be the number of digits in the input number.
-•	Time complexity: O(n^2)
-The outer loop iterates through each digit (from 0 to n−1), and for each digit, the inner loop also iterates through the remaining digits (from i+1 to n−1). This results in (n(n−1))/2 possible swaps, leading to quadratic time complexity. Each swap involves:
-o	Performing a swap operation (constant time).
-o	Converting the modified string back to an integer takes O(n) time due to the length of the string.
-Therefore, the total time complexity combines these two aspects, resulting in O(n^2⋅n)=O(n^3) for this specific implementation. However, since the main constraint is derived from the nested loops alone, the simplified consideration will generally focus on O(n^2).
-•	Space complexity: O(n)
-The space complexity arises from converting the integer to a string, which requires additional space proportional to the number of digits n in the number. No additional data structures that grow with input size are used, hence the overall space complexity is primarily determined by this string conversion. Thus, it is O(n).
+    Let n be the number of digits in the input number.
+    •	Time complexity: O(n^2)
+    The outer loop iterates through each digit (from 0 to n−1), and for each digit, the inner loop also iterates through the remaining digits (from i+1 to n−1). This results in (n(n−1))/2 possible swaps, leading to quadratic time complexity. Each swap involves:
+    o	Performing a swap operation (constant time).
+    o	Converting the modified string back to an integer takes O(n) time due to the length of the string.
+    Therefore, the total time complexity combines these two aspects, resulting in O(n^2⋅n)=O(n^3) for this specific implementation. However, since the main constraint is derived from the nested loops alone, the simplified consideration will generally focus on O(n^2).
+    •	Space complexity: O(n)
+    The space complexity arises from converting the integer to a string, which requires additional space proportional to the number of digits n in the number. No additional data structures that grow with input size are used, hence the overall space complexity is primarily determined by this string conversion. Thus, it is O(n).
 
              */
             public int Naive(int num)
@@ -30024,18 +30548,18 @@ The space complexity arises from converting the integer to a string, which requi
 
             /*             Approach 2: Greedy Two-Pass
             Complexity Analysis
-Let n be the number of digits in the input number.
-•	Time complexity: O(n)
-Converting the integer num to its string representation takes O(n).
-We iterate through the digits from right to left, making one comparison per digit. This pass takes O(n) time.
-We iterate from left to right, checking whether the current digit is smaller than the maximum digit to its right. This also takes O(n) time.
-Converting the modified string back to an integer takes O(n) time.
-Overall, each operation in the algorithm takes linear time, so the total time complexity is O(n).
-•	Space complexity: O(n)
-We store the string representation of the number, which requires O(n) space.
-We maintain an array maxRightIndex of size n, which also takes O(n) space.
-The space used by simple variables like num and loop counters is constant, i.e., O(1).
-Thus, the total space complexity is O(n).
+    Let n be the number of digits in the input number.
+    •	Time complexity: O(n)
+    Converting the integer num to its string representation takes O(n).
+    We iterate through the digits from right to left, making one comparison per digit. This pass takes O(n) time.
+    We iterate from left to right, checking whether the current digit is smaller than the maximum digit to its right. This also takes O(n) time.
+    Converting the modified string back to an integer takes O(n) time.
+    Overall, each operation in the algorithm takes linear time, so the total time complexity is O(n).
+    •	Space complexity: O(n)
+    We store the string representation of the number, which requires O(n) space.
+    We maintain an array maxRightIndex of size n, which also takes O(n) space.
+    The space used by simple variables like num and loop counters is constant, i.e., O(1).
+    Thus, the total space complexity is O(n).
 
              */
             public int GreedyTwoPass(int num)
@@ -30128,7 +30652,7 @@ Thus, the overall space complexity is dominated by the space needed to store the
             The numStr variable is a string representation of the input number, which requires O(n) space to store.
             The other variables (maxDigitIndex, swapIdx1, swapIdx2) require O(1) space since they are just integer indices.
             Therefore, the overall space complexity is O(n), mainly due to the string representation of the number.
-            
+
              */
             public int GreedySpaceOptimal(int num)
             {
@@ -30162,7 +30686,7 @@ Thus, the overall space complexity is dominated by the space needed to store the
                 }
 
                 return int.Parse(new String(numStr)); // Return the new number or the original if no
-                // swap occurred
+                                                      // swap occurred
             }
         }
 
@@ -30390,7 +30914,2138 @@ Thus, the overall space complexity is dominated by the space needed to store the
 
         }
 
-    
+        /*     825. Friends Of Appropriate Ages
+        https://leetcode.com/problems/friends-of-appropriate-ages/description/?envType=company&envId=facebook&favoriteSlug=facebook-all&difficulty=MEDIUM
+         */
+        class NumFriendRequestsSol
+        {
+            /* Time and Space Complexity
+    Time Complexity
+    The given code consists of two nested loops each ranging from 1 to 121, resulting in a fixed number of iterations for the loops. Since the loops do not depend on the size of the input (ages list), they have a constant runtime. However, the overall time complexity does still depend on the Counter operation performed on the ages list earlier, which iterates over the entire list once.
+    The Counter operation has a time complexity of O(N) where N is the number of elements in ages. The nested loops have a constant time complexity of O(121 * 121) because they iterate over a fixed range independent of the input size. Therefore, the total time complexity of the code is predominated by the Counter operation, resulting in O(N).
+    Space Complexity
+    The space complexity of the code is influenced by the additional storage needed for the counter variable, which depends on the number of unique elements in ages. In the worst case, each age is unique, so the space complexity for counter is O(K) where K is the number of unique ages. Given the constraints of the problem (ages are between 1 and 120), the maximum number of unique ages K can be 120.
+    Therefore, the space complexity is O(K), yet since K is constant and limited to 120, this could also be considered O(1) in the context of this problem where K does not scale with the size of the input.
+    */
+            public int NumFriendRequests(int[] ages)
+            {
+                // Array to keep count of each age (up to 120)
+                int[] ageCount = new int[121];
+                // Fill the ageCount array with the frequency of each age
+                foreach (int age in ages)
+                {
+                    ageCount[age]++;
+                }
+
+                // Variable to hold the final result
+                int friendRequests = 0;
+
+                // Loop through each age for the sender
+                for (int senderAge = 1; senderAge < 121; senderAge++)
+                {
+                    int senderCount = ageCount[senderAge];
+
+                    // Only continue if there are people with this age
+                    if (senderCount > 0)
+                    {
+                        // Loop through each age for the receiver
+                        for (int receiverAge = 1; receiverAge < 121; receiverAge++)
+                        {
+                            int receiverCount = ageCount[receiverAge];
+                            // Check if the friend request condition is satisfied
+                            if (!(receiverAge <= 0.5 * senderAge + 7 || receiverAge > senderAge || (receiverAge > 100 && senderAge < 100)))
+                            {
+                                // Add the product of the counts of the respective ages
+                                friendRequests += senderCount * receiverCount;
+                                // Deduct the count when sender and receiver are of the same age
+                                if (senderAge == receiverAge)
+                                {
+                                    friendRequests -= receiverCount;
+                                }
+                            }
+                        }
+                    }
+                }
+                // Return the total number of friend requests
+                return friendRequests;
+            }
+        }
+
+        /* 341. Flatten Nested List Iterator
+        https://leetcode.com/problems/flatten-nested-list-iterator/description/?envType=company&envId=facebook&favoriteSlug=facebook-all&difficulty=MEDIUM
+         */
+        public class NestedIteratorSol
+        {
+            /* Approach 1: Make a Flat List with Recursion
+            Complexity Analysis
+    Let N be the total number of integers within the nested list, L be the total number of lists within the nested list, and D be the maximum nesting depth (maximum number of lists inside each other).
+    •	Time complexity:
+    We'll analyze each of the methods separately.
+    o	Constructor: O(N+L).
+    The constructor is where all the time-consuming work is done.
+    For each list within the nested list, there will be one call to flattenList(...). The loop within flattenList(...) will then iterate n times, where n is the number of integers within that list. Across all calls to flattenList(...), there will be a total of N loop iterations. Therefore, the time complexity is the number of lists plus the number of integers, giving us O(N+L).
+    Notice that the maximum depth of the nesting does not impact the time complexity.
+    o	next(): O(1).
+    Getting the next element requires incrementing position by 1 and accessing an element at a particular index of the integers list. Both of these are O(1) operations.
+    o	hasNext(): O(1).
+    Checking whether or not there is a next element requires comparing the length of the integers list to the position variable. This is an O(1) operation.
+    •	Space complexity : O(N+D).
+    The most obvious auxiliary space is the integers list. The length of this is O(N).
+    The less obvious auxiliary space is the space used by the flattenList(...) function. Recall that recursive functions need to keep track of where they're up to by putting stack frames on the runtime stack. Therefore, we need to determine what the maximum number of stack frames there could be at a time is. Each time we encounter a nested list, we call flattenList(...) and a stack frame is added. Each time we finish processing a nested list, flattenList(...) returns and a stack frame is removed. Therefore, the maximum number of stack frames on the runtime stack is the maximum nesting depth, D.
+    Because these two operations happen one-after-the-other, and either could be the largest, we add their time complexities together giving a final result of O(N+D).
+
+             */
+            public class MakeFlatListRecNestedIteratorSol : IEnumerator<int>
+            {
+                private List<int> integers = new List<int>();
+                private int currentPosition = 0; // Pointer to next integer to return.
+
+                public MakeFlatListRecNestedIteratorSol(List<NestedInteger> nestedList)
+                {
+                    FlattenList(nestedList);
+                }
+
+                // Recursively unpacks a nested list in DFS order.
+                private void FlattenList(List<NestedInteger> nestedList)
+                {
+                    foreach (NestedInteger nestedInteger in nestedList)
+                    {
+                        if (nestedInteger.IsInteger())
+                        {
+                            integers.Add(nestedInteger.GetInteger());
+                        }
+                        else
+                        {
+                            FlattenList(nestedInteger.GetList());
+                        }
+                    }
+                }
+
+                public int Current
+                {
+                    get
+                    {
+                        // As per C# specs, we should throw an exception if no more ints.
+                        if (!HasNext()) throw new InvalidOperationException();
+                        // Return int at current position.
+                        return integers[currentPosition];
+                    }
+                }
+
+                object System.Collections.IEnumerator.Current => Current;
+
+                public bool MoveNext()
+                {
+                    // Increment position and check if it still has next.
+                    return ++currentPosition < integers.Count;
+                }
+
+                public void Reset()
+                {
+                    currentPosition = 0;
+                }
+
+                public bool HasNext()
+                {
+                    return currentPosition < integers.Count;
+                }
+
+                public void Dispose()
+                {
+                    throw new NotImplementedException();
+                }
+            }
+            // This is the interface that allows for creating nested lists.
+            // You should not implement it, or speculate about its implementation
+            public interface NestedInteger
+            {
+
+                // @return true if this NestedInteger holds a single integer, rather than a nested list.
+                public bool IsInteger();
+
+                // @return the single integer that this NestedInteger holds, if it holds a single integer
+                // Return null if this NestedInteger holds a nested list
+                public int GetInteger();
+
+                // @return the nested list that this NestedInteger holds, if it holds a nested list
+                // Return null if this NestedInteger holds a single integer
+                public List<NestedInteger> GetList();
+            }
+
+
+            /* Approach 2: Stack
+    Complexity Analysis
+    Let N be the total number of integers within the nested list, L be the total number of lists within the nested list, and D be the maximum nesting depth (maximum number of lists inside each other).
+    •	Time complexity.
+    o	Constructor: O(N+L).
+    The worst-case occurs when the initial input nestedList consists entirely of integers and empty lists (everything is in the top-level). In this case, every item is reversed and stored, giving a total time complexity of O(N+L).
+    o	makeStackTopAnInteger(): O(L/N) or O(1).
+    If the top of the stack is an integer, then this function does nothing; taking O(1) time.
+    Otherwise, it needs to process the stack until an integer is on top. The best way of analyzing the time complexity is to look at the total cost across all calls to makeStackTopAnInteger() and then divide by the number of calls made. Once the iterator is exhausted makeStackTopAnInteger() must have seen every integer at least once, costing O(N) time. Additionally, it has seen every list (except the first) on the stack at least once also, so this costs O(L) time. Adding these together, we get O(N+L) time.
+    The amortized time of a single makeStackTopAnInteger is the total cost, O(N+L), divided by the number of times it's called. In order to get all integers, we need to have called it N times. This gives us an amortized time complexity of NO(N+L)=O(N/N+L/N)=O(L/N).
+    o	next(): O(L/N) or O(1).
+    All of this method is O(1), except for possibly the call to makeStackTopAnInteger(), giving us a time complexity the same as makeStackTopAnInteger().
+    o	hasNext(): O(L/N) or O(1).
+    All of this method is O(1), except for possibly the call to makeStackTopAnInteger(), giving us a time complexity the same as makeStackTopAnInteger().
+    •	Space complexity : O(N+L).
+    In the worst case, where the top list contains N integers, or L empty lists, it will cost O(N+L) space. Other expensive cases occur when the nesting is very deep. However, it's useful to remember that D≤L (because each layer of nesting requires another list), and so we don't need to take this into account.
+
+             */
+            public class UsingStackSol : IEnumerator<int>
+            {
+                private LinkedList<NestedInteger> stack;
+
+                public UsingStackSol(List<NestedInteger> nestedList)
+                {
+                    // The constructor puts them on in the order we require. No need to reverse.
+                    stack = new LinkedList<NestedInteger>(nestedList);
+                }
+
+                public int Current
+                {
+                    get
+                    {
+                        // As per C# specs, throw an exception if there's no elements left.
+                        if (!MoveNext()) throw new InvalidOperationException();
+                        // hasNext ensures the stack top is now an integer. Pop and return
+                        // this integer.
+                        var val = stack.First().GetInteger();
+                        stack.RemoveFirst();
+                        return val;
+                    }
+                }
+
+                object System.Collections.IEnumerator.Current => Current;
+
+                public bool MoveNext()
+                {
+                    // Check if there are integers left by getting one onto the top of stack.
+                    MakeStackTopAnInteger();
+                    // If there are any integers remaining, one will be on the top of the stack,
+                    // and therefore the stack can't possibly be empty.
+                    return stack.Count > 0;
+                }
+
+                public void Reset()
+                {
+                    // Reset logic can be implemented if necessary
+                    throw new NotImplementedException();
+                }
+
+                private void MakeStackTopAnInteger()
+                {
+                    // While there are items remaining on the stack and the front of 
+                    // stack is a list (i.e. not integer), keep unpacking.
+                    while (stack.Count > 0 && !stack.First().IsInteger())
+                    {
+                        // Put the NestedIntegers onto the stack in reverse order.
+                        List<NestedInteger> nestedList = stack.First().GetList();
+                        stack.RemoveFirst();
+                        for (int i = nestedList.Count - 1; i >= 0; i--)
+                        {
+                            stack.AddFirst(nestedList[i]);
+                        }
+                    }
+                }
+
+                public void Dispose()
+                {
+                    // Dispose logic can be implemented if necessary
+                }
+            }
+            /* Approach 3: Two Stacks
+            Complexity Analysis
+    Let N be the total number of integers within the nested list, L be the total number of lists within the nested list, and D be the maximum nesting depth (maximum number of lists inside each other).
+    •	Time complexity:
+    o	Constructor: O(1).
+    Pushing a list onto a stack is by reference in all the programming languages we're using here. This means that instead of creating a new list, some information about how to get to the existing list is put onto the stack. The list is not traversed, as it doesn't need reversing this time, and we're not pushing the items on one-by-one. This is, therefore, an O(1) operation.
+    o	makeStackTopAnInteger() / next() / hasNext(): O(NL) or O(1).
+    Same as Approach 2.
+    •	Space complexity : O(D).
+    At any given time, the stack contains only one nestedList reference for each level. This is unlike the previous approach, wherein the worst case we need to put almost all elements onto the stack.
+    Because there's one reference on the stack at each level, the worst case is when we're looking at the deepest leveled list, giving a space complexity is O(D).
+
+             */
+            public class TwoStackNestedIteratorSol : IEnumerator<int>
+            {
+                private LinkedList<List<NestedInteger>> listStack = new LinkedList<List<NestedInteger>>();
+                private LinkedList<int> indexStack = new LinkedList<int>();
+
+                public TwoStackNestedIteratorSol(List<NestedInteger> nestedList)
+                {
+                    listStack.AddFirst(nestedList);
+                    indexStack.AddFirst(0);
+                }
+
+                public int Current
+                {
+                    get
+                    {
+                        if (!MoveNext()) throw new InvalidOperationException();
+                        int currentPosition = indexStack.First();
+                        indexStack.RemoveFirst();
+                        indexStack.AddFirst(currentPosition + 1);
+                        return listStack.First()[currentPosition].GetInteger();
+                    }
+                }
+
+                object IEnumerator.Current => Current;
+
+                public bool MoveNext()
+                {
+                    MakeStackTopAnInteger();
+                    return indexStack.Count > 0;
+                }
+
+                public void Reset()
+                {
+                    throw new NotImplementedException();
+                }
+
+                private void MakeStackTopAnInteger()
+                {
+                    while (indexStack.Count > 0)
+                    {
+                        // If the top list is used up, pop it and its index.
+                        if (indexStack.First() >= listStack.First().Count)
+                        {
+                            indexStack.RemoveFirst();
+                            listStack.RemoveFirst();
+                            continue;
+                        }
+
+                        // Otherwise, if it's already an integer, we don't need to do anything.
+                        if (listStack.First()[indexStack.First()].IsInteger())
+                        {
+                            break;
+                        }
+
+                        // Otherwise, it must be a list. We need to update the previous index
+                        // and then add the new list with an index of 0.
+                        listStack.AddFirst(listStack.First()[indexStack.First()].GetList());
+                        var val = indexStack.First() + 1;
+                        indexStack.RemoveFirst();
+                        indexStack.AddFirst(val);
+                        indexStack.AddFirst(0);
+                    }
+                }
+
+                public void Dispose()
+                {
+                    // Dispose resources if needed
+                }
+
+            }
+            /* Approach 4: Stack of Iterators 
+            Complexity Analysis
+    Let N be the total number of integers within the nested list, L be the total number of lists within the nested list, and D be the maximum nesting depth (maximum number of lists inside each other).
+    •	Time complexity:
+    o	Constructor: O(1).
+    Same as Approach 3.
+    o	makeStackTopAnInteger() / next() / hasNext(): O(NL) or O(1).
+    Same as Approach 3.
+    •	Space complexity : O(D).
+    Same as Approach 3.
+    In practice, this code runs faster than Approach 3, probably because most of the functionality relies on ListIterator; an optimized API class. Approach 3 was really just our own implementation of ListIterators.
+
+            */
+            public class StackOfIteratorNestedIteratorSol : IEnumerator<int>
+            {
+                // This time, our stack will hold list iterators instead of just lists.
+                private LinkedList<IEnumerator<NestedInteger>> stackOfIterators = new LinkedList<IEnumerator<NestedInteger>>();
+                private int? peeked = null;
+
+                public StackOfIteratorNestedIteratorSol(IList<NestedInteger> nestedList)
+                {
+                    // Make an iterator with the input and put it on the stack. 
+                    // Note that creating a list iterator is an O(1) operation.
+                    stackOfIterators.AddFirst(nestedList.GetEnumerator());
+                }
+
+                private void SetPeeked()
+                {
+                    // If peeked is already set, there's nothing to do.
+                    if (peeked.HasValue) return;
+
+                    while (stackOfIterators.Count > 0)
+                    {
+                        // If the iterator at the top of the stack doesn't have a next,
+                        // remove that iterator and continue on.
+                        if (!stackOfIterators.First.Value.MoveNext())
+                        {
+                            stackOfIterators.RemoveFirst();
+                            continue;
+                        }
+
+                        // Otherwise, we need to check whether that next is a list or 
+                        // an integer.
+                        NestedInteger next = stackOfIterators.First.Value.Current;
+
+                        // If it's an integer, set peeked to it and return as we're done.
+                        if (next.IsInteger())
+                        {
+                            peeked = next.GetInteger();
+                            return;
+                        }
+
+                        // Otherwise, it's a list. Create a new iterator with it, and put
+                        // the new iterator on the top of the stack.
+                        stackOfIterators.AddFirst(next.GetList().GetEnumerator());
+                    }
+                }
+
+                public int Next()
+                {
+                    // As per Java specs, throw an exception if there are no further elements.
+                    if (!MoveNext()) throw new InvalidOperationException();
+
+                    // hasNext() called setPeeked(), which ensures peeked has the next integer 
+                    // in it. We need to clear the peeked field so that the element is returned
+                    // again.
+                    int result = peeked.Value;
+                    peeked = null;
+                    return result;
+                }
+
+                public bool MoveNext()
+                {
+                    // Try to set the peeked field. If any integers are remaining, it will
+                    // contain the next one to be returned after this call.
+                    SetPeeked();
+
+                    // There are elements remaining iff peeked contains a value.
+                    return peeked.HasValue;
+                }
+
+                public void Reset()
+                {
+                    throw new NotImplementedException();
+                }
+
+                public int Current => Next();
+
+                object System.Collections.IEnumerator.Current => Current;
+
+                public void Dispose() { }
+            }
+
+            /* Approach 5: Using a Generator
+            Complexity Analysis
+            Let N be the total number of integers within the nested list, L be the total number of lists within the nested list, and D be the maximum nesting depth (maximum number of lists inside each other).
+            •	Time complexity:
+            o	Constructor: O(1).
+            In the constructor, we only create a generator object. Simply creating a generator object doesn't invoke any code in the generator function itself (only calls to next do).
+            Because the time taken to create the generator doesn't vary with the size of the input, the time complexity is O(1).
+            o	next() / hasNext(): O(NL) or O(1).
+            Same as approaches 2, 3, and 4.
+            •	Space complexity : O(D).
+            We recursively call _int_generator within itself for nested lists. Therefore, the runtime stack uses memory proportional to the current depth of the list. Seeing as the largest depth is D, the space complexity is O(D).
+
+             */
+            public class UsingGeneratorNestedIteratorSol
+            {
+                private IEnumerator<int> _generator;
+                private int? _peeked;
+
+                public UsingGeneratorNestedIteratorSol(IList<NestedInteger> nestedList)
+                {
+                    _generator = GetIntegerGenerator(nestedList).GetEnumerator();
+                }
+
+                private IEnumerable<int> GetIntegerGenerator(IList<NestedInteger> nestedList)
+                {
+                    foreach (var nested in nestedList)
+                    {
+                        if (nested.IsInteger())
+                        {
+                            yield return nested.GetInteger();
+                        }
+                        else
+                        {
+                            foreach (var i in GetIntegerGenerator(nested.GetList()))
+                            {
+                                yield return i;
+                            }
+                        }
+                    }
+                }
+
+                public int Next()
+                {
+                    if (!HasNext())
+                        return 0;
+
+                    int nextInteger = _peeked.Value;
+                    _peeked = null;
+                    return nextInteger;
+                }
+
+                public bool HasNext()
+                {
+                    if (_peeked.HasValue)
+                        return true;
+
+                    if (_generator.MoveNext())
+                    {
+                        _peeked = _generator.Current;
+                        return true;
+                    }
+
+                    return false;
+                }
+            }
+
+        }
+
+        /* 1701. Average Waiting Time
+        https://leetcode.com/problems/average-waiting-time/description/
+         */
+
+        class AverageWaitingTimeSol
+        {
+
+
+            /* Approach: Simulation
+            Complexity Analysis
+            Let n be the size of the customers array.
+            •	Time complexity: O(n)
+            The time complexity remains linear, as the loop traverses the array only once.
+            •	Space complexity: O(1)
+            We do not use any additional space, so the space complexity is constant.
+
+             */
+            public double UsingSimulation(int[][] customers)
+            {
+                int nextIdleTime = 0;
+                long netWaitTime = 0;
+
+                for (int i = 0; i < customers.Length; i++)
+                {
+                    // The next idle time for the chef is given by the time of delivery
+                    // of current customer's order.
+                    nextIdleTime = Math.Max(customers[i][0], nextIdleTime) +
+                    customers[i][1];
+
+                    // The wait time for the current customer is the difference between
+                    // his delivery time and arrival time.
+                    netWaitTime += nextIdleTime - customers[i][0];
+                }
+
+                // Divide by total customers to get average.
+                double averageWaitTime = (double)netWaitTime / customers.Length;
+                return averageWaitTime;
+            }
+        }
+
+
+        /* 179. Largest Number
+        https://leetcode.com/problems/largest-number/description/
+         */
+        class LargestNumberSol
+        {
+
+            /* Approach 1: Using Built-in Function
+            Complexity Analysis
+            Let n be the size of the nums array.
+            •	Time Complexity: O(nlogn)
+            The most time-consuming operation is the sorting step, which uses a custom comparator. The sorting algorithm has a time complexity of O(nlogn). The conversion of numbers to strings and concatenation operations are linear with respect to the number of elements.
+            •	Space Complexity: O(n+S)
+            Additional space is used for storing the string representations of the numbers and the final concatenated result, which scales linearly with the size of the input array.
+            Some extra space is used when we sort an array of size n in place. The space complexity of the sorting algorithm (S) depends on the programming language. The value of S depends on the programming language and the sorting algorithm being used:
+            o	In Python, the sort method sorts a list using the Timsort algorithm which is a combination of Merge Sort and Insertion Sort and has a space complexity of O(n)
+            o	In C++, the sort() function is implemented as a hybrid of Quick Sort, Heap Sort, and Insertion Sort, with a worst-case space complexity of O(logn)
+            o	In Java, Arrays.sort() is implemented using a variant of the Quick Sort algorithm which has a space complexity of O(logn)
+            Thus, the total space complexity of the algorithm is O(n+S).
+
+             */
+            public String UsingBuiltInFuncs(int[] nums)
+            {
+                // Convert each integer to a string
+                String[] numStrings = new String[nums.Length];
+                for (int i = 0; i < nums.Length; i++)
+                {
+                    numStrings[i] = nums[i].ToString();
+                }
+
+                // Sort strings based on concatenated values
+                Array.Sort(numStrings, (a, b) => (b + a).CompareTo(a + b));
+
+                // Handle the case where the largest number is zero
+                if (numStrings[0].Equals("0"))
+                {
+                    return "0";
+                }
+
+                // Concatenate sorted strings to form the largest number
+                StringBuilder largestNum = new StringBuilder();
+                foreach (String numStr in numStrings)
+                {
+                    largestNum.Append(numStr);
+                }
+
+                return largestNum.ToString();
+            }
+            /*             Approach 2: Quick Sort
+            Complexity Analysis
+            Let n be the size of the nums array.
+            •	Time Complexity: O(nlogn) on average, O(n2) in the worst case
+            Quick sort generally has an average time complexity of O(nlogn), though its worst-case time complexity is O(n2) if the pivot selection consistently results in unbalanced partitions. The average case is efficient due to its partitioning strategy.
+            •	Space Complexity: O(logn) on average, O(n) in the worst case
+            The space complexity for quick sort is O(logn) due to the depth of the recursion stack in the average case. In the worst case, it can be O(n) if the recursion depth is not balanced.
+
+             */
+            public String UsingQuickSort(int[] nums)
+            {
+                // Sort the numbers using Quick Sort
+                QuickSort(nums, 0, nums.Length - 1);
+                // Concatenate sorted numbers to form the largest number
+                StringBuilder largestNum = new StringBuilder();
+                foreach (int num in nums)
+                {
+                    largestNum.Append(num);
+                }
+                // Handle the case where the largest number is zero
+                return largestNum[0] == '0' ? "0" : largestNum.ToString();
+            }
+
+            private void QuickSort(int[] nums, int left, int right)
+            {
+                // Base case: if the range has one or no elements, it is already sorted
+                if (left >= right) return;
+                // Partition the array and get the pivot index
+                int pivotIndex = Partition(nums, left, right);
+                // Recursively sort the sub-arrays
+                QuickSort(nums, left, pivotIndex - 1);
+                QuickSort(nums, pivotIndex + 1, right);
+            }
+
+            private int Partition(int[] nums, int left, int right)
+            {
+                int pivot = nums[right];
+                int lowIndex = left;
+                // Rearrange elements so that those greater than the pivot are on the left
+                for (int i = left; i < right; ++i)
+                {
+                    if (Compare(nums[i], pivot))
+                    {
+                        Swap(nums, i, lowIndex);
+                        ++lowIndex;
+                    }
+                }
+                // Place the pivot in its correct position
+                Swap(nums, lowIndex, right);
+                return lowIndex;
+            }
+
+            private bool Compare(int firstNum, int secondNum)
+            {
+                // Compare concatenated strings to decide the order
+                String str1 = firstNum.ToString() + secondNum.ToString();
+                String str2 = secondNum.ToString() + firstNum.ToString();
+                return str1.CompareTo(str2) > 0;
+            }
+
+            private void Swap(int[] nums, int i, int j)
+            {
+                int temp = nums[i];
+                nums[i] = nums[j];
+                nums[j] = temp;
+            }
+
+            /* Approach 3: Merge Sort
+            Complexity Analysis
+    Let n be the size of the nums array.
+    •	Time Complexity: O(nlogn)
+    Merge sort divides the array into halves and merges them in O(nlogn) time. Each merge operation is linear in the size of the array being merged, and the recursive divide-and-conquer approach ensures a logarithmic depth of recursion.
+    •	Space Complexity: O(n)
+    Merge sort requires additional space for the temporary arrays used during merging. For each recursive call, we use extra space proportional to the size of the array being merged.
+    The depth of the recursion stack is O(logn), and the space used per level of recursion for merging is O(n). So, the total space complexity is O(n).
+    Creating the final string involves space proportional to the size of the final string, which is O(n).
+
+             */
+            public string UsingMergeSort(int[] nums)
+            {
+                // Sort the numbers using Merge Sort
+                List<int> sortedNums = MergeSort(nums, 0, nums.Length - 1);
+                // Concatenate sorted numbers to form the largest number
+                StringBuilder largestNum = new StringBuilder();
+                foreach (int num in sortedNums)
+                {
+                    largestNum.Append(num);
+                }
+                // Handle the case where the largest number is zero
+                return largestNum[0] == '0' ? "0" : largestNum.ToString();
+            }
+
+            private List<int> MergeSort(int[] nums, int left, int right)
+            {
+                // Base case: a single element is already sorted
+                if (left >= right) return new List<int> { nums[left] };
+                int mid = left + (right - left) / 2;
+                // Recursively sort the left and right halves
+                List<int> leftHalf = MergeSort(nums, left, mid);
+                List<int> rightHalf = MergeSort(nums, mid + 1, right);
+                // Merge the sorted halves
+                return Merge(leftHalf, rightHalf);
+            }
+
+            private List<int> Merge(List<int> leftHalf, List<int> rightHalf)
+            {
+                List<int> sortedNums = new List<int>();
+                int leftIndex = 0, rightIndex = 0;
+                // Merge the two halves based on custom comparison
+                while (leftIndex < leftHalf.Count && rightIndex < rightHalf.Count)
+                {
+                    if (Compare(leftHalf[leftIndex], rightHalf[rightIndex]))
+                    {
+                        sortedNums.Add(leftHalf[leftIndex++]);
+                    }
+                    else
+                    {
+                        sortedNums.Add(rightHalf[rightIndex++]);
+                    }
+                }
+                // Append remaining elements from left half
+                while (leftIndex < leftHalf.Count) sortedNums.Add(leftHalf[leftIndex++]);
+                // Append remaining elements from right half
+                while (rightIndex < rightHalf.Count) sortedNums.Add(rightHalf[rightIndex++]);
+                return sortedNums;
+            }
+
+            /* Approach 4: HeapSort
+    Complexity Analysis
+    Let n be the size of the nums array.
+    •	Time Complexity: O(nlogn)
+    Converting each integer to a string takes O(logk) time per integer, where k is the integer value. If there are n integers, the total time for conversion is O(nlogk).
+    Inserting each string into the priority queue takes O(logn) time per insertion. Since there are n strings, this step contributes O(nlogn).
+    Extracting elements from the priority queue and concatenating them into the result string takes O(nlogn) time due to the heap operations and string concatenations.
+    Combining these steps, the overall time complexity is dominated by the heap operations, so:
+    Converting integers to strings takes O(nlogk) time, and inserting each string into the priority queue takes O(nlogn). Building the result string takes O(nlogn). Thus, the overall time complexity is O(nlogn).
+    •	Space Complexity: O(n)
+    The priority queue stores n strings, each of which can be up to O(logk) in length. Hence, the space required for the priority queue is O(nlogk).
+    The result string stores all n integers, so its space complexity is O(nlogk). Since these are the main contributors to space complexity, the overall space complexity is O(nlogk)=O(n).
+
+             */
+            public string UsingHeapSort(int[] nums)
+            {
+                // Priority queue to order numbers using the custom comparison function
+                PriorityQueue<string, string> maxHeap = new PriorityQueue<string, string>(
+                    Comparer<string>.Create((first, second) => (second + first).CompareTo(first + second))
+                );
+
+                int totalLength = 0;
+
+                // Convert integers to strings and push them into the priority queue
+                foreach (int num in nums)
+                {
+                    string strNum = num.ToString();
+                    totalLength += strNum.Length;
+                    maxHeap.Enqueue(strNum, strNum);
+                }
+
+                // Build the result string from the priority queue
+                StringBuilder result = new StringBuilder(totalLength);
+                while (maxHeap.Count > 0)
+                {
+                    result.Append(maxHeap.Dequeue());
+                }
+
+                // Handle edge case where the result might be "000...0"
+                return result[0] == '0' ? "0" : result.ToString();
+            }
+
+
+            /* Approach 5: TimSort
+    Complexity Analysis
+    Let n be the size of the nums array.
+    •	Time complexity: O(nlogn)
+    The main time-consuming operation here is the sorting step using TimSort. Its time complexity is O(nlogn) in the average and worst cases.
+    Specifically:
+    o	The insertion sort runs in O(n2) time on small segments (runs), but since it operates on a limited size of RUN, the total cost for insertion sorting all runs is O(n) in practice.
+    o	The merge step involves merging pairs of runs and is performed logn times, leading to the overall time complexity of O(nlogn) for TimSort.
+    Concatenating the numbers to form the final string has a linear time complexity O(n), but it doesn't affect the overall complexity since O(nlogn) dominates.
+    •	Space complexity: O(n)
+    The space complexity is dominated by the space used for temporary storage during merging:
+    o	The leftArr and rightArr vectors in the merge function require O(n) space in total.
+    o	The extra space used for the largestNum string is O(n).
+    Other auxiliary space used in the algorithm, such as variables and function call stacks, is minimal compared to the space required for arrays.
+    Thus, the overall space complexity is O(n).
+
+             */
+            private const int RUN = 32;
+
+            public string UsingTimSort(int[] nums)
+            {
+                // Convert int array to Integer array for custom sorting
+                var numsArray = nums.Select(num => (int)num).ToArray();
+                // Sort the numbers using custom Tim Sort
+                TimSort(numsArray);
+                // Concatenate sorted numbers to form the largest number
+                var largestNum = new StringBuilder();
+                foreach (var num in numsArray)
+                {
+                    largestNum.Append(num);
+                }
+                // Handle the case where the largest number is zero
+                return largestNum[0] == '0' ? "0" : largestNum.ToString();
+            }
+
+            private void InsertionSort(int[] nums, int left, int right)
+            {
+                for (int i = left + 1; i <= right; ++i)
+                {
+                    var temp = nums[i];
+                    int j = i - 1;
+                    while (j >= left && Compare(temp, nums[j]))
+                    {
+                        nums[j + 1] = nums[j];
+                        --j;
+                    }
+                    nums[j + 1] = temp;
+                }
+            }
+
+            private void Merge(int[] nums, int left, int mid, int right)
+            {
+                var leftArr = new int[mid - left + 1];
+                Array.Copy(nums, left, leftArr, 0, leftArr.Length);
+                var rightArr = new int[right - mid];
+                Array.Copy(nums, mid + 1, rightArr, 0, rightArr.Length);
+
+                int i = 0, j = 0, k = left;
+                while (i < leftArr.Length && j < rightArr.Length)
+                {
+                    if (Compare(leftArr[i], rightArr[j]))
+                    {
+                        nums[k++] = leftArr[i++];
+                    }
+                    else
+                    {
+                        nums[k++] = rightArr[j++];
+                    }
+                }
+                while (i < leftArr.Length) nums[k++] = leftArr[i++];
+                while (j < rightArr.Length) nums[k++] = rightArr[j++];
+            }
+
+            private void TimSort(int[] nums)
+            {
+                var n = nums.Length;
+                // Sort small runs with insertion sort
+                for (int i = 0; i < n; i += RUN)
+                {
+                    InsertionSort(nums, i, Math.Min(i + RUN - 1, n - 1));
+                }
+                // Merge sorted runs
+                for (int size = RUN; size < n; size *= 2)
+                {
+                    for (int left = 0; left < n; left += 2 * size)
+                    {
+                        int mid = left + size - 1;
+                        int right = Math.Min(left + 2 * size - 1, n - 1);
+                        if (mid < right)
+                        {
+                            Merge(nums, left, mid, right);
+                        }
+                    }
+                }
+            }
+
+
+
+        }
+
+
+        /* 1395. Count Number of Teams
+        https://leetcode.com/problems/count-number-of-teams/description/
+         */
+
+        public class CountNumberOfTeamsSol
+        {
+
+            /* Approach 1: Dynamic Programming (Memoization)
+            Complexity Analysis
+            Let n be the length of the rating array.
+            •	Time complexity: O(n^2)
+            The algorithm iterates through rating, each time calling countIncreasingTeams and countDecreasingTeams. In the worst case, the recursive functions might explore all subsequent soldiers for each call. However, due to memoization, each unique subproblem is only computed once. There are n possible indices and 3 possible team sizes (1,2,3). This gives us n×3=O(n) unique sub-problems. Each sub-problem may iterate through up to n soldiers in the worst case. Therefore, the overall time complexity is O(n^2).
+            •	Space complexity: O(n)
+            Each cache (increasingCache and decreasingCache) is a 2D array of size n×4, thus taking O(8⋅n)=O(n) space.
+            The maximum depth of recursion is 3, so this doesn't add to the asymptotic space complexity.
+            Thus, the overall space complexity is O(n).
+
+             */
+            public int DPMemo(int[] rating)
+            {
+                int n = rating.Length;
+                int teams = 0;
+                int?[,] increasingCache = new int?[n, 4];
+                int?[,] decreasingCache = new int?[n, 4];
+
+                // Calculate total teams by considering each soldier as a starting point
+                for (int startIndex = 0; startIndex < n; startIndex++)
+                {
+                    teams +=
+                    CountIncreasingTeams(rating, startIndex, 1, increasingCache) +
+                    CountDecreasingTeams(rating, startIndex, 1, decreasingCache);
+                }
+
+                return teams;
+            }
+
+            private int CountIncreasingTeams(int[] rating, int currentIndex, int teamSize, int?[,] increasingCache)
+            {
+                int n = rating.Length;
+
+                // Base case: reached end of array
+                if (currentIndex == n) return 0;
+
+                // Base case: found a valid team of size 3
+                if (teamSize == 3) return 1;
+
+                // Return cached result if available
+                if (increasingCache[currentIndex, teamSize] != null)
+                {
+                    return increasingCache[currentIndex, teamSize].Value;
+                }
+
+                int validTeams = 0;
+
+                // Recursively count teams with increasing ratings
+                for (int nextIndex = currentIndex + 1; nextIndex < n; nextIndex++)
+                {
+                    if (rating[nextIndex] > rating[currentIndex])
+                    {
+                        validTeams +=
+                        CountIncreasingTeams(rating, nextIndex, teamSize + 1, increasingCache);
+                    }
+                }
+
+                // Cache and return the result
+                return (int)(increasingCache[currentIndex, teamSize] = validTeams);
+            }
+
+            private int CountDecreasingTeams(int[] rating, int currentIndex, int teamSize, int?[,] decreasingCache)
+            {
+                int n = rating.Length;
+
+                // Base case: reached end of array
+                if (currentIndex == n) return 0;
+
+                // Base case: found a valid team of size 3
+                if (teamSize == 3) return 1;
+
+                // Return cached result if available
+                if (decreasingCache[currentIndex, teamSize] != null)
+                {
+                    return decreasingCache[currentIndex, teamSize].Value;
+                }
+
+                int validTeams = 0;
+
+                // Recursively count teams with decreasing ratings
+                for (int nextIndex = currentIndex + 1; nextIndex < n; nextIndex++)
+                {
+                    if (rating[nextIndex] < rating[currentIndex])
+                    {
+                        validTeams +=
+                        CountDecreasingTeams(rating, nextIndex, teamSize + 1, decreasingCache);
+                    }
+                }
+
+                // Cache and return the result
+                return (int)(decreasingCache[currentIndex, teamSize] = validTeams);
+            }
+
+            /* Approach 2: Dynamic Programming (Tabulation)
+            Complexity Analysis
+    Let n be the length of the rating array.
+    •	Time complexity: O(n^2)
+    Initializing the increasingTeams and decreasingTeams arrays take O(n) time.
+    In the nested loops: the outer loop runs 2 times, the middle loop n times and the inner loop at most n times. Thus, the total complexity of the section is O(2⋅n⋅n), which simplifies to O(n^2).
+    The final summation loop runs in linear time.
+    Thus, the total time complexity of the algorithm is dominated by the nested loops, resulting in O(n^2).
+    •	Space complexity: O(n)
+    The two 2D arrays increasingTeams and decreasingTeams each take n×4 space, which give them a total space complexity of O(2⋅4⋅n)=O(n).
+    All other elements take constant space, so the space complexity of the algorithm is O(n).
+
+             */
+            public int DPTabulation(int[] rating)
+            {
+                int n = rating.Length;
+                int teams = 0;
+
+                // Tables for increasing and decreasing sequences
+                int[][] increasingTeams = new int[n][];
+                int[][] decreasingTeams = new int[n][];
+
+                // Fill the base cases. (Each soldier is a sequence of length 1)
+                for (int i = 0; i < n; i++)
+                {
+                    increasingTeams[i][1] = 1;
+                    decreasingTeams[i][1] = 1;
+                }
+
+                // Fill the tables
+                for (int count = 2; count <= 3; count++)
+                {
+                    for (int i = 0; i < n; i++)
+                    {
+                        for (int j = i + 1; j < n; j++)
+                        {
+                            if (rating[j] > rating[i])
+                            {
+                                increasingTeams[j][count] +=
+                                increasingTeams[i][count - 1];
+                            }
+                            if (rating[j] < rating[i])
+                            {
+                                decreasingTeams[j][count] +=
+                                decreasingTeams[i][count - 1];
+                            }
+                        }
+                    }
+                }
+
+                // Sum up the results (All sequences of length 3)
+                for (int i = 0; i < n; i++)
+                {
+                    teams += increasingTeams[i][3] + decreasingTeams[i][3];
+                }
+
+                return teams;
+            }
+
+
+            /* Approach 3: Dynamic Programming (Optimized) 
+            Complexity Analysis
+    Let n be the length of the rating array.
+    •	Time complexity: O(n^2)
+    The main loop iterates through the rating array, which takes linear time. In each iteration, the two inner loops compare n−1 elements in total. Thus, the overall time complexity is O(n⋅(n−1)), which simplifies to O(n^2).
+    •	Space complexity: O(1)
+    The space complexity is constant since no additional data structures dependent on the length of the input space are used.
+
+            */
+            public int DPSpaceOptimal(int[] rating)
+            {
+                int n = rating.Length;
+                int teams = 0;
+
+                // Iterate through each soldier as the middle soldier
+                for (int mid = 0; mid < n; mid++)
+                {
+                    int leftSmaller = 0;
+                    int rightLarger = 0;
+
+                    // Count soldiers with smaller rating on the left side of the current soldier
+                    for (int left = mid - 1; left >= 0; left--)
+                    {
+                        if (rating[left] < rating[mid])
+                        {
+                            leftSmaller++;
+                        }
+                    }
+
+                    // Count soldiers with larger ratings on the right side of the current soldier
+                    for (int right = mid + 1; right < n; right++)
+                    {
+                        if (rating[right] > rating[mid])
+                        {
+                            rightLarger++;
+                        }
+                    }
+
+                    // Calculate and add the number of ascending rating teams (small-mid-large)
+                    teams += leftSmaller * rightLarger;
+
+                    // Calculate soldiers with larger ratings on the left and smaller ratings on the right
+                    int leftLarger = mid - leftSmaller;
+                    int rightSmaller = n - mid - 1 - rightLarger;
+
+                    // Calculate and add the number of descending rating teams (large-mid-small)
+                    teams += leftLarger * rightSmaller;
+                }
+
+                // Return the total number of valid teams
+                return teams;
+            }
+            /* Approach 4: Binary Indexed Tree (Fenwick Tree)
+    Complexity Analysis
+    Let n be the length of the rating array and maxRating be the maximum rating in rating.
+    •	Time complexity: O(n⋅log(maxRating))
+    Finding maxRating takes linear time.
+    Initially populating the rightBIT takes O(n⋅log(maxRating)) time.
+    The main loop iterates n times. For each iteration, updating the BIT's have a complexity of O(log(maxRating)) and getting the prefix sums also take O(log(maxRating)) time. Thus, the total for the main loop is O(n⋅log(maxRating)).
+    Thus, the overall time complexity of the algorithm comes out to be O(n)+O(2⋅n⋅log(maxRating)), which simplifies to O(n⋅log(maxRating)).
+    •	Space complexity: O(maxRating)
+    The only additional space used are the two arrays for the BIT, each taking O(maxRating) space.
+    This makes the space complexity of the algorithm O(2⋅maxRating)=O(maxRating).
+
+             */
+            public int UsingBIT(int[] rating)
+            {
+                // Find the maximum rating
+                int maxRating = 0;
+                foreach (int r in rating)
+                {
+                    maxRating = Math.Max(maxRating, r);
+                }
+
+                // Initialize Binary Indexed Trees for left and right sides
+                int[] leftBIT = new int[maxRating + 1];
+                int[] rightBIT = new int[maxRating + 1];
+
+                // Populate the right BIT with all ratings initially
+                foreach (int r in rating)
+                {
+                    UpdateBIT(rightBIT, r, 1);
+                }
+
+                int teams = 0;
+                foreach (int currentRating in rating)
+                {
+                    // Remove current rating from right BIT
+                    UpdateBIT(rightBIT, currentRating, -1);
+
+                    // Count soldiers with smaller and larger ratings on both sides
+                    int smallerRatingsLeft = GetPrefixSum(leftBIT, currentRating - 1);
+                    int smallerRatingsRight = GetPrefixSum(rightBIT, currentRating - 1);
+                    int largerRatingsLeft =
+                        GetPrefixSum(leftBIT, maxRating) -
+                        GetPrefixSum(leftBIT, currentRating);
+                    int largerRatingsRight =
+                        GetPrefixSum(rightBIT, maxRating) -
+                        GetPrefixSum(rightBIT, currentRating);
+
+                    // Count increasing and decreasing sequences
+                    teams += (smallerRatingsLeft * largerRatingsRight);
+                    teams += (largerRatingsLeft * smallerRatingsRight);
+
+                    // Add current rating to left BIT
+                    UpdateBIT(leftBIT, currentRating, 1);
+                }
+
+                return teams;
+            }
+
+            // Update the Binary Indexed Tree
+            private void UpdateBIT(int[] BIT, int index, int value)
+            {
+                while (index < BIT.Length)
+                {
+                    BIT[index] += value;
+                    index += index & (-index); // Move to the next relevant index in BIT
+                }
+            }
+
+            // Get the sum of all elements up to the given index in the BIT
+            private int GetPrefixSum(int[] BIT, int index)
+            {
+                int sum = 0;
+                while (index > 0)
+                {
+                    sum += BIT[index];
+                    index -= index & (-index); // Move to the parent node in BIT
+                }
+                return sum;
+            }
+
+        }
+
+
+        /* 1823. Find the Winner of the Circular Game
+        https://leetcode.com/problems/find-the-winner-of-the-circular-game/description/
+         */
+
+        class FindTheWinnerOfCircularGameSol
+        {
+            /* Approach 1: Simulation with List
+    Complexity Analysis
+    Let n be the initial size of the friend circle.
+    •	Time Complexity: O(n^2)
+    Considering the pop operation inside the loop, the time complexity for each iteration can be O(n) in the worst case (when pop shifts all subsequent elements). Since we might potentially perform n−1 pop operations (removing n-1 friends), the overall worst-case time complexity is O(n^2).
+    •	Space Complexity: O(n)
+    The space complexity of the algorithm is primarily dominated by the circle list, which stores n integers representing the friends. Therefore, the space complexity is O(n). Other variables like startIndex and removalIndex are integers and require constant additional space, O(1).
+
+             */
+            public int SimulationWithList(int numberOfFriends, int eliminationStep)
+            {
+                // Initialize list of N friends, labeled from 1-N
+                List<int> friendsCircle = new List<int>();
+                for (int friendNumber = 1; friendNumber <= numberOfFriends; friendNumber++)
+                {
+                    friendsCircle.Add(friendNumber);
+                }
+
+                // Maintain the index of the friend to start the count on
+                int currentIndex = 0;
+
+                // Perform eliminations while there is more than 1 friend left
+                while (friendsCircle.Count > 1)
+                {
+                    // Calculate the index of the friend to be removed
+                    int removalIndex = (currentIndex + eliminationStep - 1) % friendsCircle.Count;
+
+                    // Erase the friend at removalIndex
+                    friendsCircle.RemoveAt(removalIndex);
+
+                    // Update currentIndex for the next round
+                    currentIndex = removalIndex;
+                }
+
+                return friendsCircle[0];
+            }
+
+            /* Approach 2: Simulation with Queue
+            Complexity Analysis
+            Let n be the number of friends and k be the step count for elimination.
+            •	Time Complexity: O(n⋅k)
+            The time complexity is O(n⋅k) because each elimination cycle involves rotating the queue k−1 times, and this happens n−1 times.
+            •	Space Complexity: O(n)
+            The space complexity is O(n) due to the queue storing all n friends initially.
+
+             */
+            public int SimulationWithQueue(int n, int k)
+            {
+                // Initialize queue with n friends
+                Queue<int> circle = new();
+                for (int i = 1; i <= n; i++)
+                {
+                    circle.Enqueue(i);
+                }
+
+                // Perform eliminations while more than 1 player remains
+                while (circle.Count > 1)
+                {
+                    // Process the first k-1 friends without eliminating them
+                    for (int i = 0; i < k - 1; i++)
+                    {
+                        circle.Enqueue(circle.Dequeue());
+                    }
+                    // Eliminate the k-th friend
+                    circle.Dequeue();
+                }
+
+                return circle.Peek();
+            }
+            /*             Approach 3: Recursion
+
+    Complexity Analysis
+    Let n be the initial size of the friend circle.
+    •	Time Complexity: O(n)
+    The function makes n recursive calls, each performing O(1) operations (modulo and addition).
+    •	Space Complexity: O(n)
+    The space complexity is determined by the maximum depth of the recursion stack, which is n.
+
+             */
+            public int UsingRecursion(int n, int k)
+            {
+                return WinnerHelper(n, k) + 1;
+            }
+
+            private int WinnerHelper(int n, int k)
+            {
+                if (n == 1)
+                {
+                    return 0;
+                }
+                return (WinnerHelper(n - 1, k) + k) % n;
+            }
+
+            /* Approach 4: Iterative
+            Complexity Analysis
+    Let n be the initial size of the friend circle.
+    •	Time Complexity: O(n)
+    The loop runs O(n) times, where each iteration involves a constant time calculation. Thus, the total time complexity is O(n).
+    •	Space Complexity: O(1)
+    Unlike the recursive approach, no extra memory is needed to maintain a call stack. Furthermore, no auxiliary data structures are used. Thus, the space complexity is constant.
+
+             */
+            public int UsingIterative(int n, int k)
+            {
+                int ans = 0;
+                for (int i = 2; i <= n; i++)
+                {
+                    ans = (ans + k) % i;
+                }
+                // add 1 to convert back to 1 indexing
+                return ans + 1;
+            }
+
+        }
+
+
+        /* 1105. Filling Bookcase Shelves
+        https://leetcode.com/problems/filling-bookcase-shelves/description/
+         */
+        class MinHeightShelvesSol
+        {
+            /* Approach 1: Top-Down Dynamic Programming
+
+    Complexity Analysis
+    Let N be the length of array books, and W be the shelfWidth.
+    •	Time Complexity: O(N⋅W)
+    There are a total of O(N⋅W) possible subproblems to be solved. Each subproblem takes constant time, so the total time complexity is O(N⋅W⋅H).
+    •	Space Complexity: O(N⋅W)
+    Our memo array has a size of N⋅W. Thus, the total space complexity is O(N⋅W).
+
+             */
+
+            public int TopDownDP(int[][] books, int shelfWidth)
+            {
+                // Cache to store previous computations
+                int[][] memo = new int[books.Length][];
+                return DpHelper(books, shelfWidth, memo, 0, shelfWidth, 0);
+            }
+
+            private int DpHelper(
+                int[][] books,
+                int shelfWidth,
+                int[][] memo,
+                int i,
+                int remainingShelfWidth,
+                int maxHeight
+            )
+            {
+                // Return height of current shelf
+                if (i == books.Length) return maxHeight;
+                // Return answer if already computed
+                if (memo[i][remainingShelfWidth] != 0)
+                {
+                    return memo[i][remainingShelfWidth];
+                }
+                else
+                {
+                    int[] currentBook = books[i];
+                    // Calculate the height of the bookcase if we put the current book on the new shelf
+                    int option1Height =
+                        maxHeight +
+                        DpHelper(
+                            books,
+                            shelfWidth,
+                            memo,
+                            i + 1,
+                            shelfWidth - currentBook[0],
+                            currentBook[1]
+                        );
+                    int option2Height = int.MaxValue;
+                    if (remainingShelfWidth >= currentBook[0])
+                    {
+                        int maxHeightUpdated = Math.Max(maxHeight, currentBook[1]);
+                        // Calculate height of the bookcase if we put the current book on the current shelf
+                        option2Height = DpHelper(
+                            books,
+                            shelfWidth,
+                            memo,
+                            i + 1,
+                            remainingShelfWidth - currentBook[0],
+                            maxHeightUpdated
+                        );
+                    }
+                    // Store the smaller result in cache
+                    memo[i][remainingShelfWidth] = Math.Min(
+                        option1Height,
+                        option2Height
+                    );
+                    return memo[i][remainingShelfWidth];
+                }
+            }
+
+            /* Approach 2: Bottom-Up Dynamic Programming
+            Complexity Analysis
+    Let N be the length of array books, and W be the shelfWidth.
+    •	Time Complexity: O(N⋅W)
+    There are O(N) subproblems to complete. In the worst case, each subproblem dp[i] takes O(W) time to calculate the heights when adding previous books onto the new shelf. Thus, the total time complexity is O(N⋅W).
+    •	Space Complexity: O(N)
+    The dp array has N+1 elements, so the total space complexity is O(N).	
+
+             */
+            public int BottomUpDP(int[][] books, int shelfWidth)
+            {
+                // dp[i] = minimum height of bookcase containing all books up to and
+                // excluding book i
+                int[] dp = new int[books.Length + 1];
+
+                // base cases
+                dp[0] = 0;
+                dp[1] = books[0][1];
+
+                for (int i = 2; i <= books.Length; i++)
+                {
+                    // new shelf built to hold current book
+                    int remainingShelfWidth = shelfWidth - books[i - 1][0];
+                    int maxHeight = books[i - 1][1];
+                    dp[i] = books[i - 1][1] + dp[i - 1];
+
+                    int j = i - 1;
+                    // calculate the height when previous books are added onto a new shelf
+                    while (j > 0 && remainingShelfWidth - books[j - 1][0] >= 0)
+                    {
+                        maxHeight = Math.Max(maxHeight, books[j - 1][1]);
+                        remainingShelfWidth -= books[j - 1][0];
+                        dp[i] = Math.Min(dp[i], maxHeight + dp[j - 1]);
+                        j--;
+                    }
+                }
+
+                return dp[books.Length];
+            }
+        }
+
+        /* 539. Minimum Time Difference
+        https://leetcode.com/problems/minimum-time-difference/description/
+         */
+
+        class FindMinDifferenceSol
+        {
+            /* Approach 1: Sort
+
+    Complexity Analysis
+    Let N be the size of the given array timePoints.
+    •	Time Complexity: O(N⋅logN)
+    Converting the input into minutes and traversing the sorted array to calculate the minimum difference both take O(N) time. However, sorting the array takes O(N⋅logN) time. Thus, the total time complexity is O(N⋅logN)
+    •	Space Complexity: O(N)
+    Our array minutes to store the converted input takes O(N) space.
+
+             */
+            public int UsingSort(List<string> timePoints)
+            {
+                // convert input to minutes
+                int[] minutes = new int[timePoints.Count];
+                for (int i = 0; i < timePoints.Count; i++)
+                {
+                    string time = timePoints[i];
+                    int hours = int.Parse(time.Substring(0, 2));
+                    int minutesPart = int.Parse(time.Substring(3));
+                    minutes[i] = hours * 60 + minutesPart;
+                }
+
+                // sort times in ascending order
+                Array.Sort(minutes);
+
+                // find minimum difference across adjacent elements
+                int minimumDifference = int.MaxValue;
+                for (int i = 0; i < minutes.Length - 1; i++)
+                {
+                    minimumDifference = Math.Min(minimumDifference, minutes[i + 1] - minutes[i]);
+                }
+
+                // consider difference between last and first element
+                return Math.Min(
+                    minimumDifference,
+                    24 * 60 - minutes[minutes.Length - 1] + minutes[0]
+                );
+            }
+
+            /* Approach 2: Bucket Sort
+    Complexity Analysis
+    Let N be the size of the given array timePoints.
+    •	Time Complexity: O(N)
+    In contrast to Approach 1, our sorting only takes O(N) time.
+    •	Space Complexity: O(1)
+    Our array minutes will always have a size of 24∗60, so the space complexity is constant.	
+
+             */
+            public int UsingBucketSort(List<string> timePoints)
+            {
+                // create buckets array for the times converted to minutes
+                bool[] minutes = new bool[24 * 60];
+                foreach (string time in timePoints)
+                {
+                    int totalMinutes =
+                        int.Parse(time.Substring(0, 2)) * 60 +
+                        int.Parse(time.Substring(3));
+                    if (minutes[totalMinutes]) return 0;
+                    minutes[totalMinutes] = true;
+                }
+
+                int previousIndex = int.MaxValue;
+                int firstIndex = int.MaxValue;
+                int lastIndex = int.MaxValue;
+                int minimumDifference = int.MaxValue;
+
+                // find differences between adjacent elements in sorted array
+                for (int i = 0; i < 24 * 60; i++)
+                {
+                    if (minutes[i])
+                    {
+                        if (previousIndex != int.MaxValue)
+                        {
+                            minimumDifference = Math.Min(minimumDifference, i - previousIndex);
+                        }
+                        previousIndex = i;
+                        if (firstIndex == int.MaxValue)
+                        {
+                            firstIndex = i;
+                        }
+                        lastIndex = i;
+                    }
+                }
+
+                return Math.Min(minimumDifference, 24 * 60 - lastIndex + firstIndex);
+            }
+        }
+
+
+        /* 874. Walking Robot Simulation
+        https://leetcode.com/problems/walking-robot-simulation/description/
+         */
+        class RobotSimSol
+        {
+            private const long HashMultiplier = 60013; // Slightly larger than 2 * max coordinate value
+
+            /* Approach: Simulation
+            Complexity Analysis
+            Let m and n be the length of commands and obstacles, respectively.
+            •	Time complexity: O(m+n)
+            The algorithm initially iterates over the obstacles array and hashes each obstacle’s coordinates, taking O(n) time.
+            The algorithm then loops over the commands array. In the worst case, each command is a positive integer k. Since the maximum value of k is limited to 9, this step has a time complexity of O(9⋅m)=O(m).
+            Thus, the overall time complexity of the algorithm is O(n)+O(m)=O(m+n).
+            •	Space complexity: O(n)
+            The only additional space used by the algorithm is the obstacleSet, which stores up to n hashed obstacle positions. The directions and currentPosition arrays and all other primitive variables use constant space.
+            Thus, the space complexity of the algorithm is O(n).
+
+             */
+            public int UsingSimulation(int[] commands, int[][] obstacles)
+            {
+                // Store obstacles in a HashSet for efficient lookup
+                HashSet<long> obstacleSet = new HashSet<long>();
+                foreach (int[] obstacle in obstacles)
+                {
+                    obstacleSet.Add(HashCoordinates(obstacle[0], obstacle[1]));
+                }
+
+                // Define direction vectors: North, East, South, West
+                int[][] directions = { new int[] { 0, 1 }, new int[] { 1, 0 }, new int[] { 0, -1 }, new int[] { -1, 0 } };
+
+                int[] currentPosition = { 0, 0 };
+                int maxDistanceSquared = 0;
+                int currentDirection = 0; // 0: North, 1: East, 2: South, 3: West
+
+                foreach (int command in commands)
+                {
+                    if (command == -1)
+                    {
+                        // Turn right
+                        currentDirection = (currentDirection + 1) % 4;
+                        continue;
+                    }
+                    if (command == -2)
+                    {
+                        // Turn left
+                        currentDirection = (currentDirection + 3) % 4;
+                        continue;
+                    }
+
+                    // Move forward
+                    int[] direction = directions[currentDirection];
+                    for (int step = 0; step < command; step++)
+                    {
+                        int nextX = currentPosition[0] + direction[0];
+                        int nextY = currentPosition[1] + direction[1];
+                        if (obstacleSet.Contains(HashCoordinates(nextX, nextY)))
+                        {
+                            break;
+                        }
+                        currentPosition[0] = nextX;
+                        currentPosition[1] = nextY;
+                    }
+
+                    maxDistanceSquared = Math.Max(
+                        maxDistanceSquared,
+                        currentPosition[0] * currentPosition[0] +
+                        currentPosition[1] * currentPosition[1]
+                    );
+                }
+
+                return maxDistanceSquared;
+            }
+
+            // Hash function to convert (x, y) coordinates to a unique integer value
+            private long HashCoordinates(long x, long y)
+            {
+                return x + HashMultiplier * y;
+            }
+        }
+
+        /* 2069. Walking Robot Simulation II	
+        https://leetcode.com/problems/walking-robot-simulation-ii/description/
+        https://algo.monster/liteproblems/2069
+         */
+        public class WalkingRobotSimulationIISol
+        {
+            private List<Tuple<int[], string>> pos;
+            private bool isOrigin;
+            private int i;
+
+            public WalkingRobotSimulationIISol(int width, int height)
+            {
+                pos = new List<Tuple<int[], string>>();
+                pos.Add(Tuple.Create(new int[] { 0, 0 }, "South"));
+                for (int i = 1; i < width; ++i)
+                {
+                    pos.Add(Tuple.Create(new int[] { i, 0 }, "East"));
+                }
+                for (int j = 1; j < height; ++j)
+                {
+                    pos.Add(Tuple.Create(new int[] { width - 1, j }, "North"));
+                }
+                for (int i = width - 2; i >= 0; --i)
+                {
+                    pos.Add(Tuple.Create(new int[] { i, height - 1 }, "West"));
+                }
+                for (int j = height - 2; j > 0; --j)
+                {
+                    pos.Add(Tuple.Create(new int[] { 0, j }, "South"));
+                }
+                isOrigin = true;
+                i = 0;
+            }
+
+            public void Step(int num)
+            {
+                isOrigin = false;
+                i = (i + num) % pos.Count;
+            }
+
+            public int[] GetPos()
+            {
+                return pos[i].Item1;
+            }
+
+            public String GetDir()
+            {
+                return isOrigin ? "East" : pos[i].Item2;
+            }
+        }
+
+
+
+        /* 1052. Grumpy Bookstore Owner
+        https://leetcode.com/problems/grumpy-bookstore-owner/description/
+         */
+        class MaxSatisfiedCustomersSol
+        {
+            /* 
+            Approach 1: Sliding Window
+            Complexity Analysis
+            Let n be the length of the customers array.
+            •	Time complexity: O(n)
+            The algorithm loops over the entire length of customers twice, which takes 2⋅O(n) time. This can be simplified to a time complexity of O(n).
+            •	Space complexity: O(1)
+            The algorithm does not use any additional data structures, so the space complexity remains O(1).
+
+             */
+            public int UsingSlidingWindow(int[] customers, int[] grumpy, int minutes)
+            {
+                int n = customers.Length;
+                int unrealizedCustomers = 0;
+
+                // Calculate initial number of unrealized customers in first 'minutes' window
+                for (int i = 0; i < minutes; i++)
+                {
+                    unrealizedCustomers += customers[i] * grumpy[i];
+                }
+
+                int maxUnrealizedCustomers = unrealizedCustomers;
+
+                // Slide the 'minutes' window across the rest of the customers array
+                for (int i = minutes; i < n; i++)
+                {
+                    // Add the current minute's unsatisfied customers if the owner is grumpy
+                    // and remove the customers that are out of the current window
+                    unrealizedCustomers += customers[i] * grumpy[i];
+                    unrealizedCustomers -= customers[i - minutes] * grumpy[i - minutes];
+
+                    // Update the maximum unrealized customers
+                    maxUnrealizedCustomers = Math.Max(
+                        maxUnrealizedCustomers,
+                        unrealizedCustomers
+                    );
+                }
+
+                // Start with maximum possible satisfied customers due to secret technique
+                int totalCustomers = maxUnrealizedCustomers;
+
+                // Add the satisfied customers during non-grumpy minutes
+                for (int i = 0; i < customers.Length; i++)
+                {
+                    totalCustomers += customers[i] * (1 - grumpy[i]);
+                }
+
+                // Return the maximum number of satisfied customers
+                return totalCustomers;
+            }
+        }
+
+
+        /* 650. 2 Keys Keyboard
+        https://leetcode.com/problems/2-keys-keyboard/description/
+
+         */
+        class MinStepsSol
+        {
+
+            int n;
+            /*
+    Approach 1: Recursion / Backtracking
+            Complexity Analysis
+            •	Time Complexity: O(2^n)
+            The minStepsHelper function is recursively called 2 times at each point. The maximum height of the call stack would be n, leading to a total exponential time complexity of O(2^n).
+            •	Space Complexity: O(n)
+            The space complexity is determined by the call stack, which has a maximum height of O(n).
+             */
+            public int UsingRecursion(int n)
+            {
+                if (n == 1) return 0;
+                this.n = n;
+                // first step is always a Copy All operation
+                return 1 + MinStepsHelper(1, 1);
+            }
+
+            private int MinStepsHelper(int currLen, int pasteLen)
+            {
+                // base case: reached n A's, don't need more operations
+                if (currLen == n) return 0;
+                // base case: exceeded n `A`s, not a valid sequence, so
+                // return max value
+                if (currLen > n) return 1000;
+
+                // copy all + paste
+                int opt1 = 2 + MinStepsHelper(currLen * 2, currLen);
+                // paste
+                int opt2 = 1 + MinStepsHelper(currLen + pasteLen, pasteLen);
+
+                return Math.Min(opt1, opt2);
+            }
+            /* Approach 2: Top-Down Dynamic Programming
+
+            Complexity Analysis
+            •	Time Complexity: O(n^2)
+            The time complexity is determined by the total number of subproblems solved, which is proportional to the size of the memo array: (n+1)⋅(n/2+1). This leads to a time complexity of O(n^2).
+            •	Space Complexity: O(n^2)
+            The space complexity is determined by the size of the memo array, which is O(n^2).
+
+             */
+            public int TopDownDP(int n)
+            {
+                if (n == 1) return 0;
+                this.n = n;
+
+                int[][] memo = new int[n + 1][];
+                return 1 + MinStepsHelper(1, 1, memo);
+            }
+
+            private int MinStepsHelper(int currLen, int pasteLen, int[][] memo)
+            {
+                if (currLen == n) return 0;
+                if (currLen > n) return 1000;
+
+                // return result if it has been calculated already
+                if (memo[currLen][pasteLen] != 0) return memo[currLen][pasteLen];
+
+                int opt1 = 1 + MinStepsHelper(currLen + pasteLen, pasteLen, memo);
+                int opt2 = 2 + MinStepsHelper(currLen * 2, currLen, memo);
+                memo[currLen][pasteLen] = Math.Min(opt1, opt2);
+                return memo[currLen][pasteLen];
+            }
+
+            /* Approach 3: Bottom-Up Dynamic Programming
+    Complexity Analysis
+    •	Time Complexity: O(n^2)
+    Initializing our dp array takes O(n) time. To fill in the dp array, the outer and inner loop each run O(n) times, resulting in a total time complexity of O(n^2).
+    •	Space Complexity: O(n)
+    The space complexity is determined by our dp array, which has a size of O(n).
+
+             */
+            public int BottomUpDP(int n)
+            {
+                int[] dp = new int[n + 1];
+                Array.Fill(dp, 1000);
+
+                // Base case
+                dp[1] = 0;
+                for (int i = 2; i <= n; i++)
+                {
+                    for (int j = 1; j <= i / 2; j++)
+                    {
+                        // Copy All and Paste (i-j) / j times
+                        // for all valid j's
+                        if (i % j == 0)
+                        {
+                            dp[i] = Math.Min(dp[i], dp[j] + i / j);
+                        }
+                    }
+                }
+
+                return dp[n];
+            }
+
+            /*             Approach 4: Prime Factorization
+            Complexity Analysis
+            •	Time Complexity: O(Sqrt(n))
+            The outer while loop runs until n becomes 1. The inner while loop divides n by d whenever d is a divisor of n.
+            The factorization of n involves checking divisibility from d = 2 to d≤ Sqrt(n). After d surpasses sqrtn, n can only have one prime factor greater than Sqrt(n), which will be handled in one iteration of the outer loop.
+            Thus, the complexity is dominated by the number of potential divisors up to n, leading to a time complexity of O(Sqrt(n)).
+            •	Space Complexity: O(1)
+            Our iterative algorithm has no recursive overhead and no auxiliary data structures. Thus, the space complexity is O(1).
+
+
+             */
+            public int UsingPrimeFactor(int n)
+            {
+                int ans = 0;
+                int d = 2;
+                while (n > 1)
+                {
+                    // If d is prime factor, keep dividing
+                    // n by d until is no longer divisible
+                    while (n % d == 0)
+                    {
+                        ans += d;
+                        n /= d;
+                    }
+                    d++;
+                }
+                return ans;
+            }
+
+
+
+        }
+
+
+        /* 1404. Number of Steps to Reduce a Number in Binary Representation to One
+        https://leetcode.com/problems/number-of-steps-to-reduce-a-number-in-binary-representation-to-one/description/
+         */
+
+        class NumStepsSol
+        {
+            /*             Approach 1: Simulation
+            Complexity Analysis
+            Here, N is the size of the string s.
+            •	Time complexity: O(N).
+            The time complexity of the divideByTwo method is O(1). The time complexity of the method addOne can be up to O(N), such as the case where s = 1111, representing 15. In this case, after the addOne method is called, s = 10000, representing 16. Since 16 is a power of two, each remaining step would just involve the divideByTwo method. Over the course of the entire algorithm, the addOne method will flip each bit of s from 1 to 0 at most once, so it is amortized O(N). For each even integer, we remove a digit from the string. For each odd integer, we add one to it, which will make it even, and then we again remove one digit from it. Thus, it takes one step to remove one digit when the number is even, and it takes two steps to remove one digit when the number is odd, hence, the number of steps required would be O(N). Therefore, the time complexity would be equal to O(2N), which we can simplify to O(N).
+            •	Space complexity: O(1) (C++) or O(N) (Python3 and Java)
+            In Python3 and Java, strings are immutable, which means they cannot be changed once they are created. For these languages, we create a mutable representation of s, which requires O(N) space. In the C++ implementation, we apply the operations on the given input string, and hence, no extra space is required. Generally, it is not recommended to alter the input, but given the nature of the problem here, altering the input is reasonable.
+
+             */
+            public int UsingSimulation(String s)
+            {
+                StringBuilder str = new StringBuilder(s);
+
+                int operations = 0;
+                while (str.Length > 1)
+                {
+                    int N = str.Length;
+
+                    if (str[N - 1] == '0')
+                    {
+                        DivideByTwo(str);
+                    }
+                    else
+                    {
+                        AddOne(str);
+                    }
+
+                    operations++;
+                }
+
+                return operations;
+            }
+            private void DivideByTwo(StringBuilder s)
+            {
+                s.Remove(s.Length - 1, 1);
+            }
+
+            private void AddOne(StringBuilder s)
+            {
+                int i = s.Length - 1;
+
+                // Iterating while the character is 1 and changing to 0
+                while (i >= 0 && s[i] != '0')
+                {
+                    s[i] = '0';
+                    i--;
+                }
+
+                if (i < 0)
+                {
+                    s[0] = '1';
+                }
+                else
+                {
+                    s[i] = '1';
+                }
+            }
+            /* Approach 2: Greedy
+            Complexity Analysis
+            Here, N is the size of the string s.
+            •	Time complexity: O(N).
+            We are iterating over each character of the string only once and hence the time complexity is equal to O(N).
+            •	Space complexity: O(1)
+            No extra space is required other than the few variables operations and carry. Hence the time complexity is constant.
+
+             */
+            public int UsingGreedy(String s)
+            {
+                int N = s.Length;
+
+                int operations = 0;
+                int carry = 0;
+                for (int i = N - 1; i > 0; i--)
+                {
+                    int digit = (int)(Char.GetNumericValue(s[i]) + carry);
+
+                    if (digit % 2 == 1)
+                    {
+                        operations += 2;
+                        carry = 1;
+                    }
+                    else
+                    {
+                        operations++;
+                    }
+                }
+
+                return operations + carry;
+            }
+
+        }
+
+        /* 1552. Magnetic Force Between Two Balls
+        https://leetcode.com/problems/magnetic-force-between-two-balls/description/
+         */
+
+        class MagneticForceBetweenTwoBallsSol
+        {
+            /* Approach: Binary Search
+            Complexity Analysis
+            Here, n is the number of elements, and k is the maximum position value in the position array.
+            •	Time complexity: O(n log((n*k)/m))
+            Sorting the position array takes O(nlogn) time.
+            Checking if we can place the balls in the position array takes O(n) time. This operation is repeated until we reduce our search space to one element. The search space is halved in each step until only one element remains, resulting in O(logmk) steps.
+            a→a/2→a/4→...→1 (b steps)
+            a/2(b−1)=1⟹b≈loga
+            Therefore, the overall time complexity is O(nlogmn∗k).
+            •	Space complexity: O(logn) or O(n)
+            Apart from sorting, we do not use any additional space.	
+
+             */
+            public int UsingBinarySearch(int[] position, int m)
+            {
+                int answer = 0;
+                int n = position.Length;
+                Array.Sort(position);
+
+                // Initial search space.
+                int low = 1;
+                int high = (int)Math.Ceiling(position[n - 1] / (m - 1.0));
+                while (low <= high)
+                {
+                    int mid = low + (high - low) / 2;
+                    // If we can place all balls having a gap at least 'mid',
+                    if (canPlaceBalls(mid, position, m))
+                    {
+                        // then 'mid' can be our answer,
+                        answer = mid;
+                        // and discard the left half search space.
+                        low = mid + 1;
+                    }
+                    else
+                    {
+                        // Discard the right half search space.
+                        high = mid - 1;
+                    }
+                }
+                return answer;
+            }
+            // Check if we can place 'm' balls at 'position'
+            // with each ball having at least 'x' gap.
+            private bool canPlaceBalls(int x, int[] position, int m)
+            {
+                // Place the first ball at the first position.
+                int prevBallPos = position[0];
+                int ballsPlaced = 1;
+
+                // Iterate on each 'position' and place a ball there if we can place it.
+                for (int i = 1; i < position.Length && ballsPlaced < m; ++i)
+                {
+                    int currPos = position[i];
+                    // Check if we can place the ball at the current position.
+                    if (currPos - prevBallPos >= x)
+                    {
+                        ballsPlaced += 1;
+                        prevBallPos = currPos;
+                    }
+                }
+                // If all 'm' balls are placed, return 'true'.
+                return ballsPlaced == m;
+            }
+
+
+        }
+
+        /* 165. Compare Version Numbers
+        https://leetcode.com/problems/compare-version-numbers/description/
+         */
+        public class CompareVersionSol
+        {
+            /* Approach 1: Split + Parse, Two Pass
+            Complexity Analysis
+    •	Time complexity : O(N+M+max(N,M)), where N and M are lengths of input strings.
+    •	Space complexity : O(N+M) to store arrays nums1 and nums2.
+
+             */
+            public int UsingSplitAndParseWithTwoPass(string version1, string version2)
+            {
+                string[] nums1 = version1.Split('.');
+                string[] nums2 = version2.Split('.');
+                int n1 = nums1.Length, n2 = nums2.Length;
+                int i1, i2;
+                for (int i = 0; i < Math.Max(n1, n2); ++i)
+                {
+                    i1 = i < n1 ? Int32.Parse(nums1[i]) : 0;
+                    i2 = i < n2 ? Int32.Parse(nums2[i]) : 0;
+
+                    if (i1 != i2)
+                        return i1 > i2 ? 1 : -1;
+                }
+
+                // The versions are equal
+                return 0;
+            }
+            /* Approach 2: Two Pointers, One Pass
+            Complexity Analysis
+    •	Time complexity : O(max(N,M)), where N and M are the lengths of the input strings respectively. It's a one-pass solution.
+    •	Space complexity : O(max(N,M)).
+    o	Despite the fact that we did not keep arrays of revision numbers, we still need some additional space to store a substring of the input string for integer conversion.
+    In the worst case, the substring could be of the original string as well.
+
+             */
+            public int UsingTwoPointersWithOnePass(string version1, string version2)
+            {
+                int p1 = 0, p2 = 0;
+                int n1 = version1.Length, n2 = version2.Length;
+
+                while (p1 < n1 || p2 < n2)
+                {
+                    (int i1, int p1_) = GetNextChunk(version1, n1, p1);
+                    p1 = p1_;
+                    (int i2, int p2_) = GetNextChunk(version2, n2, p2);
+                    p2 = p2_;
+                    if (i1 != i2)
+                    {
+                        return i1 > i2 ? 1 : -1;
+                    }
+                }
+
+                return 0;
+            }
+            private (int, int) GetNextChunk(string version, int n, int p)
+            {
+                if (p > n - 1)
+                {
+                    return (0, p);
+                }
+
+                int pEnd = p;
+                while (pEnd < n && version[pEnd] != '.')
+                {
+                    ++pEnd;
+                }
+
+                int i = Int32.Parse(version.Substring(p,
+                    pEnd != n - 1 ? pEnd - p : n - p));
+                p = pEnd + 1;
+                return (i, p);
+            }
+
+
+
+        }
+
+        /* 2055. Plates Between Candles
+        https://leetcode.com/problems/plates-between-candles/description/
+        https://algo.monster/liteproblems/2055
+         */
+
+        class PlatesBetweenCandlesSol
+        {
+
+            /* Time and Space Complexity
+            The given Python code defines a method platesBetweenCandles to calculate the number of plates between candles for a series of queries.
+            Time Complexity:
+            Let's break it down step by step:
+            1.	We first compute the prefix sum array presum, which takes O(n) time, where n is the length of the string s.
+            2.	Then we create two arrays left and right that store the index of the nearest left and right candle for each position in the string. Building these arrays takes O(n) time each since we iterate over all elements from left to right and right to left, respectively.
+            3.	Finally, we iterate over all the queries. For each query, it takes O(1) time to compute the answer using the prefix sums and the left and right arrays. Since there are q queries, this step takes O(q) time in total.
+            Therefore, the overall time complexity of the code is O(n) + O(n) + O(q) = O(n + q).
+            Space Complexity:
+            1.	We use O(n) space for the prefix sum array presum of size n + 1.
+            2.	We also use O(n) space for each of the left and right arrays.
+            3.	Finally, the space for output ans is O(q) where q is the number of queries.
+            Therefore, the total space used is O(n) + O(n) + O(n) + O(q) = O(n + q).
+            In conclusion, the time complexity of the code is O(n + q), and the space complexity is O(n + q), where n is the length of the string and q is the number of queries.
+             */
+            // Method to calculate the number of plates between candles based on a set of queries
+            public int[] PlatesBetweenCandles(String s, int[][] queries)
+            {
+                int length = s.Length; // Length of the string
+
+                // Array to hold the prefix sum of plates up to each position
+                int[] prefixSum = new int[length + 1];
+                // Calculate the prefix sum of plates
+                for (int i = 0; i < length; ++i)
+                {
+                    prefixSum[i + 1] = prefixSum[i] + (s[i] == '*' ? 1 : 0);
+                }
+
+                // Arrays to hold the index of the nearest left and right candles to each position
+                int[] nearestLeftCandle = new int[length];
+                int[] nearestRightCandle = new int[length];
+
+                // Calculate the nearest left candle positions
+                for (int i = 0, lastCandleIndex = -1; i < length; ++i)
+                {
+                    if (s[i] == '|')
+                    {
+                        lastCandleIndex = i; // Update last seen candle
+                    }
+                    nearestLeftCandle[i] = lastCandleIndex;
+                }
+
+                // Calculate the nearest right candle positions
+                for (int i = length - 1, nextCandleIndex = -1; i >= 0; --i)
+                {
+                    if (s[i] == '|')
+                    {
+                        nextCandleIndex = i; // Update next seen candle
+                    }
+                    nearestRightCandle[i] = nextCandleIndex;
+                }
+
+                // Array to hold the results of queries
+                int[] answer = new int[queries.Length];
+
+                // Iterate over each query to determine the number of plates between candles
+                for (int k = 0; k < queries.Length; ++k)
+                {
+                    // Find the nearest right candle index from the start of the current query
+                    int startIndex = nearestRightCandle[queries[k][0]];
+                    // Find the nearest left candle index from the end of the current query
+                    int endIndex = nearestLeftCandle[queries[k][1]];
+
+                    // If valid candle indices are found and the start index is before the end index
+                    if (startIndex >= 0 && endIndex >= 0 && startIndex < endIndex)
+                    {
+                        // Calculate the number of plates by subtracting the prefix sums
+                        answer[k] = prefixSum[endIndex] - prefixSum[startIndex + 1];
+                    }
+                }
+
+                return answer;
+            }
+        }
 
 
 
@@ -30399,7 +33054,6 @@ Thus, the overall space complexity is dominated by the space needed to store the
 
 
 
-    
 
     }
 }

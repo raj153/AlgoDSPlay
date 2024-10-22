@@ -31,8 +31,8 @@ namespace AlgoDSPlay.Design
             dic = new Dictionary<int, Node>();
             head = new Node(-1, -1);
             tail = new Node(-1, -1);
-            head.next = tail;
-            tail.prev = head;
+            head.Next = tail;
+            tail.Prev = head;
         }
 
         public int Get(int key)
@@ -45,7 +45,7 @@ namespace AlgoDSPlay.Design
             Node node = dic[key];
             Remove(node);
             Add(node);
-            return node.value;
+            return node.Val;
         }
 
         public void Put(int key, int value)
@@ -61,38 +61,46 @@ namespace AlgoDSPlay.Design
             Add(node);
             if (dic.Count > capacity)
             {
-                Node nodeToDelete = head.next;
+                Node nodeToDelete = head.Next;
                 Remove(nodeToDelete);
-                dic.Remove(nodeToDelete.key);
+                dic.Remove(nodeToDelete.Key);
             }
         }
 
         private void Add(Node node)
         {
-            Node previousEnd = tail.prev;
-            previousEnd.next = node;
-            node.prev = previousEnd;
-            node.next = tail;
-            tail.prev = node;
+            Node previousEnd = tail.Prev;
+            previousEnd.Next = node;
+            node.Prev = previousEnd;
+            node.Next = tail;
+            tail.Prev = node;
         }
 
         private void Remove(Node node)
         {
-            node.prev.next = node.next;
-            node.next.prev = node.prev;
+            node.Prev.Next = node.Next;
+            node.Next.Prev = node.Prev;
         }
     }
     public class Node
     {
-        public int key { get; set; }
-        public int value { get; set; }
-        public Node next { get; set; }
-        public Node prev { get; set; }
+
+        public int Key { get; set; }
+        public int Val { get; set; }
+        public Node Next { get; set; }
+        public Node Prev { get; set; }
 
         public Node(int key, int value)
         {
-            this.key = key;
-            this.value = value;
+            this.Key = key;
+            this.Val = value;
+        }
+
+        public Node(int value1, Node prev, Node next)
+        {
+            this.Val = value1;
+            this.Prev = prev;
+            this.Next = next;
         }
     }
 

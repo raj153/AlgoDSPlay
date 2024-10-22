@@ -6,7 +6,7 @@ using AlgoDSPlay.DataStructures;
 
 namespace AlgoDSPlay
 {
-    public class Subsequence
+    public class SubsequenceProbs
     {
         //https://www.algoexpert.io/questions/validate-subsequence
         public static bool IsValidSubsequence(List<int> array, List<int> sequence)
@@ -1229,18 +1229,528 @@ Since we always remove out-of-range elements from queue, so it contains at most 
         }
 
 
+        /* 334. Increasing Triplet Subsequence
+        https://leetcode.com/problems/increasing-triplet-subsequence/description/?envType=company&envId=facebook&favoriteSlug=facebook-all&difficulty=MEDIUM
+         */
+
+        class IncreasingTripletSubseqSol
+        {
+
+            /* Approach 1: Linear Scan
+            Complexity Analysis
+            •	Time complexity : O(N) where N is the size of nums. We are updating first_num and second_num as we are scanning nums.
+            •	Space complexity : O(1) since we are not consuming additional space other than variables for two numbers.
+
+             */
+            public bool UsingLinearScan(int[] nums)
+            {
+                int first_num = int.MaxValue;
+                int second_num = int.MaxValue;
+                foreach (int n in nums)
+                {
+                    if (n <= first_num)
+                    {
+                        first_num = n;
+                    }
+                    else if (n <= second_num)
+                    {
+                        second_num = n;
+                    }
+                    else
+                    {
+                        return true;
+                    }
+                }
+                return false;
+            }
+        }
 
 
+        /* 2486. Append Characters to String to Make Subsequence
+        https://leetcode.com/problems/append-characters-to-string-to-make-subsequence/description/
+
+         */
+        class AppendCharactersToStringToMakeSubseqSol
+        {
+            /* Approach 1: Greedy (Two Pointers)
+            Complexity Analysis
+            Let n be the length of s and m be the length of t.
+            •	Time complexity: O(n)
+              Since we iterate through the string s exactly once, the time complexity can be stated as O(n).
+            •	Space complexity: O(1)
+              We do not allocate any additional auxiliary memory proportional to the size of the given strings. Therefore, overall space complexity is given by O(1).	
+
+             */
+            public int UsingTwoPointers(String s, String t)
+            {
+                int first = 0, longestPrefix = 0;
+
+                while (first < s.Length && longestPrefix < t.Length)
+                {
+                    if (s[first] == t[longestPrefix])
+                    {
+                        // Since at the current position both the characters are equal,
+                        // increment longestPrefix by 1
+                        longestPrefix++;
+                    }
+                    first++;
+                }
+
+                // The number of characters appended is given by the difference in
+                // length of t and longestPrefix
+                return t.Length - longestPrefix;
+            }
+        }
+
+        /* 300. Longest Increasing Subsequence
+        https://leetcode.com/problems/longest-increasing-subsequence/description/
+         */
+
+        class LengthOfLISSol
+        {
+
+            /* Approach 1: Dynamic Programming
+Complexity Analysis
+Given N as the length of nums,
+•	Time complexity: O(N^2)
+We use two nested for loops resulting in 1+2+3+4+...+N=(N∗(N+1))/2 operations, resulting in a time complexity of O(N^2).
+•	Space complexity: O(N)
+The only extra space we use relative to input size is the dp array, which is the same length as nums.
+             */
+            public int UsingDP(int[] nums)
+            {
+                int[] dp = new int[nums.Length];
+                Array.Fill(dp, 1);
+
+                for (int i = 1; i < nums.Length; i++)
+                {
+                    for (int j = 0; j < i; j++)
+                    {
+                        if (nums[i] > nums[j])
+                        {
+                            dp[i] = Math.Max(dp[i], dp[j] + 1);
+                        }
+                    }
+                }
+
+                int longest = 0;
+                foreach (int c in dp)
+                {
+                    longest = Math.Max(longest, c);
+                }
+
+                return longest;
+            }
+            /* Approach 2: Intelligently Build a Subsequence
+Complexity Analysis
+Given N as the length of nums,
+•	Time complexity: O(N^2)
+This algorithm will have a runtime of O(N^2) only in the worst case. Consider an input where the first half is [1, 2, 3, 4, ..., 99998, 99999], then the second half is [99998, 99998, 99998, ..., 99998, 99998]. We would need to iterate (N/2)2 times for the second half because there are N/2 elements equal to 99998, and a linear scan for each one takes N/2 iterations. This gives a time complexity of O(N^2).
+Despite having the same time complexity as the previous approach, in the best and average cases, it is much more efficient.
+•	Space complexity: O(N)
+When the input is strictly increasing, the sub array will be the same size as the input.
+             */
+            public int UsingASequenceBuild(int[] nums)
+            {
+                List<int> sub = new();
+                sub.Add(nums[0]);
+
+                for (int i = 1; i < nums.Length; i++)
+                {
+                    int num = nums[i];
+                    if (num > sub[sub.Count - 1])
+                    {
+                        sub.Add(num);
+                    }
+                    else
+                    {
+                        // Find the first element in sub that is greater than or equal to num
+                        int j = 0;
+                        while (num > sub[j])
+                        {
+                            j += 1;
+                        }
+
+                        sub[j] = num;
+                    }
+                }
+
+                return sub.Count;
+            }
+            /* Approach 3: Improve With Binary Search
+Complexity Analysis
+Given N as the length of nums,
+•	Time complexity: O(N⋅log(N))
+Binary search uses log(N) time as opposed to the O(N) time of a linear scan, which improves our time complexity from O(N2) to O(N⋅log(N)).
+•	Space complexity: O(N)
+When the input is strictly increasing, the sub array will be the same size as the input.	
+
+             */
+            public int UsingBinarySearch(int[] nums)
+            {
+                List<int> sub = new();
+                sub.Add(nums[0]);
+
+                for (int i = 1; i < nums.Length; i++)
+                {
+                    int num = nums[i];
+                    if (num > sub[sub.Count - 1])
+                    {
+                        sub.Add(num);
+                    }
+                    else
+                    {
+                        int j = BinarySearch(sub, num);
+                        sub[j] = num;
+                    }
+                }
+
+                return sub.Count;
+            }
+
+            private int BinarySearch(List<int> sub, int num)
+            {
+                int left = 0;
+                int right = sub.Count - 1;
+                int mid = (left + right) / 2;
+
+                while (left < right)
+                {
+                    mid = (left + right) / 2;
+                    if (sub[mid] == num)
+                    {
+                        return mid;
+                    }
+
+                    if (sub[mid] < num)
+                    {
+                        left = mid + 1;
+                    }
+                    else
+                    {
+                        right = mid;
+                    }
+                }
+
+                return left;
+            }
 
 
+        }
+
+        /* 2539. Count the Number of Good Subsequences
+        https://leetcode.com/problems/count-the-number-of-good-subsequences/description/
+        https://algo.monster/liteproblems/2539
+         */
+        class CountGoodSubsequencesSol
+        {
+            // Constants for MOD value and the pre-calculated array size
+            private const int ARRAY_SIZE = 10001;
+            private const int MOD = 1000000007;
+
+            // Pre-calculated factorial and modular multiplicative inverse arrays
+            private static readonly long[] factorialArray = new long[ARRAY_SIZE];
+            private static readonly long[] inverseArray = new long[ARRAY_SIZE];
+
+            // Static initializer block for pre-calculation of factorials and their inverses
+            static CountGoodSubsequencesSol()
+            {
+                factorialArray[0] = 1;
+                inverseArray[0] = 1;
+                for (int i = 1; i < ARRAY_SIZE; ++i)
+                {
+                    factorialArray[i] = factorialArray[i - 1] * i % MOD;
+                    inverseArray[i] = QuickModularInverse(factorialArray[i], MOD - 2, MOD);
+                }
+            }
+
+            // Method to count the number of good subsequences in the string s
+            public int CountGoodSubsequences(string s)
+            {
+                // Count array for each character with a maximum value tracker
+                int[] characterCount = new int[26];
+                int maxCount = 1;
+
+                // Calculate character counts and find the max count
+                for (int i = 0; i < s.Length; ++i)
+                {
+                    maxCount = Math.Max(maxCount, ++characterCount[s[i] - 'a']);
+                }
+
+                // Initialize the answer value which will be the final count
+                long answer = 0;
+
+                // Iterate over all possible subsequence lengths
+                for (int i = 1; i <= maxCount; ++i)
+                {
+                    long countForLength = 1;
+                    for (int j = 0; j < 26; ++j)
+                    {
+                        if (characterCount[j] >= i)
+                        {
+                            countForLength = countForLength * (Combination(characterCount[j], i) + 1) % MOD;
+                        }
+                    }
+                    // Subtract 1 because we are excluding the empty subsequence
+                    answer = (answer + countForLength - 1) % MOD;
+                }
+
+                // Return the result after casting to int
+                return (int)answer;
+            }
+            // Method to compute the quick modular inverse using exponentiation
+            private static long QuickModularInverse(long base1, long exponent, long modulus)
+            {
+                long result = 1;
+                while (exponent != 0)
+                {
+                    if ((exponent & 1) == 1)
+                    {
+                        result = result * base1 % modulus;
+                    }
+                    exponent >>= 1;
+                    base1 = base1 * base1 % modulus;
+                }
+                return result;
+            }
+
+            // Method to compute the combination (n choose k) under modulus
+            public static long Combination(int n, int k)
+            {
+                return (factorialArray[n] * inverseArray[k] % MOD) * inverseArray[n - k] % MOD;
+            }
 
 
+        }
 
+        /* 3202. Find the Maximum Length of Valid Subsequence II
+        https://leetcode.com/problems/find-the-maximum-length-of-valid-subsequence-ii/description/
+         */
 
+        class MaximumLengthOfValidSubseqIISolution
+        {
+            public int MaximumLength(int[] nums, int k)
+            {
+                int[][] dp = new int[k][];
+                int max = 0;
+                for (int i = 0; i < nums.Length; i++)
+                {
+                    for (int j = 0; j < k; j++)
+                    {
+                        max = Math.Max(max, dp[nums[i] % k][j] = dp[j][nums[i] % k] + 1);
+                    }
+                }
+                return max;
+            }
+        }
 
+        /* 1143. Longest Common Subsequence
+        https://leetcode.com/problems/longest-common-subsequence/description/
+         */
 
+        class LongestCommonSubsequenceSol
+        {
 
+            private int[][] memo;
+            private String text1;
+            private String text2;
+            /* 
+            Approach 1: Memoization
+Complexity Analysis
+•	Time complexity : O(M⋅N^2).
+We analyze a memoized-recursive function by looking at how many unique subproblems it will solve, and then what the cost of solving each subproblem is.
+The input parameters to the recursive function are a pair of integers; representing a position in each string. There are M possible positions for the first string, and N for the second string. Therefore, this gives us M⋅N possible pairs of integers, and is the number of subproblems to be solved.
+Solving each subproblem requires, in the worst case, an O(N) operation; searching for a character in a string of length N. This gives us a total of (M⋅N^2).
+•	Space complexity : O(M⋅N).
+We need to store the answer for each of the M⋅N subproblems. Each subproblem takes O(1) space to store. This gives us a total of O(M⋅N).
+It is important to note that the time complexity given here is an upper bound. In practice, many of the subproblems are unreachable, and therefore not solved.
+For example, if the first letter of the first string is not in the second string, then only one subproblem that has the entire first word is even considered (as opposed to the N possible subproblems that have it). This is because when we search for the letter, we skip indices until we find the letter, skipping over a subproblem at each iteration. In the case of the letter not being present, no further subproblems are even solved with that particular first string.
 
+             */
+            public int UsingMemo(String text1, String text2)
+            {
+                // Make the memo big enough to hold the cases where the pointers
+                // go over the edges of the strings.
+                this.memo = new int[text1.Length + 1][];
+                // We need to initialise the memo array to -1's so that we know
+                // whether or not a value has been filled in. Keep the base cases
+                // as 0's to simplify the later code a bit.
+                for (int i = 0; i < text1.Length; i++)
+                {
+                    for (int j = 0; j < text2.Length; j++)
+                    {
+                        this.memo[i][j] = -1;
+                    }
+                }
+                this.text1 = text1;
+                this.text2 = text2;
+                return MemoSolve(0, 0);
+            }
+
+            private int MemoSolve(int p1, int p2)
+            {
+                // Check whether or not we've already solved this subproblem.
+                // This also covers the base cases where p1 == text1.length
+                // or p2 == text2.length.
+                if (memo[p1][p2] != -1)
+                {
+                    return memo[p1][p2];
+                }
+
+                // Option 1: we don't include text1[p1] in the solution.
+                int option1 = MemoSolve(p1 + 1, p2);
+
+                // Option 2: We include text1[p1] in the solution, as long as
+                // a match for it in text2 at or after p2 exists.
+                int firstOccurence = text2.IndexOf(text1[p1], p2);
+                int option2 = 0;
+                if (firstOccurence != -1)
+                {
+                    option2 = 1 + MemoSolve(p1 + 1, firstOccurence + 1);
+                }
+
+                // Add the best answer to the memo before returning it.
+                memo[p1][p2] = Math.Max(option1, option2);
+                return memo[p1][p2];
+            }
+            /* Approach 2: Improved Memoization
+            Complexity Analysis
+•	Time complexity : O(M⋅N).
+This time, solving each subproblem has a cost of O(1). Again, there are M⋅N subproblems, and so we get a total time complexity of O(M⋅N).
+•	Space complexity : O(M⋅N).
+We need to store the answer for each of the M⋅N subproblems.	
+
+             */
+            public int UsingMemoOptimal(string text1, string text2)
+            {
+                // Make the memo big enough to hold the cases where the pointers
+                // go over the edges of the strings.
+                this.memo = new int[text1.Length + 1][];
+                // We need to initialise the memo array to -1's so that we know
+                // whether or not a value has been filled in. Keep the base cases
+                // as 0's to simplify the later code a bit.
+                for (int i = 0; i < text1.Length; i++)
+                {
+                    for (int j = 0; j < text2.Length; j++)
+                    {
+                        this.memo[i][j] = -1;
+                    }
+                }
+                this.text1 = text1;
+                this.text2 = text2;
+                return MemoSolve(0, 0);
+
+                int MemoSolve(int p1, int p2)
+                {
+                    // Check whether or not we've already solved this subproblem.
+                    // This also covers the base cases where p1 == text1.Length
+                    // or p2 == text2.Length.
+                    if (memo[p1][p2] != -1)
+                    {
+                        return memo[p1][p2];
+                    }
+
+                    // Recursive cases.
+                    int answer = 0;
+                    if (text1[p1] == text2[p2])
+                    {
+                        answer = 1 + MemoSolve(p1 + 1, p2 + 1);
+                    }
+                    else
+                    {
+                        answer = Math.Max(MemoSolve(p1, p2 + 1), MemoSolve(p1 + 1, p2));
+                    }
+
+                    // Add the best answer to the memo before returning it.
+                    memo[p1][p2] = answer;
+                    return memo[p1][p2];
+                }
+            }
+
+            /* Approach 3: Dynamic Programming
+Complexity Analysis
+•	Time complexity : O(M⋅N).
+We're solving M⋅N subproblems. Solving each subproblem is an O(1) operation.
+•	Space complexity : O(M⋅N).
+We'e allocating a 2D array of size M⋅N to save the answers to subproblems
+
+             */
+            public int UsingDP(String text1, String text2)
+            {
+
+                // Make a grid of 0's with text2.Length + 1 columns 
+                // and text1.Length + 1 rows.
+                int[][] dpGrid = new int[text1.Length + 1][];
+
+                // Iterate up each column, starting from the last one.
+                for (int col = text2.Length - 1; col >= 0; col--)
+                {
+                    for (int row = text1.Length - 1; row >= 0; row--)
+                    {
+                        // If the corresponding characters for this cell are the same...
+                        if (text1[row] == text2[col])
+                        {
+                            dpGrid[row][col] = 1 + dpGrid[row + 1][col + 1];
+                            // Otherwise they must be different...
+                        }
+                        else
+                        {
+                            dpGrid[row][col] = Math.Max(dpGrid[row + 1][col], dpGrid[row][col + 1]);
+                        }
+                    }
+                }
+
+                // The original problem's answer is in dp_grid[0][0]. Return it.
+                return dpGrid[0][0];
+            }
+            /* Approach 4: Dynamic Programming with Space Optimization 
+            Complexity Analysis
+Let M be the length of the first word, and N be the length of the second word.
+•	Time complexity : O(M⋅N).
+Like before, we're solving M⋅N subproblems, and each is an O(1) operation to solve.
+•	Space complexity : O(min(M,N)).
+We've reduced the auxilary space required so that we only use two 1D arrays at a time; each the length of the shortest input word. Seeing as the 2 is a constant, we drop it, leaving us with the minimum length out of the two words.
+
+            */
+            public int UsingDPSpaceOptimal(string text1, string text2)
+            {
+                // If text1 doesn't reference the shortest string, swap them.
+                if (text2.Length < text1.Length)
+                {
+                    string temp = text1;
+                    text1 = text2;
+                    text2 = temp;
+                }
+
+                // The previous column starts with all 0's and like before is 1
+                // more than the length of the first word.
+                int[] previous = new int[text1.Length + 1];
+
+                // Iterate through each column, starting from the last one.
+                for (int col = text2.Length - 1; col >= 0; col--)
+                {
+                    // Create a new array to represent the current column.
+                    int[] current = new int[text1.Length + 1];
+                    for (int row = text1.Length - 1; row >= 0; row--)
+                    {
+                        if (text1[row] == text2[col])
+                        {
+                            current[row] = 1 + previous[row + 1];
+                        }
+                        else
+                        {
+                            current[row] = Math.Max(previous[row], current[row + 1]);
+                        }
+                    }
+                    // The current column becomes the previous one.
+                    previous = current;
+                }
+
+                // The original problem's answer is in previous[0]. Return it.
+                return previous[0];
+            }
+
+        }
 
 
 

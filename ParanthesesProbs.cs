@@ -733,15 +733,15 @@ Like the previous approach, the string building requires O(n) space.
         class MinAddToMakeValidParenSol
         {
 
-/* Approach: Open Bracket Counter
-Complexity Analysis
-Here, N is the number of characters in the string s.
-•	Time complexity: O(N)
-We iterate over each character in the string s once. For each character, we either increment, decrement, or compare a counter. These operations take constant time. Therefore, the overall time complexity is linear, O(N).
-•	Space complexity: O(1)
-We use only two variables, openBrackets and minAddsRequired, to count unmatched brackets. These variables require constant space, and we do not use any extra data structures that depend on the input size. Thus, the space complexity is constant.
+            /* Approach: Open Bracket Counter
+            Complexity Analysis
+            Here, N is the number of characters in the string s.
+            •	Time complexity: O(N)
+            We iterate over each character in the string s once. For each character, we either increment, decrement, or compare a counter. These operations take constant time. Therefore, the overall time complexity is linear, O(N).
+            •	Space complexity: O(1)
+            We use only two variables, openBrackets and minAddsRequired, to count unmatched brackets. These variables require constant space, and we do not use any extra data structures that depend on the input size. Thus, the space complexity is constant.
 
- */
+             */
             public int OpenBracketCounter(String s)
             {
                 int openBrackets = 0;
@@ -774,11 +774,510 @@ We use only two variables, openBrackets and minAddsRequired, to count unmatched 
         }
 
 
+        /* 241. Different Ways to Add Parentheses
+        https://leetcode.com/problems/different-ways-to-add-parentheses/description/
+         */
+        public class DiffWaysToAddParenSol
+        {
+
+            /* Approach 1: Recursion
+Complexity Analysis
+Let n be the the length of the input string expression.
+•	Time complexity: O(n⋅2^n)
+For each sub-expression, we iterate through the string to identify the operators, which takes O(n) time. However, the key aspect is the recursive combination of results from the left and right sub-expressions. The number of results grows exponentially because each sub-expression produces multiple results, and combining these results takes O(k×l), where k and l are the numbers of results from the left and right sub-problems, respectively.
+There were some suggestions to model the number of results using Catalan numbers which we deemed as incorrect. Catalan numbers apply when counting distinct ways to fully parenthesize an expression or structure. In this problem, however, we're not just counting valid ways to split the expression but also calculating and combining all possible results. This introduces exponential growth in the number of possible results, not the polynomial growth typical of Catalan numbers. The number of combinations grows exponentially with the depth of recursive splitting, which means the overall complexity is driven by the exponential growth in results.
+Thus, the time complexity of the algorithm is O(n⋅2^n), where the O(2^n) factor reflects the exponential growth in the number of ways to combine results from sub-expressions.
+•	Space complexity: O(2^n)
+The algorithm stores the intermediate results at each step. Since the total number of results can be equal to the O(2^n), the space complexity of the algorithm is O(2^n).
+
+             */
+            public List<int> UsingRecursion(string expression)
+            {
+                List<int> results = new List<int>();
+
+                // Base case: if the string is empty, return an empty list
+                if (expression.Length == 0) return results;
+
+                // Base case: if the string is a single character, treat it as a number and return it
+                if (expression.Length == 1)
+                {
+                    results.Add(int.Parse(expression));
+                    return results;
+                }
+
+                // If the string has only two characters and the first character is a digit, parse it as a number
+                if (expression.Length == 2 && char.IsDigit(expression[0]))
+                {
+                    results.Add(int.Parse(expression));
+                    return results;
+                }
+
+                // Recursive case: iterate through each character
+                for (int i = 0; i < expression.Length; i++)
+                {
+                    char currentChar = expression[i];
+
+                    // Skip if the current character is a digit
+                    if (char.IsDigit(currentChar)) continue;
+
+                    // Split the expression into left and right parts
+                    List<int> leftResults = UsingRecursion(expression.Substring(0, i));
+                    List<int> rightResults = UsingRecursion(expression.Substring(i + 1));
+
+                    // Combine results from left and right parts
+                    foreach (int leftValue in leftResults)
+                    {
+                        foreach (int rightValue in rightResults)
+                        {
+                            int computedResult = 0;
+
+                            // Perform the operation based on the current character
+                            switch (currentChar)
+                            {
+                                case '+':
+                                    computedResult = leftValue + rightValue;
+                                    break;
+                                case '-':
+                                    computedResult = leftValue - rightValue;
+                                    break;
+                                case '*':
+                                    computedResult = leftValue * rightValue;
+                                    break;
+                            }
+
+                            results.Add(computedResult);
+                        }
+                    }
+                }
+
+                return results;
+            }
+            /* Approach 2: Memoization
+            Complexity Analysis
+Let n be the the length of the input string expression.
+•	Time complexity: O(n⋅2^n)
+The algorithm uses memoization to store the results of sub-problems, ensuring that each sub-problem is evaluated exactly once. There are at most O(n^2) possible sub-problems, as each sub-problem is defined by its start and end indices, both ranging from 0 to n−1.
+Despite the efficiency gains from memoization, the time complexity is still dominated by the recursive nature of the algorithm. The recursion tree expands exponentially, with a growth factor of O(2^n).
+Thus, the overall time complexity remains O(n⋅2^n).
+•	Space complexity: O(n^2⋅2^n)
+The space complexity is O(n^2⋅2^n), where O(n^2) comes from the memoization table storing results for all sub-problems, and O(2^n) accounts for the space required to store the exponentially growing number of results for each sub-problem. The recursion stack depth is at most O(n), which is dominated by the exponential complexity and can therefore be omitted from the overall space complexity analysis.
+
+             */
+            public IList<int> UsingMemo(string expression)
+            {
+                // Initialize memoization array to store results of subproblems
+                IList<int>[][] memo = new List<int>[expression.Length][];
+                for (int i = 0; i < expression.Length; i++)
+                {
+                    memo[i] = new List<int>[expression.Length];
+                }
+
+                // Solve for the entire expression
+                return ComputeResults(expression, memo, 0, expression.Length - 1);
+            }
+
+            private IList<int> ComputeResults(string expression, IList<int>[][] memo, int start, int end)
+            {
+                // If result is already memoized, return it
+                if (memo[start][end] != null)
+                {
+                    return memo[start][end];
+                }
+
+                List<int> results = new List<int>();
+
+                // Base case: single digit
+                if (start == end)
+                {
+                    results.Add(expression[start] - '0');
+                    return results;
+                }
+
+                // Base case: two-digit number
+                if (end - start == 1 && Char.IsDigit(expression[start]))
+                {
+                    int tens = expression[start] - '0';
+                    int ones = expression[end] - '0';
+                    results.Add(10 * tens + ones);
+                    return results;
+                }
+
+                // Recursive case: split the expression at each operator
+                for (int i = start; i <= end; i++)
+                {
+                    char currentChar = expression[i];
+                    if (Char.IsDigit(currentChar))
+                    {
+                        continue;
+                    }
+
+                    IList<int> leftResults = ComputeResults(expression, memo, start, i - 1);
+                    IList<int> rightResults = ComputeResults(expression, memo, i + 1, end);
+
+                    // Combine results from left and right subexpressions
+                    foreach (int leftValue in leftResults)
+                    {
+                        foreach (int rightValue in rightResults)
+                        {
+                            switch (currentChar)
+                            {
+                                case '+':
+                                    results.Add(leftValue + rightValue);
+                                    break;
+                                case '-':
+                                    results.Add(leftValue - rightValue);
+                                    break;
+                                case '*':
+                                    results.Add(leftValue * rightValue);
+                                    break;
+                            }
+                        }
+                    }
+                }
+
+                // Memoize the result for this subproblem
+                memo[start][end] = results;
+
+                return results;
+            }
+            /*             Approach 3: Tabulation
+            Complexity Analysis
+            Let n be the the length of the input string expression.
+            •	Time complexity: O(n⋅2^n)
+            Similar to the memoization approach, the algorithm evaluates each sub-problem exactly once. Thus, the time complexity remains the same as Approach 2: O(n⋅2^n).
+            •	Space complexity: O(n^2⋅2^n)
+            The space complexity is similar to the previous approach, with one key difference: the absence of the recursive stack space.
+            However, the dp table dominates the space complexity anyway, keeping the overall space complexity as O(n^2⋅2^n).
+
+             */
+            public List<int> UsingTabulation(string expression)
+            {
+                int length = expression.Length;
+                // Create a 2D array of lists to store results of subproblems
+                List<int>[,] dp = new List<int>[length, length];
+
+                InitializeBaseCases(expression, dp);
+
+                // Fill the dp table for all possible subexpressions
+                for (int currentLength = 3; currentLength <= length; currentLength++)
+                {
+                    for (int start = 0; start + currentLength - 1 < length; start++)
+                    {
+                        int end = start + currentLength - 1;
+                        ProcessSubexpression(expression, dp, start, end);
+                    }
+                }
+
+                // Return the results for the entire expression
+                return dp[0, length - 1];
+            }
+
+            private void InitializeBaseCases(string expression, List<int>[,] dp)
+            {
+                int length = expression.Length;
+                // Initialize the dp array with empty lists
+                for (int i = 0; i < length; i++)
+                {
+                    for (int j = 0; j < length; j++)
+                    {
+                        dp[i, j] = new List<int>();
+                    }
+                }
+
+                // Handle base cases: single digits and two-digit numbers
+                for (int i = 0; i < length; i++)
+                {
+                    if (char.IsDigit(expression[i]))
+                    {
+                        // Check if it's a two-digit number
+                        int firstDigit = expression[i] - '0';
+                        if (i + 1 < length && char.IsDigit(expression[i + 1]))
+                        {
+                            int secondDigit = expression[i + 1] - '0';
+                            int number = firstDigit * 10 + secondDigit;
+                            dp[i, i + 1].Add(number);
+                        }
+                        // Single digit case
+                        dp[i, i].Add(firstDigit);
+                    }
+                }
+            }
+
+            private void ProcessSubexpression(string expression, List<int>[,] dp, int start, int end)
+            {
+                // Try all possible positions to split the expression
+                for (int split = start; split <= end; split++)
+                {
+                    if (char.IsDigit(expression[split])) continue;
+
+                    List<int> leftResults = dp[start, split - 1];
+                    List<int> rightResults = dp[split + 1, end];
+
+                    ComputeResults(expression[split], leftResults, rightResults, dp[start, end]);
+                }
+            }
+
+            private void ComputeResults(char op, List<int> leftResults, List<int> rightResults, List<int> results)
+            {
+                // Compute results based on the operator at position 'split'
+                foreach (int leftValue in leftResults)
+                {
+                    foreach (int rightValue in rightResults)
+                    {
+                        switch (op)
+                        {
+                            case '+':
+                                results.Add(leftValue + rightValue);
+                                break;
+                            case '-':
+                                results.Add(leftValue - rightValue);
+                                break;
+                            case '*':
+                                results.Add(leftValue * rightValue);
+                                break;
+                        }
+                    }
+                }
+            }
 
 
+        }
 
+        /* 678. Valid Parenthesis String
+        https://leetcode.com/problems/valid-parenthesis-string/description/
+         */
+        public class CheckValidParanthesisStringSol
+        {
+            /* Approach 1: Top-Down Dynamic Programming - Memoization
+Complexity Analysis
+Let n be the length of the input string.
+•	Time complexity: O(n⋅n)
+The time complexity of the isValidString function can be analyzed by considering the number of unique subproblems that need to be solved. Since there are at most n⋅n unique subproblems (indexed by index and openCount), where n is the length of the input string, and each subproblem is computed only once (due to memoization), the time complexity is bounded by the number of unique subproblems. Therefore, the time complexity can be stated as O(n⋅n).
+•	Space complexity: O(n⋅n)
+The space complexity of the algorithm is primarily determined by two factors: the auxiliary space used for memoization and the recursion stack space. The memoization table, denoted as memo, consumes O(n⋅n) space due to its size being proportional to the square of the length of the input string. Additionally, the recursion stack space can grow up to O(n) in the worst case, constrained by the length of the input string, as each recursive call may add a frame to the stack. Therefore, the overall space complexity is the sum of these two components, resulting in O(n⋅n)+O(n), which simplifies to O(n⋅n).
 
+             */
+            public bool TopDownDPWithMemo(string inputString)
+            {
+                int length = inputString.Length;
+                int[,] memoizationArray = new int[length, length];
+                for (int row = 0; row < length; row++)
+                {
+                    for (int column = 0; column < length; column++)
+                    {
+                        memoizationArray[row, column] = -1;
+                    }
+                }
+                return IsValidString(0, 0, inputString, memoizationArray);
+            }
 
+            private bool IsValidString(int currentIndex, int openBracketCount, string inputString, int[,] memoizationArray)
+            {
+                // If reached end of the string, check if all brackets are balanced
+                if (currentIndex == inputString.Length)
+                {
+                    return (openBracketCount == 0);
+                }
+                // If already computed, return memoized result
+                if (memoizationArray[currentIndex, openBracketCount] != -1)
+                {
+                    return memoizationArray[currentIndex, openBracketCount] == 1;
+                }
+                bool isValid = false;
+                // If encountering '*', try all possibilities
+                if (inputString[currentIndex] == '*')
+                {
+                    isValid |= IsValidString(currentIndex + 1, openBracketCount + 1, inputString, memoizationArray); // Treat '*' as '('
+                    if (openBracketCount > 0)
+                    {
+                        isValid |= IsValidString(currentIndex + 1, openBracketCount - 1, inputString, memoizationArray); // Treat '*' as ')'
+                    }
+                    isValid |= IsValidString(currentIndex + 1, openBracketCount, inputString, memoizationArray); // Treat '*' as empty
+                }
+                else
+                {
+                    // Handle '(' and ')'
+                    if (inputString[currentIndex] == '(')
+                    {
+                        isValid = IsValidString(currentIndex + 1, openBracketCount + 1, inputString, memoizationArray); // Increment count for '('
+                    }
+                    else if (openBracketCount > 0)
+                    {
+                        isValid = IsValidString(currentIndex + 1, openBracketCount - 1, inputString, memoizationArray); // Decrement count for ')'
+                    }
+                }
+
+                // Memoize and return the result
+                memoizationArray[currentIndex, openBracketCount] = isValid ? 1 : 0;
+                return isValid;
+            }
+
+            /* Approach 2: Bottom-Up Dynamic Programming - Tabulation
+Complexity Analysis
+Let n be the length of the input string.
+•	Time complexity: O(n⋅n)
+This is due to the nested loop structure, where the outer loop iterates over each character of the string, and the inner loop iterates over all possible counts of opening brackets.
+•	Space complexity: O(n⋅n)
+This is primarily due to the 2D array dp, which has dimensions (n+1)⋅(n+1).
+
+             */
+            public bool BottomUpDPTabulation(string inputString)
+            {
+                int stringLength = inputString.Length;
+                // dp[i][j] represents if the substring starting from index i is valid with j opening brackets
+                bool[,] dynamicProgrammingTable = new bool[stringLength + 1, stringLength + 1];
+
+                // base case: an empty string with 0 opening brackets is valid
+                dynamicProgrammingTable[stringLength, 0] = true;
+
+                for (int index = stringLength - 1; index >= 0; index--)
+                {
+                    for (int openBracketCount = 0; openBracketCount < stringLength; openBracketCount++)
+                    {
+                        bool isValid = false;
+
+                        // '*' can represent '(' or ')' or '' (empty)
+                        if (inputString[index] == '*')
+                        {
+                            isValid |= dynamicProgrammingTable[index + 1, openBracketCount + 1]; // try '*' as '('
+                                                                                                 // opening brackets to use '*' as ')'
+                            if (openBracketCount > 0)
+                            {
+                                isValid |= dynamicProgrammingTable[index + 1, openBracketCount - 1]; // try '*' as ')'
+                            }
+                            isValid |= dynamicProgrammingTable[index + 1, openBracketCount]; // ignore '*'
+                        }
+                        else
+                        {
+                            // If the character is not '*', it can be '(' or ')'
+                            if (inputString[index] == '(')
+                            {
+                                isValid |= dynamicProgrammingTable[index + 1, openBracketCount + 1]; // try '('
+                            }
+                            else if (openBracketCount > 0)
+                            {
+                                isValid |= dynamicProgrammingTable[index + 1, openBracketCount - 1]; // try ')'
+                            }
+                        }
+                        dynamicProgrammingTable[index, openBracketCount] = isValid;
+                    }
+                }
+
+                return dynamicProgrammingTable[0, 0]; // check if the entire string is valid with no excess opening brackets
+            }
+
+            /* Approach 3: Using Two Stacks
+Complexity Analysis
+Let n be the length of the input string.
+•	Time complexity: O(n)
+The algorithm iterates through the entire string once, taking O(n) time. Additionally, in the worst case, it may need to traverse both the openBrackets and asterisks stacks simultaneously to check for balanced parentheses, which also takes O(n) time. Thus, the overall time complexity is O(n).
+•	Space complexity: O(n)
+The algorithm uses two stacks, openBrackets, and asterisks, which could potentially hold up to O(n) elements combined in the worst case. Additionally, there are a few extra variables and loop counters, which require constant space. Therefore, the overall space complexity is O(n).
+
+             */
+            public bool UsingTwoStacks(string inputString)
+            {
+                // Stacks to store indices of open brackets and asterisks
+                Stack<int> openBrackets = new Stack<int>();
+                Stack<int> asterisks = new Stack<int>();
+
+                for (int index = 0; index < inputString.Length; index++)
+                {
+                    char currentChar = inputString[index];
+
+                    // If current character is an open bracket, push its index onto the stack
+                    if (currentChar == '(')
+                    {
+                        openBrackets.Push(index);
+                    }
+                    // If current character is an asterisk, push its index onto the stack
+                    else if (currentChar == '*')
+                    {
+                        asterisks.Push(index);
+                        // current character is a closing bracket ')'
+                    }
+                    else
+                    {
+                        // If there are open brackets available, use them to balance the closing bracket
+                        if (openBrackets.Count > 0)
+                        {
+                            openBrackets.Pop();
+                            // If no open brackets are available, use an asterisk to balance the closing bracket
+                        }
+                        else if (asterisks.Count > 0)
+                        {
+                            asterisks.Pop();
+                        }
+                        else
+                        {
+                            return false;
+                        }
+                    }
+                }
+
+                // Check if there are remaining open brackets and asterisks that can balance them
+                while (openBrackets.Count > 0 && asterisks.Count > 0)
+                {
+                    // If an open bracket appears after an asterisk, it cannot be balanced, return false
+                    if (openBrackets.Pop() > asterisks.Pop())
+                    {
+                        return false; // '*' before '(' which cannot be balanced.
+                    }
+                }
+
+                // If all open brackets are matched and there are no unmatched open brackets left, return true
+                return openBrackets.Count == 0;
+            }
+            /* Approach 4: Two Pointer
+Complexity Analysis
+Let n be the length of the input string.
+•	Time complexity: O(n)
+The time complexity is O(n), as we iterate through the string once.
+•	Space complexity: O(1)
+The space complexity is O(1), as we use a constant amount of extra space to store the openCount and closeCount variables.
+
+             */
+            public bool UsingTwoPointers(string inputString)
+            {
+                int openParenthesesCount = 0;
+                int closeParenthesesCount = 0;
+                int stringLength = inputString.Length - 1;
+
+                // Traverse the string from both ends simultaneously
+                for (int index = 0; index <= stringLength; index++)
+                {
+                    // Count open parentheses or asterisks
+                    if (inputString[index] == '(' || inputString[index] == '*')
+                    {
+                        openParenthesesCount++;
+                    }
+                    else
+                    {
+                        openParenthesesCount--;
+                    }
+
+                    // Count close parentheses or asterisks
+                    if (inputString[stringLength - index] == ')' || inputString[stringLength - index] == '*')
+                    {
+                        closeParenthesesCount++;
+                    }
+                    else
+                    {
+                        closeParenthesesCount--;
+                    }
+
+                    // If at any point open count or close count goes negative, the string is invalid
+                    if (openParenthesesCount < 0 || closeParenthesesCount < 0)
+                    {
+                        return false;
+                    }
+                }
+
+                // If open count and close count are both non-negative, the string is valid
+                return true;
+            }
+
+        }
 
 
 

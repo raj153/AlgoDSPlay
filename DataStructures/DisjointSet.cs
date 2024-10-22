@@ -73,31 +73,28 @@ namespace AlgoDSPlay.DataStructures
 
         public bool Union(int x, int y)
         {
-            int xr = Find(x), yr = Find(y);
-            if (xr == yr)
+            int xSet = Find(x), ySet = Find(y);
+            if (xSet == ySet)
             {
                 return false;
             }
-            else if (rank[xr] < rank[yr])
+            else if (rank[xSet] < rank[ySet])
             {
-                parent[xr] = yr;
+                parent[xSet] = ySet;
             }
-            else if (rank[xr] > rank[yr])
+            else if (rank[xSet] > rank[ySet])
             {
-                parent[yr] = xr;
+                parent[ySet] = xSet;
             }
             else
             {
-                parent[yr] = xr;
-                rank[xr]++;
+                parent[ySet] = xSet;
+                rank[xSet]++;
             }
             return true;
         }
 
-        internal int find(object value)
-        {
-            throw new NotImplementedException();
-        }
+        
     }
 
 }

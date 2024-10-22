@@ -1074,6 +1074,75 @@ heap uses O(n) space.
             return ans;
         }
 
+        /*         390. Elimination Game
+        https://leetcode.com/problems/elimination-game/description/
+        https://algo.monster/liteproblems/390
+         */
+        class LastRemainingSol
+        {
+            /* Time and Space Complexity
+The given Python code defines a method lastRemaining that calculates the last number remaining after repeatedly removing numbers from a list that has been recreated at each step of the problem. In the problem, numbers are removed alternately from the start and end, and every second number from the list is removed at each step.
+Time Complexity
+The time complexity of the function is determined by the while loop which runs until cnt > 1. The number cnt represents the remaining numbers in the sequence and is halved (cnt >>= 1) at each iteration of the while loop due to removing every second number. As a result, the time complexity of the loop, and hence the function, is O(log n), as it reduces the sequence size by a factor of two at each step until only one number is left.
+Space Complexity
+The space complexity of the provided code is O(1). This is because the algorithm uses a fixed number of variables (a1, an, i, step, cnt) and doesn't require any additional space that would grow with the input size n. It does not utilize any complex data structures that would require space proportional to the input size
+ */
+            public int LastRemaining(int n)
+            {
+                int firstElement = 1;      // Initialize the first element of the sequence to 1
+                int lastElement = n;       // Initialize the last element of the sequence to n
+                int step = 1;              // Step size, which doubles each iteration
+
+                // Loop until only one element remains. cnt keeps track of the remaining elements.
+                for (int round = 0, remainingElements = n; remainingElements > 1;
+                     remainingElements >>= 1, step <<= 1, ++round)
+                {
+
+                    // In odd rounds, move from right to left
+                    if (round % 2 == 1)
+                    {
+                        lastElement -= step;  // Subtract step from the last element
+
+                        // If the count is odd, increment the first element
+                        if (remainingElements % 2 == 1)
+                        {
+                            firstElement += step;
+                        }
+                    }
+                    // In even rounds, move from left to right
+                    else
+                    {
+                        firstElement += step;  // Increment first element
+
+                        // If the count is odd, decrement the last element
+                        if (remainingElements % 2 == 1)
+                        {
+                            lastElement -= step;
+                        }
+                    }
+                }
+
+                // Once the loop is finished, there's only one element left, which is the first element.
+                return firstElement;
+            }
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     }
 }

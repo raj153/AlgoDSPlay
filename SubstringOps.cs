@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace AlgoDSPlay
@@ -599,13 +600,13 @@ In the worst case we might end up visiting every element of string S twice, once
          */
         public class SubstringChecker
         {
-/* Approach: Greedy O(n)	
-Complexity Analysis
-•	Time: O(n). In the worst case, we search for substring 26 times, and each search is O(n)
-•	Memory: O(1). We store left and right positions for 26 characters.
-o	For the complexity analysis purposes, we ignore memory required by inputs and outputs.
+            /* Approach: Greedy O(n)	
+            Complexity Analysis
+            •	Time: O(n). In the worst case, we search for substring 26 times, and each search is O(n)
+            •	Memory: O(1). We store left and right positions for 26 characters.
+            o	For the complexity analysis purposes, we ignore memory required by inputs and outputs.
 
- */
+             */
             public List<string> MaxNumberOfSubstrings(string inputString)
             {
                 int[] leftIndices = new int[26];
@@ -622,7 +623,7 @@ o	For the complexity analysis purposes, we ignore memory required by inputs and 
                 }
 
                 int rightBoundary = -1;
-                
+
                 // check if it forms a valid solution.
                 for (int i = 0; i < inputString.Length; ++i)
                 {
@@ -654,43 +655,1282 @@ o	For the complexity analysis purposes, we ignore memory required by inputs and 
 
         }
 
+        /* 1190. Reverse Substrings Between Each Pair of Parentheses
+        https://leetcode.com/problems/reverse-substrings-between-each-pair-of-parentheses/description/
+         */
+        public class ReverseSubstringsBetweenEachPairOfParenthesesSol
+        {
+
+            /* Approach 1: Straightforward Way
+            Complexity Analysis
+            Let n be the length of the string.
+            •	Time complexity: O(n^2)
+            The algorithm iterates through each character of the input string once. For each character, we have three cases:
+            o	If it's (, we push its index or the starting position where the reversal takes place to the stack. This is O(1).
+            o	If it's ), we pop from the stack and reverse a portion of the result string. Popping is O(1).
+            o	The reverse operation can take up to O(n) time in the worst case (when we reverse the entire string).
+            o	For other characters, we append to the result string, which is typically O(1) (amortized).
+            The worst-case scenario occurs when we have to reverse large portions of the string multiple times. In the worst case, we might end up reversing the entire string for each closing parenthesis. Therefore, the overall time complexity is O(n^2) in the worst case.
+            •	Space complexity: O(n)
+            The algorithm uses a stack to store the indices of opening parentheses. In the worst case (when all characters are opening parentheses), this could take O(n) space. The reverse function typically doesn't use extra space proportional to the input size. Therefore, the overall space complexity is O(n).
+
+             */
+            public string ReverseParentheses(string s)
+            {
+                Stack<int> openParenthesesIndices = new Stack<int>();
+                StringBuilder result = new StringBuilder();
+
+                foreach (char currentChar in s)
+                {
+                    if (currentChar == '(')
+                    {
+                        // Store the current length as the start index for future reversal
+                        openParenthesesIndices.Push(result.Length);
+                    }
+                    else if (currentChar == ')')
+                    {
+                        int start = openParenthesesIndices.Pop();
+                        // Reverse the substring between the matching parentheses
+                        Reverse(result, start, result.Length - 1);
+                    }
+                    else
+                    {
+                        // Append non-parenthesis characters to the processed string
+                        result.Append(currentChar);
+                    }
+                }
+
+                return result.ToString();
+            }
+
+            private void Reverse(StringBuilder sb, int start, int end)
+            {
+                while (start < end)
+                {
+                    char temp = sb[start];
+                    sb[start++] = sb[end];
+                    sb[end--] = temp;
+                }
+            }
+            /* Approach 2: Wormhole Teleportation technique
+            Complexity Analysis
+    Let n be the length of the string.
+    •	Time complexity: O(n)
+    We iterate through the string once to pair up parentheses using a stack. Each character is processed once, resulting in O(n) time complexity.
+    After pairing, we iterate through the string again to construct the final result string. During this pass, each character is processed once, and we navigate through pairs in constant time. This results in another O(n) time complexity.
+    Converting a StringBuilder to a String in Java using toString() takes O(n) time, where n is the length of the StringBuilder. Joining elements of a list into a string in Python using ''.join() also takes O(n) time. Combined, the total time complexity is O(n).
+    •	Space complexity: O(n)
+    We use a stack to track indices of opening parentheses. In the worst case, the stack may hold up to O(n/2) elements (when all are opening parentheses), resulting in O(n) space complexity. An array pair of size n is used to store indices of matching parentheses. This contributes O(n) space complexity.
+    Converting a StringBuilder to a String in Java generally does not increase space complexity beyond the size of the resulting string itself. However, StringBuilder internally manages a character array whose size might be slightly larger than the resulting string due to its capacity management strategy. The additional space complexity for ''.join() in Python is O(n), accounting for the space needed to store the new string object.
+    Therefore, the total space complexity is O(n).
+
+             */
+            public String UsingWormholeTeleportationTechnique(String s)
+            {
+                int n = s.Length;
+                Stack<int> openParenthesesIndices = new();
+                int[] pair = new int[n];
+
+                // First pass: Pair up parentheses
+                for (int i = 0; i < n; ++i)
+                {
+                    if (s[i] == '(')
+                    {
+                        openParenthesesIndices.Push(i);
+                    }
+                    if (s[i] == ')')
+                    {
+                        int j = openParenthesesIndices.Pop();
+                        pair[i] = j;
+                        pair[j] = i;
+                    }
+                }
+
+                // Second pass: Build the result string
+                StringBuilder result = new StringBuilder();
+                for (
+                    int currIndex = 0, direction = 1;
+                    currIndex < n;
+                    currIndex += direction
+                )
+                {
+                    if (s[currIndex] == '(' || s[currIndex]
+
+                     == ')')
+                    {
+                        currIndex = pair[currIndex];
+                        direction = -direction;
+                    }
+                    else
+                    {
+                        result.Append(s[currIndex]);
+                    }
+                }
+
+                return result.ToString();
+            }
+        }
+
+        /* 1915. Number of Wonderful Substrings
+        https://leetcode.com/problems/number-of-wonderful-substrings/description/
+         */
+
+        class NumberOfWonderfulSubstringsSol
+        {
+            /*
+            
+Approach: Count Parity Prefixes
+
+            Complexity Analysis
+•	Time complexity: O(NA).
+The number of distinct characters that can appear in word is defined as A. For each of the N characters in word, we iterate through all possible characters that can be the odd character. Therefore, the time complexity of O(NA), where A≤10, because only letters "a" through "j" will appear.
+•	Space complexity: O(N).
+The frequency map can store up to N key/entry pairs, hence the linear space complexity.
+  */
+            public long UsingCountParityPrefixes(String word)
+            {
+                int N = word.Length;
+
+                // Create the frequency map
+                // Key = bitmask, Value = frequency of bitmask key
+                Dictionary<int, int> freq = new();
+
+                // The empty prefix can be the smaller prefix, which is handled like this
+                freq.Add(0, 1);
+
+                int mask = 0;
+                long res = 0L;
+                for (int i = 0; i < N; i++)
+                {
+                    char c = word[i];
+                    int bit = c - 'a';
+
+                    // Flip the parity of the c-th bit in the running prefix mask
+                    mask ^= (1 << bit);
+
+                    // Count smaller prefixes that create substrings with no odd occurring letters
+                    res += freq.GetValueOrDefault(mask, 0);
+
+                    // Increment value associated with mask by 1
+                    freq[mask] = freq.GetValueOrDefault(mask, 0) + 1;
+
+                    // Loop through every possible letter that can appear an odd number of times in a substring
+                    for (int odd_c = 0; odd_c < 10; odd_c++)
+                    {
+                        res += freq.GetValueOrDefault(mask ^ (1 << odd_c), 0);
+                    }
+                }
+                return res;
+            }
+        }
+
+        /* 1717. Maximum Score From Removing Substrings
+        https://leetcode.com/problems/maximum-score-from-removing-substrings/description/
+         */
+        class MaximumScoreFromRemovingSubstringsSol
+        {
+
+            /* Approach 1: Greedy Way (Stack)
+            Complexity Analysis
+            Let n be the length of the string s.
+            •	Time complexity: O(n)
+            The removeSubstring method is called twice in the algorithm. In it, the algorithm iterates over each character in the input string, which has a time complexity of O(n). Reconstructing the string from the stack also takes O(n). Thus, the total time complexity of the algorithm is 2⋅(O(n)+O(n)), which simplifies to O(n).
+            •	Space complexity: O(n)
+            The stringAfterFirstPass and stringAfterSecondPass variables can use an additional space of O(n) in the worst case. In the removeSubstring method, the stack can store at most n characters, and the reconstructed string can also store at most n characters, resulting in a space complexity of O(n) for each. When considering all these individual complexities together, the space complexity of the algorithm amounts to O(n).
+
+             */
+            public int UsingGreedyWithStack(String s, int x, int y)
+            {
+                int totalScore = 0;
+                String highPriorityPair = x > y ? "ab" : "ba";
+                String lowPriorityPair = highPriorityPair.Equals("ab") ? "ba" : "ab";
+
+                // First pass: remove high priority pair
+                String stringAfterFirstPass = RemoveSubstring(s, highPriorityPair);
+                int removedPairsCount =
+                    (s.Length - stringAfterFirstPass.Length) / 2;
+
+                // Calculate score from first pass
+                totalScore += removedPairsCount * Math.Max(x, y);
+
+                // Second pass: remove low priority pair
+                String stringAfterSecondPass = RemoveSubstring(
+                    stringAfterFirstPass,
+                    lowPriorityPair
+                );
+                removedPairsCount = (stringAfterFirstPass.Length -
+                    stringAfterSecondPass.Length) /
+                2;
+
+                // Calculate score from second pass
+                totalScore += removedPairsCount * Math.Min(x, y);
+
+                return totalScore;
+            }
+
+            private String RemoveSubstring(String input, String targetPair)
+            {
+                Stack<char> charStack = new();
+
+                // Iterate through each character in the input string
+                for (int i = 0; i < input.Length; i++)
+                {
+                    char currentChar = input[i];
+
+                    // Check if current character forms the target pair with the top of the stack
+                    if (
+                        currentChar == targetPair[1] &&
+                        charStack.Count > 0 &&
+                        charStack.Peek() == targetPair[0]
+                    )
+                    {
+                        charStack.Pop(); // Remove the matching character from the stack
+                    }
+                    else
+                    {
+                        charStack.Push(currentChar);
+                    }
+                }
+
+                // Reconstruct the remaining string after removing target pairs
+                StringBuilder remainingChars = new StringBuilder();
+                while (charStack.Count > 0)
+                {
+                    remainingChars.Append(charStack.Pop());
+                }
+                return remainingChars.ToString().Reverse().ToString();
+            }
+
+            /* Approach 2: Greedy Way (Without Stack)
+            Complexity Analysis
+            Let n be the length of the string s
+            •	Time complexity: O(n)
+            The algorithm calls removeSubstring twice, each iterating through the entire string once. All operations within the loop—such as character comparisons and index manipulations—are constant time. Thus, the time complexity is 2⋅O(n), which can be simplified to O(n).
+            •	Space complexity: O(1) or O(n)
+            In the C++ implementation of the algorithm, where strings are mutable, we do not use any additional data structures which scale with input size. Thus, the space complexity remains O(1).
+            In the Java and Python3 implementations, we use an additional data structure to bypass the caveat of immutable strings. This takes O(n) space, which is the space complexity of the algorithm.
+
+             */
+
+
+            public int UsingGreedyWithoutStack(String s, int x, int y)
+            {
+                StringBuilder text = new StringBuilder(s);
+                int totalPoints = 0;
+
+                if (x > y)
+                {
+                    // Remove "ab" first (higher points), then "ba"
+                    totalPoints += RemoveSubstring(text, "ab", x);
+                    totalPoints += RemoveSubstring(text, "ba", y);
+                }
+                else
+                {
+                    // Remove "ba" first (higher or equal points), then "ab"
+                    totalPoints += RemoveSubstring(text, "ba", y);
+                    totalPoints += RemoveSubstring(text, "ab", x);
+                }
+
+                return totalPoints;
+                int RemoveSubstring(
+               StringBuilder inputString,
+               String targetSubstring,
+               int pointsPerRemoval
+           )
+                {
+                    int totalPoints = 0;
+                    int writeIndex = 0;
+
+                    // Iterate through the string
+                    for (int readIndex = 0; readIndex < inputString.Length; readIndex++)
+                    {
+                        // Add the current character
+                        inputString[writeIndex++] = inputString[readIndex];
+
+                        // Check if we've written at least two characters and
+                        // they match the target substring
+                        if (
+                            writeIndex > 1 &&
+                            inputString[writeIndex - 2] ==
+                            targetSubstring[0] &&
+                            inputString[writeIndex - 1] == targetSubstring[1]
+                        )
+                        {
+                            writeIndex -= 2; // Move write index back to remove the match
+                            totalPoints += pointsPerRemoval;
+                        }
+                    }
+
+                    // Trim the StringBuilder to remove any leftover characters
+                    inputString.Capacity = writeIndex;
+
+                    return totalPoints;
+
+                }
+            }
+            /* Approach 3: Greedy Way (Counting)
+             Complexity Analysis
+Let n be the length of the given string s.
+•	Time complexity: O(n)
+The algorithm reverses the string in the worst case and iterates over each character of the string exactly once, with each operation taking O(n) time. Therefore, the time complexity of the algorithm is O(n).
+•	Space complexity: O(1) or O(n)
+In the C++ implementation of the algorithm, the string reversal takes constant space since reverse() flips the string in-place.
+For the Java and Python3 implementations, the string reversal requires O(n) space.
+We do not use any other data structures that scale with the input size. Therefore, the space complexity of the algorithm is O(1) for C++, and O(n) for Java and Python3.
+
+            */
+            public int UsingGreedyCounting(String s, int x, int y)
+            {
+                // Ensure "ab" always has higher points than "ba"
+                if (x < y)
+                {
+                    // Swap points
+                    int temp = x;
+                    x = y;
+                    y = temp;
+                    // Reverse the string to maintain logic
+                    s = new StringBuilder(s).ToString().Reverse().ToString();
+                }
+
+                int aCount = 0, bCount = 0, totalPoints = 0;
+
+                for (int i = 0; i < s.Length; i++)
+                {
+                    char currentChar = s[i];
+
+                    if (currentChar == 'a')
+                    {
+                        aCount++;
+                    }
+                    else if (currentChar == 'b')
+                    {
+                        if (aCount > 0)
+                        {
+                            // Can form "ab", remove it and add points
+                            aCount--;
+                            totalPoints += x;
+                        }
+                        else
+                        {
+                            // Can't form "ab", keep 'b' for potential future "ba"
+                            bCount++;
+                        }
+                    }
+                    else
+                    {
+                        // Non 'a' or 'b' character encountered
+                        // Calculate points for any remaining "ba" pairs
+                        totalPoints += Math.Min(bCount, aCount) * y;
+                        // Reset counters for next segment
+                        aCount = bCount = 0;
+                    }
+                }
+
+                // Calculate points for any remaining "ba" pairs at the end
+                totalPoints += Math.Min(bCount, aCount) * y;
+
+                return totalPoints;
+            }
 
 
 
+        }
+
+        /* 1371. Find the Longest Substring Containing Vowels in Even Counts
+        https://leetcode.com/problems/find-the-longest-substring-containing-vowels-in-even-counts/description/
+         */
+        class FindTheLongestSubstringContainingVowelsinEvenCountsSol
+        {
+            /* Approach: Bitmasking
+            Complexity Analysis
+            Let m be the size of the given s string.
+            •	Time complexity: O(n)
+            We iterate through the string s exactly once. Apart from this, all operations are constant time. Therefore, the total time complexity is given by O(max(m,n)).
+            •	Space complexity: O(1)
+            Apart from the characterMap and mp array, no additional space is used to solve the problem. Therefore, the space complexity is given by O(26)+O(32)≈O(1).
+
+             */
+            public int UsingBitMasking(String s)
+            {
+                int prefixXOR = 0;
+                int[] characterMap = new int[26];
+                characterMap['a' - 'a'] = 1;
+                characterMap['e' - 'a'] = 2;
+                characterMap['i' - 'a'] = 4;
+                characterMap['o' - 'a'] = 8;
+                characterMap['u' - 'a'] = 16;
+                int[] mp = new int[32];
+                for (int i = 0; i < 32; i++) mp[i] = -1;
+                int longestSubstring = 0;
+                for (int i = 0; i < s.Length; i++)
+                {
+                    prefixXOR ^= characterMap[s[i] - 'a'];
+                    if (mp[prefixXOR] == -1 && prefixXOR != 0) mp[prefixXOR] = i;
+                    longestSubstring = Math.Max(longestSubstring, i - mp[prefixXOR]);
+                }
+                return longestSubstring;
+            }
+        }
+
+        /* 395. Longest Substring with At Least K Repeating Characters
+        https://leetcode.com/problems/longest-substring-with-at-least-k-repeating-characters/description/
+         */
+
+        class LongestSubstringWithAtleastKRepeatingCharSol
+        {
+            /*
+                         Approach 1: Brute Force
+Complexity Analysis
+•	Time Complexity : O(n^2), where n is equal to length of string s. The nested for loop that generates all substrings from string s takes O(n^2) time, and for each substring, we iterate over countMap array of size 26.
+This gives us time complexity as O(26⋅n^2) = O(n^2).
+This approach is exhaustive and results in Time Limit Exceeded (TLE).
+•	Space Complexity: O(1) We use constant extra space of size 26 for countMap array.
+
+             */
+            public int LongestSubstring(String s, int k)
+            {
+                if (s == null || s.Length == 0 || k > s.Length)
+                {
+                    return 0;
+                }
+                int[] countMap = new int[26];
+                int n = s.Length;
+                int result = 0;
+                for (int start = 0; start < n; start++)
+                {
+                    // reset the count map
+                    Array.Fill(countMap, 0);
+                    for (int end = start; end < n; end++)
+                    {
+                        countMap[s[end] - 'a']++;
+                        if (IsValid(s, start, end, k, countMap))
+                        {
+                            result = Math.Max(result, end - start + 1);
+                        }
+                    }
+                }
+                return result;
+            }
+
+            private bool IsValid(String s, int start, int end, int k, int[] countMap)
+            {
+                int countLetters = 0, countAtLeastK = 0;
+                foreach (int freq in countMap)
+                {
+                    if (freq > 0) countLetters++;
+                    if (freq >= k) countAtLeastK++;
+                }
+                return countAtLeastK == countLetters;
+            }
+            /* Approach 2: Divide And Conquer
+Complexity Analysis
+•	Time Complexity : O(N^2), where N is the length of string s. Though the algorithm performs better in most cases, the worst case time complexity is still O(N^2).
+In cases where we perform split at every index, the maximum depth of recursive call could be O(N). For each recursive call it takes O(N) time to build the countMap resulting in O(n^2) time complexity.
+•	Space Complexity: O(N) This is the space used to store the recursive call stack. The maximum depth of recursive call stack would be O(N).
+             */
+            public int UsingDivideAndConquer(String s, int k)
+            {
+                return LongestSubstringUtil(s, 0, s.Length, k);
+            }
+            private int LongestSubstringUtil(String s, int start, int end, int k)
+            {
+                if (end < k) return 0;
+                int[] countMap = new int[26];
+                // update the countMap with the count of each character
+                for (int i = start; i < end; i++)
+                    countMap[s[i] - 'a']++;
+                for (int mid = start; mid < end; mid++)
+                {
+                    if (countMap[s[mid] - 'a'] >= k) continue;
+                    int midNext = mid + 1;
+                    while (midNext < end && countMap[s[midNext] - 'a'] < k) midNext++;
+                    return Math.Max(LongestSubstringUtil(s, start, mid, k),
+                            LongestSubstringUtil(s, midNext, end, k));
+                }
+                return (end - start);
+            }
+            /* Approach 3: Sliding Window 
+Complexity Analysis
+•	Time Complexity : O(maxUnique⋅N). We iterate over the string of length N, maxUnqiue times. Ideally, the number of unique characters in the string would not be more than 26 (a to z). Hence, the time complexity is approximately O(26⋅N) = O(N)
+•	Space Complexity: O(1) We use constant extra space of size 26 to store the countMap.
+
+            */
+            public int UsingSlidingWindow(String s, int k)
+            {
+                char[] str = s.ToCharArray();
+                int[] countMap = new int[26];
+                int maxUnique = GetMaxUniqueLetters(s);
+                int result = 0;
+                for (int currUnique = 1; currUnique <= maxUnique; currUnique++)
+                {
+                    // reset countMap
+                    Array.Fill(countMap, 0);
+                    int windowStart = 0, windowEnd = 0, idx = 0, unique = 0, countAtLeastK = 0;
+                    while (windowEnd < str.Length)
+                    {
+                        // expand the sliding window
+                        if (unique <= currUnique)
+                        {
+                            idx = str[windowEnd] - 'a';
+                            if (countMap[idx] == 0) unique++;
+                            countMap[idx]++;
+                            if (countMap[idx] == k) countAtLeastK++;
+                            windowEnd++;
+                        }
+                        // shrink the sliding window
+                        else
+                        {
+                            idx = str[windowStart] - 'a';
+                            if (countMap[idx] == k) countAtLeastK--;
+                            countMap[idx]--;
+                            if (countMap[idx] == 0) unique--;
+                            windowStart++;
+                        }
+                        if (unique == currUnique && unique == countAtLeastK)
+                            result = Math.Max(windowEnd - windowStart, result);
+                    }
+                }
+
+                return result;
+            }
+            // get the maximum number of unique letters in the string s
+            private int GetMaxUniqueLetters(String s)
+            {
+                bool[] map = new bool[26];
+                int maxUnique = 0;
+                for (int i = 0; i < s.Length; i++)
+                {
+                    if (!map[s[i] - 'a'])
+                    {
+                        maxUnique++;
+                        map[s[i] - 'a'] = true;
+                    }
+                }
+                return maxUnique;
+            }
+
+        }
+
+        /* 2743. Count Substrings Without Repeating Character
+        https://leetcode.com/problems/count-substrings-without-repeating-character/description/
+         */
+        class NumberOfSpecialSubstringsSol
+        {
+
+            /* Approach: Sliding Window
+            Complexity Analysis
+            Here, N is the number of characters in the string s.
+            •	Time complexity: O(N).
+            We can iterate over each character at most twice. This is because we will iterate over the character for the first time while extending the sliding window from the right side and then we can again iterate over while shrinking the window from the left end. Hence, the total number of operations could be 2∗N and therefore, the total time complexity is equal to O(N).
+            •	Space complexity: O(1).
+            We need an array freq to keep the frequencies of characters in the current window. Since there can only be lowercase English letters the size of freq is only 26 and hence is independent of s length. Therefore, the total space complexity is constant.
+
+             */
+            public int UsingSlidingWindow(String s)
+            {
+                int substringCount = 0;
+
+                int start = 0;
+                int[] freq = new int[26];
+                for (int end = 0; end < s.Length; end++)
+                {
+                    freq[s[end] - 'a']++;
+
+                    while (freq[s[end] - 'a'] > 1)
+                    {
+                        freq[s[start] - 'a']--;
+                        start++;
+                    }
+
+                    substringCount += (end - start + 1);
+                }
+
+                return substringCount;
+            }
+        }
 
 
+        /* 2734. Lexicographically Smallest String After Substring Operation
+        https://leetcode.com/problems/lexicographically-smallest-string-after-substring-operation/description/
+        https://algo.monster/liteproblems/2734	
+         */
+
+        class LexicographicallySmallestStringAfterSubstringOperationSol
+        {
+            /*  Time and Space Complexity
+Time Complexity:
+The time complexity of this code is O(n), where n is the length of the input string s.
+•	The first while loop runs in O(n) in the worst case when all characters are "a". At best, it exits immediately if the first character is not "a".
+•	The second while loop also runs in O(n) in the worst case, if there are no "a" characters following the first non-"a" character. At best, it exits immediately if the next character is "a".
+•	The line with join and chr(ord(c) - 1) inside list comprehension again runs in O(n) because it iterates through the substring s[i:j]. This substring can potentially be the entire string s in the worst case.
+These loops are sequential and not nested, so the time complexity remains O(n).
+Space Complexity:
+The space complexity of the code is also O(n).
+•	This is because the code creates a new string with the join operation, which can potentially contain as many characters as the original string s in the worst case.
+•	The space used to store indexes i and j is constant and does not scale with the size of the input string, therefore their contribution to space complexity is O(1).
+To sum up, the space complexity of the code is dominated by the space required for the new string generated in the join operation, which is O(n).
+*/
+            public String SmallestString(String s)
+            {
+                int stringLength = s.Length;
+                int firstNonAIndex = 0;
+
+                // Find the first instance of a character that is not 'a'
+                while (firstNonAIndex < stringLength && s[firstNonAIndex] == 'a')
+                {
+                    firstNonAIndex++;
+                }
+
+                // If there's no character other than 'a', replace the last 'a' with 'z'
+                if (firstNonAIndex == stringLength)
+                {
+                    return s.Substring(0, stringLength - 1) + "z";
+                }
+
+                // Convert the string to a character array for manipulation
+                char[] chars = s.ToCharArray();
+
+                // Start decreasing the value of characters until an 'a' is reached
+                int reduceIndex = firstNonAIndex;
+                while (reduceIndex < stringLength && chars[reduceIndex] != 'a')
+                {
+                    chars[reduceIndex] = (char)(chars[reduceIndex] - 1);
+                    reduceIndex++;
+                }
+
+                // Return the new string constructed from the character array
+                return chars.ToString();
+            }
+        }
 
 
+        /* 340. Longest Substring with At Most K Distinct Characters
+        https://leetcode.com/problems/longest-substring-with-at-most-k-distinct-characters/description/
+         */
+        class LengthOfLongestSubstringWithAtMostKKDistinctCharsSol
+        {
+
+            /* Approach 1: Binary Search + Fixed Size Sliding Window
+            Complexity Analysis
+Let n be the length of the input string s.
+•	Time complexity: O(n⋅logn)
+o	We set the search space as [k, n], it takes at most O(logn) binary search steps.
+o	At each step, we iterate over s which takes O(n) time.
+•	Space complexity: O(n)
+o	We need to update the boundary indices left and right.
+o	During the iteration, we use a hash map counter which could contain at most O(n) distinct characters.
+
+             */
+            public int UsingBinarySearchWithFixedSizeSlidingWindow(String s, int k)
+            {
+                int n = s.Length;
+                if (k >= n)
+                {
+                    return n;
+                }
+
+                int left = k, right = n;
+                while (left < right)
+                {
+                    int mid = (left + right + 1) / 2;
+
+                    if (IsValid(s, mid, k))
+                    {
+                        left = mid;
+                    }
+                    else
+                    {
+                        right = mid - 1;
+                    }
+                }
+
+                return left;
+            }
+
+            private bool IsValid(String s, int size, int k)
+            {
+                int n = s.Length;
+                Dictionary<char, int> counter = new();
+
+                for (int i = 0; i < size; i++)
+                {
+                    char c = s[i];
+                    counter[c] = counter.GetValueOrDefault(c, 0) + 1;
+                }
+
+                if (counter.Count <= k)
+                {
+                    return true;
+                }
+
+                for (int i = size; i < n; i++)
+                {
+                    char c1 = s[i];
+                    counter[c1] = counter.GetValueOrDefault(c1, 0) + 1;
+
+                    char c2 = s[i - size];
+                    counter[c2] = counter.GetValueOrDefault(c2, 0) + 1;
+
+                    if (counter[c2] == 0)
+                    {
+                        counter.Remove(c2);
+                    }
+                    if (counter.Count <= k)
+                    {
+                        return true;
+                    }
+                }
+
+                return false;
+            }
+
+            /* Approach 2: Sliding Window
+            Complexity Analysis
+Let n be the length of the input string s and k be the maximum number of distinct characters.
+•	Time complexity: O(n)
+o	In the iteration of the right boundary right, we shift it from 0 to n - 1. Although we may move the left boundary left in each step, left always stays to the left of right, which means left moves at most n - 1 times.
+o	At each step, we update the value of an element in the hash map counter, which takes constant time.
+o	To sum up, the overall time complexity is O(n).
+•	Space complexity: O(k)
+o	We need to record the occurrence of each distinct character in the valid window. During the iteration, there might be at most O(k+1) unique characters in the window, which takes O(k) space.
+
+             */
+            public int UsingSlidingWindow(String s, int k)
+            {
+                int n = s.Length;
+                int maxSize = 0;
+                Dictionary<char, int> counter = new();
+
+                int left = 0;
+                for (int right = 0; right < n; right++)
+                {
+                    counter[s[right]] = counter.GetValueOrDefault(s[right], 0) + 1;
+
+                    while (counter.Count > k)
+                    {
+                        counter[s[left]] = counter[s[left]] - 1;
+                        if (counter[s[left]] == 0)
+                        {
+                            counter.Remove(s[left]);
+                        }
+                        left++;
+                    }
+
+                    maxSize = Math.Max(maxSize, right - left + 1);
+                }
+
+                return maxSize;
+            }
+            /* Approach 3: Sliding Window II
+            Complexity Analysis
+Let n be the length of the input string s and k be the maximum number of distinct characters.
+•	Time complexity: O(n)
+o	In the iteration of the right boundary right, we shift it from 0 to n - 1.
+o	At each step, we update the number of s[right] and/or the number of s[right - max_size] in the hash map counter, which takes constant time.
+o	To sum up, the overall time complexity is O(n).
+•	Space complexity: O(k)
+o	We need to record the occurrence of each distinct character in the valid window. During the iteration, there might be at most O(k+1) unique characters in the window, which takes O(k) space.
+
+             */
+            public int UsingSlidingWindowII(string inputString, int k)
+            {
+                int stringLength = inputString.Length;
+                int maximumSize = 0;
+                Dictionary<char, int> characterCount = new Dictionary<char, int>();
+
+                for (int right = 0; right < stringLength; right++)
+                {
+                    if (characterCount.ContainsKey(inputString[right]))
+                    {
+                        characterCount[inputString[right]]++;
+                    }
+                    else
+                    {
+                        characterCount[inputString[right]] = 1;
+                    }
+
+                    if (characterCount.Count <= k)
+                    {
+                        maximumSize++;
+                    }
+                    else
+                    {
+                        char leftChar = inputString[right - maximumSize];
+                        characterCount[leftChar]--;
+
+                        if (characterCount[leftChar] == 0)
+                        {
+                            characterCount.Remove(leftChar);
+                        }
+                    }
+                }
+
+                return maximumSize;
+            }
+
+        }
+
+        /* 1062. Longest Repeating Substring
+        https://leetcode.com/problems/longest-repeating-substring/description/
+         */
+        class LongestRepeatingSubstringSol
+        {
+
+            /* Approach 1: Brute Force with Set
+            Complexity Analysis
+Let n be the length of the string.
+•	Time complexity: O(n^3)
+The primary time-consuming operations are the nested loops and the substring extraction for every combination of start and end positions, which involves up to n^2 iterations, and each substring extraction and set operation takes O(n) time.
+•	Space complexity: O(n^2)
+O(n^2), as we may store up to O(n^2) substrings of various lengths in the set.
+
+             */
+            public int NaiveWithHashSet(String s)
+            {
+                HashSet<String> seenSubstrings = new HashSet<string>();
+                int maxLength = s.Length - 1;
+
+                for (int start = 0; start <= s.Length; start++)
+                {
+                    int end = start;
+                    // If the remaining substring is shorter than maxLength,
+                    // reset the loop
+                    if (end + maxLength > s.Length)
+                    {
+                        if (--maxLength == 0) break;
+                        start = -1;
+                        seenSubstrings.Clear();
+                        continue;
+                    }
+                    // Extract substring of length maxLength
+                    String currentSubstring = s.Substring(end, end + maxLength);
+                    // If the substring is already in the set,
+                    // it means we've found a repeating substring
+                    if (!seenSubstrings.Add(currentSubstring))
+                    {
+                        return maxLength;
+                    }
+                }
+                return maxLength;
+            }
+            /* Approach 2: Brute Force with Incremental Search
+            Complexity Analysis
+Let n be the length of the string.
+•	Time complexity: O(n^3)
+For each possible starting index start, the algorithm generates substrings of length maxLength + 1. As maxLength increases, substring generation involves examining substrings of lengths up to n. The number of substrings generated can be up to O(n^2).
+Each substring extraction takes O(n) time in the worst case because it involves copying a portion of the original string.
+Given that each substring extraction is O(n) and there are up to O(n^2) substrings, the overall time complexity is O(n^3) due to the nested loops and substring operations.
+•	Space complexity: O(n^2)
+The set is used to store substrings that have been seen. In the worst case, the number of unique substrings stored can be up to O(n^2), and each substring can be up to length n. Thus, the space complexity for the set is O(n^2).
+
+             */
+            public int NaiveWithIncrementalSearch(String s)
+            {
+                int length = s.Length, maxLength = 0;
+                HashSet<String> seenSubstrings = new HashSet<string>();
+
+                for (int start = 0; start < length; start++)
+                {
+                    int end = start;
+                    // Stop if it's not possible to find a longer repeating substring
+                    if (end + maxLength >= length)
+                    {
+                        return maxLength;
+                    }
+                    // Generate substrings of length maxLength + 1
+                    String currentSubstring = s.Substring(end, end + maxLength + 1);
+                    // If a repeating substring is found, increase maxLength and restart
+                    if (!seenSubstrings.Add(currentSubstring))
+                    {
+                        start = -1; // Restart search for new length
+                        seenSubstrings.Clear();
+                        maxLength++;
+                    }
+                }
+                return maxLength;
+            }
+
+            /* Approach 3: Suffix Array with Sorting
+Complexity Analysis
+Let n be the length of the string.
+•	Time complexity: O(n^2logn)
+The time complexity for generating all suffixes is O(n^2) because we have to create n suffixes and each suffix, in the worst case, can be up to length n.
+Sorting the suffixes involves comparing pairs of suffixes, each comparison taking up to O(n) time. Sorting n suffixes takes O(nlogn) time, resulting in an overall time complexity of O(n^2logn).
+Comparing adjacent suffixes to find the longest common prefix takes up to O(n) time per comparison. With n suffixes, this step takes O(n^2) time.
+Combining these, the overall time complexity is dominated by the sorting step, resulting in O(n^2logn).
+•	Space complexity: O(n^2)
+We store all n suffixes, each of which can be up to length n. This results in O(n^2) space for storing the suffixes.
+Some extra space is used when we sort an array of size n in place. The space complexity of the sorting algorithm depends on the programming language.
+o	In Python, the sort method sorts a list using the Timsort algorithm which is a combination of Merge Sort and Insertion Sort and has a space complexity of O(n)
+o	In C++, the sort() function is implemented as a hybrid of Quick Sort, Heap Sort, and Insertion Sort, with a worst-case space complexity of O(logn)
+o	In Java, Arrays.sort() is implemented using a variant of the Quick Sort algorithm which has a space complexity of O(logn)
+Apart from storing suffixes and sorting space, other variables and operations use O(1) space.
+Thus, the overall space complexity remains O(n^2) due to the dominant factor being the storage of suffixes. However, the space used by the sorting algorithm (whether O(n), O(logn), or similar) adds to the total space usage, though it is less significant in comparison.
+
+             */
+            public int UsingSuffixArrayWithSorting(String s)
+            {
+                int length = s.Length;
+                String[] suffixes = new String[length];
+
+                // Create suffix array
+                for (int i = 0; i < length; i++)
+                {
+                    suffixes[i] = s.Substring(i);
+                }
+                // Sort the suffixes
+                Array.Sort(suffixes);
+
+                int maxLength = 0;
+                // Find the longest common prefix between consecutive sorted suffixes
+                for (int i = 1; i < length; i++)
+                {
+                    int j = 0;
+                    while (
+                        j < Math.Min(suffixes[i].Length, suffixes[i - 1].Length) &&
+                        suffixes[i][j] == suffixes[i - 1][j]
+                    )
+                    {
+                        j++;
+                    }
+                    maxLength = Math.Max(maxLength, j);
+                }
+                return maxLength;
+            }
+            /* 
+            Approach 4: Binary Search with Set
+            Complexity Analysis
+Let n be the length of string.
+•	Time complexity: O(n^2logn)
+O(n^2logn), where logn comes from the binary search and O(n^2) from the set operations for each substring length check.
+•	Space complexity: O(n^2)
+O(n^2), for storing substrings in the set.
+
+ */
+            public int UsingBinarySearchWithHashSet(String s)
+            {
+                char[] characters = s.ToCharArray();
+                int start = 1, end = characters.Length - 1;
+
+                while (start <= end)
+                {
+                    int mid = (start + end) / 2;
+                    // Check if there's a repeating substring of length mid
+                    if (HasRepeatingSubstring(characters, mid))
+                    {
+                        start = mid + 1;
+                    }
+                    else
+                    {
+                        end = mid - 1;
+                    }
+                }
+                return start - 1;
+            }
+
+            private bool HasRepeatingSubstring(char[] characters, int length)
+            {
+                HashSet<String> seenSubstrings = new HashSet<string>();
+                // Check for repeating substrings of given length
+                for (int i = 0; i <= characters.Length - length; i++)
+                {
+                    String substring = new String(characters, i, length);
+                    if (!seenSubstrings.Add(substring))
+                    {
+                        return true;
+                    }
+                }
+                return false;
+            }
+
+            /* Approach 5: Dynamic Programming
+            Complexity Analysis
+Let n be the length of the string.
+•	Time complexity: O(n^2)
+The nested loops each run up to n times, filling in the DP table.
+•	Space complexity: O(n^2)
+O(n^2), for the DP table used to store the lengths of common substrings.
+
+             */
+            public int UsingDP(String s)
+            {
+                int length = s.Length;
+                int[][] dp = new int[length + 1][];
+                int maxLength = 0;
+
+                // Use DP to find the longest common substring
+                for (int i = 1; i <= length; i++)
+                {
+                    for (int j = i + 1; j <= length; j++)
+                    {
+                        // If characters match, extend the length of
+                        // the common substring
+                        if (s[i - 1] == s[j - 1])
+                        {
+                            dp[i][j] = dp[i - 1][j - 1] + 1;
+                            maxLength = Math.Max(maxLength, dp[i][j]);
+                        }
+                    }
+                }
+                return maxLength;
+            }
+
+            /* Approach 6: MSD Radix  (Most Significant Digit Radix Sort)
+Complexity Analysis
+Let n be the length of the string.
+•	Time complexity: O(n^2)
+The main operations are creating the suffix array, sorting it using MSD Radix Sort, and then comparing consecutive suffixes, each taking O(n^2) time in the worst case.
+•	Space complexity: O(n^2)
+O(n^2), for the storage of the suffixes and auxiliary arrays during the sorting process.
+
+             */
+            public int UsingMSDRadix(String s)
+            {
+                int length = s.Length;
+                String[] suffixes = new String[length];
+
+                // Create suffix array
+                for (int i = 0; i < length; i++)
+                {
+                    suffixes[i] = s.Substring(i);
+                }
+                // Sort the suffix array using MSD Radix Sort
+                MsdRadixSort(suffixes);
+
+                int maxLength = 0;
+                // Find the longest common prefix between consecutive sorted suffixes
+                for (int i = 1; i < length; i++)
+                {
+                    int j = 0;
+                    while (
+                        j < Math.Min(suffixes[i].Length, suffixes[i - 1].Length) &&
+                        suffixes[i][j] == suffixes[i - 1][j])
+                    {
+                        j++;
+                    }
+                    maxLength = Math.Max(maxLength, j);
+                }
+                return maxLength;
+            }
+
+            // Main method to perform MSD Radix Sort
+            private void MsdRadixSort(String[] input)
+            {
+                Sort(input, 0, input.Length - 1, 0, new String[input.Length]);
+            }
+
+            // Helper method for sorting
+            private void Sort(String[] input, int lo, int hi, int depth, String[] aux)
+            {
+                if (lo >= hi) return;
+
+                int[] count = new int[28];
+                for (int i = lo; i <= hi; i++)
+                {
+                    count[CharAt(input[i], depth) + 1]++;
+                }
+                for (int i = 1; i < 28; i++)
+                {
+                    count[i] += count[i - 1];
+                }
+                for (int i = lo; i <= hi; i++)
+                {
+                    aux[count[CharAt(input[i], depth)]++] = input[i];
+                }
+                for (int i = lo; i <= hi; i++)
+                {
+                    input[i] = aux[i - lo];
+                }
+                for (int i = 0; i < 27; i++)
+                {
+                    Sort(input, lo + count[i], lo + count[i + 1] - 1, depth + 1, aux);
+                }
+            }
+
+            // Returns the character value or 0 if index exceeds string length
+            private int CharAt(String s, int index)
+            {
+                if (index >= s.Length) return 0;
+                return s[index] - 'a' + 1;
+            }
+
+        }
 
 
+        /* 1208. Get Equal Substrings Within Budget
+        https://leetcode.com/problems/get-equal-substrings-within-budget/description/
+
+         */
+        class GetEqualSubstringsWithinBudgetSol
+        {
+
+            /*
+Approach: Sliding Window
+
+            Complexity Analysis
+            Here, N is the length of the strings s and t.
+            •	Time complexity: O(N)
+            We will process each index of s and t at most twice. This is because we iterate over the character while extending the window from the right side, and again while contracting the window from the left end. Therefore, the total time complexity is equal to O(N).
+            •	Space complexity: O(1)
+            We do not need any extra space apart from some variables, and hence, the space complexity is constant.
+             */
+            public int UsingSlidingWindow(String s, String t, int maxCost)
+            {
+                int N = s.Length;
+
+                int maxLen = 0;
+                // Starting index of the current substring
+                int start = 0;
+                // Cost of converting the current substring in s to t
+                int currCost = 0;
+
+                for (int i = 0; i < N; i++)
+                {
+                    // Add the current index to the substring
+                    currCost += Math.Abs(s[i] - t[i]);
+
+                    // Remove the indices from the left end till the cost becomes less than or equal to maxCost
+                    while (currCost > maxCost)
+                    {
+                        currCost -= Math.Abs(s[start] - t[start]);
+                        start++;
+                    }
+
+                    maxLen = Math.Max(maxLen, i - start + 1);
+                }
+
+                return maxLen;
+            }
+        }
 
 
+        /* 1839. Longest Substring Of All Vowels in Order
+        https://leetcode.com/problems/longest-substring-of-all-vowels-in-order/description/
+        https://algo.monster/liteproblems/1839
+         */
+        class LongestBeautifulSubstringSol
+        {
+            /* Time and Space Complexity
+            Time Complexity
+            The time complexity of the given code can be analyzed in the following steps:
+            1.	Constructing the arr list: This involves a single pass through the input string word with a pair of pointers i and j. For each unique character in the word, the loop checks for consecutive occurrences and adds a tuple (character, count) to arr. This operation has a time complexity of O(n) where n is the length of the input string since each character is considered exactly once.
+            2.	Looping through arr for finding the longest beautiful substring: The second loop runs with an upper limit of len(arr) - 4, and for each iteration, it checks a fixed sequence of 5 elements (not considering nested loops). The check and max call are O(1) operations. The number of iterations depends on the number of unique characters in word, but since it's strictly less than n, the loop has a time complexity of O(n).
+            Combining both parts, the overall time complexity is O(n) + O(n) = O(n).
+            Space Complexity
+            The space complexity is determined by additional space used apart from the input:
+            1.	The arr list: In the worst case, if every character in word is unique, arr would have n tuples. Therefore, the space complexity due to arr is O(n).
+            2.	Constant space for variables i, j, and ans, which doesn't depend on the size of the input.
+            Hence, the overall space complexity of the code is O(n).
+             */
+            // Method to find the length of the longest beautiful substring in the input string
+            public int LongestBeautifulSubstring(String word)
+            {
+                int wordLength = word.Length; // Store the length of the word
+                List<CharGroup> charGroups = new(); // List to store groups of consecutive identical characters
 
+                // Loop through the string and group consecutive identical characters
+                for (int i = 0; i < wordLength;)
+                {
+                    int j = i;
+                    // Find the end index of the group of identical characters
+                    while (j < wordLength && word[j] == word[i])
+                    {
+                        ++j;
+                    }
+                    // Add the group to the list
+                    charGroups.Add(new CharGroup(word[i], j - i));
+                    i = j; // Move to the next group
+                }
 
+                int maxBeautyLength = 0; // Variable to track the maximum length of a beautiful substring
 
+                // Iterate through the list of char groups to find the longest beautiful substring
+                for (int i = 0; i < charGroups.Count - 4; ++i)
+                {
+                    // Get five consecutive char groups
+                    CharGroup a = charGroups[i],
+                              b = charGroups[i + 1],
+                              c = charGroups[i + 2],
+                              d = charGroups[i + 3],
+                              e = charGroups[i + 4];
 
+                    // Check if the groups form a sequence 'a', 'e', 'i', 'o', 'u'
+                    if (a.Character == 'a' && b.Character == 'e' && c.Character == 'i'
+                        && d.Character == 'o' && e.Character == 'u')
+                    {
+                        // Calculate the total length of the beautiful substring and update the max length
+                        maxBeautyLength = Math.Max(maxBeautyLength, a.Count + b.Count + c.Count + d.Count + e.Count);
+                    }
+                }
 
+                return maxBeautyLength; // Return the maximum length found
+            }
+            // Helper class to represent a group of consecutive identical characters
+            public class CharGroup
+            {
+                public char Character; // The character in the group
+                public int Count;      // The count of how many times the character is repeated
 
+                // Constructor for the helper class
+                public CharGroup(char character, int count)
+                {
+                    this.Character = character;
+                    this.Count = count;
+                }
+            }
+        }
 
+        /* 2950. Number of Divisible Substrings
+        https://leetcode.com/problems/number-of-divisible-substrings/description/
+        https://algo.monster/liteproblems/2950	
+         */
+        class CountDivisibleSubstringsSol
+        {
+            /*             Time and Space Complexity
+            Time Complexity
+            The time complexity of the given code is O(n^2). This is because there are two nested loops. The outer loop runs for n iterations (n being the length of the word), and for each iteration of the outer loop, the inner loop runs for at most n iterations - starting from the current index of the outer loop to the end of the word. During each iteration of the inner loop, a constant number of operations are executed. So, for each element, we potentially loop through every other element to the right of it, leading to the n * (n-1) / 2 term, which simplifies to O(n^2).
+            Space Complexity
+            The space complexity of the code is O(C) where C is the size of the character set. In this case, C=26 as there are 26 lowercase English letters. The space is used to store the mapping of each character to its associated integer, which in this instance does not change with the size of the input string and is hence constant.
+             */
+            public int CountDivisibleSubstrings(String word)
+            {
+                // Array of strings representing groups of characters
+                String[] groups = { "ab", "cde", "fgh", "ijk", "lmn", "opq", "rst", "uvw", "xyz" };
+                // Mapping for characters to their respective group values
+                int[] mapping = new int[26];
 
+                // Initialize the mapping for each character to its group value
+                for (int i = 0; i < groups.Length; ++i)
+                {
+                    foreach (char c in groups[i])
+                    {
+                        mapping[c - 'a'] = i + 1;
+                    }
+                }
 
+                // Initialize count of divisible substrings
+                int count = 0;
+                int length = word.Length;
 
+                // Iterate over all possible starting points of substrings
+                for (int i = 0; i < length; ++i)
+                {
+                    // 'sum' will hold the sum of the group values for the current substring
+                    int sum = 0;
+                    // Iterate over all possible ending points of substrings
+                    for (int j = i; j < length; ++j)
+                    {
+                        // Add group value of the current character to 'sum'
+                        sum += mapping[word[j] - 'a'];
+                        // Increment the count if sum is divisible by the length of the substring
+                        count += sum % (j - i + 1) == 0 ? 1 : 0;
+                    }
+                }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+                // Return the total count of divisible substrings
+                return count;
+            }
+        }
 
 
 
