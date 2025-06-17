@@ -956,9 +956,81 @@ We are not using any extra space. Thus, the space complexity will be O(1).
         }
 
 
-       
+        /*        385. Mini Parser
+        https://leetcode.com/problems/mini-parser/description/
+        https://algo.monster/liteproblems/385
+         */
 
+        class DeserializeSol
+        {
 
+            /* Time and Space Complexity
+            The time complexity of the code is O(n) where n is the length of the input string s. This is because the function involves a single loop through the input string, performing a constant amount of work for each character in the string.
+            The space complexity of the code is O(n), also dependent on the length of the string s. In the worst case, the input string could represent a deeply nested list, requiring a new NestedInteger object for every [ encountered before any ] is encountered, which are stored in the stack stk. In the worst-case scenario, this stack could have as many nested NestedInteger objects as there are characters in the input string if the structure were to be very unbalanced. However, this is a very conservative estimation. In practical scenarios, the number of NestedInteger objects will often be less than n.
+             */
+            // Deserializes a string representation of a nested list into a NestedInteger object.
+            public NestedInteger Deserialize(String s)
+            {
+                // If the string starts with an integer, parse it and return a NestedInteger with that value.
+                if (s[0] != '[')
+                {
+                    return new NestedInteger(int.Parse(s));
+                }
+
+                // Initialize a stack to hold the NestedInteger objects.
+                Stack<NestedInteger> stack = new();
+                int number = 0; // Used to store the current number being processed.
+                bool isNegative = false; // Flag to check if the current number is negative.
+
+                // Iterate through each character in the string.
+                for (int i = 0; i < s.Length; ++i)
+                {
+                    char character = s[i];
+                    if (character == '-')
+                    {
+                        // If the current character is a minus sign, set the isNegative flag.
+                        isNegative = true;
+                    }
+                    else if (Char.IsDigit(character))
+                    {
+                        // If the current character is a digit, add it to the current number.
+                        number = number * 10 + character - '0';
+                    }
+                    else if (character == '[')
+                    {
+                        // If the current character is an open bracket, push an empty NestedInteger onto the stack.
+                        stack.Push(new NestedInteger());
+                    }
+                    else if (character == ',' || character == ']')
+                    {
+                        // If the character is a comma or a close bracket,
+                        // and previous character was a digit, finalize and push the number onto the stack.
+                        if (Char.IsDigit(s[i - 1]))
+                        {
+                            if (isNegative)
+                            {
+                                number = -number; // Apply the negative sign if applicable.
+                            }
+                            stack.Peek().Add(new NestedInteger(number)); // Add the number as a NestedInteger.
+                        }
+                        // Reset variables for processing the next number.
+                        number = 0;
+                        isNegative = false;
+
+                        // If the character is a close bracket and there is more than one NestedInteger on the stack,
+                        // pop the top NestedInteger and add it to the next NestedInteger on the stack.
+                        if (character == ']' && stack.Count > 1)
+                        {
+                            NestedInteger topNestedInteger = stack.Pop();
+                            stack.Peek().Add(topNestedInteger);
+                        }
+                    }
+                }
+
+                // The top of the stack contains the deserialized NestedInteger.
+                return stack.Peek();
+            }
+        }
 
 
 

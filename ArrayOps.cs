@@ -13466,6 +13466,53 @@ Complexity Analysis
         }
 
 
+        /* 1441. Build an Array With Stack Operations
+        https://leetcode.com/problems/build-an-array-with-stack-operations/description/
+         */
+
+        class BuildArrayWithStackOperationsSol
+        {
+            /* Approach: Simulate
+            Complexity Analysis
+•	Time complexity: O(n)
+Let k denote the largest (final) element in target. We push (and maybe pop) every number from 1 until k. This gives us a maximum of 2k operations. In the worst case scenario, k = n, which gives us a time complexity of O(n).
+•	Space complexity: O(1)
+We don't count the answer as part of the space complexity. Thus, we aren't using any extra space other than the integer i.
+ */
+            public List<String> WithSimulation(int[] target, int n)
+            {
+                List<String> ans = new List<string>();
+                int i = 0;
+
+                foreach (int num in target)
+                {
+                    {
+                        while (i < num - 1)
+                            ans.Add("Push");
+                        ans.Add("Pop");
+                        i++;
+                    }
+
+                    ans.Add("Push");
+                    i++;
+                }
+
+                return ans;
+            }
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
